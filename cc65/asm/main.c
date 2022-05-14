@@ -70,16 +70,17 @@ int TESTgraphMultiColor ( void )
 
 	return 0 ;
 }
+
 int main( void )
 {
-	//TESTgraphHiresColor();
+	TESTgraphHiresColor();
 	
-	TESTgraphMultiColor();
+	//TESTgraphMultiColor();
 	
 	graphTextMode();// graph off
 	//graphOff(); // graph off and Inter Rom default
 
-	POKE( backGroundColor, cBlue ) ;
+	graphDefaultColor();
 	
 	return 0 ;
 }

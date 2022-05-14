@@ -45,7 +45,7 @@ void gPixel		(void) ;
 void gDrawPixel	(void);
 #define graphDrawPixel(x,y) do{pointX=(x);pointY=(y);gDrawPixel();}while(0);
 
-
+void graphDefaultColor(void);
 
 
 

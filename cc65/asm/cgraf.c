@@ -1,5 +1,7 @@
 
+#include "C64.h"
 #include "cgraf.h"
+#include <peekpoke.h>
 
 // .......................................................... gPixel graphPixel
 
@@ -21,6 +23,9 @@ void gPixel(void)
 		}
 	}
 }
+
+// .......................................................... graph draw pixel (INT/ROM)
+
 void gDrawPixel(void)
 {
 	if ( pointY < 200 )
@@ -49,3 +54,16 @@ void gDrawPixel(void)
 		}
 	}
 }
+
+// .......................................................... graphDefaultColor
+
+void graphDefaultColor(void)
+{
+	__asm__("lda #14");
+	__asm__("jsr _graphSetColor4");
+	POKE( backGroundColor, cBlue ) ;	
+}
+
+
+
+

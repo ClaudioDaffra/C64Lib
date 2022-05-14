@@ -55,6 +55,8 @@
 
 .export _plotPoint
 .export _plotPointMC
+
+.export _graphSetColor4
 	
 ; .................................................... define
 
@@ -164,7 +166,7 @@ _graphTextMode:
 		ora $dd00	;		  %11, 3: Bank #0, $0000-$3FFF, 0-16383.
 		sta	$dd00	;	
 		
-		lda $d011        ; set off 160x200
+		lda $d011	; set off 160x200
 		and #abit6       
 		sta 53265
 
@@ -632,7 +634,6 @@ _plotPointMC_11:
 
 	pla 
 	ora tblMC_orbitbit11,x 
-
 
 _plotPointMC_end:
 
