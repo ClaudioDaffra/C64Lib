@@ -35,10 +35,7 @@ int TESTgraphHiresColor ( void )
 	graphPixel( 3,3 ) ;
 
 	graphIntRomEnable();		
-	
-	// gText();
-	
-	
+
 	return 0 ;
 }
 int TESTgraphMultiColor ( void ) 
@@ -83,15 +80,15 @@ int TESTgraphMultiColor ( void )
 }
 int main( void )
 {
-	//TESTgraphHiresColor();
+	TESTgraphHiresColor();
 	
-	TESTgraphMultiColor();
+	//TESTgraphMultiColor();
 	
-	//gtext();
-
-	//graphOff();
+	//graphTextMode();// graph off
+	//graphOff(); // graph off and Inter Rom default
 	
 	//printf("[%d]\r\n",graphMode);
+
 	
 	return 0 ;
 }

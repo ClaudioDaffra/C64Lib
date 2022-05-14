@@ -26,7 +26,7 @@
 
 .export _graphHiresColor
 .export _graphMultiColor
-.export _gtext
+.export _graphTextMode
 .export _graphBitmapClear
 .export _graphIntRomDisable
 .export _graphIntRomEnable
@@ -141,11 +141,11 @@ _grafON:
 		
 		rts
 
-; **************************************************** _gtext
+; **************************************************** _graphTextMode
 ;
 ; ****************************************************
 
-_gtext:
+_graphTextMode:
 
 		;	graf off 	
 
@@ -167,6 +167,14 @@ _gtext:
 		ora $dd00	;		  %11, 3: Bank #0, $0000-$3FFF, 0-16383.
 		sta	$dd00	;	
 		
+		lda $d011        ; set off 160x200
+		and #abit6       
+		sta 53265
+
+		lda $d016         
+		and #abit5        
+		sta 53270
+	
 		rts
 
 ; **************************************************** _graphMultiColor

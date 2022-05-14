@@ -9,7 +9,7 @@
 
 extern void __fastcall__ graphHiresColor(void);
 extern void __fastcall__ graphMultiColor(void);
-//extern void __fastcall__ gtext(void);
+extern void __fastcall__ graphTextMode(void);
 extern void __fastcall__ graphBitmapClear(void);
 extern void __fastcall__ graphBitmapClearFast(void);
 extern void __fastcall__ graphIntRomDisable(void);
