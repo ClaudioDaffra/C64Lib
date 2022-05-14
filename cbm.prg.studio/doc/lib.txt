@@ -1,0 +1,78 @@
+
+C64 Lib
+
+target TGT_C64
+
+##########
+# kernal
+##########
+
+        kClearSCreen    =       $E54
+        
+        or bit(x)       :       ora obit1
+        
+        and bit(x)      :       and abit1
+
+##########      
+# graphic
+##########
+
+        graphStartHR
+        
+        graphSetBankOn8192
+        
+        graphClear
+
+        graphClearCustom
+        
+        mGraphSetColor cRed,cYellow
+        
+        mPlotXY   #0,#3,#0,#3 
+
+        mUnPlotXY #0,#5,#0,#5  
+        
+        graphSetBankOff8192
+
+        graphEndHR
+
+
+#####################
+# multi color graphic
+#####################
+
+        graphStartMC
+
+        graphSetBankOn8192
+
+        graphClear
+
+        mGraphSetMultiColor cCyan,cWhite,cGreen,cYellow
+
+;       -------------------------
+
+        ; color 00
+        mUnPlotXY  #0,#0,#0,#1 
+        mUnPlotXY  #0,#1,#0,#1 
+
+        ; color 01
+        mUnPlotXY  #0,#0,#0,#3 
+        mPlotXY    #0,#1,#0,#3 
+
+        ; color 10
+        mPlotXY    #0,#0,#0,#5 
+        mUnPlotXY  #0,#1,#0,#5
+
+        ; color 11
+        mPlotXY    #0,#0,#0,#7 
+        mPlotXY    #0,#1,#0,#7 
+
+;       -------------------------
+
+        graphSetBankOff8192
+
+        graphEndMC
+
+       
+
+;
+                

@@ -1,0 +1,2 @@
+del *.prg*
+del *.o
