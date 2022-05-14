@@ -18,7 +18,7 @@ int TESTgraphHiresColor ( void )
 	
 	graphColor0=cGreen;		// verde
 	graphColor1=cYellow;	// gallo
-	
+
 	graphScreenClear();
 
 	graphColor(cColor1) ;
@@ -76,11 +76,10 @@ int main( void )
 	
 	TESTgraphMultiColor();
 	
-	//graphTextMode();// graph off
+	graphTextMode();// graph off
 	//graphOff(); // graph off and Inter Rom default
-	
-	//printf("[%d]\r\n",graphMode);
 
+	POKE( backGroundColor, cBlue ) ;
 	
 	return 0 ;
 }

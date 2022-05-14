@@ -8,6 +8,9 @@
 //
 // *******
 
+#define backGroundColor	0xd021
+#define screenFramColor	0xd020
+
 // and or
 
 #define obit1	0b00000001             

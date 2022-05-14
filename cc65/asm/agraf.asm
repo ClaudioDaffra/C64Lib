@@ -65,9 +65,6 @@ _graphScreenColor	=	$d800
 graphMode320x200	=	0
 graphMode160x200	=	1
 
-screenFrameColor 	= 	53280
-backGroundColor  	= 	53281
-
 ; .................................................... global
 
 _graphBitMap:		.word GRAPHADDR
