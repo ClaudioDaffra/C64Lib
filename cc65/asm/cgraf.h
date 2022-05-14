@@ -42,8 +42,8 @@ extern void __fastcall__  plotPointMC			(void) ;
 void gPixel		(void) ;
 #define graphPixel(x,y) do{pointX=(x);pointY=(y);gPixel();}while(0);
 
-
-
+void gDrawPixel	(void);
+#define graphDrawPixel(x,y) do{pointX=(x);pointY=(y);gDrawPixel();}while(0);
 
 
 

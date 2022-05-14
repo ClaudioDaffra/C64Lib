@@ -6,7 +6,7 @@
 
 
 
-// cl65 -t c64 lgraf.s main.c -o x.prg
+// cl65 -t c64 agraf.asm cgraf.c main.c -o x.prg 
 
 int TESTgraphHiresColor ( void ) 
 {
@@ -21,27 +21,23 @@ int TESTgraphHiresColor ( void )
 	
 	graphScreenClear();
 
-	graphIntRomDisable();
-
 	graphColor(cColor1) ;
-	graphPixel( 1,1 ) ;
-	graphPixel( 3,3 ) ;	
-	graphPixel( 5,5 ) ;
-	graphPixel( 7,7 ) ;	
+	
+	graphDrawPixel( 1,1 ) ;
+	graphDrawPixel( 3,3 ) ;	
+	graphDrawPixel( 5,5 ) ;
+	graphDrawPixel( 7,7 ) ;	
 
-	graphPixel( 319,199 ) ;	
+	graphDrawPixel( 319,199 ) ;	
 
 	graphColor(cColor0) ;
-	graphPixel( 3,3 ) ;
-
-	graphIntRomEnable();		
+	graphDrawPixel( 3,3 ) ;
 
 	return 0 ;
 }
 int TESTgraphMultiColor ( void ) 
 {
-	//unsigned int i,counter=0;
-	//graphMultiColor();
+
 	graphInit(graphMode160x200);
 	
 	//graphBitmapClear();
@@ -54,35 +50,31 @@ int TESTgraphMultiColor ( void )
 	
 	graphSetMultiColor();
 	
-	graphIntRomDisable();
-
 	graphColor(cColor1) ;
-	graphPixel( 1,1 ) ;
+	graphDrawPixel( 1,1 ) ;
 	
 	graphColor(cColor2) ;
-	graphPixel( 3,3 ) ;	
+	graphDrawPixel( 3,3 ) ;	
 	
 	graphColor(cColor3) ;	
-	graphPixel( 5,5 ) ;
+	graphDrawPixel( 5,5 ) ;
 
 	graphColor(cColor0) ;	
-	graphPixel( 7,7 ) ;	
+	graphDrawPixel( 7,7 ) ;	
 
 	graphColor(cColor1) ;	
-	graphPixel( 9,9 ) ;	
+	graphDrawPixel( 9,9 ) ;	
 
 	graphColor(cColor1) ;	
-	graphPixel( 159,199 ) ;	
-	
-	graphIntRomEnable();		
+	graphDrawPixel( 159,199 ) ;	
 
 	return 0 ;
 }
 int main( void )
 {
-	TESTgraphHiresColor();
+	//TESTgraphHiresColor();
 	
-	//TESTgraphMultiColor();
+	TESTgraphMultiColor();
 	
 	//graphTextMode();// graph off
 	//graphOff(); // graph off and Inter Rom default
