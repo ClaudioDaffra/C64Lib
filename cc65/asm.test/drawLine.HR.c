@@ -8,14 +8,20 @@
 
 
 // cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.HR.c -o x.prg 
+// cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.HR.c -o x.prg -Osri -Cl
  
 int TESTgraphHiresColor ( void ) 
 {
-	int msec = 0, trigger = 10; /* 10ms */
+	int msec , trigger ; /* 10ms */
 	clock_t difference ;
-	clock_t before = clock();	
+	clock_t before ;	
 	int x,y ;
-	int iterations=0 ;
+	unsigned int iterations ;
+	
+	
+	before = clock();
+	trigger = 10;
+	msec = 0 ;
 	
 	//graphHiresColor();
 	graphInit(graphMode320x200);
@@ -30,13 +36,13 @@ int TESTgraphHiresColor ( void )
 
 	graphColor(cColor1) ;
 
+	iterations=0;
 	//do {
 		for ( x=0;x<320;x+=50)	
 			for ( y=0;y<199;y+=50)	
 			{
-				graphColor(cColor1);
 				graphLine(320-x,200-y,x,y) ;
-				iterations++;
+				iterations+=1;
 			}
 
 	  difference = clock() - before;
@@ -46,7 +52,8 @@ int TESTgraphHiresColor ( void )
 
 	graphEnd();
 
-	printf("\nTime taken \n%d seconds \n%d milliseconds \n(%d iterations)\n",  msec/1000, msec%1000, iterations);
+	printf("\nTime taken \n%d seconds \n%u milliseconds \n(%u iterations)\n"
+	,  msec/1000, msec%1000, iterations);
 
 	return 0 ;
 }
