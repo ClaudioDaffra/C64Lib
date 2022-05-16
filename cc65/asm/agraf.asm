@@ -360,7 +360,7 @@ _graphIntRomEnable:
 	ora	$01			;				KERNAL ROM visible at $E000-$FFFF.
 	sta $01
 	
-	lda	#$01		;	0000:0010
+	lda	#$01		;	0000:0001
 	ora	$dc0e
 	sta	$dc0e
 	

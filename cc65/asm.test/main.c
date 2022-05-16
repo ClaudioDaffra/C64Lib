@@ -1,8 +1,8 @@
 
 #include <stdio.h>
 #include <peekpoke.h>
-#include "c64.h"
-#include "cgraf.h"
+#include "..\asm\c64.h"
+#include "..\asm\cgraf.h"
 
 
 

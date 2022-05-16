@@ -47,7 +47,21 @@ void gDrawPixel	(void);
 
 void graphDefaultColor(void);
 
+void graphEnd(void) ;
+
+#define graphLine( LX1,LY1,LX2,LY2 ) do{ lineX1=(LX1); lineY1=(LY1); lineX2=(LX2); lineY2=(LY2); GraphLine(); } while(0);
 
 
+// graph.c : graphLine
+
+extern unsigned char 	lineY1	, lineY2 ;
+extern int 				lineX1  , lineX2 ;
+
+// GraphLine Local Private
+
+extern int GraphLineDelta	,	GraphLineDX,	GraphLineDY ;
+extern int GraphLineAI		,	GraphLineBI,	GraphLineXI,	GraphLineYI;
+
+extern void GraphLine (void) ;
 
 #endif
