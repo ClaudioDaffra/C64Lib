@@ -1,6 +1,8 @@
 
 #include <stdio.h>
 #include <peekpoke.h>
+#include <stdio.h>
+#include <peekpoke.h>
 #include <stdlib.h>
 #include <time.h>
 #include "..\asm\c64.h"
@@ -8,41 +10,48 @@
 
 
 
-// cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.HR.c -o x.prg 
-// cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.HR.c -o x.prg -Osri -Cl
+// cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.MC.c -o x.prg 
+// cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.MC.c -o x.prg -Osri -Cl
 
-int TESTgraphHiresColor ( void ) 
+
+
+int TESTgraphMultiColor ( void ) 
 {
 	int msec , trigger ; /* 10ms */
 	clock_t difference ;
 	clock_t before ;	
 	int x,y ;
 	unsigned int iterations ;
- 	
+ 	int count;
 	
 	before = clock();
 	trigger = 10;
 	msec = 0 ;
-	
-	//graphHiresColor();
-	graphInit(graphMode320x200);
-	
-	//graphBitmapClear();
+	count=0; 
+ 
+	graphInit(graphMode160x200);
+
 	graphBitmapClearFast();
 	
-	graphColor0=cGreen;		// verde
-	graphColor1=cYellow;	// gallo
-
-	graphScreenClear();
+	graphColor0=cGreen;	
+	graphColor1=cWhite;	
+	graphColor2=cBlue;	
+	graphColor3=cRed;	
+	
+	graphSetMultiColor();
 
 	graphColor(cColor1) ;
  
 	iterations=0;
- 
-		for ( x=0;x<320;x+=50)	
-			for ( y=0;y<199;y+=50)	
+    count=0;
+
+		for ( x=0;x<160;x+=50)	
+			for ( y=0;y<200;y+=50)	
 			{
-				graphLine(320-x,200-y,x,y) ;
+				if (++count>3) count=1;
+				graphColor(count) ;
+				
+				graphLine(159-x,199-y,x,y) ;
 				iterations+=1;
 			}
 
@@ -59,12 +68,11 @@ int TESTgraphHiresColor ( void )
 
 int main( void )
 {
-	TESTgraphHiresColor();
+	TESTgraphMultiColor();
 
 	//graphEnd();
 	
 	return 0 ;
 }
 
-// 3.158 / 3.61
-// 3.158 / 0.68
+ 
