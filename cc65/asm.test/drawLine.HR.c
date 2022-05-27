@@ -3,13 +3,18 @@
 #include <peekpoke.h>
 #include "..\asm\c64.h"
 #include "..\asm\cgraf.h"
-
+#include <stdlib.h>
 #include <time.h>
 
 
 // cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.HR.c -o x.prg 
 // cl65 -t c64 ..\asm\agraf.asm ..\asm\cgraf.c drawLine.HR.c -o x.prg -Osri -Cl
- 
+
+#undef clock
+#define clock()			((PEEK(160)*65536)+(PEEK(161)*256+PEEK(162)))
+#define TIME_SEC(T) 	(T/2250)
+#define TIME_mSEC(T) 	((T%1000))
+
 int TESTgraphHiresColor ( void ) 
 {
 	int msec , trigger ; /* 10ms */
@@ -17,7 +22,7 @@ int TESTgraphHiresColor ( void )
 	clock_t before ;	
 	int x,y ;
 	unsigned int iterations ;
-	
+ 	
 	
 	before = clock();
 	trigger = 10;
@@ -35,9 +40,9 @@ int TESTgraphHiresColor ( void )
 	graphScreenClear();
 
 	graphColor(cColor1) ;
-
+ 
 	iterations=0;
-	//do {
+ 
 		for ( x=0;x<320;x+=50)	
 			for ( y=0;y<199;y+=50)	
 			{
@@ -46,14 +51,12 @@ int TESTgraphHiresColor ( void )
 			}
 
 	  difference = clock() - before;
-	  msec = difference * 1000 / CLOCKS_PER_SEC;
-	  
-	//} while ( msec < trigger );
-
+	  msec = difference / CLOCKS_PER_SEC ;
+ 
 	graphEnd();
 
 	printf("\nTime taken \n%d seconds \n%u milliseconds \n(%u iterations)\n"
-	,  msec/1000, msec%1000, iterations);
+	                   ,  TIME_SEC(msec)    , TIME_mSEC(msec)        , iterations);
 
 	return 0 ;
 }
@@ -67,5 +70,5 @@ int main( void )
 	return 0 ;
 }
 
-
-
+// 3.158 / 3.61
+// 3.158 / 0.68

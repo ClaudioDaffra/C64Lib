@@ -340,6 +340,13 @@ _gBitmapClearFastLoop2:
 
 _graphIntRomDisable:
 
+	lda $a0
+	sta	$fd
+	lda $a1
+	sta	$fe
+	lda $a2
+	sta	$ff
+	
 	lda	#$fe		;	1111:11[10]
 	and	$dc0e		;	 
 	sta	$dc0e
@@ -356,6 +363,8 @@ _graphIntRomDisable:
 	
 _graphIntRomEnable:
 
+
+	
 	lda	#$02		;	0000:00[10] %x10:  RAM visible at $A000-$BFFF; 
 	ora	$01			;				KERNAL ROM visible at $E000-$FFFF.
 	sta $01
@@ -364,6 +373,13 @@ _graphIntRomEnable:
 	ora	$dc0e
 	sta	$dc0e
 	
+	lda	$ff
+	sta $a2
+	lda	$fd
+	sta $a1
+	lda	$fe
+	sta $a0
+
 	rts
 
 ; **************************************************** _graphScreenClear
@@ -427,16 +443,7 @@ _graphOff:
 	
 	lda #151
 	sta $dd00
-	
-	;		lda #4
-	;		sta 648
-	
-	lda #55
-	sta 1
-	
-	lda #1
-	sta $dc0e
-
+ 
 	rts
 	
 ; **************************************************** _graphInit
@@ -521,6 +528,8 @@ _plotPoint:
 	;set point
 	;---------
 
+	jsr _graphIntRomDisable
+	
 	lda (gPointer),y            ;get row with point in it
 	ora tbl_orbit,x             ;isolate and set the point
 	sta (gPointer),y            ;write back to _graphBitMap
@@ -538,7 +547,8 @@ _plotPoint:
 	sta (gPointer),y          ;write back to _graphBitMap
 
 	past:
-
+	jsr _graphIntRomEnable
+	
 	rts
 
 ; ****************************************************
