@@ -45,9 +45,9 @@ void gDrawPixel(void)
 				pointX=pointX*2;
 				if ( pointX < 320 ) 
 				{
-					//graphIntRomDisable();
+					graphIntRomDisable();
 					plotPointMC();
-					//graphIntRomEnable();
+					graphIntRomEnable();
 				}
 			break ;
 

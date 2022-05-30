@@ -45,6 +45,8 @@ int TESTgraphMultiColor ( void )
 	iterations=0;
     count=0;
 
+graphLine(0,199,319,199) ;
+
 		for ( x=0;x<160;x+=50)	
 			for ( y=0;y<200;y+=50)	
 			{

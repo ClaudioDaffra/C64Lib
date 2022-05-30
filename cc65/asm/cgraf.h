@@ -64,4 +64,12 @@ extern int GraphLineAI		,	GraphLineBI,	GraphLineXI,	GraphLineYI;
 
 extern void GraphLine (void) ;
 
+#undef clock
+#define clock()			((PEEK(160)*65536)+(PEEK(161)*256+PEEK(162)))
+#define TIME_SEC(T) 	(T/2000)
+#define TIME_mSEC(T) 	((T%1000))
+
 #endif
+
+
+

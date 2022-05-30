@@ -363,8 +363,6 @@ _graphIntRomDisable:
 	
 _graphIntRomEnable:
 
-
-	
 	lda	#$02		;	0000:00[10] %x10:  RAM visible at $A000-$BFFF; 
 	ora	$01			;				KERNAL ROM visible at $E000-$FFFF.
 	sta $01
@@ -599,12 +597,16 @@ _plotPointMC:
 	;# erase bit xx00000000
 	;----------------------------------------------
 
+	;jsr _graphIntRomDisable	
+	
 	lda (gPointer),y   			;erase couple of bit 
 	
-	and tblMC_andbitbit,x     
-	
+	and tblMC_andbitbit,x  
+
 	sta (gPointer),y                 
 
+	;jsr _graphIntRomEnable
+	
 	pha 						; salva risultato
 
 	lda _graphDrawMode       	; get color
@@ -647,7 +649,12 @@ _plotPointMC_11:
 
 _plotPointMC_end:
 
-	sta (gPointer),y  
+	;jsr _graphIntRomDisable
+	
+	sta (gPointer),y 
+
+	;jsr _graphIntRomEnable
+	
 	rts
 
 ; ****************************************************
