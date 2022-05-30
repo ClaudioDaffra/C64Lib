@@ -10,10 +10,12 @@ graphMode320x200        =       0
 graphMode160x200        =       1
 graphMode40x25          =       2
 
-graphMode       
+graphMode 
+      
         byte  graphMode40x25    ; modalità grafica
 
 _graphDrawMode  
+
         bytes 0                 ; 0 1 erase/put color 0 1 2 3
 
 ; .................................................... Color
@@ -310,7 +312,7 @@ pointXlo        =       $fb
 
 TabPower2       ; posizione del pixel da accenre o spegnere
 
-        ;byte $80,$40,$20,$10,$08,$04,$02,$01
+        byte $80,$40,$20,$10,$08,$04,$02,$01
         byte %10000000
         byte %01000000
         byte %00100000
@@ -348,7 +350,7 @@ TabPower2_11
         byte %00110000
         byte %00001100
         byte %00001100
-        byte %00001100
+        byte %00000011
         byte %00000011
 
 TabPower2_10        
@@ -402,23 +404,20 @@ graphSetPixel:
         sta $ff                 ; high
         tya
         and #$7
-        sta $fc                 ; temp
+        sta $f9                 ; temp
         lda $fb                 ; xl in $fb
         tax
         and #$f8                ; %11111000
-        adc $fc                 ; temp
+        adc $f9                 ; temp
         tay
         txa
         and #$7                 ; (xc and 7)
 
-        ; carica dalla tabella il pixel da accendere
+        ; ................. graphMode320x200
 
-        ; se graphMode=graphMode320x200
+        ; carica dalla tabella il pixel da accendere
         tax
         lda TabPower2,x         ; 2^(7-(xc and 7))
-
-        ; se graphMode=graphMode160x200
-        ; ...
 
         ldx _graphDrawMode
         beq graphSetPixelOFF:
@@ -443,7 +442,250 @@ graphSetPixelEND:
 
         rts
 
+
+        ; ................. graphMode3160x200
+
+mgraphPixel:
+
+        ldx _graphDrawMode
+
+        cpx #0
+        beq mgraphPixel00:
+
+        cpx #1
+        beq mgraphPixel01:
+
+        cpx #2
+        beq mgraphPixel10:
+
+        cpx #3
+        beq mgraphPixel11:
+
+        rts
+
+mgraphPixel00:
+
+        graphSetColor #0
+        jsr graphSetPixel:
+
+        ;graphSetColor #0
+        inc $fb
+        jsr graphSetPixel:
+
+        jmp mgraphPixelEND:
+
+mgraphPixel01:
+
+        graphSetColor #0
+        jsr graphSetPixel:
+
+        graphSetColor #1
+        inc $fb 
+        jsr graphSetPixel:
+
+        jmp mgraphPixelEND:
+
+mgraphPixel10:
+
+        graphSetColor #1
+        jsr graphSetPixel:
+
+        graphSetColor #0
+        inc $fb 
+        jsr graphSetPixel:
+
+        jmp mgraphPixelEND:
+
+mgraphPixel11:
+
+        graphSetColor #1
+        jsr graphSetPixel:
+
+        ;graphSetColor #1
+        inc $fb 
+        jsr graphSetPixel:
+
+        ;jmp mgraphPixelEND:
+
+mgraphPixelEND:
+
+        jsr cdRomEnable:
+
+        rts
+
 ; .................................................... Macro
+
+
+testHiresColor:
+
+        graphHiresColor #cBlack,#cWhite
+
+        ;  ................................ plot point      
+
+        graphSetColor #1
+
+        lda #0    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #0
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #2    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #2
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #4    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #4
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #6    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #6
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #8    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #8
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #10    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #10
+        sta $fb
+        jsr graphSetPixel:
+
+        lda #12    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #12
+        sta $fb
+        jsr graphSetPixel:
+
+        lda #14    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #14
+        sta $fb
+        jsr graphSetPixel:
+
+        ;
+
+        ;jsr cdTextColor:
+
+        rts
+
+testMultiColor:
+
+        graphMultiColor #cCyan,#cYellow,#cRed,#cWhite
+
+        graphSetColor #1
+
+        lda #0    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #0
+        sta $fb
+        jsr mgraphPixel:
+
+        graphSetColor #2
+
+        lda #2    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #2
+        sta $fb
+        jsr mgraphPixel:
+
+        graphSetColor #3
+
+        lda #4    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #4
+        sta $fb
+        jsr mgraphPixel:
+
+        graphSetColor #0
+
+        lda #6    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #6
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #1
+
+        lda #8    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #8
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #2
+
+        lda #10    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #10
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #3
+
+        lda #12    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #12
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #2
+
+        lda #14    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #14
+        sta $fb
+        jsr mgraphPixel:
+
+        ;jsr cdTextColor:
+
+        rts
 
 
 ; .................................................... MAIN
@@ -452,53 +694,12 @@ graphSetPixelEND:
  
 main:
 
-    graphHiresColor #cBlack,#cWhite
+        ;jsr testHiresColor:
+        jsr testMultiColor:
 
-    ;graphMultiColor #cCyan,#cYellow,#cRed,#cGreen
-
-    ;  ................................ plot point      
+        rts
 
 
-    graphSetColor #1
-
-    lda #$00    ;       y
-    sta $fc
-    lda #$00    ;       x
-    sta $fa
-    lda #$00
-    sta $fb
-    jsr graphSetPixel:
-
-    lda #$01    ;       y
-    sta $fc
-    lda #$00    ;       x
-    sta $fa
-    lda #$01
-    sta $fb
-    jsr graphSetPixel:
-
-    lda #$02    ;       y
-    sta $fc
-    lda #$00    ;       x
-    sta $fa
-    lda #$02
-    sta $fb
-    jsr graphSetPixel:
-
-    graphSetColor #0
-    lda #$01    ;       y
-    sta $fc
-    lda #$00    ;       x
-    sta $fa
-    lda #$01
-    sta $fb
-    jsr graphSetPixel:
-
-    ;
-
-    ;jsr cdTextColor:
-
-    rts
 ;;;
 ;;
 ;
