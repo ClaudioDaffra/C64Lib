@@ -7,12 +7,31 @@
 
 *= $c000
 
-        lda #<cBasic:    
+        lda #147        ; clear screen
+        jsr $ffd2
+
+        ldy #>cdTitle   ; prompt message 
+        lda #<cdTitle     
+        jsr STROUT 
+
+
+        lda #<cBasic:   ; add command parser    
         sta $0308    
         lda #>cBasic:
         sta $0309
 
         rts
+
+; ....................................................
+
+cdTitle 
+
+    byte $0d
+    text "    **** commodore 64 cdbasic v1 ****    "
+    byte $0d
+    text "basic 39k/64k bytes free, highmem bitmap"
+    text "            by claudio daffra : gpl 2022"
+    byte $00
 
 ; ....................................................
 
