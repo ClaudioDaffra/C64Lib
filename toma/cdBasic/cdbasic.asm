@@ -1,7 +1,105 @@
+; ....................................................
+
+; cBasic
+
+; ....................................................
+
 
 *= $c000
 
-    jmp main:
+        lda #<cBasic:    
+        sta $0308    
+        lda #>cBasic:
+        sta $0309
+
+        rts
+
+; ....................................................
+
+CHRGET  = $0073
+CHRGOT  = $0079
+SNERR   = $AF08
+NEWSTT  = $a7ae
+GONE    = $a7e4
+STROUT  = $ab1e
+
+charAt  = $40   ;       @
+charG   = $47   ;       H
+charH   = $48   ;       H
+charR   = $52   ;       R
+
+; ....................................................
+
+
+cBasic:
+
+        jsr CHRGET              ; prendi carattere
+       
+        cmp #charAt
+        beq newdispatch:
+         
+        jmp GONE+3
+
+        rts
+
+newdispatch:
+
+        jsr CHRGET              ; nuovo carattere
+        
+        cmp #charG
+        beq newdispatch_H:
+
+        jmp SNERR 
+
+newdispatch_H:
+
+        jsr CHRGET              ; nuovo carattere
+        
+        cmp #charH
+        beq newdispatch_HR:
+
+        jmp SNERR       
+
+newdispatch_HR: ; @GH7,6
+
+        ;-------------------
+
+        jsr cdHiresColor:       ; grafica 320x200
+
+        jsr $b79e               ; get byte into .x
+        stx $fb
+
+        jsr $aefd               ; skip comma
+
+        jsr $b79e               ; get byte into .x
+        stx $fc
+
+        jsr cdBitmapScreenColor:
+
+        jsr cdBitmapClear:
+
+        lda #graphMode320x200
+        sta graphMode
+
+        ;-------------------
+                
+        jmp newdispatchSTMT:
+
+        rts
+
+newdispatchSTMT:
+
+        jsr CHRGET  
+        jmp NEWSTT
+
+        rts
+
+; ....................................................
+
+
+; ....................................................
+  
+    ;jmp main:
     
 ; .................................................... Global
 
@@ -342,42 +440,6 @@ TabLowE000
         byte $00,$40,$80,$c0
         byte $00
 
-TabPower2_11        
-
-        byte %11000000
-        byte %11000000
-        byte %00110000
-        byte %00110000
-        byte %00001100
-        byte %00001100
-        byte %00000011
-        byte %00000011
-
-TabPower2_10        
-
-        byte %10000000
-        byte %10000000
-        byte %00100000
-        byte %00100000
-        byte %00001000
-        byte %00001000
-        byte %00000010
-        byte %00000010
-        
-TabPower2_01        
-
-        byte %01000000
-        byte %01000000
-        byte %00010000
-        byte %00010000
-        byte %00000100
-        byte %00000100
-        byte %00000001
-        byte %00000001
-
- 
- 
- 
 ; .................................................... graphSetPixel ON/FF
 ;
 ;  INPUT :
