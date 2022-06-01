@@ -14,6 +14,7 @@
         lda #<cdTitle     
         jsr STROUT 
 
+
         lda #<cBasic:   ; add command parser    
         sta $0308    
         lda #>cBasic:
@@ -43,33 +44,16 @@ STROUT          = $ab1e
 GETBYTE_CHRGET  = $b79e
 
 charAt  = $40   ;       @
-charC   = $43   ;       C
-charG   = $47   ;       G
+charG   = $47   ;       H
 charH   = $48   ;       H
 charR   = $52   ;       R
 charT   = $54   ;       T
 charDP  = $3a   ;       :
 
-
-; .................................................... Global
-
-graphBitMapAddr         =       $E000
-graphMode320x200        =       0
-graphMode160x200        =       1
-graphMode40x25          =       2
-
-graphMode 
-      
-        byte  graphMode40x25    ; modalità grafica
-
-_graphDrawMode  
-
-        byte  255               ; 0 1 erase/put color 0 1 2 3
-
 ; ....................................................
 
-cBasic:
 
+cBasic:
 
 ; ........................................... switch level 0
 
@@ -105,9 +89,6 @@ newdispatch_G:
         cmp #charT
         beq newdispatch_GT:
 
-        cmp #charC
-        beq newdispatch_GC:
-
         jmp SNERR  
 
 ; ........................................... switch level 2
@@ -127,15 +108,7 @@ newdispatch_GT: ; @GT
                 
         jmp newdispatchSTMT:
 
-newdispatch_GC: ; @GC1 ( 0 ON 1 Off - 0123 Multi Color )
-
-        jsr cbBasicGraphColor:
-
-        jmp NEWSTT 
-
-; ........................................... 
-
-newdispatchSTMT:  
+newdispatchSTMT:
 
         jsr CHRGET
 
@@ -145,9 +118,9 @@ newdispatchSTMT:
 
 ; .................................................... cBasic LBRARY
 
-; cbBasicGraphHires:    @GH
-; cbBasicGraphText:     @GT
-; cbBasicGraphColor:    @GC
+; cbBasicGraphHires:
+; cbBasicGraphText:
+
 ; ....................................................
 
 cbBasicHiresColor:
@@ -180,22 +153,24 @@ cbBasicGraphText:
 
         rts
 
-cbBasicGraphColor:
-
-        ;jsr $b79e               ; get byte into .x && get new char
-        ;stx _graphDrawMode
-
-        ; KLUDGE
-
-        jsr CHRGET
-        clc
-        sbc #$2f                ;'0'-1
-        sta _graphDrawMode     
-        jsr CHRGET
-
-        rts
-
 ; ....................................................
+  
+    ;jmp main:
+    
+; .................................................... Global
+
+graphBitMapAddr         =       $E000
+graphMode320x200        =       0
+graphMode160x200        =       1
+graphMode40x25          =       2
+
+graphMode 
+      
+        byte  graphMode40x25    ; modalità grafica
+
+_graphDrawMode  
+
+        bytes 0                 ; 0 1 erase/put color 0 1 2 3
 
 ; .................................................... Color
 
@@ -652,6 +627,191 @@ mgraphPixel11:
 mgraphPixelEND:
 
         jsr cdRomEnable:
+
+        rts
+
+; .................................................... Macro
+
+testHiresColor:
+
+        graphHiresColor #cBlack,#cWhite
+
+        ;  ................................ plot point      
+
+        graphSetColor #1
+
+        lda #0    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #0
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #2    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #2
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #4    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #4
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #6    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #6
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #8    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #8
+        sta $fb
+        jsr graphSetPixel:
+
+
+        lda #10    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #10
+        sta $fb
+        jsr graphSetPixel:
+
+        lda #12    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #12
+        sta $fb
+        jsr graphSetPixel:
+
+        lda #14    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #14
+        sta $fb
+        jsr graphSetPixel:
+
+        ;
+
+        ;jsr cdTextColor:
+
+        rts
+
+testMultiColor:
+
+        graphMultiColor #cCyan,#cYellow,#cRed,#cWhite
+
+        graphSetColor #1
+
+        lda #0    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #0
+        sta $fb
+        jsr mgraphPixel:
+
+        graphSetColor #2
+
+        lda #2    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #2
+        sta $fb
+        jsr mgraphPixel:
+
+        graphSetColor #3
+
+        lda #4    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #4
+        sta $fb
+        jsr mgraphPixel:
+
+        graphSetColor #0
+
+        lda #6    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #6
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #1
+
+        lda #8    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #8
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #2
+
+        lda #10    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #10
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #3
+
+        lda #12    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #12
+        sta $fb
+        jsr mgraphPixel:
+
+       graphSetColor #2
+
+        lda #14    ;       y
+        sta $fc
+        lda #0    ;       x
+        sta $fa
+        lda #14
+        sta $fb
+        jsr mgraphPixel:
+
+        ;jsr cdTextColor:
+
+        rts
+
+
+; .................................................... MAIN
+
+;*= $0801
+ 
+main:
+
+        ;jsr testHiresColor:
+        jsr testMultiColor:
 
         rts
 
