@@ -43,9 +43,12 @@ STROUT          = $ab1e
 GETBYTE_CHRGET  = $b79e
 
 charAt  = $40   ;       @
+charB   = $42   ;       B
 charC   = $43   ;       C
 charG   = $47   ;       G
 charH   = $48   ;       H
+
+charP   = $50   ;       P
 charR   = $52   ;       R
 charT   = $54   ;       T
 charDP  = $3a   ;       :
@@ -64,12 +67,13 @@ graphMode
 
 _graphDrawMode  
 
-        byte  255               ; 0 1 erase/put color 0 1 2 3
+        byte  0                ; 0 1 erase/put color 0 1 2 3
 
 ; ....................................................
 
 cBasic:
 
+; ....................................................
 
 ; ........................................... switch level 0
 
@@ -93,6 +97,9 @@ newdispatch:
         cmp #charG
         beq newdispatch_G:
 
+        cmp #charB
+        beq newdispatch_B:
+
         jmp SNERR 
 
 newdispatch_G:
@@ -110,6 +117,15 @@ newdispatch_G:
 
         jmp SNERR  
 
+newdispatch_B:
+
+        jsr CHRGET 
+        
+        cmp #charP
+        beq newdispatch_BP:
+
+        jmp SNERR  
+
 ; ........................................... switch level 2
 
 newdispatch_GH: ; @GH7,6
@@ -121,7 +137,7 @@ newdispatch_GH: ; @GH7,6
         ; IMP : ESCE GIA' con nuovo carattere
         ; ERR : jmp newdispatchSTMT:
 
-newdispatch_GT: ; @GT
+newdispatch_GT: ; @GT VOID
 
         jsr cbBasicGraphText:
                 
@@ -130,6 +146,14 @@ newdispatch_GT: ; @GT
 newdispatch_GC: ; @GC1 ( 0 ON 1 Off - 0123 Multi Color )
 
         jsr cbBasicGraphColor:
+
+        jmp NEWSTT 
+
+newdispatch_BP: ; @BP VOID
+
+        jsr cbBasicDrawPixel:
+   
+        ;jmp newdispatchSTMT: ; se void
 
         jmp NEWSTT 
 
@@ -148,11 +172,16 @@ newdispatchSTMT:
 ; cbBasicGraphHires:    @GH
 ; cbBasicGraphText:     @GT
 ; cbBasicGraphColor:    @GC
+
+; cbBasicGraphColor:    @BP
+
 ; ....................................................
 
 cbBasicHiresColor:
 
         jsr cdHiresColor:       ; grafica 320x200
+
+        jsr CHRGET
 
         jsr $b79e               ; get byte into .x && get new char
         stx $fb
@@ -182,16 +211,26 @@ cbBasicGraphText:
 
 cbBasicGraphColor:
 
-        ;jsr $b79e               ; get byte into .x && get new char
-        ;stx _graphDrawMode
+        jsr CHRGET
+        jsr $b79e               ; get byte into .x && get new char
+        stx _graphDrawMode
 
-        ; KLUDGE
+        rts
+
+cbBasicDrawPixel:
 
         jsr CHRGET
-        clc
-        sbc #$2f                ;'0'-1
-        sta _graphDrawMode     
-        jsr CHRGET
+        jsr $b79e               ; get byte into .x && get new char
+        stx $fa
+        jsr $aefd               ; skip comma
+
+        jsr $b79e               ; get byte into .x && get new char
+        stx $fb
+        jsr $aefd               ; skip comma
+
+        jsr $b79e               ; get byte into .x && get new char
+        stx $fc
+
 
         rts
 
