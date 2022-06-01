@@ -30,29 +30,36 @@ cdTitle
     text "    **** commodore 64 cdbasic v1 ****    "
     byte $0d
     text "basic 39k/64k bytes free, highmem bitmap"
-    text "            by claudio daffra : gpl 2022"
+    ;text "            by claudio daffra : gpl 2022"
     byte $00
 
 ; ....................................................
 
-CHRGET  = $0073
-CHRGOT  = $0079
-SNERR   = $AF08
-NEWSTT  = $a7ae
-GONE    = $a7e4
-STROUT  = $ab1e
+CHRGET          = $0073
+CHRGOT          = $0079
+SNERR           = $AF08
+NEWSTT          = $a7ae
+GONE            = $a7e4
+STROUT          = $ab1e
+GETBYTE_CHRGET  = $b79e
 
 charAt  = $40   ;       @
 charG   = $47   ;       H
 charH   = $48   ;       H
 charR   = $52   ;       R
+charT   = $54   ;       T
+charDP  = $3a   ;       :
 
 ; ....................................................
 
 
 cBasic:
 
+; ........................................... switch level 0
+
         jsr CHRGET              ; prendi carattere
+
+cBasicCont:
        
         cmp #charAt
         beq newdispatch:
@@ -61,36 +68,71 @@ cBasic:
 
         rts
 
+; ........................................... switch level 1
+
 newdispatch:
 
-        jsr CHRGET              ; nuovo carattere
+        jsr CHRGET 
         
         cmp #charG
-        beq newdispatch_H:
+        beq newdispatch_G:
 
         jmp SNERR 
 
-newdispatch_H:
+newdispatch_G:
 
-        jsr CHRGET              ; nuovo carattere
+        jsr CHRGET 
         
         cmp #charH
-        beq newdispatch_HR:
+        beq newdispatch_GH:
 
-        jmp SNERR       
+        cmp #charT
+        beq newdispatch_GT:
 
-newdispatch_HR: ; @GH7,6
+        jmp SNERR  
 
-        ;-------------------
+; ........................................... switch level 2
+
+newdispatch_GH: ; @GH7,6
+
+        jsr cbBasicHiresColor:
+          
+        jmp NEWSTT 
+
+        ; IMP : ESCE GIA' con nuovo carattere
+        ; ERR : jmp newdispatchSTMT:
+
+newdispatch_GT: ; @GT
+
+        jsr cbBasicGraphText:
+                
+        jmp newdispatchSTMT:
+
+newdispatchSTMT:
+
+        jsr CHRGET
+
+        jmp NEWSTT
+
+        rts
+
+; .................................................... cBasic LBRARY
+
+; cbBasicGraphHires:
+; cbBasicGraphText:
+
+; ....................................................
+
+cbBasicHiresColor:
 
         jsr cdHiresColor:       ; grafica 320x200
 
-        jsr $b79e               ; get byte into .x
+        jsr $b79e               ; get byte into .x && get new char
         stx $fb
 
         jsr $aefd               ; skip comma
 
-        jsr $b79e               ; get byte into .x
+        jsr $b79e               ; get byte into .x && get new char
         stx $fc
 
         jsr cdBitmapScreenColor:
@@ -100,21 +142,16 @@ newdispatch_HR: ; @GH7,6
         lda #graphMode320x200
         sta graphMode
 
-        ;-------------------
-                
-        jmp newdispatchSTMT:
-
         rts
 
-newdispatchSTMT:
+cbBasicGraphText:
 
-        jsr CHRGET  
-        jmp NEWSTT
+        jsr cdTextColor:
+
+        lda #graphMode40x25
+        sta graphMode
 
         rts
-
-; ....................................................
-
 
 ; ....................................................
   
@@ -523,7 +560,6 @@ graphSetPixelEND:
 
         rts
 
-
         ; ................. graphMode3160x200
 
 mgraphPixel:
@@ -595,7 +631,6 @@ mgraphPixelEND:
         rts
 
 ; .................................................... Macro
-
 
 testHiresColor:
 
