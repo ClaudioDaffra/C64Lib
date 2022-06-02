@@ -21,7 +21,7 @@
 
         rts
 
-; ....................................................
+; .................................................... COPYRIGHT
 
 cdTitle 
 
@@ -32,7 +32,7 @@ cdTitle
     ;text "            by claudio daffra : gpl 2022"
     byte $00
 
-; ....................................................
+; .................................................... KERNAL
 
 CHRGET          = $0073
 CHRGOT          = $0079
@@ -41,6 +41,10 @@ NEWSTT          = $a7ae
 GONE            = $a7e4
 STROUT          = $ab1e
 GETBYTE_CHRGET  = $b79e
+GETDEC          = $A96B
+printNumAX      = $BDCD
+
+; .................................................... PETASCII
 
 charAt  = $40   ;       @
 charB   = $42   ;       B
@@ -128,32 +132,27 @@ newdispatch_B:
 
 ; ........................................... switch level 2
 
-newdispatch_GH: ; @GH7,6
+newdispatch_GH: ; @GH background,foreground :: ( byte,byte )
 
         jsr cbBasicHiresColor:
           
         jmp NEWSTT 
 
-        ; IMP : ESCE GIA' con nuovo carattere
-        ; ERR : jmp newdispatchSTMT:
-
 newdispatch_GT: ; @GT VOID
 
         jsr cbBasicGraphText:
                 
-        jmp newdispatchSTMT:
+        jmp newdispatchSTMT:;   ( void )
 
-newdispatch_GC: ; @GC1 ( 0 ON 1 Off - 0123 Multi Color )
+newdispatch_GC: ; @GC1 col  :: ( 0 ON 1 Off - 0123 Multi Color )
 
         jsr cbBasicGraphColor:
 
         jmp NEWSTT 
 
-newdispatch_BP: ; @BP VOID
+newdispatch_BP: ; @BP  x,y  :: ( word , byte )
 
         jsr cbBasicDrawPixel:
-   
-        ;jmp newdispatchSTMT: ; se void
 
         jmp NEWSTT 
 
@@ -173,11 +172,11 @@ newdispatchSTMT:
 ; cbBasicGraphText:     @GT
 ; cbBasicGraphColor:    @GC
 
-; cbBasicGraphColor:    @BP
+; cbBasicBitmapPixel:   @BP     ,       @PX
 
 ; ....................................................
 
-cbBasicHiresColor:
+cbBasicHiresColor:       ; @gh
 
         jsr cdHiresColor:       ; grafica 320x200
 
@@ -200,7 +199,7 @@ cbBasicHiresColor:
 
         rts
 
-cbBasicGraphText:
+cbBasicGraphText:       ; @gt
 
         jsr cdTextColor:
 
@@ -209,7 +208,10 @@ cbBasicGraphText:
 
         rts
 
-cbBasicGraphColor:
+cbBasicGraphColor:       ; @gc
+
+        ; TODO if hires check color < 2
+        ; TODO if lorer check color < 4
 
         jsr CHRGET
         jsr $b79e               ; get byte into .x && get new char
@@ -217,19 +219,29 @@ cbBasicGraphColor:
 
         rts
 
-cbBasicDrawPixel:
+cbBasicDrawPixel:       ; @bp
 
         jsr CHRGET
-        jsr $b79e               ; get byte into .x && get new char
-        stx $fa
-        jsr $aefd               ; skip comma
+        JSR $AD8A       ;        get non string value
+        JSR $B7F7       ;        convert float ti integer in $14/$15
 
-        jsr $b79e               ; get byte into .x && get new char
-        stx $fb
-        jsr $aefd               ; skip comma
+        lda $14         ;       [X]:word
+        sta $fa
+        lda $15
+        sta $fb
 
-        jsr $b79e               ; get byte into .x && get new char
-        stx $fc
+        JSR $AEFD       ;       comma
+
+        jsr $b79e       ;       get byte into .x && get new char
+        stx $fc         ;       [Y]:byte
+
+
+        ; TODO check x <320
+        ; TODO check y <200
+
+        ; TODO check _graphDrawMode 
+        ; 0     :  jsr graphSetPixel:
+        ; 1     :  jsr mgraphSetPixel:     
 
 
         rts
@@ -432,7 +444,6 @@ cdBitmapScreenColor:
     asl
     ora $fc
 
-
 cdBitmapScreenColorCustom:  
   
     ldx #$04
@@ -468,7 +479,6 @@ defm graphHiresColor
         sta graphMode
 
         endm
-
 
 defm graphMultiColor
 
@@ -528,9 +538,9 @@ pointXlo        =       $fb
  
 ; .................................................... table power 2
 
-TabPower2       ; posizione del pixel da accenre o spegnere
+TabPower2       ; posizione del pixel da accendere o spegnere
 
-        byte $80,$40,$20,$10,$08,$04,$02,$01
+        ;byte $80,$40,$20,$10,$08,$04,$02,$01
         byte %10000000
         byte %01000000
         byte %00100000
