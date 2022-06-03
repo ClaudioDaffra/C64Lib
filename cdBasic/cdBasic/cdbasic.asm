@@ -242,6 +242,7 @@ newdispatchSTMT:
 ; cbBasicGraphHires:    @GH
 ; cbBasicGraphText:     @GT
 ; cbBasicGraphColor:    @GC
+; cbBasicGraphColor:    @GM
 ; cbBasicBitmapPixel:   @BPX
 
 ; ....................................................
@@ -275,6 +276,8 @@ cbBasicHiresColor:              ; @gh  bg,fg
 
 
 cbBasicGraphMultiColor:         ; @gm  c0,c1,c2,c3
+
+        ; TODO get 4 parameter byte
 
         ; grafica 160x200
         jsr cdMultiColor:
@@ -351,6 +354,8 @@ cbBasicGraphText:               ; @gt   ext     ( 0 off , 1 on )
         ora #%01000000
         sta $d011
 
+        ; TODO get 4 parameter byte
+
         ;  get 4 color
 
         jsr CHRGET
@@ -424,8 +429,8 @@ cbBasicDrawPixel:       ; @bpx
         cmp #graphMode320x200
         beq cbBasicDrawPixelHR:
 
-        ;cmp #graphMode160x200
-        ;beq cbBasicDrawPixelMC:
+        cmp #graphMode160x200
+        beq cbBasicDrawPixelMC:
 
         rts
 
@@ -804,6 +809,8 @@ graphSetPixelEND:
 mgraphPixel:
 
         ; TODO x*=2
+
+        ; fa(x_hi)::fb(x_lo) fc(y)
 
         ldx _graphDrawMode
 
