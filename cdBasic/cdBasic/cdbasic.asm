@@ -1,3 +1,10 @@
+
+;       TODO start in bank4
+;       TODO basic pointer -1024
+;       TODO screen address to cc00
+;       TODO @ht stay in bank 4
+;       TODO get memory free
+
 ; ....................................................
 
 ; cBasic
@@ -43,6 +50,34 @@ GETBYTE_CHRGET  = $b79e
 GETDEC          = $A96B
 printNumAX      = $BDCD
 
+; .................................................... Color
+
+cBlack          =       0               ;       0000
+cWhite          =       1               ;       0001
+cRed            =       2               ;       0010
+cCyan           =       3               ;       0011
+cViolet         =       4               ;       0100
+cGreen          =       5               ;       0101
+cBlue           =       6               ;       0110
+cYellow         =       7               ;       0111
+
+cOrange         =       8               ;       1000
+cBrown          =       9               ;       1001
+cLightRed       =       10              ;       1010
+cDarkGrey       =       11              ;       1011
+cGrey2          =       12              ;       1100
+cLightGreen     =       13              ;       1101
+cLightBlue      =       14              ;       1110
+cLightGrey      =       15              ;       1111
+
+cColor0         =       0
+cColor1         =       1
+cColor2         =       2
+cColor3         =       3
+
+cBackGroundColor         =       0
+cForeGroundColor         =       1        
+
 ; .................................................... PETASCII
 
 charAt  = $40   ;       @
@@ -54,6 +89,8 @@ charH   = $48   ;       H
 charP   = $50   ;       P
 charR   = $52   ;       R
 charT   = $54   ;       T
+charX   = $58   ;       X
+
 charDP  = $3a   ;       :
 
 
@@ -81,7 +118,7 @@ _screenAddr
 
 ;
 
-; ....................................................
+; .................................................... cBasic
 
 cBasic:
 
@@ -93,8 +130,6 @@ cBasic:
 
         jsr CHRGET              ; prendi carattere
 
-cBasicCont:
-       
         cmp #charAt
         beq newdispatch:
          
@@ -148,7 +183,7 @@ newdispatch_GH: ; @GH background,foreground :: ( byte,byte )
           
         jmp NEWSTT 
 
-newdispatch_GT: ; @GT ext
+newdispatch_GT: ; @GT ext,(1,2,3,4)
 
         jsr cbBasicGraphText:
                 
@@ -162,7 +197,20 @@ newdispatch_GC: ; @GC1 col  :: ( 0 ON 1 Off - 0123 Multi Color )
 
         jmp NEWSTT 
 
+; ...........................................
+
 newdispatch_BP: ; @BP  x,y  :: ( word , byte )
+
+        jsr CHRGET 
+
+        cmp #charX
+        beq newdispatch_BPX:
+
+        jmp SNERR 
+
+; ........................................... switch level 3
+
+newdispatch_BPX:
 
         jsr cbBasicDrawPixel:
 
@@ -183,12 +231,11 @@ newdispatchSTMT:
 ; cbBasicGraphHires:    @GH
 ; cbBasicGraphText:     @GT
 ; cbBasicGraphColor:    @GC
-
-; cbBasicBitmapPixel:   @BP     ,       @PX
+; cbBasicBitmapPixel:   @BPX
 
 ; ....................................................
 
-cbBasicHiresColor:       ; @gh  bg,fg
+cbBasicHiresColor:              ; @gh  bg,fg
 
         jsr cdHiresColor:       ; grafica 320x200
 
@@ -286,21 +333,22 @@ cbBasicGraphColor:       ; @gc
 
 ;..............................................................
 
-cbBasicDrawPixel:       ; @bp
+cbBasicDrawPixel:       ; @bpx
 
         jsr CHRGET
         JSR $AD8A       ;        get non string value
         JSR $B7F7       ;        convert float ti integer in $14/$15
 
-        lda $14         ;       [X]:word
-        sta $fa
+        lda $14         ;       [X]:word        fa:fb
+        sta $fb         ;       HI 14/LO
+
         lda $15
-        sta $fb
+        sta $fa         ;       LO  14/HI        
 
         JSR $AEFD       ;       comma
 
         jsr $b79e       ;       get byte into .x && get new char
-        stx $fc         ;       [Y]:byte
+        stx $fc         ;       [Y]:byte        fc
 
 
         ; TODO check x <320
@@ -308,42 +356,31 @@ cbBasicDrawPixel:       ; @bp
 
         ; TODO check _graphDrawMode 
         ; 0     :  jsr graphSetPixel:
-        ; 1     :  jsr mgraphSetPixel:     
+        ; 1     :  jsr mgraphSetPixel: 
+    
+        lda graphMode
 
+        cmp #graphMode320x200
+        beq cbBasicDrawPixelHR:
+
+        ;cmp #graphMode160x200
+        ;beq cbBasicDrawPixelMC:
+
+        rts
+
+cbBasicDrawPixelHR:
+        
+        jmp graphSetPixel:      ; disegna pixel Hires Color
+
+        rts
+
+cbBasicDrawPixelMC:
+        
+        jmp mgraphPixel:        ; disegna pixel Multi Color
 
         rts
 
 ; ....................................................
-
-; .................................................... Color
-
-cBlack          =       0               ;       0000
-cWhite          =       1               ;       0001
-cRed            =       2               ;       0010
-cCyan           =       3               ;       0011
-cViolet         =       4               ;       0100
-cGreen          =       5               ;       0101
-cBlue           =       6               ;       0110
-cYellow         =       7               ;       0111
-
-cOrange         =       8               ;       1000
-cBrown          =       9               ;       1001
-cLightRed       =       10              ;       1010
-cDarkGrey       =       11              ;       1011
-cGrey2          =       12              ;       1100
-cLightGreen     =       13              ;       1101
-cLightBlue      =       14              ;       1110
-cLightGrey      =       15              ;       1111
-
-cColor0         =       0
-cColor1         =       1
-cColor2         =       2
-cColor3         =       3
-cBackGroundColor         =       0
-cForeGroundColor         =       1        
-
-; .................................................... 
-
 
 cdGrafOn:       ;   void
 
@@ -607,7 +644,7 @@ pointXlo        =       $fb
 
 TabPower2       ; posizione del pixel da accendere o spegnere
 
-        ;byte $80,$40,$20,$10,$08,$04,$02,$01
+        byte $80,$40,$20,$10,$08,$04,$02,$01
         byte %10000000
         byte %01000000
         byte %00100000
