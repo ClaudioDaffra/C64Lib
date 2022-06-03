@@ -86,6 +86,8 @@ charC   = $43   ;       C
 charG   = $47   ;       G
 charH   = $48   ;       H
 
+charM   = $4d   ;       M
+
 charP   = $50   ;       P
 charR   = $52   ;       R
 charT   = $54   ;       T
@@ -164,6 +166,9 @@ newdispatch_G:
         cmp #charC
         beq newdispatch_GC:
 
+        cmp #charM
+        beq newdispatch_GM:
+
         jmp SNERR  
 
 newdispatch_B:
@@ -194,6 +199,12 @@ newdispatch_GT: ; @GT ext,(1,2,3,4)
 newdispatch_GC: ; @GC1 col  :: ( 0 ON 1 Off - 0123 Multi Color )
 
         jsr cbBasicGraphColor:
+
+        jmp NEWSTT 
+
+newdispatch_GM: ; @GM0,1,2,3
+
+        jsr cbBasicGraphMultiColor:
 
         jmp NEWSTT 
 
@@ -259,6 +270,56 @@ cbBasicHiresColor:              ; @gh  bg,fg
         ; TODO _screenAddr
 
         rts
+
+; ....................................................
+
+
+cbBasicGraphMultiColor:         ; @gm  c0,c1,c2,c3
+
+        ; grafica 160x200
+        jsr cdMultiColor:
+
+        jsr CHRGET
+
+        jsr $b79e               ; get byte into .x && get new char
+        stx $d021               ; setta col #0 Multi Color
+
+        jsr $aefd               ; skip comma
+
+        ; setta cc00 col #2 #3
+
+        jsr $b79e               ; get byte into .x && get new char
+        stx $fc                 ; #2               
+
+        jsr $aefd               ; skip comma
+
+        jsr $b79e               ; get byte into .x && get new char
+        stx $fb                 ; #3              
+
+        jsr $aefd               ; skip comma
+
+        jsr cdBitmapScreenColor:
+
+        jsr cdBitmapClear:
+
+        jsr $b79e               ; get byte into .x && get new char
+        stx $fb                 ; #4      
+
+        ; setta col #4 Multi Color
+        lda #$d8
+        sta $fa
+        lda #$00
+        sta $f9
+
+        jsr cdBitmapScreenColorCustom: 
+
+        lda #graphMode160x200
+        sta graphMode
+
+        ; TODO _screenAddr
+
+        rts
+
 
 ;..............................................................
 

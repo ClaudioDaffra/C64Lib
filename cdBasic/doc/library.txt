@@ -7,18 +7,27 @@ CD Basic
 
 Graph Hires BackGroundColor, ForeGroundColor
 
+--------------------------------------------- @gm
+@gm [col0,col1,col2,col3]
+
+Graph Multi Color c0,c1,c2,c3
 
 --------------------------------------------- @gt
-@gt  0
-@gt  1,c0,c1,c2,c3
+@gt  [0]
+@gt  [1],[c0,c1,c2,c3]
 
 Graph Text 0
 Graph Text 1 Extended , col1 , col2 , col3 , col4
 
-p.s. GT extende non va usato con MultiColor Res
+p.s. GT extended non va usato con MultiColor Res
+
+--------------------------------------------- @gc
+@gt [mode]  0:hires off/text on , 
+            1:extende on (c0,c1,c2,c3)
 
 
-
+--------------------------------------------- @bpx
+@bpx x,y
 
 
 
