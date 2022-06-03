@@ -26,10 +26,9 @@
 cdTitle 
 
     byte $0d
-    text "    **** commodore 64 cdbasic v1 ****    "
+    text "   **** commodore 64 cd basic v1 ****    "
     byte $0d
     text "basic 39k/64k bytes free, highmem bitmap"
-    ;text "            by claudio daffra : gpl 2022"
     byte $00
 
 ; .................................................... KERNAL
@@ -58,26 +57,37 @@ charT   = $54   ;       T
 charDP  = $3a   ;       :
 
 
-; .................................................... Global
+; .................................................... #define
 
 graphBitMapAddr         =       $E000
 graphMode320x200        =       0
 graphMode160x200        =       1
 graphMode40x25          =       2
+graphMode40x25Ext       =       3
+
+; .................................................... #global
 
 graphMode 
       
-        byte  graphMode40x25    ; modalità grafica
+        byte  graphMode40x25   ; modalità grafica
 
 _graphDrawMode  
 
         byte  0                ; 0 1 erase/put color 0 1 2 3
+
+_screenAddr  
+
+        word  1024             ; screen address
+
+;
 
 ; ....................................................
 
 cBasic:
 
 ; ....................................................
+
+;
 
 ; ........................................... switch level 0
 
@@ -138,11 +148,13 @@ newdispatch_GH: ; @GH background,foreground :: ( byte,byte )
           
         jmp NEWSTT 
 
-newdispatch_GT: ; @GT VOID
+newdispatch_GT: ; @GT ext
 
         jsr cbBasicGraphText:
                 
-        jmp newdispatchSTMT:;   ( void )
+        ;jmp newdispatchSTMT:;   ( void )
+
+        jmp NEWSTT
 
 newdispatch_GC: ; @GC1 col  :: ( 0 ON 1 Off - 0123 Multi Color )
 
@@ -176,7 +188,7 @@ newdispatchSTMT:
 
 ; ....................................................
 
-cbBasicHiresColor:       ; @gh
+cbBasicHiresColor:       ; @gh  bg,fg
 
         jsr cdHiresColor:       ; grafica 320x200
 
@@ -197,16 +209,69 @@ cbBasicHiresColor:       ; @gh
         lda #graphMode320x200
         sta graphMode
 
+        ; TODO _screenAddr
+
         rts
 
-cbBasicGraphText:       ; @gt
+;..............................................................
+
+cbBasicGraphText:               ; @gt   ext     ( 0 off , 1 on )
 
         jsr cdTextColor:
+
+        ; default colour mode
 
         lda #graphMode40x25
         sta graphMode
 
+        lda $D011               ; OFF extend color mode
+        and #%10111111
+        sta $d011
+
+        jsr CHRGET
+        jsr $b79e               ; get byte into .x && get new char
+
+        cpx #$00                ; EXT OFF
+        beq cbBasicGraphTextExit:
+
+        ; extended colour mode
+
+        lda #graphMode40x25Ext
+        sta graphMode
+
+        lda $D011               ; ON extend color mode
+        ora #%01000000
+        sta $d011
+
+        ;  get 4 color
+
+        jsr CHRGET
+
+        jsr $b79e               ; #0 get byte into .x && get new char
+        stx 53281
+
+        JSR $AEFD               ;       comma
+
+        jsr $b79e               ; #1 get byte into .x && get new char
+        stx 53282
+
+        JSR $AEFD               ;       comma
+
+        jsr $b79e               ; #2 get byte into .x && get new char
+        stx 53283
+
+        JSR $AEFD               ;       comma
+
+        jsr $b79e               ; #3 get byte into .x && get new char
+        stx 53284
+
+        ;jmp newdispatchSTMT:;   ( void )
+
+cbBasicGraphTextExit:
+
         rts
+
+;..............................................................
 
 cbBasicGraphColor:       ; @gc
 
@@ -218,6 +283,8 @@ cbBasicGraphColor:       ; @gc
         stx _graphDrawMode
 
         rts
+
+;..............................................................
 
 cbBasicDrawPixel:       ; @bp
 
@@ -634,9 +701,11 @@ graphSetPixelEND:
 
         rts
 
-        ; ................. graphMode3160x200
+        ; ................. graphMode160x200
 
 mgraphPixel:
+
+        ; TODO x*=2
 
         ldx _graphDrawMode
 
