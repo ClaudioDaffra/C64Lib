@@ -23,7 +23,9 @@ int TESTgraphMultiColor ( void )
 	int x,y ;
 	unsigned int iterations ;
  	int count;
-	
+  
+    
+    
 	before = clock();
 	trigger = 10;
 	msec = 0 ;
@@ -44,11 +46,11 @@ int TESTgraphMultiColor ( void )
  
 	iterations=0;
     count=0;
+ 
+    graphLine(0,199,319,199) ;
 
-graphLine(0,199,319,199) ;
-
-		for ( x=0;x<160;x+=50)	
-			for ( y=0;y<200;y+=50)	
+		for ( x=0;x<160;x+=5)	
+			for ( y=0;y<200;y+=5)	
 			{
 				if (++count>3) count=1;
 				graphColor(count) ;

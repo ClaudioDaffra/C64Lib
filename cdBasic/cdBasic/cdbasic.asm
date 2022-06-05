@@ -90,6 +90,7 @@ charM   = $4d   ;       M
 
 charP   = $50   ;       P
 charR   = $52   ;       R
+charS   = $53   ;       S
 charT   = $54   ;       T
 charX   = $58   ;       X
 
@@ -128,7 +129,7 @@ cBasic:
 
 ;
 
-; ........................................... switch level 0
+; ---------------------------------------------  switch level 0
 
         jsr CHRGET              ; prendi carattere
 
@@ -139,7 +140,7 @@ cBasic:
 
         rts
 
-; ........................................... switch level 1
+; ---------------------------------------------  switch level 1
 
 newdispatch:
 
@@ -150,6 +151,9 @@ newdispatch:
 
         cmp #charB
         beq newdispatch_B:
+
+        cmp #charS
+        beq newdispatch_S:
 
         jmp SNERR 
 
@@ -180,7 +184,16 @@ newdispatch_B:
 
         jmp SNERR  
 
-; ........................................... switch level 2
+newdispatch_S:
+
+        jsr CHRGET 
+
+        cmp #charR
+        beq newdispatch_SR:
+
+        jmp SNERR 
+
+; ---------------------------------------------  switch level 2
 
 newdispatch_GH: ; @GH background,foreground :: ( byte,byte )
 
@@ -219,15 +232,30 @@ newdispatch_BP: ; @BP  x,y  :: ( word , byte )
 
         jmp SNERR 
 
-; ........................................... switch level 3
+newdispatch_SR:
 
-newdispatch_BPX:
+        jsr CHRGET 
+
+        cmp #charC
+        beq newdispatch_SRC:
+
+        jmp SNERR 
+
+; --------------------------------------------- switch level 3
+
+newdispatch_BPX:        ;       @BPX x,y
 
         jsr cbBasicDrawPixel:
 
         jmp NEWSTT 
 
-; ........................................... 
+newdispatch_SRC:        ;       @SRC R,C
+
+        jsr cbScreenRC:
+
+        jmp NEWSTT 
+
+; --------------------------------------------- end 
 
 newdispatchSTMT:  
 
@@ -244,6 +272,7 @@ newdispatchSTMT:
 ; cbBasicGraphColor:    @GC
 ; cbBasicGraphColor:    @GM
 ; cbBasicBitmapPixel:   @BPX
+; cbBasiccreenRC:       @SRC
 
 ; ....................................................
 
@@ -322,7 +351,6 @@ cbBasicGraphMultiColor:         ; @gm  c0,c1,c2,c3
         ; TODO _screenAddr
 
         rts
-
 
 ;..............................................................
 
@@ -446,7 +474,31 @@ cbBasicDrawPixelMC:
 
         rts
 
-; ....................................................
+;..............................................................
+
+cbScreenRC:
+
+        jsr CHRGET
+
+        jsr $b79e       ; get byte into .x && get new char
+        stx $02         ;Store .X in temporary location
+
+        JSR $AEFD       ;       comma
+
+        jsr $b79e       ; get byte into .x && get new char
+        ldy $02         ;Load .Y with previously saved/evaluated value
+
+        clc
+
+        jsr $fff0
+
+        rts
+
+; ******************
+;
+;       LIBRARY
+;
+; ******************
 
 cdGrafOn:       ;   void
 

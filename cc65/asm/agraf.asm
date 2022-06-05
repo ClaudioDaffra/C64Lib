@@ -197,25 +197,30 @@ _graphMultiColor:
 
 .PROC _graphSetColor4   
 
+         jsr _graphIntRomDisable
+   
          ldy #$00                ;       $00
 
 c2a4:    sta $d800,y            ;       1024-2048
          iny
          bne c2a4
 
-c2b4:    sta $d900,y
+c2b4:    sta $d8ff,y
          iny
          bne c2b4
 
-c2c4:     sta $da00,y
+c2c4:    sta $d9fe,y
          iny
          bne c2c4
 
-         ldy #$e8
+         ;ldy #$e8
 
-c2d4:    sta $db00,y
-         dey
+c2d4:    sta $daf9,y
+         ;dey
+         iny
          bne c2d4
+
+        jsr _graphIntRomEnable
 
         rts
 		
@@ -554,6 +559,8 @@ _plotPoint:
 
 _plotPointMC:
 
+    jsr _graphIntRomDisable
+
 	;...........................calc Y-cell, divide by 8	y/8 is y-cell table index
 
 	lda _pointY
@@ -621,7 +628,9 @@ _plotPointMC:
 	beq _plotPointMC_11	
 	
 	pla
-	
+
+    jsr _graphIntRomEnable
+    
 	rts
 
 _plotPointMC_00:
@@ -653,7 +662,7 @@ _plotPointMC_end:
 	
 	sta (gPointer),y 
 
-	;jsr _graphIntRomEnable
+	jsr _graphIntRomEnable
 	
 	rts
 
