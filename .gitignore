@@ -9,6 +9,7 @@ x
 *.prg
 *.tmp
 *.dbg
+cdBasicLoader.bas
 
 # Object files
 *.o
@@ -17,6 +18,8 @@ x
 *.ko
 *.obj
 *.elf
+
+
 
 # Precompiled Headers
 *.gch

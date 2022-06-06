@@ -437,7 +437,7 @@ cbBasicDrawPixel:       ; @bpx
         sta $fb         ;       HI 14/LO
 
         lda $15
-        sta $fa         ;       LO  14/HI        
+        sta $fa         ;       LO 14/HI        
 
         JSR $AEFD       ;       comma
 
@@ -469,7 +469,11 @@ cbBasicDrawPixelHR:
         rts
 
 cbBasicDrawPixelMC:
-        
+ 
+        ;fa/hi;fb/lo * 2
+        ASL $FB;LO
+        ROL $FA;HI
+
         jmp mgraphPixel:        ; disegna pixel Multi Color
 
         rts
