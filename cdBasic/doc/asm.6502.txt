@@ -1,0 +1,25 @@
+
+; ---------------------------- unsigned number 8 bit   :    comparison
+
+    ; unsigned number
+    
+    < BCC   ( Carry = 0 ) 
+    
+    >= BCS  ( Carry = 1 ) 
+
+
+    cmp #xx
+    
+    bcc label1: <
+    bcs label2: >=
+    beq label3: ==
+    bne label4: !=
+
+; ---------------------------- unsigned number 16 bit   :    *= 2
+
+       ;fa/hi;fb/lo * 2
+       
+       ASL $FB;LO
+       ROL $FA;HI
+       
+; ---------------------------- 
