@@ -1,10 +1,74 @@
 
+;--------------------------------------------   kernal basic 
 
-jsr CHRGET  ->  get new char
+CHRGET          =   $0073
+chrget          =   $0073
+CHRGOT          =   $0079
+chrgot          =   $0079
+SNERR           =   $AF08
+NEWSTT          =   $a7ae
+GONE            =   $a7e4
+STROUT          =   $ab1e
+GETBYTE_CHRGET  =   $b79e
+GETDEC          =   $A96B
+printNumAX      =   $BDCD
+ieval           =   $030a  
 
-jsr $b79e   ->  get byte into .x -> get new char
+;--------------------------------------------   usage   
+ 
+jsr CHRGET  ->  get new char    -> a
+
+jsr $b79e   ->  get byte into   -> x -> get new char
 stx $...
 
-JSR $AEFD   ->  get comma -> get new char
-       
+JSR $AEFD   ->  get comma       -> get new char
+
+;-------------------------------------------- hook basic command
+ 
+# ieval
+
+        lda #<evalhex:
+        sta ieval       ;   $030a
+        lda #>evalHex:
+        sta ieval+1     ;   $030a+1
+        rts
+        
+evalutate expression
+   
+;-------------------------------------------- hook basic expression
+ 
+    # ieval
+
+            lda #<evalhex:
+            sta ieval
+            lda #>evalHex:
+            sta ieval+1
+            rts
+            
+    evalutate expression
+
+            ...
+
+            sta $62     ;   hi
+            sta $63     :   lo
+
+            ldx     #$90    ;       2^16
+
+            sec
+
+            jsr $bc49       ;       convert 16 bits int/float
+
+            jmp chrget      ;       get next char and exit        
+
+;-------------------------------------------- hook basic command
+
+        lda #<cBasic:   ; add command parser    
+        sta $0308    
+        lda #>cBasic:
+        sta $0309
+ 
+;-------------------------------------------- clear screen
+ 
+         lda #147        ; clear screen
+        jsr $ffd2
         

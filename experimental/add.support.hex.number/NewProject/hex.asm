@@ -6,13 +6,13 @@ ieval   =       $030a   ;       Execution address of routine reading next
 
 *= $c000
 
-        lda #<evalhex:
+        lda #<cdBasicEvalHex:
         sta ieval
-        lda #>evalHex:
+        lda #>cdBasicEvalHex:
         sta ieval+1
         rts
 
-evalhex:
+cdBasicEvalHex:
 
         lda     #0      ;       00      number  ff      string
         sta     $0d     ;       tell    basic this is a number
@@ -20,13 +20,13 @@ evalhex:
         jsr     chrget
         cmp     #"$"
 
-        beq     ishex:
+        beq     cdBasicIsHex:
 
         jsr     chrgot
         jmp     $ae8d   ;       next statement
 
 
-ishex:
+cdBasicIsHex:
 
         lda     #0
         sta     $fe     ;       hi
@@ -36,7 +36,7 @@ ishex:
 
 
         ldx     #$04    
-loop:
+cdBasicIsHexLoop:
 
         jsr     chrget
 
@@ -47,36 +47,36 @@ loop:
 
 
         cmp     #"@"
-        beq     loopEnd:       
+        beq     cdBasicIsHexLoopEnd:       
 
         cmp     #71            ;      > F
-        bcs     loopEnd:       ;      c=1 >= numero non esadecimale
+        bcs     cdBasicIsHexLoopEnd:       ;      c=1 >= numero non esadecimale
 
         cmp     #47            ;      < 0
-        bcc     loopEnd:       ;      c=1 < numero non esadecimale
+        bcc     cdBasicIsHexLoopEnd:       ;      c=1 < numero non esadecimale
  
         cmp     #65             ;        
-        bcs     isDigitAF:      ;     c=  >=   
+        bcs     cdBasicIsDigitAF:      ;     c=  >=   
 
         sbc     #47             ;       
         sta     $fa,x
 
-        jmp check:
+        jmp cdBasicIsCheckEndLoop:
 
-isDigitAF:
+cdBasicIsDigitAF:
 
         sbc     #55             ;   65-10    A=10
         sta     $fa,x
 
-check:
+cdBasicIsCheckEndLoop:
 
         dex
-        beq    loopEnd: 
+        beq    cdBasicIsHexLoopEnd: 
 
-        jmp loop:
+        jmp cdBasicIsHexLoop:
 
 
-loopEnd:
+cdBasicIsHexLoopEnd:
 
         ;               ;       $D021
         ;       $fe     ;       hi      D       HI      $62
@@ -88,15 +88,14 @@ loopEnd:
         ;       $63     ;       LO
 
 
-        lda $fe         ;       shift hi
+        lda $fe         ;       shift hi     0000xxxx <- xxxx0000
         asl
         asl
         asl
         asl
         sta $fe
 
-
-        lda $fc         ;       shift hi
+        lda $fc         ;       shift hi    0000xxxx <- xxxx0000
         asl
         asl
         asl
