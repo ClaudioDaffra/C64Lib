@@ -12,7 +12,28 @@
 ; ....................................................
 
 
+; .................................................... KERNAL
+
+CHRGET          = $0073 
+CHRGOT          = $0079
+SNERR           = $AF08 
+NEWSTT          = $a7ae 
+GONE            = $a7e4
+STROUT          = $ab1e
+GETBYTE_CHRGET  = $b79e 
+GETDEC          = $A96B
+printNumAX      = $BDCD
+chrget          = $0073
+chrgot          = $0079
+ieval           = $030a ; Execution address of routine reading next 
+                        ; item of BASIC expression. ( AE86 )
+
+; ....................................................
+
+
 *= $c000
+
+        ; ........................... main message
 
         lda #147        ; clear screen
         jsr $ffd2
@@ -21,10 +42,21 @@
         lda #<cdTitle     
         jsr STROUT 
 
+        ; ........................... HOOK command
+
+
         lda #<cBasic:   ; add command parser    
         sta $0308    
         lda #>cBasic:
         sta $0309
+
+        ; ........................... HOOK expression
+
+        lda #<cdBasicEvalHex:
+        sta ieval
+        lda #>cdBasicEvalHex:
+        sta ieval+1
+        rts
 
         rts
 
@@ -38,17 +70,7 @@ cdTitle
     text "basic 39k/64k bytes free, highmem bitmap"
     byte $00
 
-; .................................................... KERNAL
 
-CHRGET          = $0073         ;
-CHRGOT          = $0079
-SNERR           = $AF08         ;
-NEWSTT          = $a7ae         ;
-GONE            = $a7e4
-STROUT          = $ab1e
-GETBYTE_CHRGET  = $b79e         ;
-GETDEC          = $A96B
-printNumAX      = $BDCD
 
 ; .................................................... Color
 
