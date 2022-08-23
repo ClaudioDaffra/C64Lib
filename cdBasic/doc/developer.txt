@@ -1,0 +1,10 @@
+
+
+jsr CHRGET  ->  get new char
+
+jsr $b79e   ->  get byte into .x -> get new char
+stx $...
+
+JSR $AEFD   ->  get comma -> get new char
+       
+        

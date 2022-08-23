@@ -1,0 +1,70 @@
+# Minimalistic .gitignore
+#
+# Project contributors: clean with ./clean.sh, do not rely on .gitignore
+
+# exe files
+bin/*
+*.exe
+x
+*.prg
+*.tmp
+*.dbg
+cdBasicLoader.bas
+
+# Object files
+*.o
+*.obj
+*.os
+*.ko
+*.obj
+*.elf
+
+
+
+# Precompiled Headers
+*.gch
+
+# commodore 64 cbm project studio
+*.prg
+bak/*
+*.tmp
+
+*.pch
+
+# Libraries
+*.a
+*.la
+*.lo
+*.lib
+*.lai
+*.def
+*.exp
+*.slo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Logs
+*.log
+
+# Executables
+a.out
+
+# Other
+.DS_Store
+*.dSYM
+.*.swp
+.*.swa
+
+# Autotools
+.deps
+.dirstamp
+autom4te.cache
+Makefile
+config.h
+config.status
+config.log
+stamp-h1

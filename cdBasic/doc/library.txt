@@ -1,0 +1,84 @@
+---------
+CD Basic
+---------
+
+*****************
+    GRAPH
+*****************
+
+--------------------------------------------- @gh
+@gh  [bg],[fg]
+
+Graph Hires BackGroundColor, ForeGroundColor
+
+--------------------------------------------- @gm
+@gm [col0,col1,col2,col3]
+
+Graph Multi Color c0,c1,c2,c3
+
+--------------------------------------------- @gt
+@gt  [0]
+@gt  [1],[c0,c1,c2,c3]
+
+Graph Text 0
+Graph Text 1 Extended , col1 , col2 , col3 , col4
+
+p.s. GT extended non va usato con MultiColor Res
+
+--------------------------------------------- @gc
+@gt [mode]  0:hires off/text on , 
+            1:extended on (c0,c1,c2,c3)
+
+*****************
+    BITMAP
+*****************
+
+--------------------------------------------- @bpx
+@bpx x,y
+
+
+*****************
+    SCREEN
+*****************
+
+--------------------------------------------- @src
+@src r,c
+
+Screen Row Col , locate cursor in row col screen 1024
+
+--------------------------------------------- 
+
+scl
+
+
+
+;;;
+;;
+;
+
+
+
+---------------------------------------------
+
+cBlack          =       0               ;       0000
+cWhite          =       1               ;       0001
+cRed            =       2               ;       0010
+cCyan           =       3               ;       0011
+cViolet         =       4               ;       0100
+cGreen          =       5               ;       0101
+cBlue           =       6               ;       0110
+cYellow         =       7               ;       0111
+
+cOrange         =       8               ;       1000
+cBrown          =       9               ;       1001
+cLightRed       =       10              ;       1010
+cDarkGrey       =       11              ;       1011
+cGrey2          =       12              ;       1100
+cLightGreen     =       13              ;       1101
+cLightBlue      =       14              ;       1110
+cLightGrey      =       15              ;       1111
+
+cColor0         =       0
+cColor1         =       1
+cColor2         =       2
+cColor3         =       3
