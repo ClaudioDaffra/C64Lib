@@ -1,0 +1,97 @@
+
+    ----------------------------------------------------------
+    
+a)  ### text mode   -   standard
+
+    ----------------------------------------------------------
+
+    activate  :
+    
+        POKE 53265,PEEK(53265) and 191
+        
+    [ $d021 / 53265 ]   bit 6   =   0   (and 191  %10111111)
+    
+    background                              1/16
+    
+    53281   $d021   back ground color 00   
+
+    foreground
+
+    55296+(1000)   foreground               1/16
+
+    ----------------------------------------------------------
+    
+b)  ### text mode   -   extended    
+
+    ----------------------------------------------------------
+
+    activate  :
+    
+        POKE 53265,PEEK(53265) OR 64
+
+    [ $d021 / 53265 ]   bit 6   =   1   (or 64 %01000000)
+    
+    background                              4/16
+    
+    53281   $d021   back ground color 00
+    
+    extra background
+        
+    53282   $d022   back ground color 01
+    53283   $d023   back ground color 10
+    53284   $d024   back ground color 11
+
+    bit [cc2][char6]
+
+    foreground
+
+    55296+(1000)   foreground               1/16
+
+    ----------------------------------------------------------
+    
+c)  ### text mode   -   multicolor
+
+    ----------------------------------------------------------
+
+    Activate the multicolor mode: 
+    
+        POKE 53270,PEEK(53270) OR 16
+        
+    Deactivating the multicolor mode:
+    
+        POKE 53270,PEEK(53270) AND 239
+        
+    color                               1/16
+    
+    53281   $d021   back ground         color 00 ( transparent )
+    53282   $d022   back ground         color 01
+    53283   $d023   back ground         color 10
+
+    55296+(1000)    foreground          color 11
+    
+    
+    p.s. va ridefinito il set di caratteri, coppie di bit
+    p.s. text mode - multicor non va settato con text mode - extended
+    
+    -------------------------------------------------------------------------------------
+    -------------------------------------------------------------------------------------
+    -------------------------------------------------------------------------------------
+
+4) 53272    $d018   Memory setup register. Bits:
+
+                    - pointer to character memory
+                    - pointer to bitmap memory
+                    - Pointer to screen memory
+
+5) 56576    $DD00   Bits #0-#1: VIC bank. Values:
+
+                    - %00, 0: Bank #3, $C000-$FFFF, 49152-65535.
+                    - %01, 1: Bank #2, $8000-$BFFF, 32768-49151.
+                    - %10, 2: Bank #1, $4000-$7FFF, 16384-32767.
+                    - %11, 3: Bank #0, $0000-$3FFF,     0-16383.
+ 
+
+d)  bitmap mode 320x200 2 color
+
+e)  bitmap mode 160x200 4 color
+

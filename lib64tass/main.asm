@@ -32,6 +32,31 @@ main	.proc
 
 start	.proc
 
+        jsr c64.set_std_char_mode
+        jsr c64.set_mc_char_mode
+        jsr c64.set_std_bitmap_mode
+        rts
+        
+        ; -------------------------------------
+        
+        lda #chr_clearScreen
+        jsr c64_CHROUT
+    
+        lda #3
+        sta screen.row
+        lda #5
+        sta screen.col
+
+        lda #1
+        jsr txt.setchar
+
+        lda #cRed
+        jsr txt.setcol
+
+        rts
+         
+         jsr c64_CHROUT
+          
          lda signed16
          jsr std.print_u8_bin
          
