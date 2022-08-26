@@ -28,35 +28,35 @@ bit_and_7    =   %01111111
 
 ;--------------------------------------------------------------- test flag
 
-test_flag_0   .macro
+test_bit_0   .macro
     and #%00000001
 .endm
-test_flag_1   .macro
+test_bit_1   .macro
     and #%00000010
 .endm
-test_flag_2   .macro
+test_bit_2   .macro
     and #%00000100
 .endm
-test_flag_3   .macro
+test_bit_3   .macro
     and #%00001000
 .endm
-test_flag_4   .macro
+test_bit_4   .macro
     and #%00010000
 .endm
-test_flag_5   .macro
+test_bit_5   .macro
     and #%00100000
 .endm
-test_flag_6   .macro
+test_bit_6   .macro
     and #%01000000
 .endm
-test_flag_7   .macro
+test_bit_7   .macro
     and #%10000000
 .endm
 
-if_flag_0 .macro
+if_bit_0 .macro
         beq \1        ;   non settato     =   0
 .endm
-if_flag_1 .macro
+if_bit_1 .macro
         bne \1         ;  settato         =   1
 .endm
    
@@ -94,7 +94,10 @@ c64 .proc
             lda 53265
             and #%11011111  ;   bit5
             sta 53265
-
+            
+            jsr txt.set_border_color
+            jsr txt.set_background_color
+            
             rts
    
         ;   set bitmap mode ON  /   set text mode OFF
@@ -106,6 +109,9 @@ c64 .proc
             ora #%00100000
             sta 53265
 
+            ;jsr txt.set_border_color
+            ;jsr txt.set_background_color
+            
             rts 
             
         ;   set text extended background mode ON
@@ -115,6 +121,17 @@ c64 .proc
             ora #%01000000  ; bit 6
             sta 53265
 
+            lda screen.border
+            sta $d020
+            lda screen.color0
+            sta $d021
+            lda screen.color1
+            sta $d022
+            lda screen.color2
+            sta $d023
+            lda screen.color3
+            sta $d024
+            
             rts
         
         ;   set text extended background mode OFF
@@ -131,9 +148,18 @@ c64 .proc
         set_text_mode_multicolor_on
         set_bitmap_mode_multicolor_on
             lda 53270
-            ;ora #16
-            ora #%00010000
+            ora #%00010000  ;ora #16
             sta 53270
+
+            lda screen.border
+            sta $d020
+            lda screen.color0
+            sta $d021
+            lda screen.color1
+            sta $d022
+            lda screen.color2
+            sta $d023
+            
             rts 
 
         ;   set bitmap mode MC OFF 
@@ -141,14 +167,17 @@ c64 .proc
         set_text_mode_multicolor_off        
         set_bitmap_mode_multicolor_off
             lda 53270
-            ;and #239
-            and #%11101111
+            and #%11101111  ;and #239
             sta 53270
+            
             rts 
+
+        ;   set bitmap mode 320x200 on / off 
 
         set_bitmap_mode_320x200_on  .proc
             jsr set_bitmap_mode_on
             jsr set_bitmap_mode_multicolor_off
+            jsr set_text_mode_extended_off
             rts
         .pend
         
@@ -157,10 +186,13 @@ c64 .proc
             jsr set_bitmap_mode_multicolor_off
             rts
         .pend
-        
+
+        ;   set bitmap mode 160x200 on / off 
+
         set_bitmap_mode_160x200_on  .proc
             jsr set_bitmap_mode_on
             jsr set_bitmap_mode_multicolor_on
+            jsr set_text_mode_extended_off
             rts
         .pend
         
@@ -175,8 +207,8 @@ c64 .proc
         check_text_mode_standard        .proc
 
                 lda c64_Screen_control_register_1
-                test_flag_5
-                if_flag_0   + 
+                test_bit_5
+                if_bit_0   + 
                 clc
                 rts
         +
@@ -187,8 +219,8 @@ c64 .proc
         check_text_mode_extended        .proc
 
                 lda c64_Screen_control_register_1
-                test_flag_6
-                if_flag_1   + 
+                test_bit_6
+                if_bit_1   + 
                 clc
                 rts
         +
@@ -199,8 +231,8 @@ c64 .proc
         check_bitmap_mode         .proc
 
                 lda c64_Screen_control_register_1
-                test_flag_5
-                if_flag_1   + 
+                test_bit_5
+                if_bit_1   + 
                 clc
                 rts
         +
@@ -211,8 +243,8 @@ c64 .proc
         check_multi_color         .proc
 
                 lda c64_Screen_control_register_2
-                test_flag_4
-                if_flag_1   + 
+                test_bit_4
+                if_bit_1   + 
                 clc
                 rts
         +

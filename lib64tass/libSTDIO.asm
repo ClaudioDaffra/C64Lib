@@ -1,4 +1,9 @@
 
+;   TODO ptr   screen_ptr
+;   TODO ptr   color_ptr
+;   TODO   \n clr \r
+;   txt.screen_ptr
+;   txt_color_ptr
 ; lib std io
 
 ;--------------------------------------------------------------- color
@@ -27,20 +32,21 @@ SCREEN_ADDR =   $0400
 .endweak
 
 screen_s    .struct
-    row     .byte   0
-    col     .byte   0
+    row         .byte   0
+    col         .byte   0
+    border      .byte   0       ;           53280   border color    
     .union
-    border      .byte   0       ;           53280   border color
-    ;background  .byte   0       ;   col 0   53181   background color :  color 0
+    background  .byte   0       ;   col 0   53181   background color :  color 0
     color0      .byte   0
     .endunion
-    .union
     color1      .byte   0       ;   col 1   53182   extra background :  color 1
-    ;foreground  .byte   0
+    color2      .byte   0       ;   col 2   53183   extra background :  color 2
+    color3      .byte   0       ;   col 3   53184   extra background :  color 3
+    .union
+    foreground      .byte   0       ;   foreground color
+    color_number    .byte   0       ;   00  01  10  11
     .endunion
-    color2  .byte       0       ;   col 2   53183   extra background :  color 2
-    color3  .byte       0       ;   col 3   53184   extra background :  color 3
-    char    .byte       0
+    char        .byte   0
 .endstruct
 
 screen  .dstruct  screen_s
@@ -51,72 +57,89 @@ txt .proc
 
     ; 2* 3* colore
     setscreen_with_col_2_3
-            lda screen.color0
+            lda screen.color2
             asl
             asl
             asl
             asl
-            ora screen.color1
+            ora screen.color3
             rts
             
     ; 4* colore     
-    setchar_with_col4_0
+    
+    char_color_or
+        .byte   %00000000
+        .byte   %01000000
+        .byte   %10000000
+        .byte   %11000000
+        
+    setchar_with_color_number
+    
+            ldx screen.color_number
             lda screen.char
-            ora #%00111111
+            and #%00111111
+            ora txt.char_color_or,x
             sta screen.char
             rts
-            
-    setchar_with_col4_1
-            lda screen.char
-            ora #%00111111
-            ora #%01111111
-            sta screen.char
-            rts
-            
-    setchar_with_col4_2
-            lda screen.char
-            ora #%00111111
-            ora #%10111111
-            sta screen.char
-            rts
-            
-    setchar_with_col4_3
-            lda screen.char
-            ora #%00111111
-            ora #%11111111
-            sta screen.char
-            rts
-            
+
     ; ---- sets the character in the screen matrix at the given position
     setchar .proc
         
+            lda screen.char
             ldx screen.col
             ldy screen.row
-            pha
+            ;pha
             tya
             asl  a
             tay
             lda  screen_rows+1,y
-            sta  _mod+2
+            sta  ptr+2
             txa
             clc
             adc  screen_rows,y
-            sta  _mod+1
+            sta  ptr+1
             bcc  +
-            inc  _mod+2
+            inc  ptr+2
     +		
-            pla
-    _mod
+            ;pla
+      
+            ; ext mode
+            
+                jsr c64.check_text_mode_extended
+                if_false end
+                
+                jsr setchar_with_color_number
+                ;lda screen.char
+    end            
+            lda screen.char
+    ptr
             sta  $0400		; modified
             rts
         
-    screen_ptr  = setchar._mod + 1
+    pointer  = setchar.ptr + 1
     screen_rows	.word  SCREEN_ADDR + range(0, 1000, 40)
 
     .pend
-    
-    setcol .proc
 
+    set_border_color .proc
+        lda screen.border
+        sta $d020
+        rts
+    .pend
+    
+    set_background_color .proc
+        lda screen.background
+        sta $d021
+        rts
+    .pend
+    
+    set_foreground_color .proc
+    
+            ; ext mode
+                jsr c64.check_text_mode_extended
+                if_true end
+                
+            lda screen.foreground
             ldx screen.col
             ldy screen.row
             pha
@@ -124,20 +147,21 @@ txt .proc
             asl  a
             tay
             lda  color_rows+1,y
-            sta  _mod+2
+            sta  ptr+2
             txa
             clc
             adc  color_rows,y
-            sta  _mod+1
+            sta  ptr+1
             bcc  +
-            inc  _mod+2
+            inc  ptr+2
     +		
             pla
-    _mod		
+    ptr		
             sta  $d800		; modified
+    end
             rts
             
-    color_ptr  = setcol._mod + 1
+    pointer  = set_foreground_color.ptr + 1
     color_rows	.word  $D800 + range(0, 1000, 40)
 
     .pend

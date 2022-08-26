@@ -30,107 +30,89 @@ signed16        .sint(-32455)
 
 main	.proc
 
+    start	.proc
 
+            jmp due
+            
+            ; ------------------------------------- std mode
+            
+            lda #cOrange
+            sta screen.background
+            lda #cRed
+            sta screen.foreground
+            lda #cCyan
+            sta screen.border 
 
+            jsr c64.set_text_mode_standard_on
+            
+            lda #chr_clearScreen
+            jsr c64_CHROUT
+            
+            lda #3
+            sta screen.row
+            lda #5
+            sta screen.col 
+            
+            lda #1
+            sta screen.char
 
-start	.proc
+            jsr txt.setchar           
+            jsr txt.set_foreground_color   
 
-        ;jsr c64.set_text_mode_standard_on
-        ;jsr c64.set_text_mode_extended_on
-        
-        ;jsr c64.set_text_mode_multicolor_on
-        ;jsr c64.set_bitmap_mode_on
+            ;
+            
+            lda #5
+            sta screen.row
+            lda #7
+            sta screen.col 
+            
+            jsr txt.setchar
+            jsr txt.set_foreground_color 
+            
+            rts
+            
+            ; ------------------------------------- ext mode
+due
+            lda #cBlue
+            sta screen.border 
+            
+            lda #cYellow
+            sta screen.color0
+            lda #cRed
+            sta screen.color1
+            lda #cGreen
+            sta screen.color2
+            lda #cCyan
+            sta screen.color3
+            
+            lda #cBlack
+            sta screen.foreground
 
-        jsr c64.set_bitmap_mode_320x200_on
-    
-        ;lda c64_Screen_control_register_1
-        ;test_flag_5
-        ;if_flag_set     uno
-        ;if_flag_not_set zero
-        
-        jsr c64.check_bitmap_mode_320x200
-        if_true     uno
-        if_false    zero        
+            jsr c64.set_text_mode_extended_on
+            
+            lda #chr_clearScreen
+            jsr c64_CHROUT
+            
+            lda #5
+            sta screen.row
+            lda #7
+            sta screen.col 
+            
+            lda #1
+            sta screen.char
+            
+            lda #03
+            sta screen.color_number
 
-end        
-        ;jsr c64.set_bitmap_mode_off
-        ;jsr c64.set_bitmap_mode_multicolor_off
-        jsr c64.set_bitmap_mode_320x200_off
-        
-        rts
-        
-        jsr c64.set_text_mode_standard_on
-        ;jsr c64.set_text_mode_extended_on
-        ;jsr c64.set_text_mode_multicolor_on
-        ;jsr c64.set_bitmap_mode_on
-        rts
-        
-        ; -------------------------------------
-        
-                        lda #chr_clearScreen
-                        jsr c64_CHROUT
-                    
-                        lda #3
-                        sta screen.row
-                        lda #5
-                        sta screen.col
+            ;jsr txt.set_ext_char
+            jsr txt.setchar
+            ;jsr txt.set_foreground_color 
+            
+            rts
+            
 
-                        lda #1
-                        jsr txt.setchar
-
-                        lda #cRed
-                        jsr txt.setcol
-
-                        rts
-         
-                         jsr c64_CHROUT
-                          
-                         lda signed16
-                         jsr std.print_u8_bin
-                         
-                         lda signed16+1
-                         jsr std.print_u8_bin
-
-                         lda signed16
-                         jsr std.print_u8_hex 
-                         
-                         lda signed16+1
-                         jsr std.print_u8_hex
-
-                         lda signed16+1
-                         ldx signed16
-                         jsr std.print_s16_dec
-                         
-                         rts
-		
-lessThan
-		lda #"<"
-		sta 1024
-		rts
-		
-equal
-		lda #"="
-		sta 1025
-		rts
-
-greaterThan
-		lda #">"
-		sta 1024
-		rts
-
-uno
-		lda #"1"
-		sta 1024
-        jmp end
-		rts
-
-zero
-		lda #"0"
-		sta 1024
-        jmp end
-		rts
-        
-.pend
+            
+    .pend
 
 .pend
 
