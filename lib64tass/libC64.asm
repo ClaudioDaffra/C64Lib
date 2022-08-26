@@ -53,13 +53,20 @@ test_flag_7   .macro
     and #%10000000
 .endm
 
-if_flag_not_set .macro
+if_flag_0 .macro
         beq \1        ;   non settato     =   0
 .endm
-if_flag_set .macro
+if_flag_1 .macro
         bne \1         ;  settato         =   1
 .endm
-        
+   
+if_true  .macro
+        bcs \1        ;   non settato     =   0
+.endm
+if_false .macro
+        bcc \1         ;  settato         =   1
+.endm
+
 ;--------------------------------------------------------------- global
 
 zpa		= $02
@@ -79,10 +86,7 @@ zpWord1 = $fd
 
 c64 .proc
 
-        text_mode    .byte  0   ; 0 text   /    1 ext
-        bitmap_mode  .byte  0   ; 0 320x200 /   1   160x200
-
-        ;   set text mode ON    /   set bitmap mode OFF
+        ;---------------------------------------------------------------    set mode
  
         set_text_mode_on 
         set_text_mode_standard_on
@@ -127,7 +131,8 @@ c64 .proc
         set_text_mode_multicolor_on
         set_bitmap_mode_multicolor_on
             lda 53270
-            ora #16
+            ;ora #16
+            ora #%00010000
             sta 53270
             rts 
 
@@ -136,11 +141,117 @@ c64 .proc
         set_text_mode_multicolor_off        
         set_bitmap_mode_multicolor_off
             lda 53270
-            and #239
+            ;and #239
+            and #%11101111
             sta 53270
             rts 
 
+        set_bitmap_mode_320x200_on  .proc
+            jsr set_bitmap_mode_on
+            jsr set_bitmap_mode_multicolor_off
+            rts
+        .pend
+        
+        set_bitmap_mode_320x200_off  .proc
+            jsr set_bitmap_mode_off
+            jsr set_bitmap_mode_multicolor_off
+            rts
+        .pend
+        
+        set_bitmap_mode_160x200_on  .proc
+            jsr set_bitmap_mode_on
+            jsr set_bitmap_mode_multicolor_on
+            rts
+        .pend
+        
+        set_bitmap_mode_160x200_off  .proc
+            jsr set_bitmap_mode_off
+            jsr set_bitmap_mode_multicolor_off
+            rts
+        .pend
+        
+        ;---------------------------------------------------------------    check mode
+ 
+        check_text_mode_standard        .proc
+
+                lda c64_Screen_control_register_1
+                test_flag_5
+                if_flag_0   + 
+                clc
+                rts
+        +
+                sec
+                rts
+        .pend
+        
+        check_text_mode_extended        .proc
+
+                lda c64_Screen_control_register_1
+                test_flag_6
+                if_flag_1   + 
+                clc
+                rts
+        +
+                sec
+                rts
+        .pend
+        
+        check_bitmap_mode         .proc
+
+                lda c64_Screen_control_register_1
+                test_flag_5
+                if_flag_1   + 
+                clc
+                rts
+        +
+                sec
+                rts
+        .pend
+
+        check_multi_color         .proc
+
+                lda c64_Screen_control_register_2
+                test_flag_4
+                if_flag_1   + 
+                clc
+                rts
+        +
+                sec
+                rts
+        .pend
+
+        check_bitmap_mode_320x200   .proc
+        
+            jsr check_bitmap_mode
+            if_false    no
+            jsr check_multi_color
+            if_true    no
+        si
+            sec
+            rts
+        no 
+            clc
+            rts
+            
+        .pend
+
+        check_bitmap_mode_160x200         .proc
+        
+            jsr check_bitmap_mode
+            if_false    no
+            jsr check_multi_color
+            if_false    no
+        si
+            sec
+            rts
+        no 
+            clc
+            rts
+            
+        .pend
+        
 .pend
+; ---------------------------------------------------------------
 
 
 ; ---------------------------------------------------------------

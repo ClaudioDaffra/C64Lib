@@ -30,22 +30,32 @@ signed16        .sint(-32455)
 
 main	.proc
 
+
+
+
 start	.proc
 
         ;jsr c64.set_text_mode_standard_on
         ;jsr c64.set_text_mode_extended_on
-        ;jsr c64.set_text_mode_multicolor_on
-        jsr c64.set_bitmap_mode_on
-
-
         
-        lda c64_Screen_control_register_1
-        test_flag_5
-        if_flag_set     uno
-        if_flag_not_set zero
+        ;jsr c64.set_text_mode_multicolor_on
+        ;jsr c64.set_bitmap_mode_on
+
+        jsr c64.set_bitmap_mode_320x200_on
+    
+        ;lda c64_Screen_control_register_1
+        ;test_flag_5
+        ;if_flag_set     uno
+        ;if_flag_not_set zero
+        
+        jsr c64.check_bitmap_mode_320x200
+        if_true     uno
+        if_false    zero        
 
 end        
-        jsr c64.set_bitmap_mode_off
+        ;jsr c64.set_bitmap_mode_off
+        ;jsr c64.set_bitmap_mode_multicolor_off
+        jsr c64.set_bitmap_mode_320x200_off
         
         rts
         
