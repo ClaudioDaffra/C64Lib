@@ -32,48 +32,66 @@ main	.proc
 
 start	.proc
 
-        jsr c64.set_std_char_mode
-        jsr c64.set_mc_char_mode
-        jsr c64.set_std_bitmap_mode
+        ;jsr c64.set_text_mode_standard_on
+        ;jsr c64.set_text_mode_extended_on
+        ;jsr c64.set_text_mode_multicolor_on
+        jsr c64.set_bitmap_mode_on
+
+
+        
+        lda c64_Screen_control_register_1
+        test_flag_5
+        if_flag_set     uno
+        if_flag_not_set zero
+
+end        
+        jsr c64.set_bitmap_mode_off
+        
+        rts
+        
+        jsr c64.set_text_mode_standard_on
+        ;jsr c64.set_text_mode_extended_on
+        ;jsr c64.set_text_mode_multicolor_on
+        ;jsr c64.set_bitmap_mode_on
         rts
         
         ; -------------------------------------
         
-        lda #chr_clearScreen
-        jsr c64_CHROUT
-    
-        lda #3
-        sta screen.row
-        lda #5
-        sta screen.col
+                        lda #chr_clearScreen
+                        jsr c64_CHROUT
+                    
+                        lda #3
+                        sta screen.row
+                        lda #5
+                        sta screen.col
 
-        lda #1
-        jsr txt.setchar
+                        lda #1
+                        jsr txt.setchar
 
-        lda #cRed
-        jsr txt.setcol
+                        lda #cRed
+                        jsr txt.setcol
 
-        rts
+                        rts
          
-         jsr c64_CHROUT
-          
-         lda signed16
-         jsr std.print_u8_bin
-         
-         lda signed16+1
-         jsr std.print_u8_bin
+                         jsr c64_CHROUT
+                          
+                         lda signed16
+                         jsr std.print_u8_bin
+                         
+                         lda signed16+1
+                         jsr std.print_u8_bin
 
-         lda signed16
-         jsr std.print_u8_hex 
-         
-         lda signed16+1
-         jsr std.print_u8_hex
+                         lda signed16
+                         jsr std.print_u8_hex 
+                         
+                         lda signed16+1
+                         jsr std.print_u8_hex
 
-         lda signed16+1
-         ldx signed16
-         jsr std.print_s16_dec
-         
-         rts
+                         lda signed16+1
+                         ldx signed16
+                         jsr std.print_s16_dec
+                         
+                         rts
 		
 lessThan
 		lda #"<"
@@ -89,7 +107,19 @@ greaterThan
 		lda #">"
 		sta 1024
 		rts
-		
+
+uno
+		lda #"1"
+		sta 1024
+        jmp end
+		rts
+
+zero
+		lda #"0"
+		sta 1024
+        jmp end
+		rts
+        
 .pend
 
 .pend

@@ -1,11 +1,6 @@
 
 ; lib std io
 
-;--------------------------------------------------------------- c64 kernal
-
-c64_CHROUT = $FFD2
-
-
 ;--------------------------------------------------------------- color
 
 cBlack          =       0               ;       0000
@@ -36,12 +31,12 @@ screen_s    .struct
     col     .byte   0
     .union
     border      .byte   0       ;           53280   border color
-    background  .byte   0       ;   col 0   53181   background color :  color 0
+    ;background  .byte   0       ;   col 0   53181   background color :  color 0
     color0      .byte   0
     .endunion
     .union
     color1      .byte   0       ;   col 1   53182   extra background :  color 1
-    foreground  .byte   0
+    ;foreground  .byte   0
     .endunion
     color2  .byte       0       ;   col 2   53183   extra background :  color 2
     color3  .byte       0       ;   col 3   53184   extra background :  color 3
@@ -63,24 +58,28 @@ txt .proc
             asl
             ora screen.color1
             rts
+            
     ; 4* colore     
     setchar_with_col4_0
             lda screen.char
             ora #%00111111
             sta screen.char
             rts
+            
     setchar_with_col4_1
             lda screen.char
             ora #%00111111
             ora #%01111111
             sta screen.char
             rts
+            
     setchar_with_col4_2
             lda screen.char
             ora #%00111111
             ora #%10111111
             sta screen.char
             rts
+            
     setchar_with_col4_3
             lda screen.char
             ora #%00111111
@@ -107,10 +106,11 @@ txt .proc
             inc  _mod+2
     +		
             pla
-    _mod		
-            sta  $ffff		; modified
+    _mod
+            sta  $0400		; modified
             rts
-            
+        
+    screen_ptr  = setchar._mod + 1
     screen_rows	.word  SCREEN_ADDR + range(0, 1000, 40)
 
     .pend
@@ -134,9 +134,10 @@ txt .proc
     +		
             pla
     _mod		
-            sta  $ffff		; modified
+            sta  $d800		; modified
             rts
             
+    color_ptr  = setcol._mod + 1
     color_rows	.word  $D800 + range(0, 1000, 40)
 
     .pend
