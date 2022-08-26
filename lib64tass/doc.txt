@@ -1,4 +1,77 @@
 
+        -------------------------------------------------------------------------------
+    r)  1       $01     Processor port. Bits:
+
+                        Bits #0-#2: Configuration for memory areas $A000-$BFFF, 
+                                            $D000-$DFFF and $E000-$FFFF. Values:
+                            %x00: RAM visible in all three areas.
+                            %x01: RAM visible at $A000-$BFFF and $E000-$FFFF.
+                            %x10: RAM visible at $A000-$BFFF; KERNAL ROM visible at $E000-$FFFF.
+                            %x11: BASIC ROM visible at $A000-$BFFF; KERNAL ROM visible at $E000-$FFFF.
+                            %0xx: Character ROM visible at $D000-$DFFF. (Except for the value %000, see above.)
+                            %1xx: I/O area visible at $D000-$DFFF. (Except for the value %100, see above.)
+                        Bit #3: Datasette output signal level.
+                        Bit #4: Datasette button status;    0 = One or more of PLAY, RECORD, F.FWD or REW pressed; 
+                                                            1 = No button is pressed.
+                        Bit #5: Datasette motor control; 0 = On; 1 = Off.
+
+        default[55]
+        -------------------------------------------------------------------------------
+    r)  53265   d011    Screen control register #1. Bits:
+
+                        Bits #0-#2: Vertical raster scroll.
+                        Bit     #3: Screen height; 0 = 24 rows; 1 = 25 rows.
+                        Bit     #4: 0 = Screen off  , complete screen is covered by border; 
+                                    1 = Screen on   , normal screen contents are visible.
+                        Bit     #5: 0 = Text mode; 1 = Bitmap mode.
+                        Bit     #6: 1 = Extended background mode on.
+                        Bit     #7: Read: Current raster line (bit #8).
+                                    Write: Raster line to generate interrupt at (bit #8).
+        default[27]                         
+        -------------------------------------------------------------------------------
+    r) 53270    $d016    Screen control register #2. Bits:
+
+                        Bits #0-#2: Horizontal raster scroll.
+                        Bit     #3: Screen width; 
+                                    0 = 38 columns; 
+                                    1 = 40 columns.
+                        Bit     #4: 1 = Multicolor mode on.
+        default[200]
+        -------------------------------------------------------------------------------
+    r) 53272    $d018   Memory setup register. Bits:
+
+                        - pointer to character memory
+                        - pointer to bitmap memory
+                        - Pointer to screen memory
+        default[21]
+        -------------------------------------------------------------------------------
+    r) 56576    $DD00   Bits #0-#1: VIC bank. Values:
+
+                        - %00, 0: Bank #3, $C000-$FFFF, 49152-65535.
+                        - %01, 1: Bank #2, $8000-$BFFF, 32768-49151.
+                        - %10, 2: Bank #1, $4000-$7FFF, 16384-32767.
+                        - %11, 3: Bank #0, $0000-$3FFF,     0-16383.
+        default[0]
+        -------------------------------------------------------------------------------
+     r) 56334   $DC0E   Timer A control register. Bits:
+
+                        Bit #0: 0 = Stop timer; 
+                                1 = Start timer.
+                        Bit #1: 1 = Indicate timer underflow on port B bit #6.
+                        Bit #2: 0 = Upon timer underflow, invert port B bit #6; 
+                                1 = upon timer underflow, generate a positive edge on port B bit #6 for 1 system cycle.
+                        Bit #3: 0 = Timer restarts upon underflow; 
+                                1 = Timer stops upon underflow.
+                        Bit #4: 1 = Load start value into timer.
+                        Bit #5: 0 = Timer counts system cycles; 
+                                1 = Timer counts positive edges on CNT pin.
+                        Bit #6: Serial shift register direction; 
+                                0 = Input, read; 
+                                1 = Output, write.
+                        Bit #7: TOD speed; 
+                                0 = 60 Hz; 
+                                1 = 50 Hz.
+         default[1]               
     ----------------------------------------------------------
     
 a)  ### text mode   -   standard
@@ -9,15 +82,15 @@ a)  ### text mode   -   standard
     
         POKE 53265,PEEK(53265) and 191
         
-    [ $d021 / 53265 ]   bit 6   =   0   (and 191  %10111111)
+    [ $d011 / 53265 ]   bit 6   =   0   (and 191  %10111111)
     
     background                              1/16
     
-    53281   $d021   back ground color 00   
+        53281   $d021   back ground color 00   
 
     foreground
 
-    55296+(1000)   foreground               1/16
+        55296+(1000)   foreground               1/16
 
     ----------------------------------------------------------
     
@@ -29,7 +102,7 @@ b)  ### text mode   -   extended
     
         POKE 53265,PEEK(53265) OR 64
 
-    [ $d021 / 53265 ]   bit 6   =   1   (or 64 %01000000)
+    [ $d011 / 53265 ]   bit 6   =   1   (or 64 %01000000)
     
     background                              4/16
     
@@ -50,6 +123,7 @@ b)  ### text mode   -   extended
     ----------------------------------------------------------
     
 c)  ### text mode   -   multicolor
+    @@@ multicolor  bitmap/text mode
 
     ----------------------------------------------------------
 
@@ -77,21 +151,50 @@ c)  ### text mode   -   multicolor
     -------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------
 
-4) 53272    $d018   Memory setup register. Bits:
-
-                    - pointer to character memory
-                    - pointer to bitmap memory
-                    - Pointer to screen memory
-
-5) 56576    $DD00   Bits #0-#1: VIC bank. Values:
-
-                    - %00, 0: Bank #3, $C000-$FFFF, 49152-65535.
-                    - %01, 1: Bank #2, $8000-$BFFF, 32768-49151.
-                    - %10, 2: Bank #1, $4000-$7FFF, 16384-32767.
-                    - %11, 3: Bank #0, $0000-$3FFF,     0-16383.
  
 
 d)  bitmap mode 320x200 2 color
 
+        activate    :   poke 53265,peek(53265)or32
+        deactivate  :   poke 53265,peek(53265)and223
+
+                    ;           7654:3210
+        lda #$20    ;   0x20  0b0010:0000       32
+        ora $d011   ;   bit[5] 1 enable bitmap mode   
+        sta $d011   ;   Screen control register #1. Bits:
+
+                    ;             7654:3210    
+        lda #$38    ;   0x38    0b0011:1000     56
+        sta $d018   ;   Memory setup register. Bits: ( BITMAP MODE )
+                    ;   [7654] 0011 - screen memory 011, 3: $0C00-$0FFF.
+                    ;   [3]210 1000 - %1xx, 4: $2000-$3FFF, 8192-16383.
+                
 e)  bitmap mode 160x200 4 color
+
+
+                    ;             7654:3210
+        lda #$10    ;   0xef    0b0001:0000
+        ora $d016   ;   Bit #4: 1 = Multicolor mode on.
+        sta $d016   ; Screen control register #2. Bits:    
+
+                    ;           7654:3210
+        lda #$20    ;   0x20  0b0010:0000       32
+        ora $d011   ;   bit[5] 1 enable bitmap mode   
+        sta $d011   ;   Screen control register #1. Bits:
+
+                    ;             7654:3210    
+        lda #$38    ;   0x38    0b0011:1000     56
+        sta $d018   ;   Memory setup register. Bits: ( BITMAP MODE )
+                    ;   [7654] 0011 - screen memory 011, 3: $0C00-$0FFF.
+                    ;   [3]210 1000 - %1xx, 4: $2000-$3FFF, 8192-16383.
+
+                    ;             7654:3210
+        lda #$fc    ;   0xfc    0b1111:1100 252
+        and $dd00   ;   7654:32[10] %00, 0: Bank #3, $C000-$FFFF, 49152-65535.
+        sta $dd00   ;   Bits #0-#1: VIC bank. Values:
+
+
+;;;
+;;
+;
 
