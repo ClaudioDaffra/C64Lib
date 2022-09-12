@@ -56,8 +56,43 @@ ieval           = $030a ; Execution address of routine reading next
         sta ieval
         lda #>cdBasicEvalHex:
         sta ieval+1
+
+        ; ........................... HOOK raster
+
+        sei
+        lda #$7f        ;       disable
+        sta $dc0d       ;       CIA1
+        lda $dc0d
+
+        ldx #<subRasterIRQ
+        ldy #>subRasderIRQ
+        
+        jsr SetIRQ
+
+        lda #$1b       ;       set VIC default
+        sta #$D011
+
+        cli     
+
+
         rts
 
+setIRQ
+
+        stx     $0314   ;       hook irq
+        sty     $0315
+        sta     $d012   ;       save raster position
+
+        lda     #01
+        sta     $d019   ;       VIC interrupt request IRR
+        sta     $d01a   ;       VIC interrupt Mask    IMR
+
+        rts
+
+
+subRasterIRQ
+
+        jmp $Ea31
         rts
 
 ; .................................................... COPYRIGHT
