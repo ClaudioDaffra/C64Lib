@@ -11,27 +11,21 @@
 ; lib std io
 
 ;--------------------------------------------------------------- screen
-.weak
-SCREEN_ADDR =   $0400
-.endweak
-COLOR_ADDR  =   $D800   ; TODO
-
-;
 
 screen_s    .struct
     row         .byte   0
     col         .byte   0
-    border      .byte   0       ;           53280   border color    
+    border_color      .byte   0               ;           53280   border_color color    
     .union
-    background  .byte   0       ;   col 0   53181   background color :  color 0
-    color0      .byte   0
+    background_color    .byte   0       ;   col 0   53181   background color :  color 0
+    color0              .byte   0
     .endunion
-    color1      .byte   0       ;   col 1   53182   extra background :  color 1
-    color2      .byte   0       ;   col 2   53183   extra background :  color 2
-    color3      .byte   0       ;   col 3   53184   extra background :  color 3
+    color1      .byte   0               ;   col 1   53182   extra background :  color 1
+    color2      .byte   0               ;   col 2   53183   extra background :  color 2
+    color3      .byte   0               ;   col 3   53184   extra background :  color 3
     .union
-    foreground      .byte   0       ;   foreground color
-    color_number    .byte   0       ;   00  01  10  11
+    foreground_color        .byte   0   ;   foreground_color color
+    background_color_number .byte   0   ;   00  01  10  11
     .endunion
     char        .byte   0
 .endstruct
@@ -42,6 +36,9 @@ screen  .dstruct  screen_s
 
 txt .proc
 
+
+    ; ........................................... setscreen_with_col_2_3
+    ;
     ; 2* 3* colore
     
     setscreen_with_col_2_3
@@ -55,24 +52,28 @@ txt .proc
             
     ; 4* colore     
     
+    ; ........................................... char_color_or
+    
     char_color_or
     
         .byte   %00000000
         .byte   %01000000
         .byte   %10000000
         .byte   %11000000
-        
+
+    ; ........................................... set_char_with_color_number
+    
     set_char_with_color_number
     
-            ldx screen.color_number
+            ldx screen.background_color_number
             lda screen.char
             and #%00111111
             ora txt.char_color_or,x
             sta screen.char
             rts
 
-    ; sets the character in the screen matrix at the given position
-    
+    ; ........................................... set_char
+
     set_char .proc
         
             lda screen.char
@@ -105,29 +106,35 @@ txt .proc
             rts
         
     pointer  = set_char.ptr + 1
-    screen_rows	.word  SCREEN_ADDR + range(0, 1000, 40)
+    screen_rows	.word  c64.screen_addr + range(0, 1000, 40)
 
     .pend
 
+    ; ........................................... set_border_color
+    
     set_border_color .proc
-        lda screen.border
+        lda screen.border_color
         sta $d020
         rts
     .pend
     
+    ; ........................................... set_background_color
+    
     set_background_color .proc
-        lda screen.background
+        lda screen.background_color
         sta $d021
         rts
     .pend
     
+    ; ........................................... set_foreground_color
+    
     set_foreground_color .proc
     
             ; ext mode
-                jsr c64.check_text_mode_extended
-                if_true end
+                ;jsr c64.check_text_mode_extended
+                ;if_true end
                 
-            lda screen.foreground
+            lda screen.foreground_color
             ldx screen.col
             ldy screen.row
             pha
@@ -146,14 +153,16 @@ txt .proc
             pla
     ptr		
             sta  $d800		; modified
-    end
+    ;end
             rts
             
     pointer  = set_foreground_color.ptr + 1
-    color_rows	.word  $D800 + range(0, 1000, 40)
+    color_rows	.word  c64.color_addr + range(0, 1000, 40)
 
     .pend
-
+    
+    ; ........................................... clear_screen_chars
+    
     clear_screen_chars    .proc
      
             ldy  #250
@@ -168,7 +177,9 @@ txt .proc
             rts
 
     .pend
-
+    
+    ; ........................................... clear_screen_colors
+    
     clear_screen_colors    .proc
 
             ldy  #250
@@ -183,6 +194,32 @@ txt .proc
     .pend
 
 .pend
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;--------------------------------------------------------------- global
 

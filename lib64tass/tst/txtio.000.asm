@@ -32,18 +32,21 @@ main	.proc
             ; ------------------------------------- std mode
             
             lda #color.black
-            sta screen.background
+            sta screen.background_color
             
             lda #color.green
-            sta screen.foreground
+            sta screen.foreground_color
             
             lda #color.grey
-            sta screen.border 
+            sta screen.border_color 
 
             jsr c64.set_text_mode_standard_on
+
+            lda #' '
+            jsr txt.clear_screen_chars
             
-            lda #char.clear_screen
-            jsr sys.CHROUT
+            ;lda #char.clear_screen
+            ;jsr sys.CHROUT
             
             lda #3
             sta screen.row

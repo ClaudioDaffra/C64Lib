@@ -30,7 +30,7 @@ main	.proc
     start	.proc
 
             lda #color.light_grey
-            sta screen.border 
+            sta screen.border_color 
             
             lda #color.yellow
             sta screen.color0
@@ -45,7 +45,7 @@ main	.proc
             sta screen.color3
             
             lda #color.cyan
-            sta screen.foreground
+            sta screen.foreground_color
 
             jsr c64.set_text_mode_extended_on
             
@@ -58,23 +58,33 @@ main	.proc
             lda #char.a
             sta screen.char
             
+            ; ----------------------------
+            
             lda #2
-            sta screen.color_number
+            sta screen.background_color_number
             lda #5
             sta screen.row
             lda #7
             sta screen.col 
             jsr txt.set_char
             
-            jsr txt.set_foreground_color    ; not use in ext color mode
-
+            lda #color.red
+            sta screen.foreground_color
+            jsr txt.set_foreground_color
+            
+            ; ----------------------------
+            
             lda #3
-            sta screen.color_number
+            sta screen.background_color_number
             lda #5
             sta screen.row
             lda #8
             sta screen.col 
             jsr txt.set_char
+
+            lda #color.red
+            sta screen.foreground_color
+            jsr txt.set_foreground_color
             
             rts
 

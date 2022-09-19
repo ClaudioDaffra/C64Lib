@@ -145,8 +145,8 @@ color .proc
 char .proc
     home            =   19
     nl              =   '\n'
-    ;clear_screen    =   147    ;   restore original color
-    spc             =   ' '
+    ;clear_screen   =   147    ;   restore original color
+    space           =   ' '
     dollar          =   '$'
     a               =   1
     
@@ -169,8 +169,8 @@ c64 .proc
         screen_control_register_1   =   53265
         screen_control_register_2   =   53270
 
-        ;---------------------------------------------------------------    set mode
- 
+        ; ........................................... set mode
+        
         set_text_mode_on 
         set_text_mode_standard_on
         set_bitmap_mode_off
@@ -182,9 +182,10 @@ c64 .proc
             jsr txt.set_background_color
             
             rts
-   
-        ;   set bitmap mode ON  /   set text mode OFF
 
+        ; ........................................... set bitmap mode ON 
+        ; ........................................... set text mode OFF 
+        
         set_text_mode_off 
         set_text_mode_standard_off
         set_bitmap_mode_on
@@ -196,15 +197,15 @@ c64 .proc
             ;jsr txt.set_background_color
             
             rts 
-            
-        ;   set text extended background mode ON
 
+        ; ........................................... set text extended background mode ON 
+        
         set_text_mode_extended_on
             lda 53265
             ora #%01000000  ; bit 6
             sta 53265
 
-            lda screen.border
+            lda screen.border_color
             sta $d020
             
             lda screen.color0
@@ -216,13 +217,13 @@ c64 .proc
             lda screen.color3
             sta $d024
 
-            lda screen.foreground
+            lda screen.foreground_color
             jsr txt.clear_screen_colors
             
             rts
-        
-        ;   set text extended background mode OFF
 
+        ; ........................................... set text extended background mode OFF 
+        
         set_text_mode_extended_off
             lda 53265
             and #%10111111
@@ -230,15 +231,15 @@ c64 .proc
 
             rts
 
-        ;   set bitmap mode MC ON 
-
+        ; ........................................... set bitmap mode MC ON 
+        
         set_text_mode_multicolor_on
         set_bitmap_mode_multicolor_on
             lda 53270
             ora #%00010000  ;ora #16
             sta 53270
 
-            lda screen.border
+            lda screen.border_color
             sta $d020
             lda screen.color0
             sta $d021
@@ -249,8 +250,8 @@ c64 .proc
             
             rts 
 
-        ;   set bitmap mode MC OFF 
-
+        ; ........................................... set bitmap mode MC OFF 
+        
         set_text_mode_multicolor_off        
         set_bitmap_mode_multicolor_off
             lda 53270
@@ -259,23 +260,23 @@ c64 .proc
             
             rts 
 
-        ;   set bitmap mode 320x200 on / off 
-
+        ; ........................................... set bitmap mode 320x200 on / off 
+        
         set_bitmap_mode_320x200_on  .proc
             jsr set_bitmap_mode_on
             jsr set_bitmap_mode_multicolor_off
             jsr set_text_mode_extended_off
             rts
         .pend
-        
+
         set_bitmap_mode_320x200_off  .proc
             jsr set_bitmap_mode_off
             jsr set_bitmap_mode_multicolor_off
             rts
         .pend
 
-        ;   set bitmap mode 160x200 on / off 
-
+        ; ........................................... set bitmap mode 160x200 on / off 
+        
         set_bitmap_mode_160x200_on  .proc
             jsr set_bitmap_mode_on
             jsr set_bitmap_mode_multicolor_on
@@ -289,8 +290,8 @@ c64 .proc
             rts
         .pend
         
-        ;---------------------------------------------------------------    check mode
- 
+        ; ........................................... check mode 
+        
         check_text_mode_standard        .proc
 
                 lda c64.screen_control_register_1
@@ -370,6 +371,7 @@ c64 .proc
         .pend
         
 .pend
+
 ; ---------------------------------------------------------------
 
 
