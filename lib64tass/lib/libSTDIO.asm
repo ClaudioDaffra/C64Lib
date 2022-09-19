@@ -1,4 +1,8 @@
 
+;   TODO directory LIB
+;   ODO directory example
+
+
 ;   TODO ptr   screen_ptr
 ;   TODO ptr   color_ptr
 ;   TODO   \n clr \r
@@ -6,30 +10,13 @@
 ;   txt_color_ptr
 ; lib std io
 
-;--------------------------------------------------------------- color
-
-cBlack          =       0               ;       0000
-cWhite          =       1               ;       0001
-cRed            =       2               ;       0010
-cCyan           =       3               ;       0011
-cViolet         =       4               ;       0100
-cGreen          =       5               ;       0101
-cBlue           =       6               ;       0110
-cYellow         =       7               ;       0111
-
-cOrange         =       8               ;       1000
-cBrown          =       9               ;       1001
-cLightRed       =       10              ;       1010
-cDarkGrey       =       11              ;       1011
-cGrey2          =       12              ;       1100
-cLightGreen     =       13              ;       1101
-cLightBlue      =       14              ;       1110
-cLightGrey      =       15              ;       1111
-
 ;--------------------------------------------------------------- screen
 .weak
 SCREEN_ADDR =   $0400
 .endweak
+COLOR_ADDR  =   $D800   ; TODO
+
+;
 
 screen_s    .struct
     row         .byte   0
@@ -56,6 +43,7 @@ screen  .dstruct  screen_s
 txt .proc
 
     ; 2* 3* colore
+    
     setscreen_with_col_2_3
             lda screen.color2
             asl
@@ -68,12 +56,13 @@ txt .proc
     ; 4* colore     
     
     char_color_or
+    
         .byte   %00000000
         .byte   %01000000
         .byte   %10000000
         .byte   %11000000
         
-    setchar_with_color_number
+    set_char_with_color_number
     
             ldx screen.color_number
             lda screen.char
@@ -82,13 +71,14 @@ txt .proc
             sta screen.char
             rts
 
-    ; ---- sets the character in the screen matrix at the given position
-    setchar .proc
+    ; sets the character in the screen matrix at the given position
+    
+    set_char .proc
         
             lda screen.char
             ldx screen.col
             ldy screen.row
-            ;pha
+
             tya
             asl  a
             tay
@@ -100,23 +90,21 @@ txt .proc
             sta  ptr+1
             bcc  +
             inc  ptr+2
-    +		
-            ;pla
-      
+    +
             ; ext mode
             
                 jsr c64.check_text_mode_extended
                 if_false end
                 
-                jsr setchar_with_color_number
-                ;lda screen.char
+                jsr set_char_with_color_number
+
     end            
             lda screen.char
     ptr
             sta  $0400		; modified
             rts
         
-    pointer  = setchar.ptr + 1
+    pointer  = set_char.ptr + 1
     screen_rows	.word  SCREEN_ADDR + range(0, 1000, 40)
 
     .pend
@@ -166,6 +154,34 @@ txt .proc
 
     .pend
 
+    clear_screen_chars    .proc
+     
+            ldy  #250
+    -        
+            sta  c64.screen_addr+250*0-1,y
+            sta  c64.screen_addr+250*1-1,y
+            sta  c64.screen_addr+250*2-1,y
+            sta  c64.screen_addr+250*3-1,y
+            dey
+            bne  -
+            
+            rts
+
+    .pend
+
+    clear_screen_colors    .proc
+
+            ldy  #250
+    -        
+            sta  c64.color_addr+250*0-1,y
+            sta  c64.color_addr+250*1-1,y
+            sta  c64.color_addr+250*2-1,y
+            sta  c64.color_addr+250*3-1,y
+            dey
+            bne  -
+            rts
+    .pend
+
 .pend
 
 ;--------------------------------------------------------------- global
@@ -200,14 +216,6 @@ conv .proc
 
 
 .pend
-
-;--------------------------------------------------------------- char
-
-chr_home        =   19
-chr_nl          =   '\n'
-chr_clearScreen =   147
-chr_spc         =   ' '
-chr_dollar      =   '$'
 
 ;--------------------------------------------------------------- std
 

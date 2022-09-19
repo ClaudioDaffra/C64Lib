@@ -59,40 +59,33 @@ ieval           = $030a ; Execution address of routine reading next
 
         ; ........................... HOOK raster
 
-        sei
-        lda #$7f        ;       disable
-        sta $dc0d       ;       CIA1
-        lda $dc0d
+jmp end
 
-        ldx #<subRasterIRQ
-        ldy #>subRasderIRQ
-        
-        jsr SetIRQ
+                sei
 
-        lda #$1b       ;       set VIC default
-        sta #$D011
+                lda #$7f        ;       disable
+                sta $dc0d       ;       CIA1
+                lda $dc0d
 
-        cli     
+                ldx #<subRasterIRQ:
+                ldy #>subRasterIRQ:
+                
+                ;jsr setIRQ
+                stx     $0314   ;       hook irq
+                sty     $0315
+                sta     $d012   ;       save raster position
 
+                lda     #01
+                sta     $d019   ;       VIC interrupt request IRR
+                sta     $d01a   ;       VIC interrupt Mask    IMR
 
-        rts
+                lda #$1b       ;       set VIC default
+                sta $D011
 
-setIRQ
+                cli     
 
-        stx     $0314   ;       hook irq
-        sty     $0315
-        sta     $d012   ;       save raster position
+end
 
-        lda     #01
-        sta     $d019   ;       VIC interrupt request IRR
-        sta     $d01a   ;       VIC interrupt Mask    IMR
-
-        rts
-
-
-subRasterIRQ
-
-        jmp $Ea31
         rts
 
 ; .................................................... COPYRIGHT
@@ -139,20 +132,21 @@ cForeGroundColor         =       1
 
 charDollar      = $24   ;       $
 charAt          = $40   ;       @
+
 charB           = $42   ;       B
 charC           = $43   ;       C
 charG           = $47   ;       G
 charH           = $48   ;       H
-
 charM           = $4d   ;       M
-
 charP           = $50   ;       P
 charR           = $52   ;       R
 charS           = $53   ;       S
 charT           = $54   ;       T
+
+charW           = $57   ;       W
 charX           = $58   ;       X
 
-charDP  = $3a   ;       :
+charDP          = $3a   ;       :
 
 
 ; .................................................... #define
@@ -240,6 +234,9 @@ newdispatch_G:
         cmp #charM
         beq newdispatch_GM:
 
+        cmp #charW
+        beq newdispatch_GW:
+
         jmp SNERR  
 
 newdispatch_B:
@@ -286,6 +283,13 @@ newdispatch_GM: ; @GM0,1,2,3
 
         jsr cbBasicGraphMultiColor:
 
+
+        jmp NEWSTT 
+
+newdispatch_GW: ; @GW
+
+        ;jsr cbBasicGraphMultiColor:
+        ;jsr CHRGET
         jmp NEWSTT 
 
 ; ...........................................

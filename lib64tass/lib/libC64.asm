@@ -1,12 +1,6 @@
 
 ; C64
 
-;--------------------------------------------------------------- c64 kernal
-
-c64_CHROUT = $FFD2
-c64_Screen_control_register_1   =   53265
-c64_Screen_control_register_2   =   53270
-
                 ;76543210
 bit_or_0    =   %00000000
 bit_or_1    =   %00000010
@@ -17,14 +11,14 @@ bit_or_5    =   %00100000
 bit_or_6    =   %01000000
 bit_or_7    =   %10000000
 
-bit_and_0    =   %11111111
-bit_and_1    =   %11111101
-bit_and_2    =   %11111011
-bit_and_3    =   %11110111
-bit_and_4    =   %11101111
-bit_and_5    =   %11011111
-bit_and_6    =   %10111111
-bit_and_7    =   %01111111
+bit_and_0    =  %11111111
+bit_and_1    =  %11111101
+bit_and_2    =  %11111011
+bit_and_3    =  %11110111
+bit_and_4    =  %11101111
+bit_and_5    =  %11011111
+bit_and_6    =  %10111111
+bit_and_7    =  %01111111
 
 ;--------------------------------------------------------------- test flag
 
@@ -78,13 +72,102 @@ zpByte1 = $fc
 zpByte2 = $fd
 zpByte3 = $fe
 
-zpWord0 = $fb
-zpWord1 = $fd
+zpWord0     = $fb
+zpWord0hi   = $fb
+zpWord0lo   = $fb+1
+
+zpWord1     = $fd
+zpWord1hi   = $fd
+zpWord1lo   = $fd+1
+
+    ;   basic char get not used here TODO
+    ;
+    ;   zpByte4  = $73
+    ;   zpByte5  = $74
+    ;       zpWord2  = $73
+
+    ;   zpByte6  = $75
+    ;   zpByte7  = $76
+    ;       zpWord3  = $75
+
+    ;   zpByte8  = $77
+    ;   zpByte9  = $78
+    ;       zpWord4  = $77
+
+    ;   zpByte10     = $79
+    ;   zpByte11     = $7A
+    ;       zpWord5  = $79
+
+    ;   zpByte12     = $7B
+
+    ;   zpByte4 = $03   ;   3
+    ;   zpByte5 = $04
+    ;   zpByte6 = $05   ;   5
+    ;   zpByte7 = $06
+
+    ;   zpWord2 = $03
+    ;   zpWord3 = $05
 
 ;--------------------------------------------------------------- text mode
-; TODO check modalità con i rispettivi bit
+
+;--------------------------------------------------------------- c64 kernal
+
+sys .proc
+    CHROUT = $FFD2
+.pend
+
+;--------------------------------------------------------------- color
+
+color .proc
+
+    black          =       0               ;       0000
+    white          =       1               ;       0001
+    red            =       2               ;       0010
+    cyan           =       3               ;       0011
+    violet         =       4               ;       0100
+    green          =       5               ;       0101
+    blue           =       6               ;       0110
+    yellow         =       7               ;       0111
+
+    orange         =       8               ;       1000
+    brown          =       9               ;       1001
+    light_red      =       10              ;       1010
+    dark_grey      =       11              ;       1011
+    grey           =       12              ;       1100
+    light_green    =       13              ;       1101
+    light_blue     =       14              ;       1110
+    light_grey     =       15              ;       1111
+
+.pend
+
+;--------------------------------------------------------------- char
+
+char .proc
+    home            =   19
+    nl              =   '\n'
+    ;clear_screen    =   147    ;   restore original color
+    spc             =   ' '
+    dollar          =   '$'
+    a               =   1
+    
+.pend
+
+;--------------------------------------------------------------- c64
 
 c64 .proc
+
+
+        ;---------------------------------------------------------------  address
+        
+        .weak
+        screen_addr =   $0400
+        .endweak
+        color_addr  =   $d800
+        
+        ;---------------------------------------------------------------  
+        
+        screen_control_register_1   =   53265
+        screen_control_register_2   =   53270
 
         ;---------------------------------------------------------------    set mode
  
@@ -123,6 +206,7 @@ c64 .proc
 
             lda screen.border
             sta $d020
+            
             lda screen.color0
             sta $d021
             lda screen.color1
@@ -131,6 +215,9 @@ c64 .proc
             sta $d023
             lda screen.color3
             sta $d024
+
+            lda screen.foreground
+            jsr txt.clear_screen_colors
             
             rts
         
@@ -206,7 +293,7 @@ c64 .proc
  
         check_text_mode_standard        .proc
 
-                lda c64_Screen_control_register_1
+                lda c64.screen_control_register_1
                 test_bit_5
                 if_bit_0   + 
                 clc
@@ -218,7 +305,7 @@ c64 .proc
         
         check_text_mode_extended        .proc
 
-                lda c64_Screen_control_register_1
+                lda c64.screen_control_register_1
                 test_bit_6
                 if_bit_1   + 
                 clc
@@ -230,7 +317,7 @@ c64 .proc
         
         check_bitmap_mode         .proc
 
-                lda c64_Screen_control_register_1
+                lda c64.screen_control_register_1
                 test_bit_5
                 if_bit_1   + 
                 clc
@@ -242,7 +329,7 @@ c64 .proc
 
         check_multi_color         .proc
 
-                lda c64_Screen_control_register_2
+                lda c64.screen_control_register_2
                 test_bit_4
                 if_bit_1   + 
                 clc
@@ -257,7 +344,7 @@ c64 .proc
             jsr check_bitmap_mode
             if_false    no
             jsr check_multi_color
-            if_true    no
+            if_true     no
         si
             sec
             rts

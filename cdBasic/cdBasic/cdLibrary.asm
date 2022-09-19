@@ -554,6 +554,102 @@ cdBasicIsHexLoopEnd:
         jmp chrget      ;       get next char and exit
 
 
+;###################################################################
+
+
+; .................................................... window :
+;
+
+RASTER1 = (8*(00))+50   ; top raster
+RASTER2 = (8*(12))+50   ; bottom Raster
+
+;----------------------
+gSplitScreenTextBitmap
+;----------------------
+
+        lda     #RASTER1        ;       wait for the BEAM
+
+gSplitScreenTextBitmap_01
+
+        cmp     $d012
+        bne     gSplitScreenTextBitmap_01
+
+        ;
+
+        ldy     #$0a            ;       wait some time
+
+gSplitScreenTextBitmap_02
+
+        dey
+        bne     gSplitScreenTextBitmap_02
+
+
+        ;;;
+        ;       set multicolor ON       $d016
+        ;       set bitmap ON           $d011
+        ;       set bitmap $2000        $d018
+        ;;;
+
+
+        lda     #RASTER2        ;       wait for the BEAM
+
+gSplitScreenTextBitmap_03
+
+        cmp     $d012
+        bne     gSplitScreenTextBitmap_03
+        
+
+        ldy     #$0a            ;       wait some time
+
+gSplitScreenTextBitmap_04
+
+        dey
+        bne     gSplitScreenTextBitmap_04
+
+
+        ;;;
+        ;       set multicolor OFF      $d016
+        ;       set bitmap OFF          $d011
+        ;       set bitmap $2000        $d018
+        ;;;
+
+        inc     $d019   ; HACK IRQ
+;
+        rts
+
+
+
+
+
+subRasterIRQ:
+
+;       modified code for jsr to thread
+;
+;       nop     $ea
+;
+;       rts     $60
+;
+;       jsr     $20     hi      lo
+;
+
+;       ............................................... thread0
+thread0:
+        nop
+thread0hi:
+        nop
+thread0low:
+        nop
+;       ............................................... thread1
+thread1:
+        nop
+thread1hi:
+        nop
+thread1low:
+        nop
+;       ............................................... RTI
+        jmp $Ea31
+        rts
+
 ;;;
 ;;
 ;
