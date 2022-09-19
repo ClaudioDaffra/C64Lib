@@ -13,16 +13,16 @@
 ;--------------------------------------------------------------- screen
 
 screen_s    .struct
-    row         .byte   0
-    col         .byte   0
-    border_color      .byte   0               ;           53280   border_color color    
+    row                 .byte   0
+    col                 .byte   0
+    border_color        .byte   0       ;           53280   border_color color    
     .union
     background_color    .byte   0       ;   col 0   53181   background color :  color 0
-    color0              .byte   0
+    background_color_0  .byte   0
     .endunion
-    color1      .byte   0               ;   col 1   53182   extra background :  color 1
-    color2      .byte   0               ;   col 2   53183   extra background :  color 2
-    color3      .byte   0               ;   col 3   53184   extra background :  color 3
+    background_color_1  .byte   0       ;   col 1   53182   extra background :  color 1
+    background_color_2  .byte   0       ;   col 2   53183   extra background :  color 2
+    background_color_3  .byte   0       ;   col 3   53184   extra background :  color 3
     .union
     foreground_color        .byte   0   ;   foreground_color color
     background_color_number .byte   0   ;   00  01  10  11
@@ -42,12 +42,12 @@ txt .proc
     ; 2* 3* colore
     
     setscreen_with_col_2_3
-            lda screen.color2
+            lda screen.background_color_2
             asl
             asl
             asl
             asl
-            ora screen.color3
+            ora screen.background_color_3
             rts
             
     ; 4* colore     
@@ -110,6 +110,41 @@ txt .proc
 
     .pend
 
+    ; ........................................... set_cc ( row,col,char,col )
+    
+    set_cc   .proc 
+        ;  screen.col, screen.row, screen.char, screen.foreground_color  
+        ;  set char+color at the given position on the screen
+        ;  screen_addr FIX $0400 , color_addr FIX $d800 
+            lda  screen.row
+            asl  a
+            tay
+            lda  set_char.screen_rows+1,y
+            sta  screen_ptr+2
+            adc  #$d4
+            sta  color_ptr+2
+            lda  set_char.screen_rows,y
+            clc
+            adc  screen.col
+            sta  screen_ptr+1
+            sta  color_ptr+1
+            bcc  +
+            inc  screen_ptr+2
+            inc  color_ptr+2
+    +		
+            lda  screen.char
+            
+    screen_ptr	
+            sta  $ffff		; modified
+            lda  screen.foreground_color
+    color_ptr	
+            sta  $ffff		; modified
+            rts
+     screen_pointer  = set_cc.screen_ptr + 1
+     color_pointer   = set_cc.color_ptr  + 1
+     
+    .pend
+    
     ; ........................................... set_border_color
     
     set_border_color .proc
@@ -118,9 +153,9 @@ txt .proc
         rts
     .pend
     
-    ; ........................................... set_background_color
+    ; ........................................... set_background_color_
     
-    set_background_color .proc
+    set_background_color_ .proc
         lda screen.background_color
         sta $d021
         rts
@@ -130,10 +165,6 @@ txt .proc
     
     set_foreground_color .proc
     
-            ; ext mode
-                ;jsr c64.check_text_mode_extended
-                ;if_true end
-                
             lda screen.foreground_color
             ldx screen.col
             ldy screen.row
@@ -192,6 +223,8 @@ txt .proc
             bne  -
             rts
     .pend
+
+
 
 .pend
 

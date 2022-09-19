@@ -58,8 +58,8 @@ main	.proc
 
             jsr txt.set_char           
             jsr txt.set_foreground_color   
-
-            ;
+            
+            ; ----------------------------
             
             lda #5
             sta screen.row
@@ -68,6 +68,13 @@ main	.proc
             
             jsr txt.set_char
             jsr txt.set_foreground_color 
+            
+            ; ----------------------------
+            
+            inc screen.row
+            inc screen.col
+
+            jsr txt.set_cc
             
             rts
 

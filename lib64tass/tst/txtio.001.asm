@@ -33,16 +33,16 @@ main	.proc
             sta screen.border_color 
             
             lda #color.yellow
-            sta screen.color0
+            sta screen.background_color_0
             
             lda #color.red
-            sta screen.color1
+            sta screen.background_color_1
             
             lda #color.white
-            sta screen.color2
+            sta screen.background_color_2
             
             lda #color.green
-            sta screen.color3
+            sta screen.background_color_3
             
             lda #color.cyan
             sta screen.foreground_color
@@ -58,7 +58,7 @@ main	.proc
             lda #char.a
             sta screen.char
             
-            ; ----------------------------
+            ; ----------------------------  white,red
             
             lda #2
             sta screen.background_color_number
@@ -72,7 +72,7 @@ main	.proc
             sta screen.foreground_color
             jsr txt.set_foreground_color
             
-            ; ----------------------------
+            ; ---------------------------- green,red
             
             lda #3
             sta screen.background_color_number
@@ -85,6 +85,22 @@ main	.proc
             lda #color.red
             sta screen.foreground_color
             jsr txt.set_foreground_color
+            
+            ; ---------------------------- white,red
+            
+            inc screen.row
+            inc screen.col
+
+            lda #2
+            sta screen.background_color_number
+            
+            lda #'b'
+            sta screen.char
+            jsr txt.set_char_with_color_number
+            sta screen.char
+            
+            jsr txt.set_cc
+
             
             rts
 

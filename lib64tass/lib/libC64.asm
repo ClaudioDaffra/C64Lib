@@ -156,7 +156,6 @@ char .proc
 
 c64 .proc
 
-
         ;---------------------------------------------------------------  address
         
         .weak
@@ -179,7 +178,7 @@ c64 .proc
             sta 53265
             
             jsr txt.set_border_color
-            jsr txt.set_background_color
+            jsr txt.set_background_color_
             
             rts
 
@@ -194,7 +193,7 @@ c64 .proc
             sta 53265
 
             ;jsr txt.set_border_color
-            ;jsr txt.set_background_color
+            ;jsr txt.set_background_color_
             
             rts 
 
@@ -208,13 +207,13 @@ c64 .proc
             lda screen.border_color
             sta $d020
             
-            lda screen.color0
+            lda screen.background_color_0
             sta $d021
-            lda screen.color1
+            lda screen.background_color_1
             sta $d022
-            lda screen.color2
+            lda screen.background_color_2
             sta $d023
-            lda screen.color3
+            lda screen.background_color_3
             sta $d024
 
             lda screen.foreground_color
@@ -241,11 +240,11 @@ c64 .proc
 
             lda screen.border_color
             sta $d020
-            lda screen.color0
+            lda screen.background_color_0
             sta $d021
-            lda screen.color1
+            lda screen.background_color_1
             sta $d022
-            lda screen.color2
+            lda screen.background_color_2
             sta $d023
             
             rts 
