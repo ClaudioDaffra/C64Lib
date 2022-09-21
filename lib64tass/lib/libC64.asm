@@ -1,5 +1,7 @@
 
-; C64
+;---------------------------------------------------------------  C64
+
+;---------------------------------------------------------------  bit and or
 
                 ;76543210
 bit_or_0    =   %00000000
@@ -61,7 +63,7 @@ if_false .macro
         bcc \1         ;  settato         =   1
 .endm
 
-;--------------------------------------------------------------- global
+;--------------------------------------------------------------- zero page
 
 zpa		= $02
 zpx		= $2a
@@ -108,12 +110,13 @@ zpWord1lo   = $fd+1
     ;   zpWord2 = $03
     ;   zpWord3 = $05
 
-;--------------------------------------------------------------- text mode
-
 ;--------------------------------------------------------------- c64 kernal
 
 sys .proc
-    CHROUT = $FFD2
+
+    CHROUT      = $FFD2     ;   a
+    OUT_U16     = $BDCD     ;   ax
+    
 .pend
 
 ;--------------------------------------------------------------- color
@@ -140,19 +143,28 @@ color .proc
 
 .pend
 
+;--------------------------------------------------------------- global var
+
+global  .proc
+
+hex_digits		.text '0123456789abcdef'
+
+.pend
+
 ;--------------------------------------------------------------- char
 
 char .proc
-    home            =   19
-    nl              =   '\n'
-    ;clear_screen   =   147    ;   restore original color
-    space           =   ' '
-    dollar          =   '$'
-    a               =   1
+
+        home            =   19
+        nl              =   13
+        ;clear_screen   =   147    ;   restore original color
+        space           =   ' '
+        dollar          =   '$'
+        a               =   1
     
 .pend
 
-;--------------------------------------------------------------- c64
+;--------------------------------------------------------------- c64 subroutine
 
 c64 .proc
 
@@ -291,7 +303,7 @@ c64 .proc
         
         ; ........................................... check mode 
         
-        check_text_mode_standard        .proc
+        check_text_mode_standard    .proc
 
                 lda c64.screen_control_register_1
                 test_bit_5
@@ -303,7 +315,7 @@ c64 .proc
                 rts
         .pend
         
-        check_text_mode_extended        .proc
+        check_text_mode_extended    .proc
 
                 lda c64.screen_control_register_1
                 test_bit_6
@@ -354,7 +366,7 @@ c64 .proc
             
         .pend
 
-        check_bitmap_mode_160x200         .proc
+        check_bitmap_mode_160x200   .proc
         
             jsr check_bitmap_mode
             if_false    no
@@ -373,13 +385,31 @@ c64 .proc
 
 ; ---------------------------------------------------------------
 
-
-; ---------------------------------------------------------------
-
 load_ay	.macro
 
 	lda <\1
 	ldy >\1
+
+.endm
+
+load_var_ay	.macro
+
+	lda \1+1
+	ldy \1
+
+.endm
+
+load_ax	.macro
+
+	lda >\1
+	ldx <\1
+
+.endm
+
+load_var_ax	.macro
+
+	lda \1+1
+	ldx \1
 
 .endm
 

@@ -36,12 +36,12 @@ screen  .dstruct  screen_s
 
 txt .proc
 
-
-    ; ........................................... setscreen_with_col_2_3
+    ; ........................................... set_char_with_col_2_3
     ;
     ; 2* 3* colore
     
-    setscreen_with_col_2_3
+    set_char_with_col_2_3
+    
             lda screen.background_color_2
             asl
             asl
@@ -140,8 +140,8 @@ txt .proc
     color_ptr	
             sta  $ffff		; modified
             rts
-     screen_pointer  = set_cc.screen_ptr + 1
-     color_pointer   = set_cc.color_ptr  + 1
+    screen_pointer  = set_cc.screen_ptr + 1
+    color_pointer   = set_cc.color_ptr  + 1
      
     .pend
     
@@ -228,118 +228,72 @@ txt .proc
 
 .pend
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;--------------------------------------------------------------- global
-
-hex_digits		.text '0123456789abcdef'
-
-;--------------------------------------------------------------- conv
-
-conv .proc
-
-	; convert byte in digit
-	; input 	:	a byte
-	; output	:	a,y digit
-	
-	u8_to_hex
-
-			stx  zpx
-			pha
-			and  #$0f
-			tax
-			ldy  hex_digits,x
-			pla
-			lsr  a
-			lsr  a
-			lsr  a
-			lsr  a
-			tax
-			lda  hex_digits,x
-			ldx  zpx
-			rts
-
-
-
-.pend
-
 ;--------------------------------------------------------------- std
 
 std .proc
 
+    ; ........................................... print_u8_hex
+    ; ........................................... print_s8_hex
+    
 	;	stampa un byte a schermo
 	;	input	:	a	carattere
 	;			:	sec	stampa	$ difronte al carattere
 
+    
 	print_u8_hex
-
-			;stx  zpx
+    print_s8_hex
+    
 			bcc  +
 			pha
 			lda  #'$'
-			jsr  c64_CHROUT
+			jsr  sys.CHROUT
 			pla
 			
 	print_u8_hex_digits
     
 	+		jsr  conv.u8_to_hex
-			jsr  c64_CHROUT
+			jsr  sys.CHROUT
 			tya
-			jsr  c64_CHROUT
-			;ldx  zpx
+			jsr  sys.CHROUT
 			rts
-	
+
+    ; ........................................... print_u8_bin
+    ; ........................................... print_s8_bin
+    
 	print_u8_bin
-	
+	print_s8_bin
+    
 			stx  zpx
 			sta  zpa
 			bcc  +
 			lda  #'%'
-			jsr  c64_CHROUT
+			jsr  sys.CHROUT
             
     print_u8_bin_digits
-            sta zpa
+    
+            lda zpa
     
 	+		ldy  #8
 	-		lda  #'0'
 			asl  zpa
 			bcc  +
 			lda  #'1'
-	+		jsr  c64_CHROUT
+	+		jsr  sys.CHROUT
 			dey
 			bne  -
 			ldx  zpx
 			rts
 
+    ; ........................................... print_u16_hex
+    ; ........................................... print_s16_hex
+    
     ;   stampa un numero 16 bit esadecimale
     ;   input   :   a/y
     ;           :   sec aggiunge $ all'inizio
+    
 	print_u16_hex
-
+	print_s16_hex
+    
             pha
             tya
             jsr  print_u8_hex
@@ -349,6 +303,7 @@ std .proc
             rts
 
 	print_u16_bin
+	print_s16_bin
     
             pha
             tya
@@ -357,9 +312,12 @@ std .proc
             clc
             jmp  print_u8_bin
             rts
-            
+
+    ; ........................................... print_string
+    
     ;   stampa una string , null terminated
     ;   input   :   a/y
+    
     print_string
     
             sta  zpWord0 
@@ -367,40 +325,45 @@ std .proc
             ldy  #0
     -		lda  (zpWord0),y
             beq  +
-            jsr  c64_CHROUT
+            jsr  sys.CHROUT
             iny
             bne  -
     +		rts
     
- 
+
+    ; ........................................... print_u8_dec
+
     ; input :   a  unsigned byte
+    
     print_u8_dec .proc
 
             tax
             lda #0
-            jsr $BDCD
+            jsr sys.OUT_U16
             
             rts
     .pend
 
+    ; ........................................... print_u16_dec
     ; input :   ax  unsigned word
-    print_u16_dec .macro
+    
+    print_u16_dec .proc
 
-            ;lda >\1
-            ;ldx <\1
-            jsr $BDCD
+            jsr sys.OUT_U16
             
             rts
-    .endmacro
+    .pend
 
+    ; ........................................... print_s8_dec
     ; input :   a  signed byte
+    
     print_s8_dec .proc
 
             pha
             and #128
             beq +
             lda #'-'    ;   -127
-            jsr  c64_CHROUT
+            jsr  sys.CHROUT
             pla
             and #%01111111
             sta zpa
@@ -411,13 +374,15 @@ std .proc
             pla
             tax
             lda #0
-            jsr $BDCD
+            jsr sys.OUT_U16
 
             rts
 
     .pend 
 
+    ; ........................................... print_s16_dec
     ; input :   ax  signed word
+    
     print_s16_dec .proc
 
             stx zpx
@@ -428,7 +393,7 @@ std .proc
             ; negativo 
             
             lda #'-'
-            jsr  c64_CHROUT
+            jsr  sys.CHROUT
 
             pla
             eor #255    ;   inverti
@@ -443,17 +408,17 @@ std .proc
 
             lda zpa
             ldx zpx
-            jsr $BDCD
+            jsr sys.OUT_U16
             
             rts
     +        
             ; positivo
             pla
             ldx zpx
-            jsr $BDCD
+            jsr sys.OUT_U16
 
             rts
-            
+
     .pend
     
 ;

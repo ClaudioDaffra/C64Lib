@@ -1070,48 +1070,48 @@ print_ubhex    .proc
         rts
 .pend
  
-print_ubbin    .proc
- 
-        stx  zpx
-        sta  zpy
-        bcc  +
-        lda  #'%'
-        jsr  c64.CHROUT
-+        
-        ldy  #8
--        
-        lda  #'0'
-        asl  zpy
-        bcc  +
-        lda  #'1'
-+        
-        jsr  c64.CHROUT
-        dey
-        bne  -
-        ldx  zpx
-        rts
-.pend
+                    print_ubbin    .proc
+                     
+                            stx  zpx
+                            sta  zpy
+                            bcc  +
+                            lda  #'%'
+                            jsr  c64.CHROUT
+                    +        
+                            ldy  #8
+                    -        
+                            lda  #'0'
+                            asl  zpy
+                            bcc  +
+                            lda  #'1'
+                    +        
+                            jsr  c64.CHROUT
+                            dey
+                            bne  -
+                            ldx  zpx
+                            rts
+                    .pend
 
-print_uwbin    .proc
- 
-        pha
-        tya
-        jsr  print_ubbin
-        pla
-        clc
-        jmp  print_ubbin
-.pend
+                    print_uwbin    .proc
+                     
+                            pha
+                            tya
+                            jsr  print_ubbin
+                            pla
+                            clc
+                            jmp  print_ubbin
+                    .pend
  
 
-print_uwhex    .proc
+                    print_uwhex    .proc
 
-        pha
-        tya
-        jsr  print_ubhex
-        pla
-        clc
-        jmp  print_ubhex
-.pend
+                            pha
+                            tya
+                            jsr  print_ubhex
+                            pla
+                            clc
+                            jmp  print_ubhex
+                    .pend
  
 
 print_uw0    .proc
@@ -1130,49 +1130,49 @@ print_uw0    .proc
         rts
 .pend
 
-print_uw    .proc
- 
-        stx  zpx
-        jsr  conv.uword2decimal
-        ldx  zpx
-        ldy  #0
--        
-        lda  conv.uword2decimal.decTenThousands,y
-        beq  _allzero
-        cmp  #'0'
-        bne  _gotdigit
-        iny
-        bne  -
-_gotdigit
-        jsr  c64.CHROUT
-        iny
-        lda  conv.uword2decimal.decTenThousands,y
-        bne  _gotdigit
-        rts
-_allzero
-        lda  #'0'
-        jmp  c64.CHROUT
-.pend
+                    print_uw    .proc
+                     
+                            stx  zpx
+                            jsr  conv.uword2decimal
+                            ldx  zpx
+                            ldy  #0
+                    -        
+                            lda  conv.uword2decimal.decTenThousands,y
+                            beq  _allzero
+                            cmp  #'0'
+                            bne  _gotdigit
+                            iny
+                            bne  -
+                    _gotdigit
+                            jsr  c64.CHROUT
+                            iny
+                            lda  conv.uword2decimal.decTenThousands,y
+                            bne  _gotdigit
+                            rts
+                    _allzero
+                            lda  #'0'
+                            jmp  c64.CHROUT
+                    .pend
 
-print_w    .proc
-  
-        cpy  #0
-        bpl  +
-        pha
-        lda  #'-'
-        jsr  c64.CHROUT
-        tya
-        eor  #255
-        tay
-        pla
-        eor  #255
-        clc
-        adc  #1
-        bcc  +
-        iny
-+        
-        jmp  print_uw
-.pend
+                    print_w    .proc
+                      
+                            cpy  #0
+                            bpl  +
+                            pha
+                            lda  #'-'
+                            jsr  c64.CHROUT
+                            tya
+                            eor  #255
+                            tay
+                            pla
+                            eor  #255
+                            clc
+                            adc  #1
+                            bcc  +
+                            iny
+                    +        
+                            jmp  print_uw
+                    .pend
  
 input_chars    .proc
  
