@@ -263,9 +263,151 @@ txt .proc
             bne  -
             rts
     .pend
+    
+    ; ........................................... screen_scroll ( left,right,up,down )
+    
+    screen_scroll_left    .proc
+     
+            stx  zpx
+            bcc _scroll_screen
 
+    +       ; scroll the screen and the color memory
 
+            ldx  #0
+            ldy  #38
+    -
+            .for row=0, row<=24, row+=1
+                lda  c64.screen_addr    + 40*row + 1,x
+                sta  c64.screen_addr    + 40*row + 0,x
+                lda  c64.color_addr     + 40*row + 1,x
+                sta  c64.color_addr     + 40*row + 0,x
+            .next
+            
+            inx
+            dey
+            bpl  -
+            rts
 
+    _scroll_screen  ; scroll only the screen memory
+    
+            ldx  #0
+            ldy  #38
+    -
+            .for row=0, row<=24, row+=1
+                lda  c64.screen_addr + 40*row + 1,x
+                sta  c64.screen_addr + 40*row + 0,x
+            .next
+            inx
+            dey
+            bpl  -
+
+            ldx  zpx
+            rts
+            
+    .pend
+
+    screen_scroll_right    .proc
+     
+            stx  zpx
+            bcc  _scroll_screen
+
+    +       ; scroll the screen and the color memory
+            ldx  #38
+    -
+            .for row=0, row<=24, row+=1
+                lda  c64.screen_addr    + 40*row + 0,x
+                sta  c64.screen_addr    + 40*row + 1,x
+                lda  c64.color_addr     + 40*row + 0,x
+                sta  c64.color_addr     + 40*row + 1,x
+            .next
+            dex
+            bpl  -
+            rts
+
+    _scroll_screen  ; scroll only the screen memory
+    
+            ldx  #38
+    -
+            .for row=0, row<=24, row+=1
+                lda  c64.screen_addr + 40*row + 0,x
+                sta  c64.screen_addr + 40*row + 1,x
+            .next
+            dex
+            bpl  -
+
+            ldx  zpx
+            rts
+    .pend
+
+    screen_scroll_up    .proc
+     
+            stx  zpx
+            bcc  _scroll_screen
+
+    +       ; scroll the screen and the color memory
+    
+            ldx #39
+    -
+            .for row=1, row<=24, row+=1
+                lda  c64.screen_addr    + 40*row,x
+                sta  c64.screen_addr    + 40*(row-1),x
+                lda  c64.color_addr     + 40*row,x
+                sta  c64.color_addr     + 40*(row-1),x
+            .next
+            dex
+            bpl  -
+            rts
+
+    _scroll_screen  ; scroll only the screen memory
+    
+            ldx #39
+    -
+            .for row=1, row<=24, row+=1
+                lda  c64.screen_addr + 40*row,x
+                sta  c64.screen_addr + 40*(row-1),x
+            .next
+            dex
+            bpl  -
+
+            ldx  zpx
+            rts
+        .pend
+    
+    screen_scroll_down    .proc
+     
+            stx  zpx
+            bcc  _scroll_screen
+
+    +       ; scroll the screen and the color memory
+    
+            ldx #39
+    -
+            .for row=23, row>=0, row-=1
+                lda  c64.screen_addr    + 40*row,x
+                sta  c64.screen_addr    + 40*(row+1),x
+                lda  c64.color_addr     + 40*row,x
+                sta  c64.color_addr     + 40*(row+1),x
+            .next
+            dex
+            bpl  -
+            rts
+
+    _scroll_screen  ; scroll only the screen memory
+    
+            ldx #39
+    -
+            .for row=23, row>=0, row-=1
+                lda  c64.screen_addr + 40*row,x
+                sta  c64.screen_addr + 40*(row+1),x
+            .next
+            dex
+            bpl  -
+
+            ldx  zpx
+            rts
+        .pend
+    
+    
 .pend
 
 ;--------------------------------------------------------------- std
