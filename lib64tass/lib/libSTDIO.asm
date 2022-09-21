@@ -1,14 +1,4 @@
 
-;   TODO directory LIB
-;   ODO directory example
-
-
-;   TODO ptr   screen_ptr
-;   TODO ptr   color_ptr
-;   TODO   \n clr \r
-;   txt.screen_ptr
-;   txt_color_ptr
-; lib std io
 
 ;--------------------------------------------------------------- screen
 
@@ -110,6 +100,31 @@ txt .proc
 
     .pend
 
+    ; ........................................... get_char
+
+    get_char    .proc
+    
+            ldx screen.col
+            ldy screen.row
+
+            tya
+            asl  a
+            tay
+            lda  set_char.screen_rows+1,y
+            sta  ptr+2
+            txa
+            clc
+            adc  set_char.screen_rows,y
+            sta  ptr+1
+            bcc  +
+            inc  ptr+2
+    +
+    ptr
+            lda  $0400		; modified
+            rts
+    .pend
+
+
     ; ........................................... set_cc ( row,col,char,col )
     
     set_cc   .proc 
@@ -189,6 +204,31 @@ txt .proc
             
     pointer  = set_foreground_color.ptr + 1
     color_rows	.word  c64.color_addr + range(0, 1000, 40)
+
+    .pend
+
+    get_foreground_color .proc
+    
+            ldx screen.col
+            ldy screen.row
+            pha
+            tya
+            asl  a
+            tay
+            lda  set_foreground_color.color_rows+1,y
+            sta  ptr+2
+            txa
+            clc
+            adc  set_foreground_color.color_rows,y
+            sta  ptr+1
+            bcc  +
+            inc  ptr+2
+    +		
+            pla
+    ptr		
+            lda  $d800		; modified
+    ;end
+            rts
 
     .pend
     
@@ -318,10 +358,10 @@ std .proc
     ;   stampa una string , null terminated
     ;   input   :   a/y
     
-    print_string
+    print_string    .proc
     
             sta  zpWord0 
-            sty  zpWord0+1 
+            sty  zpWord0+1
             ldy  #0
     -		lda  (zpWord0),y
             beq  +
@@ -330,7 +370,8 @@ std .proc
             bne  -
     +		rts
     
-
+    .pend
+    
     ; ........................................... print_u8_dec
 
     ; input :   a  unsigned byte
@@ -420,7 +461,8 @@ std .proc
             rts
 
     .pend
-    
+
+
 ;
     
 .pend

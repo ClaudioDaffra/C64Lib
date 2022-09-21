@@ -58,7 +58,15 @@ screen struct
     output  :
                 set_char.pointer
                 
+    #   get_char 
 
+    input   :
+                screen.col
+                screen.row
+    output  :
+                a ( get char )
+                
+                
     #   set_cc
 
     input   :    
@@ -95,6 +103,14 @@ screen struct
     output  :
                 set_foreground_color.pointer
 
+    # get_foreground_color 
+ 
+    input   :    
+                screen.col
+                screen.row
+    output  :
+                a ( fore ground color )
+                
 
     #   clear_screen_chars
     
@@ -116,6 +132,7 @@ screen struct
 ##########
 
     #   print_u8_hex
+    #   print_s8_hex
     
     input   :    
                 a <- unsigned byte
@@ -124,6 +141,7 @@ screen struct
                 /
 
     #   print_u8_bin
+    #   print_s8_bin
     
     input   :    
                 a <- unsigned byte
@@ -131,11 +149,42 @@ screen struct
     output  :
                 /
 
+    #  print_u16_hex
+    #  print_s16_hex
+    
+    input   :    
+                a,y <- word
+                (C) 1 print % 0 , no
+    output  :
+                /
+                
+    #   print_u16_bin
+    #   print_s16_bin
+    
+    input   :    
+                a,y <- word
+                (C) 1 print % 0 , no
+    output  :
+                /
+                
+    #  print_u8_dec 
+    #  print_s8_dec 
+    
+    input   :    
+                a <- byte
 
+    output  :
+                /
+    
+    #  print_u16_dec 
+    #  print_s16_dec 
+    
+    input   :    
+                a,x <- word
 
-
-
-
+    output  :
+                /
+                
 ;;;
 ;;
 ;

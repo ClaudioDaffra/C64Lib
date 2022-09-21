@@ -1114,21 +1114,21 @@ print_ubhex    .proc
                     .pend
  
 
-print_uw0    .proc
- 
-        stx  zpx
-        jsr  conv.uword2decimal
-        ldy  #0
--        
-        lda  conv.uword2decimal.decTenThousands,y
-        beq  +
-        jsr  c64.CHROUT
-        iny
-        bne  -
-+        
-        ldx  zpx
-        rts
-.pend
+                    print_uw0    .proc
+                     
+                            stx  zpx
+                            jsr  conv.uword2decimal
+                            ldy  #0
+                    -        
+                            lda  conv.uword2decimal.decTenThousands,y
+                            beq  +
+                            jsr  c64.CHROUT
+                            iny
+                            bne  -
+                    +        
+                            ldx  zpx
+                            rts
+                    .pend
 
                     print_uw    .proc
                      
@@ -1214,24 +1214,24 @@ input_chars    .proc
             _screenrows    .word  $0400 + range(0, 1000, 40)
             .pend
  
-getchr    .proc
- 
-        pha
-        tya
-        asl  a
-        tay
-        lda  setchr._screenrows+1,y
-        sta  _mod+2
-        pla
-        clc
-        adc  setchr._screenrows,y
-        sta  _mod+1
-        bcc  _mod
-        inc  _mod+2
-_mod        
-        lda  $ffff        ; modified
-        rts
-.pend
+            getchr    .proc
+             
+                    pha
+                    tya
+                    asl  a
+                    tay
+                    lda  setchr._screenrows+1,y
+                    sta  _mod+2
+                    pla
+                    clc
+                    adc  setchr._screenrows,y
+                    sta  _mod+1
+                    bcc  _mod
+                    inc  _mod+2
+            _mod        
+                    lda  $ffff        ; modified
+                    rts
+            .pend
 
             setclr    .proc
              
@@ -1256,24 +1256,24 @@ _mod
             _colorrows    .word  $d800 + range(0, 1000, 40)
             .pend
  
-getclr    .proc
- 
-        pha
-        tya
-        asl  a
-        tay
-        lda  setclr._colorrows+1,y
-        sta  _mod+2
-        pla
-        clc
-        adc  setclr._colorrows,y
-        sta  _mod+1
-        bcc  _mod
-        inc  _mod+2
-_mod        
-        lda  $ffff        ; modified
-        rts
-.pend
+            getclr    .proc
+             
+                    pha
+                    tya
+                    asl  a
+                    tay
+                    lda  setclr._colorrows+1,y
+                    sta  _mod+2
+                    pla
+                    clc
+                    adc  setclr._colorrows,y
+                    sta  _mod+1
+                    bcc  _mod
+                    inc  _mod+2
+            _mod        
+                    lda  $ffff        ; modified
+                    rts
+            .pend
  
 plot    .proc
  

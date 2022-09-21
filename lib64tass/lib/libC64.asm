@@ -155,13 +155,19 @@ hex_digits		.text '0123456789abcdef'
 
 char .proc
 
+        ;   $CHROUT
+
         home            =   19
         nl              =   13
         ;clear_screen   =   147    ;   restore original color
+        
+        ; $0400
+        
         space           =   ' '
         dollar          =   '$'
         a               =   1
-    
+        b               =   2
+        
 .pend
 
 ;--------------------------------------------------------------- c64 subroutine
@@ -413,10 +419,17 @@ load_var_ax	.macro
 
 .endm
 
-load_string	.macro
+load_address_ay	.macro
 
 	lda #<\1
 	ldy #>\1
+
+.endm
+
+load_address_ax	.macro
+
+	lda #<\1
+	ldx #>\1
 
 .endm
 
