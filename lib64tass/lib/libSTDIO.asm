@@ -5,6 +5,7 @@
 screen_s    .struct
     row                 .byte   0
     col                 .byte   0
+    ;
     border_color        .byte   0       ;           53280   border_color color    
     .union
     background_color    .byte   0       ;   col 0   53181   background color :  color 0
@@ -17,7 +18,11 @@ screen_s    .struct
     foreground_color        .byte   0   ;   foreground_color color
     background_color_number .byte   0   ;   00  01  10  11
     .endunion
-    char        .byte   0
+    ;
+    char                .byte   0
+    ;
+    width               .byte   c64.screen_max_width
+    height              .byte   c64.screen_max_height
 .endstruct
 
 screen  .dstruct  screen_s
@@ -407,6 +412,50 @@ txt .proc
             rts
         .pend
     
+    ; ........................................... get/set cursor position
+    
+    get_cursor_pos  .proc
+    
+            sec
+            jsr sys.PLOT
+            stx screen.col
+            sty screen.row
+            rts
+            
+    .pend
+    
+    set_cursor_pos  .proc
+    
+            ldx screen.col
+            ldy screen.row 
+            clc
+            jsr sys.PLOT
+
+            rts
+            
+    .pend
+    
+    get_screen_width  .proc
+    
+            jsr  sys.SCREEN
+            stx  screen.width
+            rts
+    .pend
+
+    get_screen_height  .proc
+    
+            jsr  sys.SCREEN
+            sty  screen.height
+            rts
+    .pend
+
+    get_screen_dim  .proc
+    
+            jsr  sys.SCREEN
+            stx  screen.width
+            sty  screen.height
+            rts
+    .pend
     
 .pend
 

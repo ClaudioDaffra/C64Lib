@@ -43,12 +43,17 @@ main	.proc
 
             ; ------------------------ sec scroll text & color
             ; ------------------------ clc scroll text
-            
+
             jsr txt.screen_scroll_left
             jsr txt.screen_scroll_down
             jsr txt.screen_scroll_right
             jsr txt.screen_scroll_up
 
+            ; ------------------------ clc scroll text
+
+            lda  #char.nl
+            jsr  sys.CHROUT
+            
             rts
 
     .pend

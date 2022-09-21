@@ -773,8 +773,8 @@ logo_lines    .word  prog8_interned_strings.string_0, prog8_interned_strings.str
 
 txt    .proc
 
-    DEFAULT_WIDTH  = $28    ;   40
-    DEFAULT_HEIGHT = $19    ;   25
+                    DEFAULT_WIDTH  = $28    ;   40
+                    DEFAULT_HEIGHT = $19    ;   25
 
                     ; non-zeropage variables
 
@@ -796,15 +796,15 @@ txt    .proc
 
                     .pend
  
-column    .proc
- 
-        sec
-        jsr  c64.PLOT
-        tay
-        clc
-        jmp  c64.PLOT
-        
-.pend
+        column    .proc
+         
+                sec
+                jsr  c64.PLOT
+                tay
+                clc
+                jmp  c64.PLOT
+                
+        .pend
  
 fill_screen    .proc
  
@@ -977,98 +977,98 @@ fill_screen    .proc
                     rts
                 .pend
  
-print    .proc
+            print    .proc
+             
+                    sta  zpy
+                    sty  zpx
+                    ldy  #0
+            -        
+                    lda  (zpy),y
+                    beq  +
+                    jsr  c64.CHROUT
+                    iny
+                    bne  -
+            +        
+                    rts         
+            .pend
  
-        sta  zpy
-        sty  zpx
-        ldy  #0
--        
-        lda  (zpy),y
-        beq  +
-        jsr  c64.CHROUT
-        iny
-        bne  -
-+        
-        rts
-.pend
+                    print_ub0    .proc
+                     
+                            stx  zpx
+                            jsr  conv.ubyte2decimal
+                            pha
+                            tya
+                            jsr  c64.CHROUT
+                            pla
+                            jsr  c64.CHROUT
+                            txa
+                            jsr  c64.CHROUT
+                            ldx  zpx
+                            rts
+                    .pend
  
-print_ub0    .proc
- 
-        stx  zpx
-        jsr  conv.ubyte2decimal
-        pha
-        tya
-        jsr  c64.CHROUT
-        pla
-        jsr  c64.CHROUT
-        txa
-        jsr  c64.CHROUT
-        ldx  zpx
-        rts
-.pend
- 
-; ----------------------------------------------------------------------- print_ub (dec)
-;   
-;   input   :   a   <- (unsigned byte);
-;   return  :   //
-;   output  :   a   -> (unsigned byte) -> decimal
+                    ; ----------------------------------------------------------------------- print_ub (dec)
+                    ;   
+                    ;   input   :   a   <- (unsigned byte);
+                    ;   return  :   //
+                    ;   output  :   a   -> (unsigned byte) -> decimal
 
-print_ub    .proc
+                    print_ub    .proc
 
-        stx  zpx
-        jsr  conv.ubyte2decimal
-_print_byte_digits
-        pha
-        cpy  #'0'
-        beq  +
-        tya
-        jsr  c64.CHROUT
-        pla
-        jsr  c64.CHROUT
-        jmp  print_ub_ones
-+       
-        pla
-        cmp  #'0'
-        beq  print_ub_ones
-        jsr  c64.CHROUT
-print_ub_ones   
-        txa
-        jsr  c64.CHROUT
-        ldx  zpx
-        rts
-        
-.pend
+                            stx  zpx
+                            jsr  conv.ubyte2decimal
+                    _print_byte_digits
+                            pha
+                            cpy  #'0'
+                            beq  +
+                            tya
+                            jsr  c64.CHROUT
+                            pla
+                            jsr  c64.CHROUT
+                            jmp  print_ub_ones
+                    +       
+                            pla
+                            cmp  #'0'
+                            beq  print_ub_ones
+                            jsr  c64.CHROUT
+                    print_ub_ones   
+                            txa
+                            jsr  c64.CHROUT
+                            ldx  zpx
+                            rts
+                            
+                    .pend
 
-; -----------------------------------------------------------------------
+                    ; -----------------------------------------------------------------------
 
-print_b    .proc
+                    print_b    .proc
+                     
+                            stx  zpx
+                            pha
+                            cmp  #0
+                            bpl  +
+                            lda  #'-'
+                            jsr  c64.CHROUT
+                    +        pla
+                            jsr  conv.byte2decimal
+                            jmp  print_ub._print_byte_digits
+                    .pend
  
-        stx  zpx
-        pha
-        cmp  #0
-        bpl  +
-        lda  #'-'
-        jsr  c64.CHROUT
-+        pla
-        jsr  conv.byte2decimal
-        jmp  print_ub._print_byte_digits
-.pend
- 
-print_ubhex    .proc
- 
-        stx  zpx
-        bcc  +
-        pha
-        lda  #'$'
-        jsr  c64.CHROUT
-        pla
-+        jsr  conv.ubyte2hex
-        jsr  c64.CHROUT
-        tya
-        jsr  c64.CHROUT
-        ldx  zpx
-        rts
-.pend
+                    print_ubhex    .proc
+                     
+                            stx  zpx
+                            bcc  +
+                            pha
+                            lda  #'$'
+                            jsr  c64.CHROUT
+                            pla
+                    +        jsr  conv.ubyte2hex
+                            jsr  c64.CHROUT
+                            tya
+                            jsr  c64.CHROUT
+                            ldx  zpx
+                            rts
+                    .pend
  
                     print_ubbin    .proc
                      
@@ -1275,31 +1275,31 @@ input_chars    .proc
                     rts
             .pend
  
-plot    .proc
- 
-        stx  zpx
-        tax
-        clc
-        jsr  c64.PLOT
-        ldx  zpx
-        rts
-    .pend
+            plot    .proc
+             
+                    stx  zpx
+                    tax
+                    clc
+                    jsr  c64.PLOT
+                    ldx  zpx
+                    rts
+                .pend
  
 
-width    .proc
- 
-        jsr  c64.SCREEN
-        txa
-        rts
-.pend
-    ;    src line: library:/prog8lib/c64/textio.p8:604
+                width    .proc
+                 
+                        jsr  c64.SCREEN
+                        txa
+                        rts
+                .pend
+                    ;    src line: library:/prog8lib/c64/textio.p8:604
 
-height    .proc
-    ;    src line: library:/prog8lib/c64/textio.p8:606
-        jsr  c64.SCREEN
-        tya
-        rts
-    .pend
+                height    .proc
+                    ;    src line: library:/prog8lib/c64/textio.p8:606
+                        jsr  c64.SCREEN
+                        tya
+                        rts
+                    .pend
     .pend
 
 ;***********************
@@ -1485,7 +1485,7 @@ c64    .proc
     CHKOUT = $ffc9
     CLRCHN = $ffcc
     CHRIN = $ffcf
-    CHROUT = $ffd2
+                    CHROUT = $ffd2
     LOAD = $ffd5
     SAVE = $ffd8
     SETTIM = $ffdb
@@ -1494,8 +1494,8 @@ c64    .proc
     GETIN = $ffe4
     CLALL = $ffe7
     UDTIM = $ffea
-    SCREEN = $ffed
-    PLOT = $fff0
+                    SCREEN = $ffed
+                    PLOT = $fff0
     IOBASE = $fff3
 
 ; subroutines in this block

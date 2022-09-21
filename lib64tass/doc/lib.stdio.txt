@@ -126,7 +126,15 @@ screen struct
                 a <- color
     output  :
                 c64.color_addr
+
+    # screen_scroll_(left,right,up,down) 
     
+    input   :    
+                Carry   1   scroll text & char
+                Carry   0   scroll text
+    output  :
+                //
+                
 ##########
     std
 ##########

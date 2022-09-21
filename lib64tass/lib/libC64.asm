@@ -116,7 +116,9 @@ sys .proc
 
     CHROUT      = $FFD2     ;   a
     OUT_U16     = $BDCD     ;   ax
-    
+    PLOT        = $fff0     ;   C=1 read cursor pos(xy)   C=0 set cursor pos(xy) 
+    SCREEN      = $ffed     ;   
+
 .pend
 
 ;--------------------------------------------------------------- color
@@ -180,7 +182,10 @@ c64 .proc
         screen_addr =   $0400
         .endweak
         color_addr  =   $d800
-        
+
+        screen_max_width  = $28    ;   40
+        screen_max_height = $19    ;   25
+
         ;---------------------------------------------------------------  
         
         screen_control_register_1   =   53265
