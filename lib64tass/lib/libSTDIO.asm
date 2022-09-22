@@ -133,9 +133,9 @@ txt .proc
     ; ........................................... set_cc ( row,col,char,col )
     
     set_cc   .proc 
-        ;  screen.col, screen.row, screen.char, screen.foreground_color  
-        ;  set char+color at the given position on the screen
-        ;  screen_addr FIX $0400 , color_addr FIX $d800 
+            ;  screen.col, screen.row, screen.char, screen.foreground_color  
+            ;  set char+color at the given position on the screen
+            ;  screen_addr FIX $0400 , color_addr FIX $d800 
             lda  screen.row
             asl  a
             tay
@@ -417,7 +417,7 @@ txt .proc
     get_cursor_pos  .proc
     
             sec
-            jsr sys.PLOT
+            jsr sys.SCREEN_XY
             stx screen.col
             sty screen.row
             rts
@@ -429,7 +429,7 @@ txt .proc
             ldx screen.col
             ldy screen.row 
             clc
-            jsr sys.PLOT
+            jsr sys.SCREEN_XY
 
             rts
             
@@ -437,26 +437,28 @@ txt .proc
     
     get_screen_width  .proc
     
-            jsr  sys.SCREEN
+            jsr  sys.SCREEN_WH
             stx  screen.width
             rts
     .pend
 
     get_screen_height  .proc
     
-            jsr  sys.SCREEN
+            jsr  sys.SCREEN_WH
             sty  screen.height
             rts
     .pend
 
     get_screen_dim  .proc
     
-            jsr  sys.SCREEN
+            jsr  sys.SCREEN_WH
             stx  screen.width
             sty  screen.height
             rts
     .pend
     
+
+
 .pend
 
 ;--------------------------------------------------------------- std
@@ -561,6 +563,53 @@ std .proc
             bne  -
     +		rts
     
+    .pend
+
+    ; ........................................... input_string
+
+    ;   input   :   a/y     address string
+    ;   output  :           output  string  ,   0
+    
+    input_string    .proc
+     
+            sta  zpWord0
+            sty  zpWord0+1
+            ldy  #0             ; char counter = 0
+    -        
+            jsr  sys.CHRIN
+            cmp  #$0d           ; return (ascii 13) pressed?
+            beq  +              ; yes, end.
+            sta  (zpWord0),y    ; else store char in buffer
+            iny
+            bne  -
+    +        
+            lda  #0
+            sta  (zpWord0),y    ; finish string with 0 byte
+            rts
+            
+    .pend
+
+    input_string_max    .proc
+
+            sta  zpWord0
+            sty  zpWord0+1
+            ldy  #0             ; char counter = 0
+            inx                 ;   numer char + 0
+            beq  +              ;   if 255 then end            
+    -        
+            jsr  sys.CHRIN
+            cmp  #$0d           ; return (ascii 13) pressed?
+            beq  +              ; yes, end.
+            sta  (zpWord0),y    ; else store char in buffer
+            dex                 ; max num char
+            beq  +
+            iny
+            bne  -
+    +        
+            lda  #0
+            sta  (zpWord0),y    ; finish string with 0 byte
+            rts
+            
     .pend
     
     ; ........................................... print_u8_dec

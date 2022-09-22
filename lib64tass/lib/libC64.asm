@@ -116,9 +116,10 @@ sys .proc
 
     CHROUT      = $FFD2     ;   a
     OUT_U16     = $BDCD     ;   ax
-    PLOT        = $fff0     ;   C=1 read cursor pos(xy)   C=0 set cursor pos(xy) 
-    SCREEN      = $ffed     ;   
-
+    SCREEN_XY   = $fff0     ;   C=1 read cursor pos(xy)   C=0 set cursor pos(xy) 
+    SCREEN_WH   = $ffed     ;   
+    CHRIN       = $ffcf     ;
+    
 .pend
 
 ;--------------------------------------------------------------- color

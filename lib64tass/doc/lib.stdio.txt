@@ -192,7 +192,12 @@ screen struct
 
     output  :
                 /
-                
+
+    # input_string
+    
+    ;   input   :   a/y     address string
+    ;   output  :           output  string  ,   0
+    
 ;;;
 ;;
 ;

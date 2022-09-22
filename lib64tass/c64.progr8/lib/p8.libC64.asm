@@ -1174,23 +1174,23 @@ fill_screen    .proc
                             jmp  print_uw
                     .pend
  
-input_chars    .proc
- 
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  #0                ; char counter = 0
--        
-        jsr  c64.CHRIN
-        cmp  #$0d            ; return (ascii 13) pressed?
-        beq  +                ; yes, end.
-        sta  (zpWord0),y    ; else store char in buffer
-        iny
-        bne  -
-+        
-        lda  #0
-        sta  (zpWord0),y    ; finish string with 0 byte
-        rts
-.pend
+                input_chars    .proc
+                 
+                        sta  zpWord0
+                        sty  zpWord0+1
+                        ldy  #0                ; char counter = 0
+                -        
+                        jsr  c64.CHRIN
+                        cmp  #$0d            ; return (ascii 13) pressed?
+                        beq  +                ; yes, end.
+                        sta  (zpWord0),y    ; else store char in buffer
+                        iny
+                        bne  -
+                +        
+                        lda  #0
+                        sta  (zpWord0),y    ; finish string with 0 byte
+                        rts
+                .pend
 
             setchr    .proc
                     pha
@@ -1484,7 +1484,7 @@ c64    .proc
     CHKIN = $ffc6
     CHKOUT = $ffc9
     CLRCHN = $ffcc
-    CHRIN = $ffcf
+                    CHRIN = $ffcf
                     CHROUT = $ffd2
     LOAD = $ffd5
     SAVE = $ffd8
