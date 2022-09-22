@@ -1453,9 +1453,9 @@ c64    .proc
     Colors = $d800
 
 ; non-zeropage variables
-    STROUT = $ab1e
-    CLEARSCR = $e544
-    HOMECRSR = $e566
+                    STROUT = $ab1e
+                    CLEARSCR = $e544
+                    HOMECRSR = $e566
     IRQDFRT = $ea31
     IRQDFEND = $ea81
     CINT = $ff81
@@ -1888,6 +1888,7 @@ cx16    .proc
     r13 = $cf1a
     r14 = $cf1c
     r15 = $cf1e
+    
     r0s = $cf00
     r1s = $cf02
     r2s = $cf04
@@ -2705,146 +2706,146 @@ string    .proc
 ; subroutines in this block
     ;    src line: library:/prog8lib/string.p8:5
 
-length    .proc
-    ;    src line: library:/prog8lib/string.p8:10
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  #0
--        lda  (zpWord0),y
-        beq  +
-        iny
-        bne  -
-+        rts
-    .pend
-    ;    src line: library:/prog8lib/string.p8:22
+            length    .proc
+                
+                    sta  zpWord0
+                    sty  zpWord0+1
+                    ldy  #0
+            -        lda  (zpWord0),y
+                    beq  +
+                    iny
+                    bne  -
+            +        rts
+                .pend
+                
 
-left    .proc
-    ;    src line: library:/prog8lib/string.p8:27
-                ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
-        ldy  cx16.r0
-        sty  zpWord0
-        ldy  cx16.r0+1
-        sty  zpWord0+1
-        ldy  cx16.r1
-        sty  zpWord1
-        ldy  cx16.r1+1
-        sty  zpWord1+1
-        tay
-        lda  #0
-        sta  (zpWord1),y
-        cpy  #0
-        bne  _loop
-        rts
-_loop        dey
-        lda  (zpWord0),y
-        sta  (zpWord1),y
-        cpy  #0
-        bne  _loop
-+        rts
-    .pend
-    ;    src line: library:/prog8lib/string.p8:53
+            left    .proc
+             
+                            ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
+                    ldy  cx16.r0
+                    sty  zpWord0
+                    ldy  cx16.r0+1
+                    sty  zpWord0+1
+                    ldy  cx16.r1
+                    sty  zpWord1
+                    ldy  cx16.r1+1
+                    sty  zpWord1+1
+                    tay
+                    lda  #0
+                    sta  (zpWord1),y
+                    cpy  #0
+                    bne  _loop
+                    rts
+            _loop        dey
+                    lda  (zpWord0),y
+                    sta  (zpWord1),y
+                    cpy  #0
+                    bne  _loop
+            +        rts
+                .pend
+ 
 
-right    .proc
-    ;    src line: library:/prog8lib/string.p8:58
-                ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
+            right    .proc
+                ;    src line: library:/prog8lib/string.p8:58
+                            ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
+                            sta  zpy
+                            lda  cx16.r0
+                            ldy  cx16.r0+1
+                            jsr  string.length
+                            tya
+                            sec
+                            sbc  zpy
+                            clc
+                            adc  cx16.r0
+                    sta  zpWord0
+                    lda  cx16.r0+1
+                    adc  #0
+                    sta  zpWord0+1
+                    ldy  cx16.r1
+                    sty  zpWord1
+                    ldy  cx16.r1+1
+                    sty  zpWord1+1
+                    ldy  zpy
+                    lda  #0
+                    sta  (zpWord1),y
+                    cpy  #0
+                    bne  _loop
+                    rts
+            _loop        dey
+                    lda  (zpWord0),y
+                    sta  (zpWord1),y
+                    cpy  #0
+                    bne  _loop
+            +        rts
+                .pend
+                ;    src line: library:/prog8lib/string.p8:92
+
+        slice    .proc
+            ;    src line: library:/prog8lib/string.p8:98
+                        ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
+                ; substr(source, target, start, length)
                 sta  zpy
                 lda  cx16.r0
-                ldy  cx16.r0+1
-                jsr  string.length
-                tya
-                sec
-                sbc  zpy
+                sta  zpWord0
+                lda  cx16.r0+1
+                sta  zpWord0+1
+                lda  cx16.r1
+                sta  zpWord1
+                lda  cx16.r1+1
+                sta  zpWord1+1
+
+                ; adjust src location
                 clc
-                adc  cx16.r0
-        sta  zpWord0
-        lda  cx16.r0+1
-        adc  #0
-        sta  zpWord0+1
-        ldy  cx16.r1
-        sty  zpWord1
-        ldy  cx16.r1+1
-        sty  zpWord1+1
-        ldy  zpy
-        lda  #0
-        sta  (zpWord1),y
-        cpy  #0
-        bne  _loop
-        rts
-_loop        dey
-        lda  (zpWord0),y
-        sta  (zpWord1),y
-        cpy  #0
-        bne  _loop
-+        rts
-    .pend
-    ;    src line: library:/prog8lib/string.p8:92
-
-slice    .proc
-    ;    src line: library:/prog8lib/string.p8:98
-                ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
-        ; substr(source, target, start, length)
-        sta  zpy
-        lda  cx16.r0
-        sta  zpWord0
-        lda  cx16.r0+1
-        sta  zpWord0+1
-        lda  cx16.r1
-        sta  zpWord1
-        lda  cx16.r1+1
-        sta  zpWord1+1
-
-        ; adjust src location
-        clc
-        lda  zpWord0
-        adc  zpy
-        sta  zpWord0
-        bcc  +
-        inc  zpWord0+1
-+        lda  #0
-        sta  (zpWord1),y
-        beq  _startloop
--        lda  (zpWord0),y
-        sta  (zpWord1),y
-_startloop    dey
-        cpy  #$ff
-        bne  -
-        rts
-    .pend
-    ;    src line: library:/prog8lib/string.p8:130
-
-find    .proc
-    ;    src line: library:/prog8lib/string.p8:133
-                ; need to copy the the cx16 virtual registers to zeropage to make this run on C64...
-                sta  zpy
-        lda  cx16.r0
-        ldy  cx16.r0+1
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  #0
--        lda  (zpWord0),y
-        beq  _notfound
-        cmp  zpy
-        beq  _found
-        iny
-        bne  -
-_notfound    lda  #0
-                clc
-        rts
-_found        tya
-                sec
+                lda  zpWord0
+                adc  zpy
+                sta  zpWord0
+                bcc  +
+                inc  zpWord0+1
+        +        lda  #0
+                sta  (zpWord1),y
+                beq  _startloop
+        -        lda  (zpWord0),y
+                sta  (zpWord1),y
+        _startloop    dey
+                cpy  #$ff
+                bne  -
                 rts
-    .pend
-    ;    src line: library:/prog8lib/string.p8:156
+            .pend
+            ;    src line: library:/prog8lib/string.p8:130
 
-copy    .proc
-    ;    src line: library:/prog8lib/string.p8:161
-        sta  zpWord0
-        sty  zpWord0+1
-        lda  cx16.r0
-        ldy  cx16.r0+1
-        jmp  prog8_lib.strcpy
-    .pend
-    ;    src line: library:/prog8lib/string.p8:170
+            find    .proc
+                ;    src line: library:/prog8lib/string.p8:133
+                            ; need to copy the the cx16 virtual registers to zeropage to make this run on C64...
+                            sta  zpy
+                    lda  cx16.r0
+                    ldy  cx16.r0+1
+                    sta  zpWord0
+                    sty  zpWord0+1
+                    ldy  #0
+            -        lda  (zpWord0),y
+                    beq  _notfound
+                    cmp  zpy
+                    beq  _found
+                    iny
+                    bne  -
+            _notfound    lda  #0
+                            clc
+                    rts
+            _found        tya
+                            sec
+                            rts
+                .pend
+                ;    src line: library:/prog8lib/string.p8:156
+
+        copy    .proc
+            ;    src line: library:/prog8lib/string.p8:161
+                sta  zpWord0
+                sty  zpWord0+1
+                lda  cx16.r0
+                ldy  cx16.r0+1
+                jmp  prog8_lib.strcpy
+            .pend
+            ;    src line: library:/prog8lib/string.p8:170
 
 compare    .proc
     ;    src line: library:/prog8lib/string.p8:175
@@ -5734,19 +5735,19 @@ _arg_index    .byte  0
         .pend
 
 
-strcpy        .proc
-        ; copy a string (must be 0-terminated) from A/Y to (zpWord0)
-        ; it is assumed the target string is large enough.
-        ; returns the length of the string that was copied in Y.
-        sta  zpWord1
-        sty  zpWord1+1
-        ldy  #$ff
--        iny
-        lda  (zpWord1),y
-        sta  (zpWord0),y
-        bne  -
-        rts
-        .pend
+                strcpy        .proc
+                        ; copy a string (must be 0-terminated) from A/Y to (zpWord0)
+                        ; it is assumed the target string is large enough.
+                        ; returns the length of the string that was copied in Y.
+                        sta  zpWord1
+                        sty  zpWord1+1
+                        ldy  #$ff
+                -        iny
+                        lda  (zpWord1),y
+                        sta  (zpWord0),y
+                        bne  -
+                        rts
+                        .pend
 
 strcmp_expression    .proc
         ; -- compare strings, result in A

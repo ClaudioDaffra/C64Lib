@@ -65,6 +65,8 @@ if_false .macro
 
 ;--------------------------------------------------------------- zero page
 
+;   -------------------------------------------- safe
+
 zpa		= $02
 zpx		= $2a
 zpy		= $52
@@ -82,43 +84,36 @@ zpWord1     = $fd
 zpWord1hi   = $fd
 zpWord1lo   = $fd+1
 
-    ;   basic char get not used here TODO
-    ;
-    ;   zpByte4  = $73
-    ;   zpByte5  = $74
-    ;       zpWord2  = $73
+;   -------------------------------------------- safe?
 
-    ;   zpByte6  = $75
-    ;   zpByte7  = $76
-    ;       zpWord3  = $75
+zpByte4 = $03
+zpByte5 = $04
+zpByte6 = $05
+zpByte7 = $06
 
-    ;   zpByte8  = $77
-    ;   zpByte9  = $78
-    ;       zpWord4  = $77
+zpWord2     = $03           ;    $B1AA, execution address of routine converting floating point to integer.
+zpWord2hi   = $03
+zpWord2lo   = $03+1
 
-    ;   zpByte10     = $79
-    ;   zpByte11     = $7A
-    ;       zpWord5  = $79
+zpWord3     = $05          ;    $B391, execution address of routine converting integer to floating point.
+zpWord3hi   = $05
+zpWord3lo   = $05+1
 
-    ;   zpByte12     = $7B
-
-    ;   zpByte4 = $03   ;   3
-    ;   zpByte5 = $04
-    ;   zpByte6 = $05   ;   5
-    ;   zpByte7 = $06
-
-    ;   zpWord2 = $03
-    ;   zpWord3 = $05
 
 ;--------------------------------------------------------------- c64 kernal
 
 sys .proc
 
-    CHROUT      = $FFD2     ;   a
-    OUT_U16     = $BDCD     ;   ax
-    SCREEN_XY   = $fff0     ;   C=1 read cursor pos(xy)   C=0 set cursor pos(xy) 
-    SCREEN_WH   = $ffed     ;   
-    CHRIN       = $ffcf     ;
+
+
+    CHROUT          = $FFD2     ;   a
+    CHRIN           = $ffcf     ;   
+    STROUT          = $ab1e     ;       
+    OUT_U16         = $BDCD     ;   ax
+    SCREEN_XY       = $fff0     ;   C=1 read cursor pos(xy)   C=0 set cursor pos(xy) 
+    SCREEN_WH       = $ffed     ;   
+    SCREEN_CLEAR    = $e544     ;
+    SCREEN_HOME     = $e566     ;
     
 .pend
 
@@ -430,6 +425,24 @@ load_address_ay	.macro
 	lda #<\1
 	ldy #>\1
 
+.endm
+
+load_address_zpWord0	.macro
+
+	lda #<\1
+    sta zpWord0
+	ldy #>\1
+    sty zpWord0+1
+    
+.endm
+
+load_address_zpWord1	.macro
+
+	lda #<\1
+    sta zpWord1
+	ldy #>\1
+    sty zpWord1+1
+    
 .endm
 
 load_address_ax	.macro

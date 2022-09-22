@@ -1,0 +1,58 @@
+
+###########
+    string
+###########
+
+    # string.length
+    
+    ;--------------------------------------------------------------- length
+    ;   input   :   a/y :   address string
+    ;   output  :   a   :   length
+
+
+    ;--------------------------------------------------------------- left
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;              address string zpWord1 dest
+    ;              a   left
+    ;   output  :  //
+    
+    # string.left 
+
+    ;--------------------------------------------------------------- right
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;              address string zpWord1 dest
+    ;              a   right
+    ;   output  :  //
+    
+    # string.right 
+
+    ;--------------------------------------------------------------- mid
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;              address string zpWord1 dest
+    ;              a    start
+    ;              y    length
+    ;   output  :  //
+    
+    # string.mid
+        
+    ;--------------------------------------------------------------- find char
+    ;   input   :   
+    ;               address string zpWord0 source
+    ;               a    char
+    ;   output  :
+    ;               (C=1)   found
+    ;               (c=0)   not found
+    
+    # string.find_char
+    
+    
+;;;
+;;
+;
+
+
+
+ 

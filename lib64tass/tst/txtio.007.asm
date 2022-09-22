@@ -34,13 +34,10 @@ main	.proc
 
             ;   program
 
-            ; ---------------------------- clear screen, go 0,0 (home)
+            ; ---------------------------- clear screen kernal
             
-            lda #' '
-            jsr txt.clear_screen_chars
-            
-            lda #char.home
-            jsr sys.CHROUT
+            jsr sys.SCREEN_CLEAR
+            jsr sys.SCREEN_HOME
 
             ; ---------------------------- input string
             
@@ -51,14 +48,33 @@ main	.proc
             jsr std.print_string
 
             ; ---------------------------- input string max
+
+            lda #char.nl
+            jsr sys.CHROUT
             
             load_address_ay temp
             ldx #5
             jsr std.input_string_max
+
+            lda #' '
+            jsr sys.CHROUT
             
             load_address_ay temp
             jsr std.print_string
+
+            lda #' '
+            jsr sys.CHROUT
             
+            lda #'['
+            jsr sys.CHROUT
+            
+            ; ---------------------------- print string kernal
+
+            load_address_ay temp
+            jsr sys.STROUT
+
+            lda #']'
+            jsr sys.CHROUT
             
             rts
 

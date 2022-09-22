@@ -1,0 +1,90 @@
+
+UNUSED
+
+;   ------------------------------------ zero page
+
+    $0002           stz
+
+    $0003          zpW0rd2  hi
+    $0004                   lo
+    $0005          zpW0rd1  hi
+    $0006                   lo
+
+    $002a           stx
+
+    $0052           sty
+
+    $00FB           zpW0rd0 zpByte0 
+    $00FC                   zpByte1
+    $00FD           zpW0rd1 zpByte2 
+    $00FE                   zpByte3
+
+;   ------------------------------------ upper page
+
+    $0285           1            
+
+    $02A7-$02FF     89 bytes
+
+    $0313           1
+    $032E-$032F     2
+    $0334-$033B     8
+    $03FC-$03FF     4
+    $07E8-$07F7     16
+
+    $DBE8-$DBFF     24
+
+TEMP
+
+    ;   ------------------------------------ temp    zp0
+
+    $0019-$0021         string expr
+    $0022-$0025         Temporary area for various operations.
+    $004B-$004C         Temporary area for saving original pointer to current BASIC 
+                        instruction during GET, INPUT and READ.
+                        
+    $0068               Temporary area for various operations.
+
+    $0071-$0072         Temporary area for saving original pointer to current 
+                        BASIC instruction during VAL().
+                        
+    $0097               Temporary area for saving original value of Y register during input from RS232. 
+    $00F2               Temporary area during scrolling the screen.
+
+    ;   ------------------------------------    upper page
+
+    $029F-$02A0         Temporary area for saving pointer to original interrupt service routine during datasette input output. 
+
+    $02A1               Temporary area for saving original value of CIA#2 interrupt control register, 
+                        at memory address $DD0D, during RS232 input/output.
+
+    $02A2               Temporary area for saving original value of CIA#1 timer #1 control register, 
+                        at memory address $DC0E, during datasette input/output.
+
+    $02A3               Temporary area for saving original value of CIA#1 interrupt control register, 
+                        at memory address $DC0D, during datasette input/output.
+
+    $02A4               Temporary area for saving original value of CIA#1 timer #1 control register, 
+                        at memory address $DC0E, during datasette input/output.
+
+    ;   basic char get not used here TODO
+    ;
+    ;   zpByte4  = $73
+    ;   zpByte5  = $74
+    ;       zpWord2  = $73
+
+    ;   zpByte6  = $75
+    ;   zpByte7  = $76
+    ;       zpWord3  = $75
+
+    ;   zpByte8  = $77
+    ;   zpByte9  = $78
+    ;       zpWord4  = $77
+
+    ;   zpByte10     = $79
+    ;   zpByte11     = $7A
+    ;       zpWord5  = $79
+
+    ;   zpByte12     = $7B
+
+
+
