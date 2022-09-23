@@ -194,6 +194,7 @@ string .proc
     ;
     ;  zpWord1 = zpWord0
     ;
+    
     copy        .proc
         ; copy a string (must be 0-terminated) from A/Y to (zpWord0)
         ; it is assumed the target string is large enough.
@@ -210,7 +211,47 @@ string .proc
         
     .pend
 
+    ;--------------------------------------------------------------- copy
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;              address string zpWord1 dest
+    ;   output  :
+    ;              -1,0,1 in A, depeding on the ordering.
 
+    compare    .proc
+    
+            ldy  #0
+    _loop        
+            lda  (zpWord0),y
+            bne  +
+            lda  (zpWord1),y
+            bne  _return_minusone
+            beq  _return
+    +        
+            cmp  (zpWord1),y
+            bcc  _return_minusone
+            bne  _return_one
+            inc  zpWord0
+            bne  +
+            inc  zpWord0+1
+    +        
+            inc  zpWord1
+            bne  _loop
+            inc  zpWord1+1
+            bne  _loop
+    _return_one
+            lda  #1
+    _return        
+            rts
+    _return_minusone
+            lda  #-1
+            rts
+    .pend
+    
+    
+;    
+    
+    
 .pend
 
 

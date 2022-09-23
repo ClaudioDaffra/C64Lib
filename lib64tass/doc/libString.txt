@@ -48,6 +48,31 @@
     
     # string.find_char
     
+    ;--------------------------------------------------------------- copy
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;              address string zpWord1 dest
+    ;   output  :
+    ;              a length string copied
+    ;
+    ;  zpWord1 = zpWord0
+    ;
+    
+    # copy 
+    
+    ;--------------------------------------------------------------- compare
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;              address string zpWord1 dest
+    ;   output  :
+    ;              -1,0,1 in A, depeding on the ordering.
+    ;
+    ;   if_string_eq    label_eq
+    ;   if_string_gt    label_gt
+    ;   if_string_lt    label_lt
+  
+    # compare
+    
     
 ;;;
 ;;

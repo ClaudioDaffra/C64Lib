@@ -2835,30 +2835,30 @@ string    .proc
                             sec
                             rts
                 .pend
-                ;    src line: library:/prog8lib/string.p8:156
+                
 
         copy    .proc
-            ;    src line: library:/prog8lib/string.p8:161
+          
                 sta  zpWord0
                 sty  zpWord0+1
                 lda  cx16.r0
                 ldy  cx16.r0+1
                 jmp  prog8_lib.strcpy
             .pend
-            ;    src line: library:/prog8lib/string.p8:170
+            
 
-compare    .proc
-    ;    src line: library:/prog8lib/string.p8:175
-        sta  zpWord1
-        sty  zpWord1+1
-        lda  cx16.r0
-        ldy  cx16.r0+1
-        jmp  prog8_lib.strcmp_mem
-    .pend
-    ;    src line: library:/prog8lib/string.p8:184
+        compare    .proc
+             
+                sta  zpWord1
+                sty  zpWord1+1
+                lda  cx16.r0
+                ldy  cx16.r0+1
+                jmp  prog8_lib.strcmp_mem
+            .pend
+    
 
 lower    .proc
-    ;    src line: library:/prog8lib/string.p8:188
+     
             sta  zpWord0
             sty  zpWord0+1
             ldy  #0
@@ -2875,7 +2875,7 @@ lower    .proc
             bne  -
 _done       rts
     .pend
-    ;    src line: library:/prog8lib/string.p8:207
+   
 
 upper    .proc
     ;    src line: library:/prog8lib/string.p8:209
@@ -5763,34 +5763,34 @@ _arg_s2        .word  0
         .pend
 
 
-strcmp_mem    .proc
-        ; --   compares strings in s1 (AY) and s2 (zpWord1).
-        ;      Returns -1,0,1 in A, depeding on the ordering. Clobbers Y.
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  #0
-_loop        lda  (zpWord0),y
-        bne  +
-        lda  (zpWord1),y
-        bne  _return_minusone
-        beq  _return
-+        cmp  (zpWord1),y
-        bcc  _return_minusone
-        bne  _return_one
-        inc  zpWord0
-        bne  +
-        inc  zpWord0+1
-+        inc  zpWord1
-        bne  _loop
-        inc  zpWord1+1
-        bne  _loop
-_return_one
-        lda  #1
-_return        rts
-_return_minusone
-        lda  #-1
-        rts
-        .pend
+            strcmp_mem    .proc
+                    ; --   compares strings in s1 (AY) and s2 (zpWord1).
+                    ;      Returns -1,0,1 in A, depeding on the ordering. Clobbers Y.
+                    sta  zpWord0
+                    sty  zpWord0+1
+                    ldy  #0
+            _loop        lda  (zpWord0),y
+                    bne  +
+                    lda  (zpWord1),y
+                    bne  _return_minusone
+                    beq  _return
+            +        cmp  (zpWord1),y
+                    bcc  _return_minusone
+                    bne  _return_one
+                    inc  zpWord0
+                    bne  +
+                    inc  zpWord0+1
+            +        inc  zpWord1
+                    bne  _loop
+                    inc  zpWord1+1
+                    bne  _loop
+            _return_one
+                    lda  #1
+            _return        rts
+            _return_minusone
+                    lda  #-1
+                    rts
+                .pend
 
 
 sign_extend_stack_byte    .proc

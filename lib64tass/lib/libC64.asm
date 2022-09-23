@@ -56,12 +56,7 @@ if_bit_1 .macro
         bne \1         ;  settato         =   1
 .endm
    
-if_true  .macro
-        bcs \1        ;   non settato     =   0
-.endm
-if_false .macro
-        bcc \1         ;  settato         =   1
-.endm
+
 
 ;--------------------------------------------------------------- zero page
 
@@ -486,16 +481,41 @@ load_zpWord1	.macro
 	
 .endm
 
-; ---------------------------------------------------------------
+; --------------------------------------------------------------- if then
 
 then	.macro
 	bcs \1
 .endm
 
-; ---------------------------------------------------------------
-
 else	.macro
 	bcc \1
+.endm
+
+; --------------------------------------------------------------- logical true false
+
+if_true  .macro
+        bcs \1        ;   non settato     =   0
+.endm
+
+if_false .macro
+        bcc \1         ;  settato         =   1
+.endm
+
+; --------------------------------------------------------------- lòogical string = > <
+
+if_string_eq	.macro
+	cmp #0
+    beq \1
+.endm
+
+if_string_lt	.macro
+	cmp #-1
+    beq \1
+.endm
+
+if_string_gt	.macro
+	cmp #1
+    beq \1
 .endm
 
 ;;;
