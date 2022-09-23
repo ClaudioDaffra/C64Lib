@@ -1,5 +1,7 @@
 
-;---------------------------------------------------------------  C64
+;******
+;       C64
+;******
 
 ;---------------------------------------------------------------  bit and or
 
@@ -99,8 +101,6 @@ zpWord3lo   = $05+1
 
 sys .proc
 
-
-
     CHROUT          = $FFD2     ;   a
     CHRIN           = $ffcf     ;   
     STROUT          = $ab1e     ;       
@@ -140,7 +140,7 @@ color .proc
 
 global  .proc
 
-hex_digits		.text '0123456789abcdef'
+    hex_digits		.text '0123456789abcdef'
 
 .pend
 
@@ -385,7 +385,7 @@ c64 .proc
         
 .pend
 
-; ---------------------------------------------------------------
+; --------------------------------------------------------------- macro
 
 load_ay	.macro
 
@@ -456,9 +456,9 @@ load_zpByte0	.macro
 
 load_zpWord0	.macro
 
-	lda <\1
+	lda \1
 	sta zpWord0
-	lda >\1
+	lda \1+1
 	sta zpWord0+1
 	
 .endm
@@ -474,9 +474,9 @@ load_zpByte1	.macro
 
 load_zpWord1	.macro
 
-	lda <\1
+	lda \1
 	sta zpWord1
-	lda >\1
+	lda \1+1
 	sta zpWord1+1
 	
 .endm
@@ -501,22 +501,6 @@ if_false .macro
         bcc \1         ;  settato         =   1
 .endm
 
-; --------------------------------------------------------------- lòogical string = > <
-
-if_string_eq	.macro
-	cmp #0
-    beq \1
-.endm
-
-if_string_lt	.macro
-	cmp #-1
-    beq \1
-.endm
-
-if_string_gt	.macro
-	cmp #1
-    beq \1
-.endm
 
 ;;;
 ;;

@@ -1,0 +1,48 @@
+
+###########
+    math
+###########
+
+;   every logical compare, return always 0/1 Carry set or Not
+;   if_true / if_false check carry
+
+;   .byte   unsigned byte   u8
+;   .char   signed   byte   s8
+;   .word   unsigned word   u16
+;   .sint   signed   word   s16
+
+    #   math.u8_cmp_eq      ?=
+    #   math.u8_cmp_gt      >    
+    #   math.u8_cmp_lt      <  
+    #   math.u8_cmp_ge      >=
+    #   math.u8_cmp_le      <= 
+    
+    #   math.s8_cmp_eq      ?=
+    #   math.s8_cmp_gt      >
+    #   math.s8_cmp_lt      <
+    #   math.s8_cmp_ge      >=
+    #   math.s8_cmp_le      <=
+    
+    #   math.u16_cmp_eq     ?=
+    #   math.u16_cmp_gt     > 
+    #   math.u16_cmp_lt     <
+    #   math.u16_cmp_gt     >=
+    #   math.u16_cmp_lt     <=
+    
+    #   math.s16_cmp_eq     ?=
+    #   math.s16_cmp_gt     >
+    #   math.s16_cmp_lt     <
+    #   math.s16_cmp_gt     >=
+    #   math.s16_cmp_lt     <=
+
+
+
+
+    
+;;;
+;;
+;
+
+
+
+ 

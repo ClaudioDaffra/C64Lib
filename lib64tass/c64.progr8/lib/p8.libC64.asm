@@ -2694,17 +2694,16 @@ prog8_init_vars    .block
     .bend
     .pend
 
-;***********************
-; #LIBRARY : 'string' 
-;***********************
+            ;***********************
+            ; #LIBRARY : 'string' 
+            ;***********************
 
-string    .proc
-    ;    src line: library:/prog8lib/string.p8:3
+            string    .proc
+ 
+            ; non-zeropage variables
 
-; non-zeropage variables
-
-; subroutines in this block
-    ;    src line: library:/prog8lib/string.p8:5
+            ; subroutines in this block
+             
 
             length    .proc
                 
@@ -2968,7 +2967,7 @@ string    .proc
     
     
     
-    .pend
+            .pend
 
 ; ****************** 
 ; #LIBRARY : 'math' 
