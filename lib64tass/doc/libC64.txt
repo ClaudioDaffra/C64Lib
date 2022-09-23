@@ -117,8 +117,33 @@
             check_bitmap_mode_320x200   
             check_bitmap_mode_160x200   
             
-            
-            
+    #######
+    # macro
+    #######
+
+    load_zpByte0    var
+    load_zpByte1    var
+    load_zpWord0    var
+    load_zpWord1    var
+
+    load_address_zpWord0	address
+    load_address_zpWord1	address
+
+    load_var_ax	var
+    load_var_ay	var
+    
+    load_address_ax	address
+    load_address_ay	address
+
+    if_true  jmp
+    if_false jmp
+
+    uByte   a,1
+    sByte   b,2
+    uWord   a,1
+    sWord   b,2
+   
+   
 ;;;
 ;;
 ;

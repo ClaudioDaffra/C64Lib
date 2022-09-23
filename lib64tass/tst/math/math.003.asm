@@ -48,7 +48,7 @@ main	.proc
 
             ;   program
  
-            ;  .................................... compare u16/s16
+            ;  .................................... compare u16
             ;  0111
             ;  0111
 
@@ -78,7 +78,7 @@ main	.proc
             jsr debug_carry
             sta 1027
             
-            ;
+            ;  .................................... compare s16
 
             load_zpWord0    as16
             load_zpWord1    bs16

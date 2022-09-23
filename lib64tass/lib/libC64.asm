@@ -501,7 +501,24 @@ if_false .macro
         bcc \1         ;  settato         =   1
 .endm
 
+;--------------------------------------------------------------- macro
 
+uByte  .macro
+    \1    .byte    \2
+.endm
+
+sByte   .macro
+    \1    .char    \2
+.endm
+
+uWord   .macro
+    \1    .word    \2
+.endm
+
+sWord   .macro
+    \1    .sint    \2
+.endm
+    
 ;;;
 ;;
 ;
