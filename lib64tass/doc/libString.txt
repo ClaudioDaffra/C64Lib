@@ -73,6 +73,27 @@
   
     # compare
     
+    ;--------------------------------------------------------------- upper / lower
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;   output  :   
+    ;              address string zpWord0 dest
+    
+    # lower    .proc
+    
+    # upper    .proc
+
+    ;----------------------------------------- pattern matching of a string.
+    ;
+    ; Input:  
+    ;           zpWord0  :  string
+    ;           zpWord1  :  pattern matching
+    ;
+    ; Output: 
+    ;           A = 1 if the string matches the pattern, A = 0 if not.
+    ;           (C) = 1 found   ,   (C) = 0 not found
+
+    # pattern_match 
     
 ;;;
 ;;

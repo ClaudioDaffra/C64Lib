@@ -247,8 +247,134 @@ string .proc
             lda  #-1
             rts
     .pend
+       
+    ;--------------------------------------------------------------- upper / lower
+    ;   input   :   
+    ;              address string zpWord0 source
+    ;   output  :   
+    ;              address string zpWord0 dest
     
+    lower    .proc
+         
+                sta  zpWord0
+                sty  zpWord0+1
+                ldy  #0
+    -           lda  (zpWord0),y
+                beq  _done
+                and  #$7f
+                cmp  #97
+                bcc  +
+                cmp  #123
+                bcs  +
+                and  #%11011111
+    +           sta  (zpWord0),y
+                iny
+                bne  -
+    _done       
+                rts
+        .pend
+
+    upper    .proc
+     
+                sta  zpWord0
+                sty  zpWord0+1
+                ldy  #0
+    -           lda  (zpWord0),y
+                beq  _done
+                cmp  #65
+                bcc  +
+                cmp  #91
+                bcs  +
+                ora  #%00100000
+    +           sta  (zpWord0),y
+                iny
+                bne  -
+    _done       
+                rts
+    .pend
+
+    ;----------------------------------------- pattern matching of a string.
+    ;
+    ; Input:  
+    ;           zpWord0  :  string
+    ;           zpWord1  :  pattern matching
+    ;
+    ; Output: 
+    ;           A = 1 if the string matches the pattern, A = 0 if not.
+    ;           (C) = 1 found   ,   (C) = 0 not found
+
+    pattern_match_internal    .proc
     
+        stx  zpx
+        lda  zpWord1
+        sta  modify_pattern1+1
+        sta  modify_pattern2+1
+        lda  zpWord1+1
+        sta  modify_pattern1+2
+        sta  modify_pattern2+2
+        jsr  _match
+        lda  #0
+        adc  #0
+        ldx  zpx
+        rts
+    _match
+        ldx #$00        ; x is an index in the pattern
+        ldy #$ff        ; y is an index in the string
+    modify_pattern1
+    next    
+        lda $ffff,x     ; look at next pattern character    MODIFIED
+        cmp #'*'        ; is it a star?
+        beq star        ; yes, do the complicated stuff
+        iny             ; no, let's look at the string
+        cmp #'?'        ; is the pattern caracter a ques?
+        bne reg         ; no, it's a regular character
+        lda (zpWord0),y ; yes, so it will match anything
+        beq fail        ;  except the end of string
+    reg     
+        cmp (zpWord0),y ; are both characters the same?
+        bne fail        ; no, so no match
+        inx             ; yes, keep checking
+        cmp #0          ; are we at end of string?
+        bne next        ; not yet, loop
+    found
+        rts             ; success, return with c=1
+    star    
+        inx             ; skip star in pattern
+    modify_pattern2
+        cmp $ffff,x     ; string of stars equals one star    MODIFIED
+        beq star        ; so skip them also
+    stloop  
+        txa             ; we first try to match with * = ""
+        pha             ; and grow it by 1 character every
+        tya             ; time we loop
+        pha             ; save x and y on stack
+        jsr next        ; recursive call
+        pla             ; restore x and y
+        tay
+        pla
+        tax
+        bcs found       ; we found a match, return with c=1
+        iny             ; no match yet, try to grow * string
+        lda (zpWord0),y ; are we at the end of string?
+        bne stloop      ; not yet, add a character
+    fail    
+        clc             ; yes, no match found, return with c=0
+        rts
+
+    .pend
+
+    pattern_match    .proc
+    
+                jsr pattern_match_internal
+                cmp #0
+                bne uno
+          zero
+                clc
+                rts
+          uno
+                sec
+                rts
+    .pend
 ;    
     
     
