@@ -32,7 +32,10 @@ program_entry_point	; assembly code starts here
 main	.proc
 
 
-    c1  .null   "0033"   
+    c1  .null   "33"            ;    33
+    c2  .null   "$ff"           ;   255  
+    c3  .null   "%01010101"     ;    85
+    
     s16 .sint   -32755 
  
     print_string_out    .proc
@@ -140,8 +143,38 @@ main	.proc
             jsr print_string_out
 
             ; --------------------------------------- any2uword
+             
+            lda #char.nl
+            jsr sys.CHROUT  
+            
+            load_address_ay c1
+            jsr conv.any2uword
+            
+            load_var_ax zpWord0
+            jsr std.print_u16_dec
 
- 
+            ; --------------------------------------- any2uword
+             
+            lda #char.nl
+            jsr sys.CHROUT  
+            
+            load_address_ay c2
+            jsr conv.any2uword
+            
+            load_var_ax zpWord0
+            jsr std.print_u16_dec
+
+            ; --------------------------------------- any2uword
+             
+            lda #char.nl
+            jsr sys.CHROUT  
+            
+            load_address_ay c3
+            jsr conv.any2uword
+            
+            load_var_ax zpWord0
+            jsr std.print_u16_dec
+            
             ; --------------------------------------- 
             
             rts
