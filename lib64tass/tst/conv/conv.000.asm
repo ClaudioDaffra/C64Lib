@@ -32,7 +32,7 @@ program_entry_point	; assembly code starts here
 main	.proc
 
 
-    c1 .null   "65535:"   
+    c1  .null   "0033"   
     s16 .sint   -32755 
  
     print_string_out    .proc
@@ -138,7 +138,10 @@ main	.proc
             jsr conv.str_w
              
             jsr print_string_out
-            
+
+            ; --------------------------------------- any2uword
+
+ 
             ; --------------------------------------- 
             
             rts

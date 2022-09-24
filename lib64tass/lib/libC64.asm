@@ -87,11 +87,11 @@ zpByte5 = $04
 zpByte6 = $05
 zpByte7 = $06
 
-zpWord2     = $03           ;    $B1AA, execution address of routine converting floating point to integer.
+zpWord2     = $03       ;    $B1AA, execution address of routine converting floating point to integer.
 zpWord2hi   = $03
 zpWord2lo   = $03+1
 
-zpWord3     = $05          ;    $B391, execution address of routine converting integer to floating point.
+zpWord3     = $05       ;    $B391, execution address of routine converting integer to floating point.
 zpWord3hi   = $05
 zpWord3lo   = $05+1
 
@@ -388,6 +388,21 @@ c64 .proc
 
 ; ---------------------------------------------------------------
 
+load_imm_ay	.macro
+
+	lda <\1
+	ldy >\1
+
+.endm
+
+load_imm_ax	.macro
+
+	lda >\1
+	ldx <\1
+
+.endm
+
+; ---------------------------------------------------------------
 
 load_var_ay	.macro
 
@@ -421,7 +436,6 @@ load_address_ax	.macro
 
 ; ---------------------------------------------------------------
 
-
 load_address_zpWord0	.macro
 
 	lda #<\1
@@ -441,7 +455,6 @@ load_address_zpWord1	.macro
 .endm
 
 ; ---------------------------------------------------------------
-
 
 load_zpByte0	.macro
 
@@ -495,6 +508,23 @@ if_true  .macro
 
 if_false .macro
         bcc \1         ;  settato         =   1
+.endm
+
+;--------------------------------------------------------------- string compare
+
+if_string_lt .macro
+    cmp #$ff
+    beq \1
+.endm
+
+if_string_eq .macro
+    cmp #$00
+    beq \1
+.endm
+
+if_string_gt .macro
+    cmp #$01
+    beq \1
 .endm
 
 ;--------------------------------------------------------------- macro

@@ -50,7 +50,7 @@ main	.proc
             lda #' '
             jsr sys.CHROUT
 
-            load_ax #-32765
+            load_imm_ax #-32765
             jsr std.print_s16_dec
             
             lda #char.nl
@@ -64,7 +64,7 @@ main	.proc
             lda #' '
             jsr sys.CHROUT
             
-            load_ax #25031
+            load_imm_ax #25031
             jsr std.print_s16_dec
 
             ; .................................... print signed 8
@@ -93,16 +93,19 @@ main	.proc
 
             lda #char.nl
             jsr sys.CHROUT
+
+            lda #char.nl
+            jsr sys.CHROUT
             
-            sec
-            load_ax #25031
+            sec ;       $61c7
+            load_imm_ay #25031
             jsr std.print_s16_hex
 
             lda #' '
             jsr sys.CHROUT
 
             sec
-            load_ax #25031
+            load_imm_ay #25031
             jsr std.print_s16_bin
 
             lda #' '

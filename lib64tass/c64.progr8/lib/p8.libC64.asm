@@ -289,91 +289,91 @@ conv    .proc
                     .pend
   
 
-any2uword    .proc
-    ;    src line: library:/prog8lib/conv.p8:226
-    pha
-    sta  zpWord0
-    sty  zpWord0+1
-    ldy  #0
-    lda  (zpWord0),y
-    ldy  zpWord0+1
-    cmp  #'$'
-    beq  _hex
-    cmp  #'%'
-    beq  _bin
-    pla
-    jsr  str2uword
-    jmp  _result
-_hex    pla
-    jsr  hex2uword
-    jmp  _result
-_bin    pla
-    jsr  bin2uword
-_result
-        pha
-        lda  cx16.r15
-        sta  zpy        ; result value
-        pla
-        sta  cx16.r15
-        sty  cx16.r15+1
-        lda  zpy
-        rts
-    .pend
- 
-str2uword    .proc
-    ;    src line: library:/prog8lib/conv.p8:282
-_result = zpWord0
-            sta  zpWord1
-            sty  zpWord1+1
-        ldy  #0
-        sty  _result
-        sty  _result+1
-        sty  cx16.r15+1
-_loop
-        lda  (zpWord1),y
-        sec
-        sbc  #48
-        bpl  _digit
-_done
-        sty  cx16.r15
-        lda  _result
-        ldy  _result+1
-        rts
-_digit
-        cmp  #10
-        bcs  _done
-        ; add digit to result
-        pha
-        jsr  _result_times_10
-        pla
-        clc
-        adc  _result
-        sta  _result
-        bcc  +
-        inc  _result+1
-+        iny
-        bne  _loop
-        ; never reached
+                                            any2uword    .proc
+                                                ;    src line: library:/prog8lib/conv.p8:226
+                                                pha
+                                                sta  zpWord0
+                                                sty  zpWord0+1
+                                                ldy  #0
+                                                lda  (zpWord0),y
+                                                ldy  zpWord0+1
+                                                cmp  #'$'
+                                                beq  _hex
+                                                cmp  #'%'
+                                                beq  _bin
+                                                pla
+                                                jsr  str2uword
+                                                jmp  _result
+                                            _hex    pla
+                                                jsr  hex2uword
+                                                jmp  _result
+                                            _bin    pla
+                                                jsr  bin2uword
+                                            _result
+                                                    pha
+                                                    lda  cx16.r15
+                                                    sta  zpy        ; result value
+                                                    pla
+                                                    sta  cx16.r15
+                                                    sty  cx16.r15+1
+                                                    lda  zpy
+                                                    rts
+                                                .pend
+                                             
+                                            str2uword    .proc
+                                                ;    src line: library:/prog8lib/conv.p8:282
+                                            _result = zpWord0
+                                                        sta  zpWord1
+                                                        sty  zpWord1+1
+                                                    ldy  #0
+                                                    sty  _result
+                                                    sty  _result+1
+                                                    sty  cx16.r15+1
+                                            _loop
+                                                    lda  (zpWord1),y
+                                                    sec
+                                                    sbc  #48
+                                                    bpl  _digit
+                                            _done
+                                                    sty  cx16.r15
+                                                    lda  _result
+                                                    ldy  _result+1
+                                                    rts
+                                            _digit
+                                                    cmp  #10
+                                                    bcs  _done
+                                                    ; add digit to result
+                                                    pha
+                                                    jsr  _result_times_10
+                                                    pla
+                                                    clc
+                                                    adc  _result
+                                                    sta  _result
+                                                    bcc  +
+                                                    inc  _result+1
+                                            +        iny
+                                                    bne  _loop
+                                                    ; never reached
 
-_result_times_10     ; (W*4 + W)*2
-        lda  _result+1
-        sta  zpx
-        lda  _result
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        clc
-        adc  _result
-        sta  _result
-        lda  zpx
-        adc  _result+1
-        asl  _result
-        rol  a
-        sta  _result+1
-        rts
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:336
+                                            _result_times_10     ; (W*4 + W)*2
+                                                    lda  _result+1
+                                                    sta  zpx
+                                                    lda  _result
+                                                    asl  a
+                                                    rol  zpx
+                                                    asl  a
+                                                    rol  zpx
+                                                    clc
+                                                    adc  _result
+                                                    sta  _result
+                                                    lda  zpx
+                                                    adc  _result+1
+                                                    asl  _result
+                                                    rol  a
+                                                    sta  _result+1
+                                                    rts
+                                                .pend
+                                                ;    src line: library:/prog8lib/conv.p8:336
 
 str2word    .proc
     ;    src line: library:/prog8lib/conv.p8:341
@@ -429,104 +429,104 @@ _digit
 _negative    .byte  0
     .pend
  
-hex2uword    .proc
-    ;    src line: library:/prog8lib/conv.p8:400
-    sta  zpWord1
-    sty  zpWord1+1
-    ldy  #0
-    sty  zpWord0
-    sty  zpWord0+1
-    sty  cx16.r15+1
-    lda  (zpWord1),y
-    beq  _stop
-    cmp  #'$'
-    bne  _loop
-    iny
-_loop
-    lda  #0
-    sta  zpy
-    lda  (zpWord1),y
-    beq  _stop
-    cmp  #7                 ; screencode letters A-F are 1-6
-    bcc  _add_letter
-    and  #127
-    cmp  #97
-    bcs  _try_iso            ; maybe letter is iso:'a'-iso:'f' (97-102)
-    cmp  #'g'
-    bcs  _stop
-    cmp  #'a'
-    bcs  _add_letter
-    cmp  #'0'
-    bcc  _stop
-    cmp  #'9'+1
-    bcs  _stop
-_calc
-    asl  zpWord0
-    rol  zpWord0+1
-    asl  zpWord0
-    rol  zpWord0+1
-    asl  zpWord0
-    rol  zpWord0+1
-    asl  zpWord0
-    rol  zpWord0+1
-    and  #$0f
-    clc
-    adc  zpy
-    ora  zpWord0
-    sta  zpWord0
-    iny
-    bne  _loop
-_stop
-    sty  cx16.r15
-    lda  zpWord0
-    ldy  zpWord0+1
-    rts
-_add_letter
-    pha
-    lda  #9
-    sta  zpy
-    pla
-    jmp  _calc
-_try_iso
-        cmp  #103
-        bcs  _stop
-        and  #63
-        bne  _add_letter
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:465
+            hex2uword    .proc
+                ;    src line: library:/prog8lib/conv.p8:400
+                sta  zpWord1
+                sty  zpWord1+1
+                ldy  #0
+                sty  zpWord0
+                sty  zpWord0+1
+                sty  cx16.r15+1
+                lda  (zpWord1),y
+                beq  _stop
+                cmp  #'$'
+                bne  _loop
+                iny
+            _loop
+                lda  #0
+                sta  zpy
+                lda  (zpWord1),y
+                beq  _stop
+                cmp  #7                 ; screencode letters A-F are 1-6
+                bcc  _add_letter
+                and  #127
+                cmp  #97
+                bcs  _try_iso            ; maybe letter is iso:'a'-iso:'f' (97-102)
+                cmp  #'g'
+                bcs  _stop
+                cmp  #'a'
+                bcs  _add_letter
+                cmp  #'0'
+                bcc  _stop
+                cmp  #'9'+1
+                bcs  _stop
+            _calc
+                asl  zpWord0
+                rol  zpWord0+1
+                asl  zpWord0
+                rol  zpWord0+1
+                asl  zpWord0
+                rol  zpWord0+1
+                asl  zpWord0
+                rol  zpWord0+1
+                and  #$0f
+                clc
+                adc  zpy
+                ora  zpWord0
+                sta  zpWord0
+                iny
+                bne  _loop
+            _stop
+                sty  cx16.r15
+                lda  zpWord0
+                ldy  zpWord0+1
+                rts
+            _add_letter
+                pha
+                lda  #9
+                sta  zpy
+                pla
+                jmp  _calc
+            _try_iso
+                    cmp  #103
+                    bcs  _stop
+                    and  #63
+                    bne  _add_letter
+                .pend
 
-bin2uword    .proc
-    ;    src line: library:/prog8lib/conv.p8:469
-    sta  zpWord1
-    sty  zpWord1+1
-    ldy  #0
-    sty  zpWord0
-    sty  zpWord0+1
-    sty  cx16.r15+1
-    lda  (zpWord1),y
-    beq  _stop
-    cmp  #'%'
-    bne  _loop
-    iny
-_loop
-    lda  (zpWord1),y
-    cmp  #'0'
-    bcc  _stop
-    cmp  #'2'
-    bcs  _stop
-_first  asl  zpWord0
-    rol  zpWord0+1
-    and  #1
-    ora  zpWord0
-    sta  zpWord0
-    iny
-    bne  _loop
-_stop
-    sty  cx16.r15
-    lda  zpWord0
-    ldy  zpWord0+1
-    rts
-    .pend
+
+                    bin2uword    .proc
+                        ;    src line: library:/prog8lib/conv.p8:469
+                        sta  zpWord1
+                        sty  zpWord1+1
+                        ldy  #0
+                        sty  zpWord0
+                        sty  zpWord0+1
+                        sty  cx16.r15+1
+                        lda  (zpWord1),y
+                        beq  _stop
+                        cmp  #'%'
+                        bne  _loop
+                        iny
+                    _loop
+                        lda  (zpWord1),y
+                        cmp  #'0'
+                        bcc  _stop
+                        cmp  #'2'
+                        bcs  _stop
+                    _first  asl  zpWord0
+                        rol  zpWord0+1
+                        and  #1
+                        ora  zpWord0
+                        sta  zpWord0
+                        iny
+                        bne  _loop
+                    _stop
+                        sty  cx16.r15
+                        lda  zpWord0
+                        ldy  zpWord0+1
+                        rts
+                        .pend
  
 
                 ubyte2decimal    .proc

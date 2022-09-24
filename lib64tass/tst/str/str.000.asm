@@ -35,7 +35,7 @@ main	.proc
             .endrept
             
                     ;0123467
-    s1      .null   "claudio"    ;   string1
+    s1      .null   "claudio"           ;   string1
     s2      .null   "--------------"    ;   string2
     
     debug_a .proc
