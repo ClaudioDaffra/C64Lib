@@ -32,10 +32,10 @@ program_entry_point	; assembly code starts here
 
 main	.proc
 
-    uByte   a,1
-    sByte   b,2
-    uWord   a,1
-    sWord   b,2
+    u8_type    a,1
+    s8_type    b,2
+    u16_type   a,1
+    s16_type   b,2
     
     start	.proc
 

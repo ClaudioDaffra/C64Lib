@@ -59,7 +59,6 @@ if_bit_1 .macro
 .endm
    
 
-
 ;--------------------------------------------------------------- zero page
 
 ;   -------------------------------------------- safe
@@ -387,24 +386,13 @@ c64 .proc
 
 ; --------------------------------------------------------------- macro
 
-load_ay	.macro
+; ---------------------------------------------------------------
 
-	lda <\1
-	ldy >\1
-
-.endm
 
 load_var_ay	.macro
 
 	lda \1+1
 	ldy \1
-
-.endm
-
-load_ax	.macro
-
-	lda >\1
-	ldx <\1
 
 .endm
 
@@ -415,12 +403,24 @@ load_var_ax	.macro
 
 .endm
 
+; ---------------------------------------------------------------
+
 load_address_ay	.macro
 
 	lda #<\1
 	ldy #>\1
 
 .endm
+
+load_address_ax	.macro
+
+	lda #<\1
+	ldx #>\1
+
+.endm
+
+; ---------------------------------------------------------------
+
 
 load_address_zpWord0	.macro
 
@@ -440,12 +440,8 @@ load_address_zpWord1	.macro
     
 .endm
 
-load_address_ax	.macro
+; ---------------------------------------------------------------
 
-	lda #<\1
-	ldx #>\1
-
-.endm
 
 load_zpByte0	.macro
 
@@ -503,22 +499,30 @@ if_false .macro
 
 ;--------------------------------------------------------------- macro
 
-uByte  .macro
+u8_type  .macro
     \1    .byte    \2
 .endm
 
-sByte   .macro
+s8_type   .macro
     \1    .char    \2
 .endm
 
-uWord   .macro
+u16_type   .macro
     \1    .word    \2
 .endm
 
-sWord   .macro
+s16_type   .macro
     \1    .sint    \2
 .endm
-    
+
+cstring_type   .macro
+    \1    .null    \2
+.endm
+
+pstring_type   .macro
+    \1    .null    \2 , \3
+.endm
+
 ;;;
 ;;
 ;

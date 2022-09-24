@@ -87,208 +87,207 @@ string_7    ; PETSCII:"$"
 
 conv    .proc
  
-; non-zeropage variables
-string_out    ; PETSCII:"????????????????"
-    .byte  $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
-    .byte  $00
+        ; non-zeropage variables
+        string_out    ; PETSCII:"????????????????"
+            .byte  $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
+            .byte  $00
 
 ; subroutines in this block
  
-str_ub0    .proc
-    ;    src line: library:/prog8lib/conv.p8:11
-            stx  zpx
-            jsr  conv.ubyte2decimal
-            sty  string_out
-            sta  string_out+1
-            stx  string_out+2
-            lda  #0
-            sta  string_out+3
-            ldx  zpx
-            rts
-    .pend
+                    str_ub0    .proc
+                                stx  zpx
+                                jsr  conv.ubyte2decimal
+                                sty  string_out
+                                sta  string_out+1
+                                stx  string_out+2
+                                lda  #0
+                                sta  string_out+3
+                                ldx  zpx
+                                rts
+                        .pend
  
-str_ub    .proc
+                    str_ub    .proc
+                     
+                            stx  zpx
+                            ldy  #0
+                            sty  zpy
+                            jsr  conv.ubyte2decimal
+                    _output_byte_digits
+                                    ; hundreds?
+                            cpy  #'0'
+                            beq  +
+                            pha
+                            tya
+                            ldy  zpy
+                            sta  string_out,y
+                            pla
+                            inc  zpy
+                            ; tens?
+                    +        ldy  zpy
+                                    cmp  #'0'
+                            beq  +
+                            sta  string_out,y
+                            iny
+                    +               ; ones.
+                                    txa
+                                    sta  string_out,y
+                                    iny
+                                    lda  #0
+                                    sta  string_out,y
+                                    ldx  zpx
+                                    rts
+                        .pend
  
-        stx  zpx
-        ldy  #0
-        sty  zpy
-        jsr  conv.ubyte2decimal
-_output_byte_digits
-                ; hundreds?
-        cpy  #'0'
-        beq  +
-        pha
-        tya
-        ldy  zpy
-        sta  string_out,y
-        pla
-        inc  zpy
-        ; tens?
-+        ldy  zpy
-                cmp  #'0'
-        beq  +
-        sta  string_out,y
-        iny
-+               ; ones.
-                txa
-                sta  string_out,y
-                iny
-                lda  #0
-                sta  string_out,y
-                ldx  zpx
-                rts
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:58
 
-str_b    .proc
-    ;    src line: library:/prog8lib/conv.p8:60
-            stx  zpx
-            ldy  #0
-            sty  zpy
-            cmp  #0
-            bpl  +
-            pha
-            lda  #'-'
-            sta  string_out
-            inc  zpy
-            pla
-+        jsr  conv.byte2decimal
-            bra  str_ub._output_byte_digits
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:76
+                        str_b    .proc
+                            
+                                    stx  zpx
+                                    ldy  #0
+                                    sty  zpy
+                                    cmp  #0
+                                    bpl  +
+                                    pha
+                                    lda  #'-'
+                                    sta  string_out
+                                    inc  zpy
+                                    pla
+                        +        jsr  conv.byte2decimal
+                                    bra  str_ub._output_byte_digits
+                            .pend
+                            ;    src line: library:/prog8lib/conv.p8:76
 
-str_ubhex    .proc
-    ;    src line: library:/prog8lib/conv.p8:78
-            jsr  conv.ubyte2hex
-            sta  string_out
-            sty  string_out+1
-            lda  #0
-            sta  string_out+2
-            rts
-    .pend
+                str_ubhex    .proc
+                    ;    src line: library:/prog8lib/conv.p8:78
+                            jsr  conv.ubyte2hex
+                            sta  string_out
+                            sty  string_out+1
+                            lda  #0
+                            sta  string_out+2
+                            rts
+                    .pend
  
-str_ubbin    .proc
-    ;    src line: library:/prog8lib/conv.p8:90
-        sta  zpy
-        ldy  #0
-        sty  string_out+8
-        ldy  #7
--        lsr  zpy
-            bcc  +
-            lda  #'1'
-            bne  _digit
-+           lda  #'0'
-_digit      sta  string_out,y
-            dey
-        bpl  -
-        rts
-    .pend
+                str_ubbin    .proc
+                    ;    src line: library:/prog8lib/conv.p8:90
+                        sta  zpy
+                        ldy  #0
+                        sty  string_out+8
+                        ldy  #7
+                -        lsr  zpy
+                            bcc  +
+                            lda  #'1'
+                            bne  _digit
+                +           lda  #'0'
+                _digit      sta  string_out,y
+                            dey
+                        bpl  -
+                        rts
+                    .pend
  
-str_uwbin    .proc
-    ;    src line: library:/prog8lib/conv.p8:109
-        sta  zpx
-        tya
-        jsr  str_ubbin
-        ldy  #0
-        sty  string_out+16
-        ldy  #7
--        lsr  zpx
-            bcc  +
-            lda  #'1'
-            bne  _digit
-+           lda  #'0'
-_digit      sta  string_out+8,y
-            dey
-        bpl  -
-        rts
-    .pend
+                str_uwbin    .proc
+                    ;    src line: library:/prog8lib/conv.p8:109
+                        sta  zpx
+                        tya
+                        jsr  str_ubbin
+                        ldy  #0
+                        sty  string_out+16
+                        ldy  #7
+                -        lsr  zpx
+                            bcc  +
+                            lda  #'1'
+                            bne  _digit
+                +           lda  #'0'
+                _digit      sta  string_out+8,y
+                            dey
+                        bpl  -
+                        rts
+                    .pend
  
-str_uwhex    .proc
-    ;    src line: library:/prog8lib/conv.p8:130
-            pha
-            tya
-            jsr  conv.ubyte2hex
-            sta  string_out
-            sty  string_out+1
-            pla
-            jsr  conv.ubyte2hex
-            sta  string_out+2
-            sty  string_out+3
-            lda  #0
-            sta  string_out+4
-            rts
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:146
+            str_uwhex    .proc
+             
+                        pha
+                        tya
+                        jsr  conv.ubyte2hex
+                        sta  string_out
+                        sty  string_out+1
+                        pla
+                        jsr  conv.ubyte2hex
+                        sta  string_out+2
+                        sty  string_out+3
+                        lda  #0
+                        sta  string_out+4
+                        rts
+                .pend
+ 
 
-str_uw0    .proc
+                str_uw0    .proc
+                 
+                        stx  zpx
+                        jsr  conv.uword2decimal
+                        ldy  #0
+                -           lda  conv.uword2decimal.decTenThousands,y
+                            sta  string_out,y
+                            beq  +
+                            iny
+                            bne  -
+                +           ldx  zpx
+                        rts
+                    .pend
  
-        stx  zpx
-        jsr  conv.uword2decimal
-        ldy  #0
--           lda  conv.uword2decimal.decTenThousands,y
-            sta  string_out,y
-            beq  +
-            iny
-            bne  -
-+           ldx  zpx
-        rts
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:162
 
-str_uw    .proc
-    ;    src line: library:/prog8lib/conv.p8:164
-        stx  zpx
-        jsr  conv.uword2decimal
-        ldx  #0
-_output_digits
-        ldy  #0
--           lda  conv.uword2decimal.decTenThousands,y
-            beq  _allzero
-            cmp  #'0'
-            bne  _gotdigit
-            iny
-            bne  -
-_gotdigit   sta  string_out,x
-            inx
-            iny
-            lda  conv.uword2decimal.decTenThousands,y
-            bne  _gotdigit
-_end        lda  #0
-            sta  string_out,x
-            ldx  zpx
-            rts
+            str_uw    .proc
+             
+                    stx  zpx
+                    jsr  conv.uword2decimal
+                    ldx  #0
+            _output_digits
+                    ldy  #0
+            -           lda  conv.uword2decimal.decTenThousands,y
+                        beq  _allzero
+                        cmp  #'0'
+                        bne  _gotdigit
+                        iny
+                        bne  -
+            _gotdigit   sta  string_out,x
+                        inx
+                        iny
+                        lda  conv.uword2decimal.decTenThousands,y
+                        bne  _gotdigit
+            _end        lda  #0
+                        sta  string_out,x
+                        ldx  zpx
+                        rts
 
-_allzero    lda  #'0'
-            sta  string_out,x
-            inx
-            bne  _end
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:193
-
-str_w    .proc
+            _allzero    lda  #'0'
+                        sta  string_out,x
+                        inx
+                        bne  _end
+                .pend
  
-        cpy  #0
-        bpl  str_uw
-        stx  zpx
-        pha
-        lda  #'-'
-        sta  string_out
-            tya
-            eor  #255
-            tay
-            pla
-            eor  #255
-            clc
-            adc  #1
-            bcc  +
-            iny
-+        jsr  conv.uword2decimal
-        ldx  #1
-        bne  str_uw._output_digits
-    ;    src line: ~dummy~:0
-  rts
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:220
+
+                str_w    .proc
+                 
+                        cpy  #0
+                        bpl  str_uw
+                        stx  zpx
+                        pha
+                        lda  #'-'
+                        sta  string_out
+                            tya
+                            eor  #255
+                            tay
+                            pla
+                            eor  #255
+                            clc
+                            adc  #1
+                            bcc  +
+                            iny
+                +        jsr  conv.uword2decimal
+                        ldx  #1
+                        bne  str_uw._output_digits
+                 
+                  rts
+                    .pend
+  
 
 any2uword    .proc
     ;    src line: library:/prog8lib/conv.p8:226
@@ -528,229 +527,230 @@ _stop
     ldy  zpWord0+1
     rts
     .pend
-    ;    src line: library:/prog8lib/conv.p8:505
-
-ubyte2decimal    .proc
-    ;    src line: library:/prog8lib/conv.p8:507
-        ldy  #uword2decimal.ASCII_0_OFFSET
-        bne  uword2decimal.hex_try200
-        rts
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:514
-
-uword2decimal    .proc
-    ;    src line: library:/prog8lib/conv.p8:520
-;Convert 16 bit Hex to Decimal (0-65535) Rev 2
-;By Omegamatrix    Further optimizations by tepples
-; routine from https://forums.nesdev.org/viewtopic.php?f=2&t=11341&start=15
-
-;HexToDec99
-; start in A
-; end with A = 10's, decOnes (also in X)
-
-;HexToDec255
-; start in A
-; end with Y = 100's, A = 10's, decOnes (also in X)
-
-;HexToDec999
-; start with A = high byte, Y = low byte
-; end with Y = 100's, A = 10's, decOnes (also in X)
-; requires 1 extra temp register on top of decOnes, could combine
-; these two if HexToDec65535 was eliminated...
-
-;HexToDec65535
-; start with A/Y (low/high) as 16 bit value
-; end with decTenThousand, decThousand, Y = 100's, A = 10's, decOnes (also in X)
-; (irmen: I store Y and A in decHundreds and decTens too, so all of it can be easily printed)
-
-
-ASCII_0_OFFSET     = $30
-temp               = zpy    ; byte in zeropage
-hexHigh          = zpWord0    ; byte in zeropage
-hexLow           = zpWord0+1    ; byte in zeropage
-
-
-HexToDec65535; SUBROUTINE
-    sty    hexHigh               ;3  @9
-    sta    hexLow                ;3  @12
-    tya
-    tax                          ;2  @14
-    lsr    a                     ;2  @16
-    lsr    a                     ;2  @18   integer divide 1024 (result 0-63)
-
-    cpx    #$A7                  ;2  @20   account for overflow of multiplying 24 from 43,000 ($A7F8) onward,
-    adc    #1                    ;2  @22   we can just round it to $A700, and the divide by 1024 is fine...
-
-    ;at this point we have a number 1-65 that we have to times by 24,
-    ;add to original sum, and Mod 1024 to get a remainder 0-999
  
-    sta    temp                  ;3  @25
-    asl    a                     ;2  @27
-    adc    temp                  ;3  @30  x3
-    tay                          ;2  @32
-    lsr    a                     ;2  @34
-    lsr    a                     ;2  @36
-    lsr    a                     ;2  @38
-    lsr    a                     ;2  @40
-    lsr    a                     ;2  @42
-    tax                          ;2  @44
-    tya                          ;2  @46
-    asl    a                     ;2  @48
-    asl    a                     ;2  @50
-    asl    a                     ;2  @52
-    clc                          ;2  @54
-    adc    hexLow                ;3  @57
-    sta    hexLow                ;3  @60
-    txa                          ;2  @62
-    adc    hexHigh               ;3  @65
-    sta    hexHigh               ;3  @68
-    ror    a                     ;2  @70
-    lsr    a                     ;2  @72
-    tay                          ;2  @74    integer divide 1,000 (result 0-65)
 
-    lsr    a                     ;2  @76    split the 1,000 and 10,000 digit
-    tax                          ;2  @78
-    lda    ShiftedBcdTab,x       ;4  @82
-    tax                          ;2  @84
-    rol    a                     ;2  @86
-    and    #$0F                  ;2  @88
-    ora    #ASCII_0_OFFSET
-    sta    decThousands          ;3  @91
-    txa                          ;2  @93
-    lsr    a                     ;2  @95
-    lsr    a                     ;2  @97
-    lsr    a                     ;2  @99
-    ora    #ASCII_0_OFFSET
-    sta    decTenThousands       ;3  @102
+                ubyte2decimal    .proc
+                    ;    src line: library:/prog8lib/conv.p8:507
+                        ldy  #uword2decimal.ASCII_0_OFFSET
+                        bne  uword2decimal.hex_try200
+                        rts
+                    .pend
+ 
 
-    lda    hexLow                ;3  @105
-    cpy    temp                  ;3  @108
-    bmi    _doSubtract           ;2³ @110/111
-    beq    _useZero               ;2³ @112/113
-    adc    #23 + 24              ;2  @114
-_doSubtract
-    sbc    #23                   ;2  @116
-    sta    hexLow                ;3  @119
-_useZero
-    lda    hexHigh               ;3  @122
-    sbc    #0                    ;2  @124
+                uword2decimal    .proc
+                    ;    src line: library:/prog8lib/conv.p8:520
+                ;Convert 16 bit Hex to Decimal (0-65535) Rev 2
+                ;By Omegamatrix    Further optimizations by tepples
+                ; routine from https://forums.nesdev.org/viewtopic.php?f=2&t=11341&start=15
 
-Start100s
-    and    #$03                  ;2  @126
-    tax                          ;2  @128   0,1,2,3
-    cmp    #2                    ;2  @130
-    rol    a                     ;2  @132   0,2,5,7
-    ora    #ASCII_0_OFFSET
-    tay                          ;2  @134   Y = Hundreds digit
+                ;HexToDec99
+                ; start in A
+                ; end with A = 10's, decOnes (also in X)
 
-    lda    hexLow                ;3  @137
-    adc    Mod100Tab,x           ;4  @141    adding remainder of 256, 512, and 256+512 (all mod 100)
-    bcs    hex_doSub200             ;2³ @143/144
+                ;HexToDec255
+                ; start in A
+                ; end with Y = 100's, A = 10's, decOnes (also in X)
 
-hex_try200
-    cmp    #200                  ;2  @145
-    bcc    hex_try100               ;2³ @147/148
-hex_doSub200
-    iny                          ;2  @149
-    iny                          ;2  @151
-    sbc    #200                  ;2  @153
-hex_try100
-    cmp    #100                  ;2  @155
-    bcc    HexToDec99            ;2³ @157/158
-    iny                          ;2  @159
-    sbc    #100                  ;2  @161
+                ;HexToDec999
+                ; start with A = high byte, Y = low byte
+                ; end with Y = 100's, A = 10's, decOnes (also in X)
+                ; requires 1 extra temp register on top of decOnes, could combine
+                ; these two if HexToDec65535 was eliminated...
 
-HexToDec99; SUBROUTINE
-    lsr    a                     ;2  @163
-    tax                          ;2  @165
-    lda    ShiftedBcdTab,x       ;4  @169
-    tax                          ;2  @171
-    rol    a                     ;2  @173
-    and    #$0F                  ;2  @175
-    ora    #ASCII_0_OFFSET
-    sta    decOnes               ;3  @178
-    txa                          ;2  @180
-    lsr    a                     ;2  @182
-    lsr    a                     ;2  @184
-    lsr    a                     ;2  @186
-    ora    #ASCII_0_OFFSET
-
-    ; irmen: load X with ones, and store Y and A too, for easy printing afterwards
-    sty  decHundreds
-    sta  decTens
-    ldx  decOnes
-    rts                          ;6  @192   Y=hundreds, A = tens digit, X=ones digit
+                ;HexToDec65535
+                ; start with A/Y (low/high) as 16 bit value
+                ; end with decTenThousand, decThousand, Y = 100's, A = 10's, decOnes (also in X)
+                ; (irmen: I store Y and A in decHundreds and decTens too, so all of it can be easily printed)
 
 
-HexToDec999; SUBROUTINE
-    sty    hexLow                ;3  @9
-    jmp    Start100s             ;3  @12
+                ASCII_0_OFFSET     = $30
+                temp               = zpy    ; byte in zeropage
+                hexHigh          = zpWord0    ; byte in zeropage
+                hexLow           = zpWord0+1    ; byte in zeropage
 
-Mod100Tab
-    .byte 0,56,12,56+12
 
-ShiftedBcdTab
-    .byte $00,$01,$02,$03,$04,$08,$09,$0A,$0B,$0C
-    .byte $10,$11,$12,$13,$14,$18,$19,$1A,$1B,$1C
-    .byte $20,$21,$22,$23,$24,$28,$29,$2A,$2B,$2C
-    .byte $30,$31,$32,$33,$34,$38,$39,$3A,$3B,$3C
-    .byte $40,$41,$42,$43,$44,$48,$49,$4A,$4B,$4C
+                HexToDec65535; SUBROUTINE
+                    sty    hexHigh               ;3  @9
+                    sta    hexLow                ;3  @12
+                    tya
+                    tax                          ;2  @14
+                    lsr    a                     ;2  @16
+                    lsr    a                     ;2  @18   integer divide 1024 (result 0-63)
 
-decTenThousands       .byte  0
-decThousands        .byte  0
-decHundreds        .byte  0
-decTens            .byte  0
-decOnes           .byte  0
-            .byte  0        ; zero-terminate the decimal output string
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:689
+                    cpx    #$A7                  ;2  @20   account for overflow of multiplying 24 from 43,000 ($A7F8) onward,
+                    adc    #1                    ;2  @22   we can just round it to $A700, and the divide by 1024 is fine...
 
-byte2decimal    .proc
-    ;    src line: library:/prog8lib/conv.p8:692
-        cmp  #0
-        bpl  +
-        eor  #255
-        clc
-        adc  #1
-+        jmp  ubyte2decimal
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:702
+                    ;at this point we have a number 1-65 that we have to times by 24,
+                    ;add to original sum, and Mod 1024 to get a remainder 0-999
+                 
+                    sta    temp                  ;3  @25
+                    asl    a                     ;2  @27
+                    adc    temp                  ;3  @30  x3
+                    tay                          ;2  @32
+                    lsr    a                     ;2  @34
+                    lsr    a                     ;2  @36
+                    lsr    a                     ;2  @38
+                    lsr    a                     ;2  @40
+                    lsr    a                     ;2  @42
+                    tax                          ;2  @44
+                    tya                          ;2  @46
+                    asl    a                     ;2  @48
+                    asl    a                     ;2  @50
+                    asl    a                     ;2  @52
+                    clc                          ;2  @54
+                    adc    hexLow                ;3  @57
+                    sta    hexLow                ;3  @60
+                    txa                          ;2  @62
+                    adc    hexHigh               ;3  @65
+                    sta    hexHigh               ;3  @68
+                    ror    a                     ;2  @70
+                    lsr    a                     ;2  @72
+                    tay                          ;2  @74    integer divide 1,000 (result 0-65)
 
-ubyte2hex    .proc
-    ;    src line: library:/prog8lib/conv.p8:704
-        stx  zpx
-        pha
-        and  #$0f
-        tax
-        ldy  _hex_digits,x
-        pla
-        lsr  a
-        lsr  a
-        lsr  a
-        lsr  a
-        tax
-        lda  _hex_digits,x
-        ldx  zpx
-        rts
+                    lsr    a                     ;2  @76    split the 1,000 and 10,000 digit
+                    tax                          ;2  @78
+                    lda    ShiftedBcdTab,x       ;4  @82
+                    tax                          ;2  @84
+                    rol    a                     ;2  @86
+                    and    #$0F                  ;2  @88
+                    ora    #ASCII_0_OFFSET
+                    sta    decThousands          ;3  @91
+                    txa                          ;2  @93
+                    lsr    a                     ;2  @95
+                    lsr    a                     ;2  @97
+                    lsr    a                     ;2  @99
+                    ora    #ASCII_0_OFFSET
+                    sta    decTenThousands       ;3  @102
 
-_hex_digits    .text "0123456789abcdef"    ; can probably be reused for other stuff as well
-    .pend
-    ;    src line: library:/prog8lib/conv.p8:724
+                    lda    hexLow                ;3  @105
+                    cpy    temp                  ;3  @108
+                    bmi    _doSubtract           ;2³ @110/111
+                    beq    _useZero               ;2³ @112/113
+                    adc    #23 + 24              ;2  @114
+                _doSubtract
+                    sbc    #23                   ;2  @116
+                    sta    hexLow                ;3  @119
+                _useZero
+                    lda    hexHigh               ;3  @122
+                    sbc    #0                    ;2  @124
 
-uword2hex    .proc
-    ;    src line: library:/prog8lib/conv.p8:726
-        sta  zpx
-        tya
-        jsr  ubyte2hex
-        sta  output
-        sty  output+1
-        lda  zpx
-        jsr  ubyte2hex
-        sta  output+2
-        sty  output+3
-        rts
-output        .text  "0000", $00      ; 0-terminated output buffer (to make printing easier)
-    .pend
+                Start100s
+                    and    #$03                  ;2  @126
+                    tax                          ;2  @128   0,1,2,3
+                    cmp    #2                    ;2  @130
+                    rol    a                     ;2  @132   0,2,5,7
+                    ora    #ASCII_0_OFFSET
+                    tay                          ;2  @134   Y = Hundreds digit
+
+                    lda    hexLow                ;3  @137
+                    adc    Mod100Tab,x           ;4  @141    adding remainder of 256, 512, and 256+512 (all mod 100)
+                    bcs    hex_doSub200             ;2³ @143/144
+
+                hex_try200
+                    cmp    #200                  ;2  @145
+                    bcc    hex_try100               ;2³ @147/148
+                hex_doSub200
+                    iny                          ;2  @149
+                    iny                          ;2  @151
+                    sbc    #200                  ;2  @153
+                hex_try100
+                    cmp    #100                  ;2  @155
+                    bcc    HexToDec99            ;2³ @157/158
+                    iny                          ;2  @159
+                    sbc    #100                  ;2  @161
+
+                HexToDec99; SUBROUTINE
+                    lsr    a                     ;2  @163
+                    tax                          ;2  @165
+                    lda    ShiftedBcdTab,x       ;4  @169
+                    tax                          ;2  @171
+                    rol    a                     ;2  @173
+                    and    #$0F                  ;2  @175
+                    ora    #ASCII_0_OFFSET
+                    sta    decOnes               ;3  @178
+                    txa                          ;2  @180
+                    lsr    a                     ;2  @182
+                    lsr    a                     ;2  @184
+                    lsr    a                     ;2  @186
+                    ora    #ASCII_0_OFFSET
+
+                    ; irmen: load X with ones, and store Y and A too, for easy printing afterwards
+                    sty  decHundreds
+                    sta  decTens
+                    ldx  decOnes
+                    rts                          ;6  @192   Y=hundreds, A = tens digit, X=ones digit
+
+
+                HexToDec999; SUBROUTINE
+                    sty    hexLow                ;3  @9
+                    jmp    Start100s             ;3  @12
+
+                Mod100Tab
+                    .byte 0,56,12,56+12
+
+                ShiftedBcdTab
+                    .byte $00,$01,$02,$03,$04,$08,$09,$0A,$0B,$0C
+                    .byte $10,$11,$12,$13,$14,$18,$19,$1A,$1B,$1C
+                    .byte $20,$21,$22,$23,$24,$28,$29,$2A,$2B,$2C
+                    .byte $30,$31,$32,$33,$34,$38,$39,$3A,$3B,$3C
+                    .byte $40,$41,$42,$43,$44,$48,$49,$4A,$4B,$4C
+
+                decTenThousands       .byte  0
+                decThousands        .byte  0
+                decHundreds        .byte  0
+                decTens            .byte  0
+                decOnes           .byte  0
+                            .byte  0        ; zero-terminate the decimal output string
+                    .pend
+                    ;    src line: library:/prog8lib/conv.p8:689
+
+                byte2decimal    .proc
+                  
+                        cmp  #0
+                        bpl  +
+                        eor  #255
+                        clc
+                        adc  #1
+                +        jmp  ubyte2decimal
+                    .pend
+    
+
+                ubyte2hex    .proc
+                 
+                        stx  zpx
+                        pha
+                        and  #$0f
+                        tax
+                        ldy  _hex_digits,x
+                        pla
+                        lsr  a
+                        lsr  a
+                        lsr  a
+                        lsr  a
+                        tax
+                        lda  _hex_digits,x
+                        ldx  zpx
+                        rts
+
+                _hex_digits    .text "0123456789abcdef"    ; can probably be reused for other stuff as well
+                    .pend
+ 
+
+                uword2hex    .proc
+                    ;    src line: library:/prog8lib/conv.p8:726
+                        sta  zpx
+                        tya
+                        jsr  ubyte2hex
+                        sta  output
+                        sty  output+1
+                        lda  zpx
+                        jsr  ubyte2hex
+                        sta  output+2
+                        sty  output+3
+                        rts
+                output        .text  "0000", $00      ; 0-terminated output buffer (to make printing easier)
+                    .pend
+    
     .pend
 
 
@@ -1788,13 +1788,13 @@ internal_stringcopy    .proc
 memcopy    .proc
     ;    src line: library:/prog8lib/c64/syslib.p8:549
             ldx  cx16.r0
-            stx  zpWord0        ; source in ZP
+                stx  zpWord0        ; source in ZP
             ldx  cx16.r0+1
-            stx  zpWord0+1
+                stx  zpWord0+1
             ldx  cx16.r1
-            stx  zpWord1        ; target in ZP
+                stx  zpWord1        ; target in ZP
             ldx  cx16.r1+1
-            stx  zpWord1+1
+                stx  zpWord1+1
             cpy  #0
             bne  _longcopy
 
@@ -1842,9 +1842,9 @@ _longcopy
 memset    .proc
     ;    src line: library:/prog8lib/c64/syslib.p8:603
             ldy  cx16.r0
-            sty  zpWord0
+                sty  zpWord0
             ldy  cx16.r0+1
-            sty  zpWord0+1
+                sty  zpWord0+1
             ldx  cx16.r1
             ldy  cx16.r1+1
             jmp  prog8_lib.memset
