@@ -3,7 +3,7 @@
 
 conv .proc
 
-    ; PETSCII:"????????????????"
+    ; PETSCII:"????????????????"    16+1
     string_out    
         .byte  $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
         .byte  $00
@@ -301,18 +301,17 @@ conv .proc
             pha
             and  #$0f
             tax
-            ldy  _hex_digits,x
+            ldy  global.hex_digits,x
             pla
             lsr  a
             lsr  a
             lsr  a
             lsr  a
             tax
-            lda  _hex_digits,x
+            lda  global.hex_digits,x
             ldx  zpx
             rts
 
-    _hex_digits    .text "0123456789abcdef"    ; can probably be reused for other stuff as well
         .pend
 
     uword2hex    .proc
@@ -710,11 +709,7 @@ conv .proc
         rts
         
     .pend
- 
 
-
-    
-    
 ;#############################################################################
 
 .pend

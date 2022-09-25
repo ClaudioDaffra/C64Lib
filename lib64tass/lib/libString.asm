@@ -5,17 +5,6 @@
 
 string .proc
 
-    ; TODO
-    
-    ;  screen   :    1024   -    2023
-    ;               $0400   -   $07E7
-    ;  buffer   :    2024   -    2048    (24)
-    ;               $07E8   -   $0800
-    ;
-    ;   program :    2049   -  $0801
-
-    temp =   $07e8   ;   (24) byte
-
     ;--------------------------------------------------------------- length
     ;   input   :   a/y :   address string
     ;   output  :   a   :   length

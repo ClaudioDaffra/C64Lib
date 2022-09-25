@@ -110,7 +110,7 @@ main	.proc
             
             ; --------------------------------------- str_uwhex
 
-            ;                    (0cb6) 
+            ;                    (0ca6) 
             lda #<s16
             ldy #>s16
             jsr conv.str_uwhex
