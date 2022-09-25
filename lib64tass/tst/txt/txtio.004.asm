@@ -41,7 +41,7 @@ main	.proc
             jsr sys.CHROUT
             
             ; ---------------------------- print string
-            
+
             load_address_ay stringa
             jsr std.print_string
 

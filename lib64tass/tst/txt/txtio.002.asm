@@ -75,9 +75,8 @@ main	.proc
             lda #' '
             jsr sys.CHROUT
             
-            ;lda  u16+1
-            ;ldx  u16
-            load_var_ax u16
+            ;25031
+            load_var_ay u16
             jsr std.print_u16_dec
 
             lda #char.nl

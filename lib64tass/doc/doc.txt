@@ -194,6 +194,12 @@ e)  bitmap mode 160x200 4 color
         sta $dd00   ;   Bits #0-#1: VIC bank. Values:
 
 
+* debug test
+
+txtio.002.asm
+txtio.003.asm
+conv.000.asm
+
 ;;;
 ;;
 ;

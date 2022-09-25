@@ -66,6 +66,7 @@ main	.proc
             
             load_address_zpWord0    s1
             jsr string.upper
+            
             load_address_zpWord0    s1
             jsr std.print_string
             
@@ -74,6 +75,7 @@ main	.proc
             
             load_address_zpWord0    s1
             jsr string.lower
+            
             load_address_zpWord0    s1
             jsr std.print_string
             
@@ -86,6 +88,7 @@ main	.proc
             jsr std.print_string
             lda #char.nl
             jsr sys.CHROUT
+            
             load_address_zpWord0    px
             jsr std.print_string
             lda #char.nl

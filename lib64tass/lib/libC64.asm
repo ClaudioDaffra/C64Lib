@@ -387,6 +387,12 @@ c64 .proc
 ; --------------------------------------------------------------- macro
 
 ; ---------------------------------------------------------------
+;
+;   ay      lohi
+;
+;   a   <   lo
+;   y   >   hi
+;
 
 load_imm_ay	.macro
 
@@ -395,26 +401,12 @@ load_imm_ay	.macro
 
 .endm
 
-load_imm_ax	.macro
-
-	lda >\1
-	ldx <\1
-
-.endm
-
 ; ---------------------------------------------------------------
 
 load_var_ay	.macro
 
-	lda \1+1
-	ldy \1
-
-.endm
-
-load_var_ax	.macro
-
-	lda \1+1
-	ldx \1
+	lda \1 
+	ldy \1+1
 
 .endm
 
@@ -424,13 +416,6 @@ load_address_ay	.macro
 
 	lda #<\1
 	ldy #>\1
-
-.endm
-
-load_address_ax	.macro
-
-	lda #<\1
-	ldx #>\1
 
 .endm
 

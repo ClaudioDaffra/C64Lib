@@ -626,10 +626,17 @@ std .proc
     .pend
 
     ; ........................................... print_u16_dec
-    ; input :   ax  unsigned word
+    ;
+    ; input :   
+    ;           ay  -> ax  unsigned word
     
     print_u16_dec .proc
 
+            sta zpa
+            sty zpy
+            lda zpy
+            ldx zpa
+            
             jsr sys.OUT_U16
             
             rts
@@ -662,10 +669,17 @@ std .proc
     .pend 
 
     ; ........................................... print_s16_dec
-    ; input :   ax  signed word
+    ;
+    ; input :   
+    ;           ay  -> ax  unsigned word
     
     print_s16_dec .proc
 
+            sta zpa
+            sty zpy
+            lda zpy
+            ldx zpa
+            
             stx zpx
             pha
             and #128

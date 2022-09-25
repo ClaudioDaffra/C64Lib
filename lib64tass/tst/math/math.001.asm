@@ -50,6 +50,7 @@ main	.proc
             ;  .................................... compare u16  ?= 0
             ;  001
             ;  001
+            
             load_zpWord0    au16
             load_zpWord1    bu16
 

@@ -129,18 +129,15 @@ main	.proc
             load_address_zpWord0    s2
             load_address_zpWord1    s1
             jsr string.copy
+            
             sta zpa
             jsr debug_a
             
             load_address_zpWord0    s2
             jsr std.print_string
             
-            
-            
-            
+
             ; ---------------------------- 
-
-
             
             rts
 
