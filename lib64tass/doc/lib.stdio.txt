@@ -47,8 +47,7 @@ screen struct
                 screen.char
     output  :
                 screen.char
-            
-            
+
     #   set_char 
 
     input   :
@@ -65,8 +64,7 @@ screen struct
                 screen.row
     output  :
                 a ( get char )
-                
-                
+
     #   set_cc
 
     input   :    
@@ -77,7 +75,6 @@ screen struct
     output  :
                 set_cc.screen_pointer
                 set_cc.color_pointer
-                
                 
     #   set_border_color
 
@@ -92,7 +89,6 @@ screen struct
                 screen.background_color
     output  :
                 $d021
-        
 
     # set_foreground_color 
  
@@ -110,7 +106,6 @@ screen struct
                 screen.row
     output  :
                 a ( fore ground color )
-                
 
     #   clear_screen_chars
     
@@ -119,7 +114,6 @@ screen struct
     output  :
                 c64.screen_addr
 
-    
     # clear_screen_colors 
     
     input   :    
@@ -134,7 +128,51 @@ screen struct
                 Carry   0   scroll text
     output  :
                 //
-                
+
+    #   print_string
+    
+    input   :   ay
+
+    #   print_u8_hex
+    
+    input   :   a
+
+    #   print_u8_dec
+    
+    input   :   a
+
+    #   print_u8_hex
+    
+    input   :   a   ,sec=$
+
+    #   print_u8_bin
+    
+    input   :   a   ,sec=%
+
+    #   print_s8_dec
+    
+    input   :   a
+
+    #   print_u16_bin
+    
+    input   :   ay   ,sec=%
+
+    #   print_u16_hex
+    
+    input   :   ay   ,sec=$
+
+    #   print_u16_dec0
+    
+    input   :   ay  
+
+    #   print_u16_dec
+    
+    input   :   ay  
+
+    #   print_s16_dec
+    
+    input   :   ay  
+
 ##########
     std
 ##########

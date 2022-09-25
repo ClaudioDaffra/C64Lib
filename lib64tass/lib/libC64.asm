@@ -421,7 +421,7 @@ c64 .proc
 ;       macro
 ;******
 
-; ---------------------------------------------------------------
+; ---------------------------------------------------------------   ay
 ;
 ;   ay      lohi
 ;
@@ -436,8 +436,6 @@ load_imm_ay	.macro
 
 .endm
 
-; ---------------------------------------------------------------
-
 load_var_ay	.macro
 
 	lda \1 
@@ -445,12 +443,26 @@ load_var_ay	.macro
 
 .endm
 
-; ---------------------------------------------------------------
-
 load_address_ay	.macro
 
 	lda #<\1
 	ldy #>\1
+
+.endm
+
+; ---------------------------------------------------------------   xy
+
+load_imm_xy	.macro
+
+	ldx <\1
+	ldy >\1
+
+.endm
+
+load_var_xy	.macro
+
+	ldx \1 
+	ldy \1+1
 
 .endm
 
@@ -461,6 +473,15 @@ load_address_zpWord0	.macro
 	lda #<\1
     sta zpWord0
 	ldy #>\1
+    sty zpWord0+1
+    
+.endm
+
+load_imm_zpWord0	.macro
+
+	lda <\1
+    sta zpWord0
+	ldy >\1
     sty zpWord0+1
     
 .endm
@@ -508,6 +529,15 @@ load_zpWord1	.macro
 	lda \1+1
 	sta zpWord1+1
 	
+.endm
+
+load_imm_zpWord1	.macro
+
+	lda <\1
+    sta zpWord1
+	ldy >\1
+    sty zpWord1+1
+    
 .endm
 
 ; --------------------------------------------------------------- if then
@@ -634,7 +664,156 @@ mem .proc
                 rts
     .pend
 
+    ; ........................................... mem.set
+    ;
+    ;   input   :   
+    ;               zpWord0     begin
+    ;               xy          length
+    ;               a           value
 
+    set_byte          .proc
+    
+            ; -- fill memory from (zpWord0), length XY, with value in A.
+            ;    clobbers X, Y
+            
+            stx  zpy
+            sty  zpx
+            ldy  #0
+            ldx  zpx
+            beq  _lastpage
+    _fullpage    
+            sta  (zpWord0),y
+            iny
+            bne  _fullpage
+            inc  zpWord0+1          ; next page
+            dex
+            bne  _fullpage
+    _lastpage    
+            ldy  zpy
+            beq  +
+    -             
+            dey
+            sta  (zpWord0),y
+            bne  -
+
+    +               
+            rts
+
+    .pend
+    
+    ; ........................................... mem.set_word
+    ;
+    ;   input   :   
+    ;               zpWord0     begin
+    ;               zpWord1     length
+    ;               ay          value
+
+    set_word        .proc
+
+        ; --    fill memory from (zpWord0) 
+        ;       number of words in zpWord1, 
+        ;       with word value in AY.
+        
+            sta  _mod1+1                    ; self-modify
+            sty  _mod1b+1                   ; self-modify
+            sta  _mod2+1                    ; self-modify
+            sty  _mod2b+1                   ; self-modify
+            ldx  zpWord0
+            stx  zpWord2
+            ldx  zpWord0+1
+            inx
+            stx  zpx                ; second page
+
+            ldy  #0
+            ldx  zpWord1+1
+            beq  _lastpage
+    _fullpage
+    _mod1           
+            lda  #0                 ; self-modified
+            sta  (zpWord0),y        ; first page
+            sta  (zpWord2),y            ; second page
+            iny
+    _mod1b        lda  #0                         ; self-modified
+            sta  (zpWord0),y        ; first page
+            sta  (zpWord2),y            ; second page
+            iny
+            bne  _fullpage
+            inc  zpWord0+1          ; next page pair
+            inc  zpWord0+1          ; next page pair
+            inc  zpWord2+1              ; next page pair
+            inc  zpWord2+1              ; next page pair
+            dex
+            bne  _fullpage
+    _lastpage    
+            ldx  zpWord1
+            beq  _done
+
+            ldy  #0
+    -
+    _mod2           
+            lda  #0                         ; self-modified
+            sta  (zpWord0), y
+            inc  zpWord0
+            bne  _mod2b
+            inc  zpWord0+1
+    _mod2b          
+            lda  #0                         ; self-modified
+            sta  (zpWord0), y
+            inc  zpWord0
+            bne  +
+            inc  zpWord0+1
+    +               
+            dex
+            bne  -
+    _done        
+            rts
+            
+    .pend
+
+    ; ........................................... mem.copy_nbyte_from_to
+    ;
+    ;   input   :   
+    ;               zpWord0     from
+    ;               zpWord1     to
+    ;               xy          value
+
+    copy_npage_from_to    .proc
+    
+        ; -- copy memory UP from (zpWord0) to (zpWord1) of length X/Y (16-bit, X=lo, Y=hi)
+
+            source  = zpWord0
+            dest    = zpWord1
+            length  = zpWord2   ; (and SCRATCH_ZPREG)
+
+            stx  length
+            sty  length+1
+
+            ldx  length             ; move low byte of length into X
+            bne  +                  ; jump to start if X > 0
+            dec  length             ; subtract 1 from length
+    +        
+            ldy  #0                 ; set Y to 0
+    -        
+            lda  (source),y         ; set A to whatever (source) points to offset by Y
+            sta  (dest),y           ; move A to location pointed to by (dest) offset by Y
+            iny                     ; increment Y
+            bne  +                  ; if Y<>0 then (rolled over) then still moving bytes
+            inc  source+1           ; increment hi byte of source
+            inc  dest+1             ; increment hi byte of dest
+    +        
+            dex                     ; decrement X (lo byte counter)
+            bne  -                  ; if X<>0 then move another byte
+            dec  length             ; we've moved 255 bytes, dec length
+            bpl  -                  ; if length is still positive go back and move more
+            rts                     ; done
+            
+    .pend
+
+
+
+
+
+    
 .pend
 
 
