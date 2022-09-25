@@ -375,59 +375,59 @@ conv    .proc
                                                 .pend
                                                 ;    src line: library:/prog8lib/conv.p8:336
 
-str2word    .proc
-    ;    src line: library:/prog8lib/conv.p8:341
-_result = zpWord0
-        sta  zpWord1
-        sty  zpWord1+1
-        ldy  #0
-        sty  _result
-        sty  _result+1
-        sty  _negative
-        sty  cx16.r15+1
-        lda  (zpWord1),y
-        cmp  #'+'
-        bne  +
-        iny
-+        cmp  #'-'
-        bne  _parse
-        inc  _negative
-        iny
-_parse        lda  (zpWord1),y
-        sec
-        sbc  #48
-        bpl  _digit
-_done
-        sty  cx16.r15
-        lda  _negative
-        beq  +
-        sec
-        lda  #0
-        sbc  _result
-        sta  _result
-        lda  #0
-        sbc  _result+1
-        sta  _result+1
-+        lda  _result
-        ldy  _result+1
-        rts
-_digit
-        cmp  #10
-        bcs  _done
-        ; add digit to result
-        pha
-        jsr  str2uword._result_times_10
-        pla
-        clc
-        adc  _result
-        sta  _result
-        bcc  +
-        inc  _result+1
-+        iny
-        bne  _parse
-        ; never reached
-_negative    .byte  0
-    .pend
+                                                    str2word    .proc
+                                                        ;    src line: library:/prog8lib/conv.p8:341
+                                                    _result = zpWord0
+                                                            sta  zpWord1
+                                                            sty  zpWord1+1
+                                                            ldy  #0
+                                                            sty  _result
+                                                            sty  _result+1
+                                                            sty  _negative
+                                                            sty  cx16.r15+1
+                                                            lda  (zpWord1),y
+                                                            cmp  #'+'
+                                                            bne  +
+                                                            iny
+                                                    +        cmp  #'-'
+                                                            bne  _parse
+                                                            inc  _negative
+                                                            iny
+                                                    _parse        lda  (zpWord1),y
+                                                            sec
+                                                            sbc  #48
+                                                            bpl  _digit
+                                                    _done
+                                                            sty  cx16.r15
+                                                            lda  _negative
+                                                            beq  +
+                                                            sec
+                                                            lda  #0
+                                                            sbc  _result
+                                                            sta  _result
+                                                            lda  #0
+                                                            sbc  _result+1
+                                                            sta  _result+1
+                                                    +        lda  _result
+                                                            ldy  _result+1
+                                                            rts
+                                                    _digit
+                                                            cmp  #10
+                                                            bcs  _done
+                                                            ; add digit to result
+                                                            pha
+                                                            jsr  str2uword._result_times_10
+                                                            pla
+                                                            clc
+                                                            adc  _result
+                                                            sta  _result
+                                                            bcc  +
+                                                            inc  _result+1
+                                                    +        iny
+                                                            bne  _parse
+                                                            ; never reached
+                                                    _negative    .byte  0
+                                                        .pend
  
             hex2uword    .proc
                 ;    src line: library:/prog8lib/conv.p8:400
@@ -1007,37 +1007,37 @@ fill_screen    .proc
                             rts
                     .pend
  
-                    ; ----------------------------------------------------------------------- print_ub (dec)
-                    ;   
-                    ;   input   :   a   <- (unsigned byte);
-                    ;   return  :   //
-                    ;   output  :   a   -> (unsigned byte) -> decimal
+                            ; ----------------------------------------------------------------------- print_ub (dec)
+                            ;   
+                            ;   input   :   a   <- (unsigned byte);
+                            ;   return  :   //
+                            ;   output  :   a   -> (unsigned byte) -> decimal
 
-                    print_ub    .proc
+                            print_ub    .proc
 
-                            stx  zpx
-                            jsr  conv.ubyte2decimal
-                    _print_byte_digits
-                            pha
-                            cpy  #'0'
-                            beq  +
-                            tya
-                            jsr  c64.CHROUT
-                            pla
-                            jsr  c64.CHROUT
-                            jmp  print_ub_ones
-                    +       
-                            pla
-                            cmp  #'0'
-                            beq  print_ub_ones
-                            jsr  c64.CHROUT
-                    print_ub_ones   
-                            txa
-                            jsr  c64.CHROUT
-                            ldx  zpx
-                            rts
-                            
-                    .pend
+                                    stx  zpx
+                                    jsr  conv.ubyte2decimal
+                            _print_byte_digits
+                                    pha
+                                    cpy  #'0'
+                                    beq  +
+                                    tya
+                                    jsr  c64.CHROUT
+                                    pla
+                                    jsr  c64.CHROUT
+                                    jmp  print_ub_ones
+                            +       
+                                    pla
+                                    cmp  #'0'
+                                    beq  print_ub_ones
+                                    jsr  c64.CHROUT
+                            print_ub_ones   
+                                    txa
+                                    jsr  c64.CHROUT
+                                    ldx  zpx
+                                    rts
+                                    
+                            .pend
 
                     ; -----------------------------------------------------------------------
 
@@ -1785,66 +1785,68 @@ internal_stringcopy    .proc
     .pend
     ;    src line: library:/prog8lib/c64/syslib.p8:546
 
-memcopy    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:549
-            ldx  cx16.r0
-                stx  zpWord0        ; source in ZP
-            ldx  cx16.r0+1
-                stx  zpWord0+1
-            ldx  cx16.r1
-                stx  zpWord1        ; target in ZP
-            ldx  cx16.r1+1
-                stx  zpWord1+1
-            cpy  #0
-            bne  _longcopy
+                                        memcopy    .proc
+                                         
+                                                    ldx  cx16.r0
+                                                    stx  zpWord0        ; source in ZP
+                                                    ldx  cx16.r0+1
+                                                    stx  zpWord0+1
+                                                    
+                                                    ldx  cx16.r1
+                                                    stx  zpWord1        ; target in ZP
+                                                    ldx  cx16.r1+1
+                                                    stx  zpWord1+1
+                                                    
+                                                    cpy  #0
+                                                    bne  _longcopy
 
-            ; copy <= 255 bytes
-            tay
-            bne  _copyshort
-            rts     ; nothing to copy
+                                                    ; copy <= 255 bytes
+                                                    tay
+                                                    bne  _copyshort
+                                                    rts     ; nothing to copy
 
-_copyshort
-            ; decrease source and target pointers so we can simply index by Y
-            lda  zpWord0
-            bne  +
-            dec  zpWord0+1
-+           dec  zpWord0
-            lda  zpWord1
-            bne  +
-            dec  zpWord1+1
-+           dec  zpWord1
+                                        _copyshort
+                                                    ; decrease source and target pointers so we can simply index by Y
+                                                    lda  zpWord0
+                                                    bne  +
+                                                    dec  zpWord0+1
+                                        +           dec  zpWord0
+                                                    lda  zpWord1
+                                                    bne  +
+                                                    dec  zpWord1+1
+                                        +           dec  zpWord1
 
--           lda  (zpWord0),y
-            sta  (zpWord1),y
-            dey
-            bne  -
-            rts
+                                        -           lda  (zpWord0),y
+                                                    sta  (zpWord1),y
+                                                    dey
+                                                    bne  -
+                                                    rts
 
-_longcopy
-            sta  zpy        ; lsb(count) = remainder in last page
-            tya
-            tax                         ; x = num pages (1+)
-            ldy  #0
--           lda  (zpWord0),y
-            sta  (zpWord1),y
-            iny
-            bne  -
-            inc  zpWord0+1
-            inc  zpWord1+1
-            dex
-            bne  -
-            ldy  zpy
-            bne  _copyshort
-            rts
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:602
+                                        _longcopy
+                                                    sta  zpy        ; lsb(count) = remainder in last page
+                                                    tya
+                                                    tax                         ; x = num pages (1+)
+                                                    ldy  #0
+                                        -           lda  (zpWord0),y
+                                                    sta  (zpWord1),y
+                                                    iny
+                                                    bne  -
+                                                    inc  zpWord0+1
+                                                    inc  zpWord1+1
+                                                    dex
+                                                    bne  -
+                                                    ldy  zpy
+                                                    bne  _copyshort
+                                                    rts
+                                            .pend
+                                            ;    src line: library:/prog8lib/c64/syslib.p8:602
 
 memset    .proc
     ;    src line: library:/prog8lib/c64/syslib.p8:603
             ldy  cx16.r0
-                sty  zpWord0
+            sty  zpWord0
             ldy  cx16.r0+1
-                sty  zpWord0+1
+            sty  zpWord0+1
             ldx  cx16.r1
             ldy  cx16.r1+1
             jmp  prog8_lib.memset

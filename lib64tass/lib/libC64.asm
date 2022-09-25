@@ -19,7 +19,9 @@ temp  .proc
     
 .pend
 
-;--------------------------------------------------------------- global var
+;******
+;       global
+;******
 
 global  .proc
 
@@ -84,7 +86,9 @@ if_bit_1 .macro
 .endm
    
 
-;--------------------------------------------------------------- zero page
+;******
+;       zero page
+;******
 
 ;   -------------------------------------------- safe
 
@@ -121,7 +125,9 @@ zpWord3hi   = $05
 zpWord3lo   = $05+1
 
 
-;--------------------------------------------------------------- c64 kernal
+;******
+;       sys
+;******
 
 sys .proc
 
@@ -136,7 +142,9 @@ sys .proc
     
 .pend
 
-;--------------------------------------------------------------- color
+;******
+;       color
+;******
 
 color .proc
 
@@ -160,8 +168,9 @@ color .proc
 
 .pend
 
-
-;--------------------------------------------------------------- char
+;******
+;       char
+;******
 
 char .proc
 
@@ -180,7 +189,9 @@ char .proc
         
 .pend
 
-;--------------------------------------------------------------- c64 subroutine
+;******
+;       c64
+;******
 
 c64 .proc
 
@@ -406,7 +417,9 @@ c64 .proc
         
 .pend
 
-; --------------------------------------------------------------- macro
+;******
+;       macro
+;******
 
 ; ---------------------------------------------------------------
 ;
@@ -559,6 +572,71 @@ cstring_type   .macro
 pstring_type   .macro
     \1    .null    \2 , \3
 .endm
+
+;******
+;       mem
+;******
+
+
+mem .proc
+
+    ; ........................................... mem.copy
+    ;
+    ;   input   :
+    ;               source address  ->  zpWord0
+    ;               dest   address  ->  zpWord1
+    ;               ay              ->  size
+    ;   output  :
+    ;               //
+    
+   copy    .proc
+     
+                cpy  #0
+                bne  _longcopy
+
+                ; copy <= 255 bytes
+                tay
+                bne  _copyshort
+                rts     ; nothing to copy
+
+    _copyshort
+                ; decrease source and target pointers so we can simply index by Y
+                lda  zpWord0
+                bne  +
+                dec  zpWord0+1
+    +           dec  zpWord0
+                lda  zpWord1
+                bne  +
+                dec  zpWord1+1
+    +           dec  zpWord1
+
+    -           lda  (zpWord0),y
+                sta  (zpWord1),y
+                dey
+                bne  -
+                rts
+
+    _longcopy
+                sta  zpy        ; lsb(count) = remainder in last page
+                tya
+                tax                         ; x = num pages (1+)
+                ldy  #0
+    -           lda  (zpWord0),y
+                sta  (zpWord1),y
+                iny
+                bne  -
+                inc  zpWord0+1
+                inc  zpWord1+1
+                dex
+                bne  -
+                ldy  zpy
+                bne  _copyshort
+                rts
+    .pend
+
+
+.pend
+
 
 ;;;
 ;;

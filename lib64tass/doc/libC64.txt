@@ -1,6 +1,8 @@
 
 
-; C64
+    #######
+    #   bit
+    #######
 
     #   bit_or_(0-8)    
 
@@ -16,7 +18,16 @@
     
     #   if_false    jmp (c=0)
 
-    #   page zero register
+    #   if_string_lt    (a?=ff)
+     
+    #   if_string_eq    (a?=00) 
+     
+    #   if_string_gt    (a?=01) 
+ 
+
+    #######
+    #   zero page
+    #######
    
         zpa		= $02
         zpx		= $2a
@@ -37,12 +48,16 @@
 
     #   kernal
     
-    sys 
+    #######
+    #   sys
+    #######
+    
             CHROUT = $FFD2
- 
- 
-    #   color   
 
+    #######
+    #   color
+    #######
+    
         black          =       0               ;       0000
         white          =       1               ;       0001
         red            =       2               ;       0010
@@ -62,7 +77,10 @@
         light_grey     =       15              ;       1111
 
 
-    #   char 
+    #######
+    #   char
+    #######
+    
     
         home            =   19
         nl              =   '\n'
@@ -71,7 +89,10 @@
         dollar          =   '$'
         a               =   1
     
-
+    #######
+    #   c64
+    #######
+    
     #   address
         
         screen_addr =   $0400
@@ -142,6 +163,22 @@
     sByte   b,2
     uWord   a,1
     sWord   b,2
+   
+
+    #######
+    #   mem
+    #######
+    
+    ; ........................................... mem.copy
+    ;
+    ;   input   :
+    ;               source address  ->  zpWord0
+    ;               dest   address  ->  zpWord1
+    ;               ay              ->  size
+    ;   output  :
+    ;               //
+    
+   copy    .proc
    
    
 ;;;

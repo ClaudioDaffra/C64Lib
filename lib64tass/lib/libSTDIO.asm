@@ -1,6 +1,7 @@
 
-
-;--------------------------------------------------------------- screen
+;**********
+;           screen
+;**********
 
 screen_s    .struct
     row                 .byte   0
@@ -27,8 +28,9 @@ screen_s    .struct
 
 screen  .dstruct  screen_s
 
-;---------------------------------------------------------------
-
+;**********
+;           txt
+;**********
 txt .proc
 
     ; ........................................... set_char_with_col_2_3
@@ -253,6 +255,14 @@ txt .proc
             rts
 
     .pend
+
+    clear_screen .proc
+     
+            lda  #' '
+            ldy  #250
+            jmp  clear_screen_chars
+
+    .pend
     
     ; ........................................... clear_screen_colors
     
@@ -267,6 +277,13 @@ txt .proc
             dey
             bne  -
             rts
+    .pend
+
+    clear_color .proc
+     
+            sta  screen.foreground_color
+            jmp  clear_screen_colors
+
     .pend
     
     ; ........................................... screen_scroll ( left,right,up,down )
@@ -431,15 +448,18 @@ txt .proc
             
     .pend
     
-    set_cursor_pos  .proc
+    set_cursor_pos  ;.proc
     
             ldx screen.col
-            ldy screen.row 
+            ldy screen.row
+            
+    set_cursor_pos_xy
+    
             clc
             jsr sys.SCREEN_XY
             rts
             
-    .pend
+    ;.pend
     
     get_screen_width  .proc
     
@@ -466,11 +486,245 @@ txt .proc
             
     .pend
     
+    ; ........................................... print_string
+    ;
+	;	input   :   ay  ->  zpWord0 ->  string
 
+    print_string  .proc
+    
+            ldy  #0
+    -        
+            lda  (zpWord0),y
+            beq  +
+            jsr  sys.CHROUT
+            iny
+            bne  -
+    +        
+            rts
+            
+    .pend
+
+    ; ----------------------------------------------------------------------- print_ub0 (dec)
+    ;
+	;	input   :   a   ->  unsigned byte
+    
+    print_u8_dec0    .proc
+     
+            stx  zpx
+            jsr  conv.ubyte2decimal
+            pha
+            tya
+            jsr  sys.CHROUT
+            pla
+            jsr  sys.CHROUT
+            txa
+            jsr  sys.CHROUT
+            ldx  zpx
+            rts
+            
+    .pend
+
+    ; ----------------------------------------------------------------------- print_ub (dec)
+    ;   
+	;	input   :   a   ->  unsigned byte
+
+    print_u8_dec    .proc
+
+            stx  zpx
+            jsr  conv.ubyte2decimal
+    _print_byte_digits
+            pha
+            cpy  #'0'
+            beq  +
+            tya
+            jsr  sys.CHROUT
+            pla
+            jsr  sys.CHROUT
+            jmp  print_ub_ones
+    +       
+            pla
+            cmp  #'0'
+            beq  print_ub_ones
+            jsr  sys.CHROUT
+    print_ub_ones   
+            txa
+            jsr  sys.CHROUT
+            ldx  zpx
+            rts
+            
+    .pend
+    
+    ; ----------------------------------------------------------------------- print_b (dec)
+    ;   
+	;	input   :   a   ->  signed byte
+    
+    print_s8_dec    .proc
+     
+            stx  zpx
+            pha
+            cmp  #0
+            bpl  +
+            lda  #'-'
+            jsr  sys.CHROUT
+    +        
+            pla
+            jsr  conv.byte2decimal
+            jmp  print_u8_dec._print_byte_digits
+            
+    .pend
+
+    ; ----------------------------------------------------------------------- print_ub (hex)
+    ;   
+	;	input   :   a   ->  unsigned byte
+    
+    print_u8_hex    .proc
+     
+            stx  zpx
+            bcc  +
+            pha
+            lda  #'$'
+            jsr  sys.CHROUT
+            pla
+    +        
+            jsr  conv.ubyte2hex
+            jsr  sys.CHROUT
+            tya
+            jsr  sys.CHROUT
+            ldx  zpx
+            rts
+            
+    .pend
+    
+    ; ----------------------------------------------------------------------- print_ub (bin)
+    ;   
+	;	input   :   a   ->  unsigned byte
+    
+    print_u8_bin    .proc
+     
+            stx  zpx
+            sta  zpy
+            bcc  +
+            lda  #'%'
+            jsr  sys.CHROUT
+    +        
+            ldy  #8
+    -        
+            lda  #'0'
+            asl  zpy
+            bcc  +
+            lda  #'1'
+    +        
+            jsr  sys.CHROUT
+            dey
+            bne  -
+            ldx  zpx
+            rts
+            
+    .pend
+    
+    ; ----------------------------------------------------------------------- print_uw (bin)
+    ; ----------------------------------------------------------------------- print_uw (hex)
+    ;
+	;	input   :   ay   ->  unsigned word
+
+    print_u16_bin    .proc
+     
+            pha
+            tya
+            jsr  print_u8_bin
+            pla
+            clc
+            jmp  print_u8_bin
+            
+    .pend
+
+    print_u16_hex    .proc
+
+            pha
+            tya
+            jsr  print_u8_hex
+            pla
+            clc
+            jmp  print_u8_hex
+            
+    .pend
+
+    ; ----------------------------------------------------------------------- print_u16_dec0  (dec)
+    ; ----------------------------------------------------------------------- print_u16_dec   
+    ;
+	;	input   :   ay   ->  unsigned word
+    
+    print_u16_dec0    .proc
+     
+            stx  zpx
+            jsr  conv.uword2decimal
+            ldy  #0
+    -        
+            lda  conv.uword2decimal.decTenThousands,y
+            beq  +
+            jsr  sys.CHROUT
+            iny
+            bne  -
+    +        
+            ldx  zpx
+            rts
+            
+    .pend
+
+    print_u16_dec    .proc
+     
+            stx  zpx
+            jsr  conv.uword2decimal
+            ldx  zpx
+            ldy  #0
+    -        
+            lda  conv.uword2decimal.decTenThousands,y
+            beq  _allzero
+            cmp  #'0'
+            bne  _gotdigit
+            iny
+            bne  -
+    _gotdigit
+            jsr  sys.CHROUT
+            iny
+            lda  conv.uword2decimal.decTenThousands,y
+            bne  _gotdigit
+            rts
+    _allzero
+            lda  #'0'
+            jmp  sys.CHROUT
+            
+    .pend
+    
+    ; ----------------------------------------------------------------------- print_s16_dec  (dec)
+    ;
+	;	input   :   ay   -> signed word
+    
+    print_s16_dec    .proc
+      
+            cpy  #0
+            bpl  +
+            pha
+            lda  #'-'
+            jsr  sys.CHROUT
+            tya
+            eor  #255
+            tay
+            pla
+            eor  #255
+            clc
+            adc  #1
+            bcc  +
+            iny
+    +        
+            jmp  print_u16_dec
+    .pend
 
 .pend
 
-;--------------------------------------------------------------- std
+;**********
+;          std
+;**********
 
 std .proc
 
@@ -531,7 +785,7 @@ std .proc
 
     ; ........................................... print_u16_hex
     ; ........................................... print_s16_hex
-    
+    ;
     ;   stampa un numero 16 bit esadecimale
     ;   input   :   a/y
     ;           :   sec aggiunge $ all'inizio
@@ -559,7 +813,7 @@ std .proc
             rts
 
     ; ........................................... print_string
-    
+    ;
     ;   stampa una string , null terminated
     ;   input   :   a/y
     
@@ -730,9 +984,6 @@ std .proc
 
     .pend
 
-
-;
-    
 .pend
 
 ;;;
