@@ -173,9 +173,9 @@ txt .proc
         rts
     .pend
     
-    ; ........................................... set_background_color_
+    ; ........................................... set_background_color
     
-    set_background_color_ .proc
+    set_background_color .proc
         lda screen.background_color
         sta $d021
         rts
@@ -200,15 +200,15 @@ txt .proc
             sta  ptr+1
             bcc  +
             inc  ptr+2
-    +		
+        +		
             pla
-    ptr		
+        ptr		
             sta  $d800		; modified
-    ;end
+        ;end
             rts
-            
-    pointer  = set_foreground_color.ptr + 1
-    color_rows	.word  c64.color_addr + range(0, 1000, 40)
+                
+        pointer  = set_foreground_color.ptr + 1
+        color_rows	.word  c64.color_addr + range(0, 1000, 40)
 
     .pend
 
@@ -228,11 +228,11 @@ txt .proc
             sta  ptr+1
             bcc  +
             inc  ptr+2
-    +		
+        +		
             pla
-    ptr		
+        ptr		
             lda  $d800		; modified
-    ;end
+        ;end
             rts
 
     .pend
@@ -242,7 +242,7 @@ txt .proc
     clear_screen_chars    .proc
      
             ldy  #250
-    -        
+        -        
             sta  c64.screen_addr+250*0-1,y
             sta  c64.screen_addr+250*1-1,y
             sta  c64.screen_addr+250*2-1,y
@@ -259,7 +259,7 @@ txt .proc
     clear_screen_colors    .proc
 
             ldy  #250
-    -        
+        -        
             sta  c64.color_addr+250*0-1,y
             sta  c64.color_addr+250*1-1,y
             sta  c64.color_addr+250*2-1,y
@@ -276,11 +276,11 @@ txt .proc
             stx  zpx
             bcc _scroll_screen
 
-    +       ; scroll the screen and the color memory
+        +   ; scroll the screen and the color memory
 
             ldx  #0
             ldy  #38
-    -
+        -
             .for row=0, row<=24, row+=1
                 lda  c64.screen_addr    + 40*row + 1,x
                 sta  c64.screen_addr    + 40*row + 0,x
@@ -297,7 +297,7 @@ txt .proc
     
             ldx  #0
             ldy  #38
-    -
+        -
             .for row=0, row<=24, row+=1
                 lda  c64.screen_addr + 40*row + 1,x
                 sta  c64.screen_addr + 40*row + 0,x
@@ -316,9 +316,9 @@ txt .proc
             stx  zpx
             bcc  _scroll_screen
 
-    +       ; scroll the screen and the color memory
+        +   ; scroll the screen and the color memory
             ldx  #38
-    -
+        -
             .for row=0, row<=24, row+=1
                 lda  c64.screen_addr    + 40*row + 0,x
                 sta  c64.screen_addr    + 40*row + 1,x
@@ -332,11 +332,12 @@ txt .proc
     _scroll_screen  ; scroll only the screen memory
     
             ldx  #38
-    -
+        -
             .for row=0, row<=24, row+=1
                 lda  c64.screen_addr + 40*row + 0,x
                 sta  c64.screen_addr + 40*row + 1,x
             .next
+            
             dex
             bpl  -
 
@@ -349,16 +350,17 @@ txt .proc
             stx  zpx
             bcc  _scroll_screen
 
-    +       ; scroll the screen and the color memory
+        +   ; scroll the screen and the color memory
     
             ldx #39
-    -
+        -
             .for row=1, row<=24, row+=1
                 lda  c64.screen_addr    + 40*row,x
                 sta  c64.screen_addr    + 40*(row-1),x
                 lda  c64.color_addr     + 40*row,x
                 sta  c64.color_addr     + 40*(row-1),x
             .next
+            
             dex
             bpl  -
             rts
@@ -366,11 +368,13 @@ txt .proc
     _scroll_screen  ; scroll only the screen memory
     
             ldx #39
-    -
+        -
+        
             .for row=1, row<=24, row+=1
                 lda  c64.screen_addr + 40*row,x
                 sta  c64.screen_addr + 40*(row-1),x
             .next
+            
             dex
             bpl  -
 
@@ -383,16 +387,17 @@ txt .proc
             stx  zpx
             bcc  _scroll_screen
 
-    +       ; scroll the screen and the color memory
+        +   ; scroll the screen and the color memory
     
             ldx #39
-    -
+        -
             .for row=23, row>=0, row-=1
                 lda  c64.screen_addr    + 40*row,x
                 sta  c64.screen_addr    + 40*(row+1),x
                 lda  c64.color_addr     + 40*row,x
                 sta  c64.color_addr     + 40*(row+1),x
             .next
+            
             dex
             bpl  -
             rts
@@ -400,17 +405,19 @@ txt .proc
     _scroll_screen  ; scroll only the screen memory
     
             ldx #39
-    -
+        -
             .for row=23, row>=0, row-=1
                 lda  c64.screen_addr + 40*row,x
                 sta  c64.screen_addr + 40*(row+1),x
             .next
+            
             dex
             bpl  -
 
             ldx  zpx
             rts
-        .pend
+            
+    .pend
     
     ; ........................................... get/set cursor position
     
@@ -430,7 +437,6 @@ txt .proc
             ldy screen.row 
             clc
             jsr sys.SCREEN_XY
-
             rts
             
     .pend
@@ -440,6 +446,7 @@ txt .proc
             jsr  sys.SCREEN_WH
             stx  screen.width
             rts
+            
     .pend
 
     get_screen_height  .proc
@@ -447,6 +454,7 @@ txt .proc
             jsr  sys.SCREEN_WH
             sty  screen.height
             rts
+            
     .pend
 
     get_screen_dim  .proc
@@ -455,6 +463,7 @@ txt .proc
             stx  screen.width
             sty  screen.height
             rts
+            
     .pend
     
 
@@ -467,10 +476,11 @@ std .proc
 
     ; ........................................... print_u8_hex
     ; ........................................... print_s8_hex
-    
+    ;
 	;	stampa un byte a schermo
-	;	input	:	a	carattere
-	;			:	sec	stampa	$ difronte al carattere
+	;	input	
+    ;           :	a	    carattere
+	;			:	sec	    stampa	$ difronte al carattere
 
     
 	print_u8_hex
@@ -505,13 +515,15 @@ std .proc
     print_u8_bin_digits
     
             lda zpa
-    
-	+		ldy  #8
-	-		lda  #'0'
+        + 
+            ldy  #8
+        - 
+            lda  #'0'
 			asl  zpa
 			bcc  +
 			lda  #'1'
-	+		jsr  sys.CHROUT
+        + 
+            jsr  sys.CHROUT
 			dey
 			bne  -
 			ldx  zpx
@@ -556,12 +568,14 @@ std .proc
             sta  zpWord0 
             sty  zpWord0+1
             ldy  #0
-    -		lda  (zpWord0),y
+        - 
+            lda  (zpWord0),y
             beq  +
             jsr  sys.CHROUT
             iny
             bne  -
-    +		rts
+        + 
+            rts
     
     .pend
 
@@ -575,14 +589,14 @@ std .proc
             sta  zpWord0
             sty  zpWord0+1
             ldy  #0             ; char counter = 0
-    -        
+        -        
             jsr  sys.CHRIN
             cmp  #$0d           ; return (ascii 13) pressed?
             beq  +              ; yes, end.
             sta  (zpWord0),y    ; else store char in buffer
             iny
             bne  -
-    +        
+        +        
             lda  #0
             sta  (zpWord0),y    ; finish string with 0 byte
             rts
@@ -596,7 +610,7 @@ std .proc
             ldy  #0             ; char counter = 0
             inx                 ;   numer char + 0
             beq  +              ;   if 255 then end            
-    -        
+        -        
             jsr  sys.CHRIN
             cmp  #$0d           ; return (ascii 13) pressed?
             beq  +              ; yes, end.
@@ -605,7 +619,7 @@ std .proc
             beq  +
             iny
             bne  -
-    +        
+        +        
             lda  #0
             sta  (zpWord0),y    ; finish string with 0 byte
             rts
@@ -658,7 +672,7 @@ std .proc
             lda #129
             sbc zpa
             pha 
-    +        
+        +        
             pla
             tax
             lda #0
@@ -706,7 +720,7 @@ std .proc
             jsr sys.OUT_U16
             
             rts
-    +        
+        + 
             ; positivo
             pla
             ldx zpx

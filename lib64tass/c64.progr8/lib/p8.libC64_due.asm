@@ -1941,59 +1941,59 @@ str_w	.proc
                                                 .pend
                                                 ;	src line: library:/prog8lib/conv.p8:336
 
-str2word	.proc
-	;	src line: library:/prog8lib/conv.p8:341
-_result = P8ZP_SCRATCH_W1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		ldy  #0
-		sty  _result
-		sty  _result+1
-		sty  _negative
-		sty  cx16.r15+1
-		lda  (P8ZP_SCRATCH_W2),y
-		cmp  #'+'
-		bne  +
-		iny
-+		cmp  #'-'
-		bne  _parse
-		inc  _negative
-		iny
-_parse		lda  (P8ZP_SCRATCH_W2),y
-		sec
-		sbc  #48
-		bpl  _digit
-_done
-		sty  cx16.r15
-		lda  _negative
-		beq  +
-		sec
-		lda  #0
-		sbc  _result
-		sta  _result
-		lda  #0
-		sbc  _result+1
-		sta  _result+1
-+		lda  _result
-		ldy  _result+1
-		rts
-_digit
-		cmp  #10
-		bcs  _done
-		; add digit to result
-		pha
-		jsr  str2uword._result_times_10
-		pla
-		clc
-		adc  _result
-		sta  _result
-		bcc  +
-		inc  _result+1
-+		iny
-		bne  _parse
-		; never reached
-_negative	.byte  0
-	.pend
+                                                str2word	.proc
+                                                    ;	src line: library:/prog8lib/conv.p8:341
+                                                _result = P8ZP_SCRATCH_W1
+                                                        sta  P8ZP_SCRATCH_W2
+                                                        sty  P8ZP_SCRATCH_W2+1
+                                                        ldy  #0
+                                                        sty  _result
+                                                        sty  _result+1
+                                                        sty  _negative
+                                                        sty  cx16.r15+1
+                                                        lda  (P8ZP_SCRATCH_W2),y
+                                                        cmp  #'+'
+                                                        bne  +
+                                                        iny
+                                                +		cmp  #'-'
+                                                        bne  _parse
+                                                        inc  _negative
+                                                        iny
+                                                _parse		lda  (P8ZP_SCRATCH_W2),y
+                                                        sec
+                                                        sbc  #48
+                                                        bpl  _digit
+                                                _done
+                                                        sty  cx16.r15
+                                                        lda  _negative
+                                                        beq  +
+                                                        sec
+                                                        lda  #0
+                                                        sbc  _result
+                                                        sta  _result
+                                                        lda  #0
+                                                        sbc  _result+1
+                                                        sta  _result+1
+                                                +		lda  _result
+                                                        ldy  _result+1
+                                                        rts
+                                                _digit
+                                                        cmp  #10
+                                                        bcs  _done
+                                                        ; add digit to result
+                                                        pha
+                                                        jsr  str2uword._result_times_10
+                                                        pla
+                                                        clc
+                                                        adc  _result
+                                                        sta  _result
+                                                        bcc  +
+                                                        inc  _result+1
+                                                +		iny
+                                                        bne  _parse
+                                                        ; never reached
+                                                _negative	.byte  0
+                                                    .pend
 	;	src line: library:/prog8lib/conv.p8:395
 
                                     hex2uword	.proc

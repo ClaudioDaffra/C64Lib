@@ -6,8 +6,10 @@
 string .proc
 
     ;--------------------------------------------------------------- length
-    ;   input   :   a/y :   address string
-    ;   output  :   a   :   length
+    ;   input   :   
+    ;               a/y    address string
+    ;   output  :   
+    ;               a      length
     
     length    .proc
         
@@ -30,7 +32,8 @@ string .proc
     ;              address string zpWord0 source
     ;              address string zpWord1 dest
     ;              a   left
-    ;   output  :  //
+    ;   output  :
+    ;              zpWord1
     
     left    .proc
 
@@ -59,7 +62,8 @@ string .proc
     ;              address string zpWord0 source
     ;              address string zpWord1 dest
     ;              a   right
-    ;   output  :  //
+    ;   output  :
+    ;              zpWord1
     
     right    .proc
 
@@ -102,9 +106,11 @@ string .proc
     ;              address string zpWord1 dest
     ;              a    start
     ;              y    length
-    ;   output  :  //
+    ;   output  :
+    ;              zpWord1
     
     mid    .proc
+    
             ; sub string (source, dest , start, length )
             ;   a   #2      ;   partenza
             ;   y   #3      ;   lunghezza
@@ -147,10 +153,11 @@ string .proc
     ;              address string zpWord0 source
     ;              a    char
     ;   output  :
-    ;               (C=1)   found
-    ;               (c=0)   not found
+    ;              (C=1)   found
+    ;              (C=0)   not found
     
     find_char    .proc
+    
             sta  zpy
             lda  zpWord0
             ldy  zpWord0+1
@@ -172,6 +179,7 @@ string .proc
             tya
             sec
             rts
+            
     .pend
 
     ;--------------------------------------------------------------- copy
@@ -180,11 +188,11 @@ string .proc
     ;              address string zpWord1 dest
     ;   output  :
     ;              a length string copied
-    ;
-    ;  zpWord1 = zpWord0
+    ;              zpWord1 = zpWord0
     ;
     
     copy        .proc
+    
         ; copy a string (must be 0-terminated) from A/Y to (zpWord0)
         ; it is assumed the target string is large enough.
         ; returns the length of the string that was copied in Y.
@@ -289,8 +297,8 @@ string .proc
     ;           zpWord1  :  pattern matching
     ;
     ; Output: 
-    ;           A = 1 if the string matches the pattern, A = 0 if not.
-    ;           (C) = 1 found   ,   (C) = 0 not found
+    ;           A  = 1 if the string matches the pattern, A = 0 if not.
+    ;          (C) = 1 found   ,   (C) = 0 not found
 
     pattern_match_internal    .proc
     
@@ -364,7 +372,7 @@ string .proc
                 sec
                 rts
     .pend
-;    
+
     
     
 .pend

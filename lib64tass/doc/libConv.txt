@@ -10,3 +10,115 @@
     ;               a/y     :   digit
     
     #   u8_to_hex
+    
+    ;--------------------------------------------------------------- str_ub0
+    ;
+	; input : 
+    ;           a   unsigned byte
+	; output:
+    ;           conv.string_out
+    
+    #   str_ub0
+    
+    ;--------------------------------------------------------------- str_ub
+    ;
+	; input : 
+    ;           a   unsigned byte
+	; output:
+    ;           conv.string_out
+    
+    #   str_ub
+
+    ;--------------------------------------------------------------- str_b
+    ;
+	; input : 
+    ;           a   signed byte
+	; output:
+    ;           conv.string_out
+    
+    #   str_b
+
+    ;--------------------------------------------------------------- str_ubhex
+    ;
+	; input : 
+    ;           a   unsigned byte
+	; output:
+    ;           conv.string_out
+    
+    #   str_ubhex 
+    
+    ;--------------------------------------------------------------- str_ubbin
+    ;
+	; input : 
+    ;           a   unsigned byte
+	; output:
+    ;           conv.string_out
+    
+    #   str_ubbin
+    
+    ;--------------------------------------------------------------- str_uwbin
+    ;--------------------------------------------------------------- str_uwhex
+    ;--------------------------------------------------------------- str_uwdec0
+    ;--------------------------------------------------------------- str_uwdec
+    ;--------------------------------------------------------------- str_w
+    ;
+	; input : 
+    ;           ay   unsigned word
+	; output:
+    ;           conv.string_out
+    
+    #   str_uwbin
+    #   str_uwhex
+    #   str_uwdec0
+    #   str_uwdec
+    #   str_w
+    
+    ;--------------------------------------------------------------- ubyte2hex
+    ;--------------------------------------------------------------- uword2hex
+    ;
+	; input : 
+    ;           a   unsigned byte
+	; output:
+    ;           conv.string_out
+    
+    #   ubyte2hex
+    #   uword2hex
+    
+    ;--------------------------------------------------------------- any2uword
+    ;
+    ;   convert :   decimal $hex %binary - number to word
+    ;
+	; input : 
+    ;           ay  address string
+	; output:
+    ;           zpWord0
+    ;
+    ;--------------------------------------------------------------- 
+    ;
+    ;                                                               conv.str2uword
+    ;                                                               conv.bin2uword
+    ;                                                               conv.hex2uword
+    ;
+	; input : 
+    ;           ay  address string
+	; output:
+    ;           zpWord0
+    ;
+
+    #   any2uword
+    
+    ;--------------------------------------------------------------- str2word
+    ;
+    ;   convert :   decimal number to word
+    ;
+	; input : 
+    ;           ay  address string
+	; output:
+    ;           zpWord0
+    ;
+
+    #   str2word
+    
+    
+    
+    

@@ -35,6 +35,7 @@ main	.proc
     c1  .null   "33"            ;    33
     c2  .null   "$ff"           ;   255  
     c3  .null   "%01010101"     ;    85
+    c4  .null   "-45"           ;   -45
     
     s16 .sint   -32755 
  
@@ -143,7 +144,7 @@ main	.proc
              
             jsr print_string_out
 
-            ; --------------------------------------- any2uword
+            ; --------------------------------------- any2uword ($ % unsigned number)
              
             lda #char.nl
             jsr sys.CHROUT  
@@ -154,7 +155,7 @@ main	.proc
             load_var_ay zpWord0
             jsr std.print_u16_dec
 
-            ; --------------------------------------- any2uword
+            ; --------------------------------------- any2uword ($ % unsigned number)
              
             lda #char.nl
             jsr sys.CHROUT  
@@ -165,7 +166,7 @@ main	.proc
             load_var_ay zpWord0
             jsr std.print_u16_dec
 
-            ; --------------------------------------- any2uword
+            ; --------------------------------------- any2uword ($ % unsigned number)
              
             lda #char.nl
             jsr sys.CHROUT  
@@ -177,8 +178,19 @@ main	.proc
             load_var_ay zpWord0
             jsr std.print_u16_dec
             
-            ; --------------------------------------- 
+            ; --------------------------------------- str2word ( .  .  signed number)
+             
+            lda #char.nl
+            jsr sys.CHROUT  
+            ;                   "-45"            ;   -45
+            load_address_ay c4
+            jsr conv.str2word
             
+            load_var_ay zpWord0
+            jsr std.print_s16_dec
+
+            ;
+
             rts
             
 

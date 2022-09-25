@@ -209,7 +209,7 @@ c64 .proc
             sta 53265
             
             jsr txt.set_border_color
-            jsr txt.set_background_color_
+            jsr txt.set_background_color
             
             rts
 
@@ -224,7 +224,7 @@ c64 .proc
             sta 53265
 
             ;jsr txt.set_border_color
-            ;jsr txt.set_background_color_
+            ;jsr txt.set_background_color
             
             rts 
 
@@ -324,50 +324,54 @@ c64 .proc
         
         check_text_mode_standard    .proc
 
-                lda c64.screen_control_register_1
-                test_bit_5
-                if_bit_0   + 
-                clc
-                rts
+            lda c64.screen_control_register_1
+            test_bit_5
+            if_bit_0   + 
+            clc
+            rts
         +
-                sec
-                rts
+            sec
+            rts
+            
         .pend
         
         check_text_mode_extended    .proc
 
-                lda c64.screen_control_register_1
-                test_bit_6
-                if_bit_1   + 
-                clc
-                rts
+            lda c64.screen_control_register_1
+            test_bit_6
+            if_bit_1   + 
+            clc
+            rts
         +
-                sec
-                rts
+            sec
+            rts
+            
         .pend
         
         check_bitmap_mode         .proc
 
-                lda c64.screen_control_register_1
-                test_bit_5
-                if_bit_1   + 
-                clc
-                rts
+            lda c64.screen_control_register_1
+            test_bit_5
+            if_bit_1   + 
+            clc
+            rts
         +
-                sec
-                rts
+            sec
+            rts
+            
         .pend
 
         check_multi_color         .proc
 
-                lda c64.screen_control_register_2
-                test_bit_4
-                if_bit_1   + 
-                clc
-                rts
+            lda c64.screen_control_register_2
+            test_bit_4
+            if_bit_1   + 
+            clc
+            rts
         +
-                sec
-                rts
+            sec
+            rts
+            
         .pend
 
         check_bitmap_mode_320x200   .proc

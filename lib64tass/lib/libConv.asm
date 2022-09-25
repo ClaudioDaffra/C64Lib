@@ -4,6 +4,7 @@
 conv .proc
 
     ; PETSCII:"????????????????"    16+1
+    
     string_out    
         .byte  $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
         .byte  $00
@@ -116,7 +117,9 @@ conv .proc
             pla
     +           
             jsr  conv.byte2decimal
-            ; 1234 TODO BUG 6502 bra  str_ub._output_byte_digits
+            ;   There's a pseudo opcode called GRA for CPUs supporting BRA, 
+            ;   which is expanded to BRL (if available) or JMP
+            ;   bra  str_ub._output_byte_digits
             jmp  str_ub._output_byte_digits
     .pend
 
@@ -128,12 +131,14 @@ conv .proc
     ;           conv.string_out
     
     str_ubhex    .proc
+    
             jsr  conv.ubyte2hex
             sta  string_out
             sty  string_out+1
             lda  #0
             sta  string_out+2
             rts
+            
     .pend
 
     ;--------------------------------------------------------------- str_ubbin
@@ -167,7 +172,8 @@ conv .proc
     ;--------------------------------------------------------------- str_uwbin
     ;--------------------------------------------------------------- str_uwhex
     ;--------------------------------------------------------------- str_uwdec0
-    
+    ;--------------------------------------------------------------- str_uwdec
+    ;--------------------------------------------------------------- str_w
     ;
 	; input : 
     ;           ay   unsigned word
@@ -198,19 +204,19 @@ conv .proc
 
     str_uwhex    .proc
      
-                pha
-                tya
-                jsr  conv.ubyte2hex
-                sta  string_out
-                sty  string_out+1
-                pla
-                jsr  conv.ubyte2hex
-                sta  string_out+2
-                sty  string_out+3
-                lda  #0
-                sta  string_out+4
-                rts
-        .pend
+            pha
+            tya
+            jsr  conv.ubyte2hex
+            sta  string_out
+            sty  string_out+1
+            pla
+            jsr  conv.ubyte2hex
+            sta  string_out+2
+            sty  string_out+3
+            lda  #0
+            sta  string_out+4
+            rts
+    .pend
 
     str_uwdec0    .proc
      
@@ -226,7 +232,8 @@ conv .proc
     +           
             ldx  zpx
             rts
-        .pend
+            
+    .pend
 
     str_uwdec    .proc
      
@@ -312,7 +319,7 @@ conv .proc
             ldx  zpx
             rts
 
-        .pend
+    .pend
 
     uword2hex    .proc
  
@@ -505,7 +512,7 @@ conv .proc
         decTens                 .byte  0
         decOnes                 .byte  0
                                 .byte  0        ; zero-terminate the decimal output string
-        .pend
+    .pend
  
     byte2decimal    .proc
       
@@ -518,7 +525,27 @@ conv .proc
             jmp  ubyte2decimal
             
     .pend
-;#############################################################################
+    
+    ;--------------------------------------------------------------- any2uword
+    ;
+    ;   convert :   decimal $hex %binary - number to word
+    ;
+	; input : 
+    ;           ay  address string
+	; output:
+    ;           zpWord0
+    ;
+    ;--------------------------------------------------------------- 
+    ;
+    ;                                                               conv.str2uword
+    ;                                                               conv.bin2uword
+    ;                                                               conv.hex2uword
+    ;
+	; input : 
+    ;           ay  address string
+	; output:
+    ;           zpWord0
+    ;
 
     any2uword	.proc
      
@@ -535,11 +562,11 @@ conv .proc
         pla
         jsr  str2uword
         jmp  _result
-    _hex	
+    _hex
         pla
         jsr  hex2uword
         jmp  _result
-    _bin	
+    _bin
         pla
         jsr  bin2uword
     _result
@@ -551,8 +578,10 @@ conv .proc
         sty  zpWord2+1
         lda  zpa
         rts
+        
     .pend
     
+    ;--------------------------------------------------------------- str2uword
     
     str2uword	.proc
          
@@ -586,7 +615,7 @@ conv .proc
             sta  _result
             bcc  +
             inc  _result+1
-    +		
+    +
             iny
             bne  _loop
             ; never reached
@@ -608,7 +637,9 @@ conv .proc
             sta  _result+1
             rts
     .pend
-
+    
+    ;--------------------------------------------------------------- hex2uword
+    
     hex2uword	.proc
      
         sta  zpWord1
@@ -673,8 +704,8 @@ conv .proc
         and  #63
         bne  _add_letter
     .pend
- 
     
+    ;--------------------------------------------------------------- bin2uword
     
     bin2uword	.proc
      
@@ -709,9 +740,79 @@ conv .proc
         rts
         
     .pend
+    
+    ;--------------------------------------------------------------- str2word
+    ;
+    ;   convert :   decimal number to word
+    ;
+	; input : 
+    ;           ay  address string
+	; output:
+    ;           zpWord0
+    ;
 
-;#############################################################################
+    str2word	.proc
 
+            _result = zpWord0
+    
+            sta  zpWord1
+            sty  zpWord1+1
+            ldy  #0
+            sty  _result
+            sty  _result+1
+            sty  _negative
+            sty  zpWord2+1
+            lda  (zpWord1),y
+            cmp  #'+'
+            bne  +
+            iny
+    +
+            cmp  #'-'
+            bne  _parse
+            inc  _negative
+            iny
+    _parse
+            lda  (zpWord1),y
+            sec
+            sbc  #48
+            bpl  _digit
+    _done
+            sty  zpWord2
+            lda  _negative
+            beq  +
+            sec
+            lda  #0
+            sbc  _result
+            sta  _result
+            lda  #0
+            sbc  _result+1
+            sta  _result+1
+    +
+            lda  _result
+            ldy  _result+1
+            rts
+    _digit
+            cmp  #10
+            bcs  _done
+            ; add digit to result
+            pha
+            jsr  str2uword._result_times_10
+            pla
+            clc
+            adc  _result
+            sta  _result
+            bcc  +
+            inc  _result+1
+    +		
+            iny
+            bne  _parse
+            ; never reached
+    _negative	.byte  0
+    
+    .pend
+    
+    ;
+    
 .pend
 
 ;;;
