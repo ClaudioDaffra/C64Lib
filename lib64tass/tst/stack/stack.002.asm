@@ -79,29 +79,60 @@ main	.proc
             lda #' '
             ldy #color.green
             jsr txt.fill_screen
- 
-            ;--------------------------------------------------------------- push / pop
+
+            ;--------------------------------------------------------------- 
 
             jsr debug_stack
 
-            load_imm_ay #$1234
+            ;--------------------------------------------------------------- 
+            
+            jmp c4
+            
+            ;--------------------------------------------------------------- 
+            
+c1
+            ; sp=255    ov
+            ldx #255
+            stx stack.pointer
+            jsr stack.pop_byte
+            if_false stack_overflow
+
+c2
+            ; sp=0    ov 
+            ldx #0
+            stx stack.pointer
+            
+            lda #'a'
+            jsr stack.push_byte
+            if_false stack_overflow
+
+c3
+            ; sp=255    sp=254    ov
+            ldx #254
+            stx stack.pointer
+            jsr stack.pop_word
+            if_false stack_overflow
+
+c4
+            ; sp=0  sp=1    ov 
+            ldx #2
+            stx stack.pointer
+            
+            lda #'a'
             jsr stack.push_word
-            
-            jsr debug_stack
-
-            ;--------------------------------------------------------------- 
-
-            lda #char.nl
-            jsr sys.CHROUT
-
-            jsr print_pop_uword
-
+            if_false stack_overflow
             
             ;--------------------------------------------------------------- 
-
+            
             rts
- 
+            
+stack_overflow
 
+            lda #'0'
+            sta 1024
+            
+            rts
+            
     .pend
 
 .pend

@@ -19,29 +19,39 @@ stack .proc
         ;
         ;   input   :   a   push
         ;   output  :   a   pop
-        ;
+        ;           :   c(0) overflow   c(1) push
         
         push_byte    .proc
         
-            ldx stack.pointer
-            
-            sta stack.lo,x
-            dex
-            
-            stx stack.pointer
-            rts
+                ldx stack.pointer
+                cpx #0
+                bne protect
+                clc
+                rts
+        protect
+                sta stack.lo,x
+                dex
+                
+                stx stack.pointer
+                sec
+                rts
         
         .pend
 
         pop_byte    .proc
         
-            ldx stack.pointer
-            
-            inx
-            lda stack.lo,x
-            
-            stx stack.pointer
-            rts
+                ldx stack.pointer
+                cpx #255
+                bne protect
+                clc
+                rts
+        protect
+                inx
+                lda stack.lo,x
+                
+                stx stack.pointer
+                sec
+                rts
 
         .pend
 
@@ -49,41 +59,48 @@ stack .proc
         ;
         ;   input   :   ay  ->   push
         ;   output  :   ay  <-   pop
-        ;
-        ;    a y
-        ;   1234
-        ;   255 34  y
-        ;   254 12  a
+        ;           :   c(0) overflow   c(1) push
         
         push_word    .proc
         
-            ldx stack.pointer
-            
-            sta stack.lo,x  ;   lo+0    a<
-            dex
-            
-            tya
-            sta stack.lo,x  ;   hi+1    y>
-            dex
+                ldx stack.pointer
+                cpx #2
+                bge protect
+                clc
+                rts
+        protect
+                sta stack.lo,x  ;   lo+0    a<
+                dex
+                
+                tya
+                sta stack.lo,x  ;   hi+1    y>
+                dex
 
-            stx stack.pointer
-            rts
+                stx stack.pointer
+                sec
+                rts
         
         .pend
 
         pop_word    .proc
         
-            ldx stack.pointer
-            
-            inx
-            lda stack.lo,x  ;   hi+1    y>
-            tay
-            
-            inx
-            lda stack.lo,x  ;   lo+0    a<
+                ldx stack.pointer
+                cpx #253
+                blt protect
+                beq protect
+                clc
+                rts
+        protect
+                inx
+                lda stack.lo,x  ;   hi+1    y>
+                tay
+                
+                inx
+                lda stack.lo,x  ;   lo+0    a<
 
-            stx stack.pointer 
-            rts
+                stx stack.pointer 
+                sec
+                rts
 
         .pend
         
