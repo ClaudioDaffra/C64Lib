@@ -261,7 +261,9 @@ txt .proc
      
             lda  #' '
             ldy  #250
-            jmp  clear_screen_chars
+            jsr  clear_screen_chars
+            
+            rts
 
     .pend
     
@@ -279,14 +281,16 @@ txt .proc
             bne  -
             
             rts
+            
     .pend
 
     clear_color .proc
      
             sta  screen.foreground_color
             sta  c64.COLOR
-            jmp  clear_screen_colors
-
+            jsr  clear_screen_colors
+            
+            rts
     .pend
 
     ; ........................................... fill_screen 
@@ -302,9 +306,9 @@ txt .proc
             tya
             jsr  clear_color
             pla
-            jmp  clear_screen_chars
-            rts
+            jsr  clear_screen_chars
             
+            rts
     .pend
 
     ; ........................................... screen_scroll ( left,right,up,down )

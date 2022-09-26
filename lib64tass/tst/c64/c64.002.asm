@@ -63,7 +63,7 @@ main	.proc
             
             load_imm_zpWord0    #(1024)
             load_imm_zpWord1    #(1024+512)
-            load_imm_xy         #2
+            load_imm_xy         #1
             jsr mem.copy_npage_from_to
             
             ;   ......................................

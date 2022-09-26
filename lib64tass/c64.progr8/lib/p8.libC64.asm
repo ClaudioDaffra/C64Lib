@@ -48,10 +48,10 @@
 
                 ; .............................................
 
-.weak
-P8ESTACK_LO = $ce00
-P8ESTACK_HI = $cf00
-.endweak
+                .weak
+                stack.lo = $ce00
+                stack.hi = $cf00
+                .endweak
 
 ;***********************
 ; #LIBRARY : 'prog8_interned_strings' 
@@ -81,11 +81,11 @@ string_7    ; PETSCII:"$"
 
 .pend
 
-;***********************
-; #LIBRARY : 'conv' 
-;***********************
+                    ;***********************
+                    ; #LIBRARY : 'conv' 
+                    ;***********************
 
-conv    .proc
+                    conv    .proc
  
                     ; non-zeropage variables
                     string_out    ; PETSCII:"????????????????"
@@ -156,137 +156,137 @@ conv    .proc
                             .pend
                             ;    src line: library:/prog8lib/conv.p8:76
 
-                str_ubhex    .proc
-                    ;    src line: library:/prog8lib/conv.p8:78
-                            jsr  conv.ubyte2hex
-                            sta  string_out
-                            sty  string_out+1
-                            lda  #0
-                            sta  string_out+2
-                            rts
-                    .pend
+                        str_ubhex    .proc
+                            ;    src line: library:/prog8lib/conv.p8:78
+                                    jsr  conv.ubyte2hex
+                                    sta  string_out
+                                    sty  string_out+1
+                                    lda  #0
+                                    sta  string_out+2
+                                    rts
+                            .pend
  
-                str_ubbin    .proc
-                    ;    src line: library:/prog8lib/conv.p8:90
-                        sta  zpy
-                        ldy  #0
-                        sty  string_out+8
-                        ldy  #7
-                -        lsr  zpy
-                            bcc  +
-                            lda  #'1'
-                            bne  _digit
-                +           lda  #'0'
-                _digit      sta  string_out,y
-                            dey
-                        bpl  -
-                        rts
-                    .pend
+                        str_ubbin    .proc
+                            ;    src line: library:/prog8lib/conv.p8:90
+                                sta  zpy
+                                ldy  #0
+                                sty  string_out+8
+                                ldy  #7
+                        -        lsr  zpy
+                                    bcc  +
+                                    lda  #'1'
+                                    bne  _digit
+                        +           lda  #'0'
+                        _digit      sta  string_out,y
+                                    dey
+                                bpl  -
+                                rts
+                            .pend
  
-                str_uwbin    .proc
-                    ;    src line: library:/prog8lib/conv.p8:109
-                        sta  zpx
-                        tya
-                        jsr  str_ubbin
-                        ldy  #0
-                        sty  string_out+16
-                        ldy  #7
-                -        lsr  zpx
-                            bcc  +
-                            lda  #'1'
-                            bne  _digit
-                +           lda  #'0'
-                _digit      sta  string_out+8,y
-                            dey
-                        bpl  -
-                        rts
-                    .pend
+                        str_uwbin    .proc
+                            ;    src line: library:/prog8lib/conv.p8:109
+                                sta  zpx
+                                tya
+                                jsr  str_ubbin
+                                ldy  #0
+                                sty  string_out+16
+                                ldy  #7
+                        -        lsr  zpx
+                                    bcc  +
+                                    lda  #'1'
+                                    bne  _digit
+                        +           lda  #'0'
+                        _digit      sta  string_out+8,y
+                                    dey
+                                bpl  -
+                                rts
+                            .pend
  
-            str_uwhex    .proc
-             
-                        pha
-                        tya
-                        jsr  conv.ubyte2hex
-                        sta  string_out
-                        sty  string_out+1
-                        pla
-                        jsr  conv.ubyte2hex
-                        sta  string_out+2
-                        sty  string_out+3
-                        lda  #0
-                        sta  string_out+4
-                        rts
-                .pend
- 
-
-                str_uw0    .proc
-                 
-                        stx  zpx
-                        jsr  conv.uword2decimal
-                        ldy  #0
-                -           lda  conv.uword2decimal.decTenThousands,y
-                            sta  string_out,y
-                            beq  +
-                            iny
-                            bne  -
-                +           ldx  zpx
-                        rts
-                    .pend
+                        str_uwhex    .proc
+                         
+                                    pha
+                                    tya
+                                    jsr  conv.ubyte2hex
+                                    sta  string_out
+                                    sty  string_out+1
+                                    pla
+                                    jsr  conv.ubyte2hex
+                                    sta  string_out+2
+                                    sty  string_out+3
+                                    lda  #0
+                                    sta  string_out+4
+                                    rts
+                            .pend
  
 
-            str_uw    .proc
-             
-                    stx  zpx
-                    jsr  conv.uword2decimal
-                    ldx  #0
-            _output_digits
-                    ldy  #0
-            -           lda  conv.uword2decimal.decTenThousands,y
-                        beq  _allzero
-                        cmp  #'0'
-                        bne  _gotdigit
-                        iny
-                        bne  -
-            _gotdigit   sta  string_out,x
-                        inx
-                        iny
-                        lda  conv.uword2decimal.decTenThousands,y
-                        bne  _gotdigit
-            _end        lda  #0
-                        sta  string_out,x
-                        ldx  zpx
-                        rts
-
-            _allzero    lda  #'0'
-                        sta  string_out,x
-                        inx
-                        bne  _end
-                .pend
+                            str_uw0    .proc
+                             
+                                    stx  zpx
+                                    jsr  conv.uword2decimal
+                                    ldy  #0
+                            -           lda  conv.uword2decimal.decTenThousands,y
+                                        sta  string_out,y
+                                        beq  +
+                                        iny
+                                        bne  -
+                            +           ldx  zpx
+                                    rts
+                                .pend
  
 
-                str_w    .proc
-                 
-                        cpy  #0
-                        bpl  str_uw
-                        stx  zpx
-                        pha
-                        lda  #'-'
-                        sta  string_out
-                            tya
-                            eor  #255
-                            tay
-                            pla
-                            eor  #255
-                            clc
-                            adc  #1
-                            bcc  +
-                            iny
-                +        jsr  conv.uword2decimal
-                        ldx  #1
-                        bne  str_uw._output_digits
-                 
-                  rts
-                    .pend
+                            str_uw    .proc
+                             
+                                    stx  zpx
+                                    jsr  conv.uword2decimal
+                                    ldx  #0
+                            _output_digits
+                                    ldy  #0
+                            -           lda  conv.uword2decimal.decTenThousands,y
+                                        beq  _allzero
+                                        cmp  #'0'
+                                        bne  _gotdigit
+                                        iny
+                                        bne  -
+                            _gotdigit   sta  string_out,x
+                                        inx
+                                        iny
+                                        lda  conv.uword2decimal.decTenThousands,y
+                                        bne  _gotdigit
+                            _end        lda  #0
+                                        sta  string_out,x
+                                        ldx  zpx
+                                        rts
+
+                            _allzero    lda  #'0'
+                                        sta  string_out,x
+                                        inx
+                                        bne  _end
+                                .pend
+ 
+
+                            str_w    .proc
+                             
+                                    cpy  #0
+                                    bpl  str_uw
+                                    stx  zpx
+                                    pha
+                                    lda  #'-'
+                                    sta  string_out
+                                        tya
+                                        eor  #255
+                                        tay
+                                        pla
+                                        eor  #255
+                                        clc
+                                        adc  #1
+                                        bcc  +
+                                        iny
+                            +        jsr  conv.uword2decimal
+                                    ldx  #1
+                                    bne  str_uw._output_digits
+                             
+                              rts
+                                .pend
   
 
                                             any2uword    .proc
@@ -429,329 +429,329 @@ conv    .proc
                                                     _negative    .byte  0
                                                         .pend
  
-            hex2uword    .proc
-                ;    src line: library:/prog8lib/conv.p8:400
-                sta  zpWord1
-                sty  zpWord1+1
-                ldy  #0
-                sty  zpWord0
-                sty  zpWord0+1
-                sty  cx16.r15+1
-                lda  (zpWord1),y
-                beq  _stop
-                cmp  #'$'
-                bne  _loop
-                iny
-            _loop
-                lda  #0
-                sta  zpy
-                lda  (zpWord1),y
-                beq  _stop
-                cmp  #7                 ; screencode letters A-F are 1-6
-                bcc  _add_letter
-                and  #127
-                cmp  #97
-                bcs  _try_iso            ; maybe letter is iso:'a'-iso:'f' (97-102)
-                cmp  #'g'
-                bcs  _stop
-                cmp  #'a'
-                bcs  _add_letter
-                cmp  #'0'
-                bcc  _stop
-                cmp  #'9'+1
-                bcs  _stop
-            _calc
-                asl  zpWord0
-                rol  zpWord0+1
-                asl  zpWord0
-                rol  zpWord0+1
-                asl  zpWord0
-                rol  zpWord0+1
-                asl  zpWord0
-                rol  zpWord0+1
-                and  #$0f
-                clc
-                adc  zpy
-                ora  zpWord0
-                sta  zpWord0
-                iny
-                bne  _loop
-            _stop
-                sty  cx16.r15
-                lda  zpWord0
-                ldy  zpWord0+1
-                rts
-            _add_letter
-                pha
-                lda  #9
-                sta  zpy
-                pla
-                jmp  _calc
-            _try_iso
-                    cmp  #103
-                    bcs  _stop
-                    and  #63
-                    bne  _add_letter
-                .pend
+                                                hex2uword    .proc
+                                                    ;    src line: library:/prog8lib/conv.p8:400
+                                                    sta  zpWord1
+                                                    sty  zpWord1+1
+                                                    ldy  #0
+                                                    sty  zpWord0
+                                                    sty  zpWord0+1
+                                                    sty  cx16.r15+1
+                                                    lda  (zpWord1),y
+                                                    beq  _stop
+                                                    cmp  #'$'
+                                                    bne  _loop
+                                                    iny
+                                                _loop
+                                                    lda  #0
+                                                    sta  zpy
+                                                    lda  (zpWord1),y
+                                                    beq  _stop
+                                                    cmp  #7                 ; screencode letters A-F are 1-6
+                                                    bcc  _add_letter
+                                                    and  #127
+                                                    cmp  #97
+                                                    bcs  _try_iso            ; maybe letter is iso:'a'-iso:'f' (97-102)
+                                                    cmp  #'g'
+                                                    bcs  _stop
+                                                    cmp  #'a'
+                                                    bcs  _add_letter
+                                                    cmp  #'0'
+                                                    bcc  _stop
+                                                    cmp  #'9'+1
+                                                    bcs  _stop
+                                                _calc
+                                                    asl  zpWord0
+                                                    rol  zpWord0+1
+                                                    asl  zpWord0
+                                                    rol  zpWord0+1
+                                                    asl  zpWord0
+                                                    rol  zpWord0+1
+                                                    asl  zpWord0
+                                                    rol  zpWord0+1
+                                                    and  #$0f
+                                                    clc
+                                                    adc  zpy
+                                                    ora  zpWord0
+                                                    sta  zpWord0
+                                                    iny
+                                                    bne  _loop
+                                                _stop
+                                                    sty  cx16.r15
+                                                    lda  zpWord0
+                                                    ldy  zpWord0+1
+                                                    rts
+                                                _add_letter
+                                                    pha
+                                                    lda  #9
+                                                    sta  zpy
+                                                    pla
+                                                    jmp  _calc
+                                                _try_iso
+                                                        cmp  #103
+                                                        bcs  _stop
+                                                        and  #63
+                                                        bne  _add_letter
+                                                    .pend
 
 
-                    bin2uword    .proc
-                        ;    src line: library:/prog8lib/conv.p8:469
-                        sta  zpWord1
-                        sty  zpWord1+1
-                        ldy  #0
-                        sty  zpWord0
-                        sty  zpWord0+1
-                        sty  cx16.r15+1
-                        lda  (zpWord1),y
-                        beq  _stop
-                        cmp  #'%'
-                        bne  _loop
-                        iny
-                    _loop
-                        lda  (zpWord1),y
-                        cmp  #'0'
-                        bcc  _stop
-                        cmp  #'2'
-                        bcs  _stop
-                    _first  asl  zpWord0
-                        rol  zpWord0+1
-                        and  #1
-                        ora  zpWord0
-                        sta  zpWord0
-                        iny
-                        bne  _loop
-                    _stop
-                        sty  cx16.r15
-                        lda  zpWord0
-                        ldy  zpWord0+1
-                        rts
-                        .pend
+                                                bin2uword    .proc
+                                                    ;    src line: library:/prog8lib/conv.p8:469
+                                                    sta  zpWord1
+                                                    sty  zpWord1+1
+                                                    ldy  #0
+                                                    sty  zpWord0
+                                                    sty  zpWord0+1
+                                                    sty  cx16.r15+1
+                                                    lda  (zpWord1),y
+                                                    beq  _stop
+                                                    cmp  #'%'
+                                                    bne  _loop
+                                                    iny
+                                                _loop
+                                                    lda  (zpWord1),y
+                                                    cmp  #'0'
+                                                    bcc  _stop
+                                                    cmp  #'2'
+                                                    bcs  _stop
+                                                _first  asl  zpWord0
+                                                    rol  zpWord0+1
+                                                    and  #1
+                                                    ora  zpWord0
+                                                    sta  zpWord0
+                                                    iny
+                                                    bne  _loop
+                                                _stop
+                                                    sty  cx16.r15
+                                                    lda  zpWord0
+                                                    ldy  zpWord0+1
+                                                    rts
+                                                    .pend
  
 
-                ubyte2decimal    .proc
-                    ;    src line: library:/prog8lib/conv.p8:507
-                        ldy  #uword2decimal.ASCII_0_OFFSET
-                        bne  uword2decimal.hex_try200
-                        rts
-                    .pend
+                                                ubyte2decimal    .proc
+                                                    ;    src line: library:/prog8lib/conv.p8:507
+                                                        ldy  #uword2decimal.ASCII_0_OFFSET
+                                                        bne  uword2decimal.hex_try200
+                                                        rts
+                                                    .pend
  
 
-                uword2decimal    .proc
-                    ;    src line: library:/prog8lib/conv.p8:520
-                ;Convert 16 bit Hex to Decimal (0-65535) Rev 2
-                ;By Omegamatrix    Further optimizations by tepples
-                ; routine from https://forums.nesdev.org/viewtopic.php?f=2&t=11341&start=15
+                                                    uword2decimal    .proc
+                                                        ;    src line: library:/prog8lib/conv.p8:520
+                                                    ;Convert 16 bit Hex to Decimal (0-65535) Rev 2
+                                                    ;By Omegamatrix    Further optimizations by tepples
+                                                    ; routine from https://forums.nesdev.org/viewtopic.php?f=2&t=11341&start=15
 
-                ;HexToDec99
-                ; start in A
-                ; end with A = 10's, decOnes (also in X)
+                                                    ;HexToDec99
+                                                    ; start in A
+                                                    ; end with A = 10's, decOnes (also in X)
 
-                ;HexToDec255
-                ; start in A
-                ; end with Y = 100's, A = 10's, decOnes (also in X)
+                                                    ;HexToDec255
+                                                    ; start in A
+                                                    ; end with Y = 100's, A = 10's, decOnes (also in X)
 
-                ;HexToDec999
-                ; start with A = high byte, Y = low byte
-                ; end with Y = 100's, A = 10's, decOnes (also in X)
-                ; requires 1 extra temp register on top of decOnes, could combine
-                ; these two if HexToDec65535 was eliminated...
+                                                    ;HexToDec999
+                                                    ; start with A = high byte, Y = low byte
+                                                    ; end with Y = 100's, A = 10's, decOnes (also in X)
+                                                    ; requires 1 extra temp register on top of decOnes, could combine
+                                                    ; these two if HexToDec65535 was eliminated...
 
-                ;HexToDec65535
-                ; start with A/Y (low/high) as 16 bit value
-                ; end with decTenThousand, decThousand, Y = 100's, A = 10's, decOnes (also in X)
-                ; (irmen: I store Y and A in decHundreds and decTens too, so all of it can be easily printed)
-
-
-                ASCII_0_OFFSET     = $30
-                temp               = zpy    ; byte in zeropage
-                hexHigh          = zpWord0    ; byte in zeropage
-                hexLow           = zpWord0+1    ; byte in zeropage
+                                                    ;HexToDec65535
+                                                    ; start with A/Y (low/high) as 16 bit value
+                                                    ; end with decTenThousand, decThousand, Y = 100's, A = 10's, decOnes (also in X)
+                                                    ; (irmen: I store Y and A in decHundreds and decTens too, so all of it can be easily printed)
 
 
-                HexToDec65535; SUBROUTINE
-                    sty    hexHigh               ;3  @9
-                    sta    hexLow                ;3  @12
-                    tya
-                    tax                          ;2  @14
-                    lsr    a                     ;2  @16
-                    lsr    a                     ;2  @18   integer divide 1024 (result 0-63)
-
-                    cpx    #$A7                  ;2  @20   account for overflow of multiplying 24 from 43,000 ($A7F8) onward,
-                    adc    #1                    ;2  @22   we can just round it to $A700, and the divide by 1024 is fine...
-
-                    ;at this point we have a number 1-65 that we have to times by 24,
-                    ;add to original sum, and Mod 1024 to get a remainder 0-999
-                 
-                    sta    temp                  ;3  @25
-                    asl    a                     ;2  @27
-                    adc    temp                  ;3  @30  x3
-                    tay                          ;2  @32
-                    lsr    a                     ;2  @34
-                    lsr    a                     ;2  @36
-                    lsr    a                     ;2  @38
-                    lsr    a                     ;2  @40
-                    lsr    a                     ;2  @42
-                    tax                          ;2  @44
-                    tya                          ;2  @46
-                    asl    a                     ;2  @48
-                    asl    a                     ;2  @50
-                    asl    a                     ;2  @52
-                    clc                          ;2  @54
-                    adc    hexLow                ;3  @57
-                    sta    hexLow                ;3  @60
-                    txa                          ;2  @62
-                    adc    hexHigh               ;3  @65
-                    sta    hexHigh               ;3  @68
-                    ror    a                     ;2  @70
-                    lsr    a                     ;2  @72
-                    tay                          ;2  @74    integer divide 1,000 (result 0-65)
-
-                    lsr    a                     ;2  @76    split the 1,000 and 10,000 digit
-                    tax                          ;2  @78
-                    lda    ShiftedBcdTab,x       ;4  @82
-                    tax                          ;2  @84
-                    rol    a                     ;2  @86
-                    and    #$0F                  ;2  @88
-                    ora    #ASCII_0_OFFSET
-                    sta    decThousands          ;3  @91
-                    txa                          ;2  @93
-                    lsr    a                     ;2  @95
-                    lsr    a                     ;2  @97
-                    lsr    a                     ;2  @99
-                    ora    #ASCII_0_OFFSET
-                    sta    decTenThousands       ;3  @102
-
-                    lda    hexLow                ;3  @105
-                    cpy    temp                  ;3  @108
-                    bmi    _doSubtract           ;2³ @110/111
-                    beq    _useZero               ;2³ @112/113
-                    adc    #23 + 24              ;2  @114
-                _doSubtract
-                    sbc    #23                   ;2  @116
-                    sta    hexLow                ;3  @119
-                _useZero
-                    lda    hexHigh               ;3  @122
-                    sbc    #0                    ;2  @124
-
-                Start100s
-                    and    #$03                  ;2  @126
-                    tax                          ;2  @128   0,1,2,3
-                    cmp    #2                    ;2  @130
-                    rol    a                     ;2  @132   0,2,5,7
-                    ora    #ASCII_0_OFFSET
-                    tay                          ;2  @134   Y = Hundreds digit
-
-                    lda    hexLow                ;3  @137
-                    adc    Mod100Tab,x           ;4  @141    adding remainder of 256, 512, and 256+512 (all mod 100)
-                    bcs    hex_doSub200             ;2³ @143/144
-
-                hex_try200
-                    cmp    #200                  ;2  @145
-                    bcc    hex_try100               ;2³ @147/148
-                hex_doSub200
-                    iny                          ;2  @149
-                    iny                          ;2  @151
-                    sbc    #200                  ;2  @153
-                hex_try100
-                    cmp    #100                  ;2  @155
-                    bcc    HexToDec99            ;2³ @157/158
-                    iny                          ;2  @159
-                    sbc    #100                  ;2  @161
-
-                HexToDec99; SUBROUTINE
-                    lsr    a                     ;2  @163
-                    tax                          ;2  @165
-                    lda    ShiftedBcdTab,x       ;4  @169
-                    tax                          ;2  @171
-                    rol    a                     ;2  @173
-                    and    #$0F                  ;2  @175
-                    ora    #ASCII_0_OFFSET
-                    sta    decOnes               ;3  @178
-                    txa                          ;2  @180
-                    lsr    a                     ;2  @182
-                    lsr    a                     ;2  @184
-                    lsr    a                     ;2  @186
-                    ora    #ASCII_0_OFFSET
-
-                    ; irmen: load X with ones, and store Y and A too, for easy printing afterwards
-                    sty  decHundreds
-                    sta  decTens
-                    ldx  decOnes
-                    rts                          ;6  @192   Y=hundreds, A = tens digit, X=ones digit
+                                                    ASCII_0_OFFSET     = $30
+                                                    temp               = zpy    ; byte in zeropage
+                                                    hexHigh          = zpWord0    ; byte in zeropage
+                                                    hexLow           = zpWord0+1    ; byte in zeropage
 
 
-                HexToDec999; SUBROUTINE
-                    sty    hexLow                ;3  @9
-                    jmp    Start100s             ;3  @12
+                                                HexToDec65535; SUBROUTINE
+                                                    sty    hexHigh               ;3  @9
+                                                    sta    hexLow                ;3  @12
+                                                    tya
+                                                    tax                          ;2  @14
+                                                    lsr    a                     ;2  @16
+                                                    lsr    a                     ;2  @18   integer divide 1024 (result 0-63)
 
-                Mod100Tab
-                    .byte 0,56,12,56+12
+                                                    cpx    #$A7                  ;2  @20   account for overflow of multiplying 24 from 43,000 ($A7F8) onward,
+                                                    adc    #1                    ;2  @22   we can just round it to $A700, and the divide by 1024 is fine...
 
-                ShiftedBcdTab
-                    .byte $00,$01,$02,$03,$04,$08,$09,$0A,$0B,$0C
-                    .byte $10,$11,$12,$13,$14,$18,$19,$1A,$1B,$1C
-                    .byte $20,$21,$22,$23,$24,$28,$29,$2A,$2B,$2C
-                    .byte $30,$31,$32,$33,$34,$38,$39,$3A,$3B,$3C
-                    .byte $40,$41,$42,$43,$44,$48,$49,$4A,$4B,$4C
+                                                    ;at this point we have a number 1-65 that we have to times by 24,
+                                                    ;add to original sum, and Mod 1024 to get a remainder 0-999
+                                                 
+                                                    sta    temp                  ;3  @25
+                                                    asl    a                     ;2  @27
+                                                    adc    temp                  ;3  @30  x3
+                                                    tay                          ;2  @32
+                                                    lsr    a                     ;2  @34
+                                                    lsr    a                     ;2  @36
+                                                    lsr    a                     ;2  @38
+                                                    lsr    a                     ;2  @40
+                                                    lsr    a                     ;2  @42
+                                                    tax                          ;2  @44
+                                                    tya                          ;2  @46
+                                                    asl    a                     ;2  @48
+                                                    asl    a                     ;2  @50
+                                                    asl    a                     ;2  @52
+                                                    clc                          ;2  @54
+                                                    adc    hexLow                ;3  @57
+                                                    sta    hexLow                ;3  @60
+                                                    txa                          ;2  @62
+                                                    adc    hexHigh               ;3  @65
+                                                    sta    hexHigh               ;3  @68
+                                                    ror    a                     ;2  @70
+                                                    lsr    a                     ;2  @72
+                                                    tay                          ;2  @74    integer divide 1,000 (result 0-65)
 
-                decTenThousands       .byte  0
-                decThousands        .byte  0
-                decHundreds        .byte  0
-                decTens            .byte  0
-                decOnes           .byte  0
-                            .byte  0        ; zero-terminate the decimal output string
-                    .pend
-                    ;    src line: library:/prog8lib/conv.p8:689
+                                                    lsr    a                     ;2  @76    split the 1,000 and 10,000 digit
+                                                    tax                          ;2  @78
+                                                    lda    ShiftedBcdTab,x       ;4  @82
+                                                    tax                          ;2  @84
+                                                    rol    a                     ;2  @86
+                                                    and    #$0F                  ;2  @88
+                                                    ora    #ASCII_0_OFFSET
+                                                    sta    decThousands          ;3  @91
+                                                    txa                          ;2  @93
+                                                    lsr    a                     ;2  @95
+                                                    lsr    a                     ;2  @97
+                                                    lsr    a                     ;2  @99
+                                                    ora    #ASCII_0_OFFSET
+                                                    sta    decTenThousands       ;3  @102
 
-                byte2decimal    .proc
-                  
-                        cmp  #0
-                        bpl  +
-                        eor  #255
-                        clc
-                        adc  #1
-                +        jmp  ubyte2decimal
-                    .pend
-    
+                                                    lda    hexLow                ;3  @105
+                                                    cpy    temp                  ;3  @108
+                                                    bmi    _doSubtract           ;2³ @110/111
+                                                    beq    _useZero               ;2³ @112/113
+                                                    adc    #23 + 24              ;2  @114
+                                                _doSubtract
+                                                    sbc    #23                   ;2  @116
+                                                    sta    hexLow                ;3  @119
+                                                _useZero
+                                                    lda    hexHigh               ;3  @122
+                                                    sbc    #0                    ;2  @124
 
-                ubyte2hex    .proc
-                 
-                        stx  zpx
-                        pha
-                        and  #$0f
-                        tax
-                        ldy  _hex_digits,x
-                        pla
-                        lsr  a
-                        lsr  a
-                        lsr  a
-                        lsr  a
-                        tax
-                        lda  _hex_digits,x
-                        ldx  zpx
-                        rts
+                                                Start100s
+                                                    and    #$03                  ;2  @126
+                                                    tax                          ;2  @128   0,1,2,3
+                                                    cmp    #2                    ;2  @130
+                                                    rol    a                     ;2  @132   0,2,5,7
+                                                    ora    #ASCII_0_OFFSET
+                                                    tay                          ;2  @134   Y = Hundreds digit
 
-                _hex_digits    .text "0123456789abcdef"    ; can probably be reused for other stuff as well
-                    .pend
- 
+                                                    lda    hexLow                ;3  @137
+                                                    adc    Mod100Tab,x           ;4  @141    adding remainder of 256, 512, and 256+512 (all mod 100)
+                                                    bcs    hex_doSub200             ;2³ @143/144
 
-                uword2hex    .proc
-                    ;    src line: library:/prog8lib/conv.p8:726
-                        sta  zpx
-                        tya
-                        jsr  ubyte2hex
-                        sta  output
-                        sty  output+1
-                        lda  zpx
-                        jsr  ubyte2hex
-                        sta  output+2
-                        sty  output+3
-                        rts
-                output        .text  "0000", $00      ; 0-terminated output buffer (to make printing easier)
-                    .pend
-    
-    .pend
+                                                hex_try200
+                                                    cmp    #200                  ;2  @145
+                                                    bcc    hex_try100               ;2³ @147/148
+                                                hex_doSub200
+                                                    iny                          ;2  @149
+                                                    iny                          ;2  @151
+                                                    sbc    #200                  ;2  @153
+                                                hex_try100
+                                                    cmp    #100                  ;2  @155
+                                                    bcc    HexToDec99            ;2³ @157/158
+                                                    iny                          ;2  @159
+                                                    sbc    #100                  ;2  @161
+
+                                                HexToDec99; SUBROUTINE
+                                                    lsr    a                     ;2  @163
+                                                    tax                          ;2  @165
+                                                    lda    ShiftedBcdTab,x       ;4  @169
+                                                    tax                          ;2  @171
+                                                    rol    a                     ;2  @173
+                                                    and    #$0F                  ;2  @175
+                                                    ora    #ASCII_0_OFFSET
+                                                    sta    decOnes               ;3  @178
+                                                    txa                          ;2  @180
+                                                    lsr    a                     ;2  @182
+                                                    lsr    a                     ;2  @184
+                                                    lsr    a                     ;2  @186
+                                                    ora    #ASCII_0_OFFSET
+
+                                                    ; irmen: load X with ones, and store Y and A too, for easy printing afterwards
+                                                    sty  decHundreds
+                                                    sta  decTens
+                                                    ldx  decOnes
+                                                    rts                          ;6  @192   Y=hundreds, A = tens digit, X=ones digit
+
+
+                                                HexToDec999; SUBROUTINE
+                                                    sty    hexLow                ;3  @9
+                                                    jmp    Start100s             ;3  @12
+
+                                                Mod100Tab
+                                                    .byte 0,56,12,56+12
+
+                                                ShiftedBcdTab
+                                                    .byte $00,$01,$02,$03,$04,$08,$09,$0A,$0B,$0C
+                                                    .byte $10,$11,$12,$13,$14,$18,$19,$1A,$1B,$1C
+                                                    .byte $20,$21,$22,$23,$24,$28,$29,$2A,$2B,$2C
+                                                    .byte $30,$31,$32,$33,$34,$38,$39,$3A,$3B,$3C
+                                                    .byte $40,$41,$42,$43,$44,$48,$49,$4A,$4B,$4C
+
+                                                decTenThousands       .byte  0
+                                                decThousands        .byte  0
+                                                decHundreds        .byte  0
+                                                decTens            .byte  0
+                                                decOnes           .byte  0
+                                                            .byte  0        ; zero-terminate the decimal output string
+                                                    .pend
+                                                    ;    src line: library:/prog8lib/conv.p8:689
+
+                                                byte2decimal    .proc
+                                                  
+                                                        cmp  #0
+                                                        bpl  +
+                                                        eor  #255
+                                                        clc
+                                                        adc  #1
+                                                +        jmp  ubyte2decimal
+                                                    .pend
+                                    
+
+                                                ubyte2hex    .proc
+                                                 
+                                                        stx  zpx
+                                                        pha
+                                                        and  #$0f
+                                                        tax
+                                                        ldy  _hex_digits,x
+                                                        pla
+                                                        lsr  a
+                                                        lsr  a
+                                                        lsr  a
+                                                        lsr  a
+                                                        tax
+                                                        lda  _hex_digits,x
+                                                        ldx  zpx
+                                                        rts
+
+                                                _hex_digits    .text "0123456789abcdef"    ; can probably be reused for other stuff as well
+                                                    .pend
+                                 
+
+                                                uword2hex    .proc
+                                                    ;    src line: library:/prog8lib/conv.p8:726
+                                                        sta  zpx
+                                                        tya
+                                                        jsr  ubyte2hex
+                                                        sta  output
+                                                        sty  output+1
+                                                        lda  zpx
+                                                        jsr  ubyte2hex
+                                                        sta  output+2
+                                                        sty  output+3
+                                                        rts
+                                                output        .text  "0000", $00      ; 0-terminated output buffer (to make printing easier)
+                                                    .pend
+                                    
+                                    .pend
 
 
 ;***********************
@@ -1783,6 +1783,8 @@ internal_stringcopy    .proc
         ldy  cx16.r0+1
         jmp  prog8_lib.strcpy
     .pend
+    
+    
     ;    src line: library:/prog8lib/c64/syslib.p8:546
 
                                         memcopy    .proc
@@ -1842,19 +1844,20 @@ internal_stringcopy    .proc
                                             ;    src line: library:/prog8lib/c64/syslib.p8:602
 
 memset    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:603
+   
             ldy  cx16.r0
-            sty  zpWord0
+                            sty  zpWord0
             ldy  cx16.r0+1
-            sty  zpWord0+1
+                            sty  zpWord0+1
             ldx  cx16.r1
-            ldy  cx16.r1+1
+                            ldy  cx16.r1+1
+                            
             jmp  prog8_lib.memset
     .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:614
+  
 
 memsetw    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:615
+ 
             ldx  cx16.r0
                         stx  zpWord0
             ldx  cx16.r0+1
@@ -1863,6 +1866,7 @@ memsetw    .proc
                         stx  zpWord1
             ldx  cx16.r1+1
                         stx  zpWord1+1
+                        
             jmp  prog8_lib.memsetw
     .pend
  
@@ -2354,18 +2358,18 @@ bufferpointer     = 27     ; zp UWORD
 ; statements
  
     lda  iteration_in_progress
-    sta  P8ESTACK_LO,x
+    sta  stack.lo,x
     dex
     jsr  prog8_lib.equalzero_b
     lda  num_bytes
-    sta  P8ESTACK_LO,x
+    sta  stack.lo,x
     lda  num_bytes+1
-    sta  P8ESTACK_HI,x
+    sta  stack.hi,x
     dex
     jsr  prog8_lib.equalzero_w
     jsr  prog8_lib.bitor_b
     inx
-    lda  P8ESTACK_LO,x
+    lda  stack.lo,x
     beq  prog8_label_48_if_end
     ;    src line: library:/prog8lib/diskio.p8:275
     ldy  #>0
@@ -3271,107 +3275,107 @@ sr2         .word $7653
 ; ----------- optimized multiplications (stack) : ---------
 stack_mul_byte_3    .proc
         ; X + X*2
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_3    .proc
         ; W*2 + W
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        adc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 
 stack_mul_byte_5    .proc
         ; X*4 + X
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_5    .proc
         ; W*4 + W
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        adc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 
 stack_mul_byte_6    .proc
         ; (X*2 + X)*2
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
                 clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         asl  a
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_6    .proc
         ; (W*2 + W)*2
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        asl  P8ESTACK_LO+1,x
+        adc  stack.hi+1,x
+        asl  stack.lo+1,x
                 rol  a
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_7    .proc
         ; X*8 - X
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         asl  a
         asl  a
         sec
-        sbc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_7    .proc
         ; W*8 - W
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         asl  a
@@ -3379,31 +3383,31 @@ stack_mul_word_7    .proc
         asl  a
         rol  zpx
         sec
-        sbc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        sbc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        sbc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_9    .proc
         ; X*8 + X
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         asl  a
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_9    .proc
         ; W*8 + W
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         asl  a
@@ -3411,57 +3415,57 @@ stack_mul_word_9    .proc
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        adc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_10    .proc
         ; (X*4 + X)*2
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         asl  a
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_10    .proc
         ; (W*4 + W)*2
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        asl  P8ESTACK_LO+1,x
+        adc  stack.hi+1,x
+        asl  stack.lo+1,x
                 rol  a
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_11    .proc
         ; (X*2 + X)*4 - X
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         asl  a
         asl  a
         sec
-        sbc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
@@ -3469,47 +3473,47 @@ stack_mul_byte_11    .proc
 
 stack_mul_byte_12    .proc
         ; (X*2 + X)*4
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         asl  a
         asl  a
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_12    .proc
         ; (W*2 + W)*4
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        asl  P8ESTACK_LO+1,x
+        adc  stack.hi+1,x
+        asl  stack.lo+1,x
                 rol  a
-        asl  P8ESTACK_LO+1,x
+        asl  stack.lo+1,x
                 rol  a
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_13    .proc
         ; (X*2 + X)*4 + X
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
                 clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         asl  a
         asl  a
                 clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
@@ -3517,14 +3521,14 @@ stack_mul_byte_13    .proc
 
 stack_mul_byte_14    .proc
         ; (X*8 - X)*2
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         asl  a
         asl  a
                 sec
-        sbc  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
                 asl  a
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
@@ -3532,22 +3536,22 @@ stack_mul_byte_14    .proc
 
 stack_mul_byte_15    .proc
         ; X*16 - X
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         asl  a
         asl  a
         asl  a
         sec
-        sbc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_15    .proc
         ; W*16 - W
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         asl  a
@@ -3557,76 +3561,76 @@ stack_mul_word_15    .proc
         asl  a
         rol  zpx
         sec
-        sbc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        sbc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        sbc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_20    .proc
         ; (X*4 + X)*4
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         asl  a
         asl  a
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_20    .proc
         ; (W*4 + W)*4
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        asl  P8ESTACK_LO+1,x
+        adc  stack.hi+1,x
+        asl  stack.lo+1,x
                 rol  a
-        asl  P8ESTACK_LO+1,x
+        asl  stack.lo+1,x
                 rol  a
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_25    .proc
         ; (X*2 + X)*8 + X
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         asl  a
         asl  a
         asl  a
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_25    .proc
         ; W = (W*2 + W) *8 + W
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpWord0+1
         clc
-        adc  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
         sta  zpWord0
         lda  zpWord0+1
-        adc  P8ESTACK_HI+1,x
+        adc  stack.hi+1,x
         sta  zpWord0+1
         lda  zpWord0
         asl  a
@@ -3636,129 +3640,129 @@ stack_mul_word_25    .proc
         asl  a
         rol  zpWord0+1
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpWord0+1
-        adc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        adc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_40    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         and  #7
         tay
         lda  mul_byte_40._forties,y
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_40    .proc
         ; (W*4 + W)*8
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         asl  a
         rol  zpx
         asl  a
         rol  zpx
         clc
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  zpx
-        adc  P8ESTACK_HI+1,x
-        asl  P8ESTACK_LO+1,x
+        adc  stack.hi+1,x
+        asl  stack.lo+1,x
                 rol  a
-        asl  P8ESTACK_LO+1,x
+        asl  stack.lo+1,x
                 rol  a
-        asl  P8ESTACK_LO+1,x
+        asl  stack.lo+1,x
                 rol  a
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_50    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         and  #7
         tay
         lda  mul_byte_50._fifties, y
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_50    .proc
         ; W = W * 25 * 2
         jsr  stack_mul_word_25
-        asl  P8ESTACK_LO+1,x
-        rol  P8ESTACK_HI+1,x
+        asl  stack.lo+1,x
+        rol  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_80    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         and  #3
         tay
         lda  mul_byte_80._eighties, y
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_80    .proc
         ; W = W * 40 * 2
         jsr  stack_mul_word_40
-        asl  P8ESTACK_LO+1,x
-        rol  P8ESTACK_HI+1,x
+        asl  stack.lo+1,x
+        rol  stack.hi+1,x
         rts
         .pend
 
 stack_mul_byte_100    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         and  #3
         tay
         lda  mul_byte_100._hundreds, y
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 stack_mul_word_100    .proc
         ; W = W * 25 * 4
         jsr  stack_mul_word_25
-        asl  P8ESTACK_LO+1,x
-        rol  P8ESTACK_HI+1,x
-        asl  P8ESTACK_LO+1,x
-        rol  P8ESTACK_HI+1,x
+        asl  stack.lo+1,x
+        rol  stack.hi+1,x
+        asl  stack.lo+1,x
+        rol  stack.hi+1,x
         rts
         .pend
 
 stack_mul_word_320    .proc
         ; stackW = stackLo * 256 + stackLo * 64     (stackHi doesn't matter)
-        ldy  P8ESTACK_LO+1,x
+        ldy  stack.lo+1,x
         lda  #0
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         tya
         asl  a
-        rol  P8ESTACK_HI+1,x
+        rol  stack.hi+1,x
         asl  a
-        rol  P8ESTACK_HI+1,x
+        rol  stack.hi+1,x
         asl  a
-        rol  P8ESTACK_HI+1,x
+        rol  stack.hi+1,x
         asl  a
-        rol  P8ESTACK_HI+1,x
+        rol  stack.hi+1,x
         asl  a
-        rol  P8ESTACK_HI+1,x
+        rol  stack.hi+1,x
         asl  a
-        rol  P8ESTACK_HI+1,x
-        sta  P8ESTACK_LO+1,x
+        rol  stack.hi+1,x
+        sta  stack.lo+1,x
         tya
         clc
-        adc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        adc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 stack_mul_word_640    .proc
         ; stackW = (stackLo * 2 * 320)    (stackHi doesn't matter)
-        asl  P8ESTACK_LO+1,x
+        asl  stack.lo+1,x
         jmp  stack_mul_word_320
         .pend
 
@@ -4267,9 +4271,9 @@ mul_word_640    .proc
 ; anything below 3 is done inline. anything above 7 is done via other optimizations.
 
 shift_left_w_7    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpy
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
 
         asl  a
         rol  zpy
@@ -4286,37 +4290,37 @@ _shift3        asl  a
         asl  a
         rol  zpy
 
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         lda  zpy
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 shift_left_w_6    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpy
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         jmp  shift_left_w_7._shift6
         .pend
 
 shift_left_w_5    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpy
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         jmp  shift_left_w_7._shift5
         .pend
 
 shift_left_w_4    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpy
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         jmp  shift_left_w_7._shift4
         .pend
 
 shift_left_w_3    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpy
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         jmp  shift_left_w_7._shift3
         .pend
 
@@ -4324,11 +4328,11 @@ shift_left_w_3    .proc
 shift_left_w    .proc
         ; -- variable number of shifts left
         inx
-        ldy  P8ESTACK_LO,x
+        ldy  stack.lo,x
         bne  _shift
         rts
-_shift        asl  P8ESTACK_LO+1,x
-        rol  P8ESTACK_HI+1,x
+_shift        asl  stack.lo+1,x
+        rol  stack.hi+1,x
         dey
         bne  _shift
         rts
@@ -4337,20 +4341,20 @@ _shift        asl  P8ESTACK_LO+1,x
 shift_right_uw    .proc
         ; -- uword variable number of shifts right
         inx
-        ldy  P8ESTACK_LO,x
+        ldy  stack.lo,x
         bne  _shift
         rts
-_shift        lsr  P8ESTACK_HI+1,x
-        ror  P8ESTACK_LO+1,x
+_shift        lsr  stack.hi+1,x
+        ror  stack.lo+1,x
         dey
         bne  _shift
         rts
         .pend
 
 shift_right_uw_7    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpy
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
 
         lsr  a
         ror  zpy
@@ -4367,45 +4371,45 @@ _shift3        lsr  a
         lsr  a
         ror  zpy
 
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         lda  zpy
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 shift_right_uw_6    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpy
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         jmp  shift_right_uw_7._shift6
         .pend
 
 shift_right_uw_5    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpy
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         jmp  shift_right_uw_7._shift5
         .pend
 
 shift_right_uw_4    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpy
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         jmp  shift_right_uw_7._shift4
         .pend
 
 shift_right_uw_3    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpy
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         jmp  shift_right_uw_7._shift3
         .pend
 
 
 shift_right_w_7        .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
 
         asl  a
@@ -4438,40 +4442,40 @@ _shift3        asl  a
         ror  zpWord0
 
         lda  zpWord0
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         lda  zpWord0+1
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 shift_right_w_6    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
         jmp  shift_right_w_7._shift6
         .pend
 
 shift_right_w_5    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
         jmp  shift_right_w_7._shift5
         .pend
 
 shift_right_w_4    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
         jmp  shift_right_w_7._shift4
         .pend
 
 shift_right_w_3    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
         jmp  shift_right_w_7._shift3
         .pend
@@ -4480,13 +4484,13 @@ shift_right_w_3    .proc
 shift_right_w    .proc
         ; -- signed word variable number of shifts right
         inx
-        ldy  P8ESTACK_LO,x
+        ldy  stack.lo,x
         bne  _shift
         rts
-_shift        lda  P8ESTACK_HI+1,x
+_shift        lda  stack.hi+1,x
         asl  a
-        ror  P8ESTACK_HI+1,x
-        ror  P8ESTACK_LO+1,x
+        ror  stack.hi+1,x
+        ror  stack.lo+1,x
         dey
         bne  _shift
         rts
@@ -4761,131 +4765,131 @@ cosr16u    .proc
 ;***********************
 
 prog8_lib    .proc
-    ;    src line: library:/prog8lib/prog8_lib.p8:3
-
-; non-zeropage variables
-
-; subroutines in this block
  
-; Internal library routines - always included by the compiler
-; Generic machine independent 6502 code.
+
+                ; non-zeropage variables
+
+                ; subroutines in this block
+                 
+                ; Internal library routines - always included by the compiler
+                ; Generic machine independent 6502 code.
 
 
-                        orig_stackpointer    .byte  0    ; stores the Stack pointer register at program start
+                orig_stackpointer    .byte  0    ; stores the Stack pointer register at program start
 
-read_byte_from_address_on_stack    .proc
-    ; -- read the byte from the memory address on the top of the stack, return in A (stack remains unchanged)
-        lda  P8ESTACK_LO+1,x
-        ldy  P8ESTACK_HI+1,x
-        sta  zpWord1
-        sty  zpWord1+1
-        ldy  #0
-        lda  (zpWord1),y
-        rts
-        .pend
+                read_byte_from_address_on_stack    .proc
+                    ; -- read the byte from the memory address on the top of the stack, return in A (stack remains unchanged)
+                        lda  stack.lo+1,x
+                        ldy  stack.hi+1,x
+                        sta  zpWord1
+                        sty  zpWord1+1
+                        ldy  #0
+                        lda  (zpWord1),y
+                        rts
+                        .pend
 
 
-write_byte_to_address_on_stack    .proc
-    ; -- write the byte in A to the memory address on the top of the stack (stack remains unchanged)
-        ldy  P8ESTACK_LO+1,x
-        sty  zpWord1
-        ldy  P8ESTACK_HI+1,x
-        sty  zpWord1+1
-        ldy  #0
-        sta  (zpWord1),y
-        rts
-        .pend
+                write_byte_to_address_on_stack    .proc
+                    ; -- write the byte in A to the memory address on the top of the stack (stack remains unchanged)
+                        ldy  stack.lo+1,x
+                        sty  zpWord1
+                        ldy  stack.hi+1,x
+                        sty  zpWord1+1
+                        ldy  #0
+                        sta  (zpWord1),y
+                        rts
+                        .pend
 
 
 
 neg_b        .proc
         lda  #0
         sec
-        sbc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 neg_w        .proc
         sec
         lda  #0
-        sbc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
+        sta  stack.lo+1,x
         lda  #0
-        sbc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        sbc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 inv_word    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         eor  #255
-        sta  P8ESTACK_LO+1,x
-        lda  P8ESTACK_HI+1,x
+        sta  stack.lo+1,x
+        lda  stack.hi+1,x
         eor  #255
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 bitand_b    .proc
         ; -- bitwise and (of 2 bytes)
-        lda  P8ESTACK_LO+2,x
-        and  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        and  stack.lo+1,x
         inx
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 bitor_b        .proc
         ; -- bitwise or (of 2 bytes)
-        lda  P8ESTACK_LO+2,x
-        ora  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        ora  stack.lo+1,x
         inx
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 bitxor_b    .proc
         ; -- bitwise xor (of 2 bytes)
-        lda  P8ESTACK_LO+2,x
-        eor  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        eor  stack.lo+1,x
         inx
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 bitand_w    .proc
         ; -- bitwise and (of 2 words)
-        lda  P8ESTACK_LO+2,x
-        and  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+2,x
-        lda  P8ESTACK_HI+2,x
-        and  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+2,x
+        lda  stack.lo+2,x
+        and  stack.lo+1,x
+        sta  stack.lo+2,x
+        lda  stack.hi+2,x
+        and  stack.hi+1,x
+        sta  stack.hi+2,x
         inx
         rts
         .pend
 
 bitor_w        .proc
         ; -- bitwise or (of 2 words)
-        lda  P8ESTACK_LO+2,x
-        ora  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+2,x
-        lda  P8ESTACK_HI+2,x
-        ora  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+2,x
+        lda  stack.lo+2,x
+        ora  stack.lo+1,x
+        sta  stack.lo+2,x
+        lda  stack.hi+2,x
+        ora  stack.hi+1,x
+        sta  stack.hi+2,x
         inx
         rts
         .pend
 
 bitxor_w    .proc
         ; -- bitwise xor (of 2 bytes)
-        lda  P8ESTACK_LO+2,x
-        eor  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+2,x
-        lda  P8ESTACK_HI+2,x
-        eor  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+2,x
+        lda  stack.lo+2,x
+        eor  stack.lo+1,x
+        sta  stack.lo+2,x
+        lda  stack.hi+2,x
+        eor  stack.hi+1,x
+        sta  stack.hi+2,x
         inx
         rts
         .pend
@@ -4895,12 +4899,12 @@ add_w        .proc
     ; -- push word+word / uword+uword
         inx
         clc
-        lda  P8ESTACK_LO,x
-        adc  P8ESTACK_LO+1,x
-        sta  P8ESTACK_LO+1,x
-        lda  P8ESTACK_HI,x
-        adc  P8ESTACK_HI+1,x
-        sta  P8ESTACK_HI+1,x
+        lda  stack.lo,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
+        lda  stack.hi,x
+        adc  stack.hi+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
@@ -4908,55 +4912,55 @@ sub_w        .proc
     ; -- push word-word
         inx
         sec
-        lda  P8ESTACK_LO+1,x
-        sbc  P8ESTACK_LO,x
-        sta  P8ESTACK_LO+1,x
-        lda  P8ESTACK_HI+1,x
-        sbc  P8ESTACK_HI,x
-        sta  P8ESTACK_HI+1,x
+        lda  stack.lo+1,x
+        sbc  stack.lo,x
+        sta  stack.lo+1,x
+        lda  stack.hi+1,x
+        sbc  stack.hi,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 mul_byte    .proc
     ; -- b*b->b (signed and unsigned)
         inx
-        lda  P8ESTACK_LO,x
-        ldy  P8ESTACK_LO+1,x
+        lda  stack.lo,x
+        ldy  stack.lo+1,x
         jsr  math.multiply_bytes
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 mul_word    .proc
         inx
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         sta  zpWord0
-        lda  P8ESTACK_HI,x
+        lda  stack.hi,x
         sta  zpWord0+1
-        lda  P8ESTACK_LO+1,x
-        ldy  P8ESTACK_HI+1,x
+        lda  stack.lo+1,x
+        ldy  stack.hi+1,x
         jsr  math.multiply_words
         lda  math.multiply_words.result
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         lda  math.multiply_words.result+1
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 idiv_b        .proc
     ; signed division: use unsigned division and fix sign of result afterwards
         inx
-        lda  P8ESTACK_LO,x
-        eor  P8ESTACK_LO+1,x
+        lda  stack.lo,x
+        eor  stack.lo+1,x
         php            ; save sign of result
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         bpl  +
         eor  #$ff
         sec
         adc  #0            ; make num1 positive
 +        tay
         inx
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         bpl  +
         eor  #$ff
         sec
@@ -4969,7 +4973,7 @@ idiv_b        .proc
         eor  #$ff
         sec
         adc  #0            ; negate result
-+        sta  P8ESTACK_LO,x
++        sta  stack.lo,x
         dex
         rts
 _remainder    .byte  0
@@ -4977,36 +4981,36 @@ _remainder    .byte  0
 
 idiv_ub        .proc
         inx
-        ldy  P8ESTACK_LO,x
-        lda  P8ESTACK_LO+1,x
+        ldy  stack.lo,x
+        lda  stack.lo+1,x
         jsr  math.divmod_ub_asm
         tya
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 idiv_w        .proc
     ; signed division: use unsigned division and fix sign of result afterwards
-        lda  P8ESTACK_HI+2,x
-        eor  P8ESTACK_HI+1,x
+        lda  stack.hi+2,x
+        eor  stack.hi+1,x
         php                ; save sign of result
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         bpl  +
         jsr  neg_w            ; make value positive
 +        inx
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         bpl  +
         jsr  neg_w            ; make value positive
-+        lda  P8ESTACK_LO+1,x
++        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
-        lda  P8ESTACK_LO,x
-        ldy  P8ESTACK_HI,x
+        lda  stack.lo,x
+        ldy  stack.hi,x
         jsr  math.divmod_uw_asm
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         tya
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         plp
         bpl  +
         jmp  neg_w        ; negate result
@@ -5015,83 +5019,83 @@ idiv_w        .proc
 
 idiv_uw        .proc
         inx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
-        lda  P8ESTACK_LO,x
-        ldy  P8ESTACK_HI,x
+        lda  stack.lo,x
+        ldy  stack.hi,x
         jsr  math.divmod_uw_asm
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         tya
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 remainder_ub    .proc
         inx
-        ldy  P8ESTACK_LO,x    ; right operand
-        lda  P8ESTACK_LO+1,x  ; left operand
+        ldy  stack.lo,x    ; right operand
+        lda  stack.lo+1,x  ; left operand
         jsr  math.divmod_ub_asm
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 remainder_uw    .proc
         inx
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         sta  zpWord0
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         sta  zpWord0+1
-        lda  P8ESTACK_LO,x
-        ldy  P8ESTACK_HI,x
+        lda  stack.lo,x
+        ldy  stack.hi,x
         jsr  math.divmod_uw_asm
         lda  zpWord1
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         lda  zpWord1+1
-        sta  P8ESTACK_HI+1,x
+        sta  stack.hi+1,x
         rts
         .pend
 
 equal_w        .proc
     ; -- are the two words on the stack identical?
-        lda  P8ESTACK_LO+1,x
-        cmp  P8ESTACK_LO+2,x
+        lda  stack.lo+1,x
+        cmp  stack.lo+2,x
         bne  equal_b._equal_b_false
-        lda  P8ESTACK_HI+1,x
-        cmp  P8ESTACK_HI+2,x
+        lda  stack.hi+1,x
+        cmp  stack.hi+2,x
         bne  equal_b._equal_b_false
         beq  equal_b._equal_b_true
         .pend
 
 notequal_b    .proc
     ; -- are the two bytes on the stack different?
-        lda  P8ESTACK_LO+1,x
-        cmp  P8ESTACK_LO+2,x
+        lda  stack.lo+1,x
+        cmp  stack.lo+2,x
         beq  equal_b._equal_b_false
         bne  equal_b._equal_b_true
         .pend
 
 notequal_w    .proc
     ; -- are the two words on the stack different?
-        lda  P8ESTACK_HI+1,x
-        cmp  P8ESTACK_HI+2,x
+        lda  stack.hi+1,x
+        cmp  stack.hi+2,x
         beq  notequal_b
         bne  equal_b._equal_b_true
         .pend
 
 less_ub        .proc
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
         bcc  equal_b._equal_b_true
         bcs  equal_b._equal_b_false
         .pend
 
 less_b        .proc
     ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  P8ESTACK_LO+2,x
+        lda  stack.lo+2,x
         sec
-        sbc  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
         bvc  +
         eor  #$80
 +        bmi  equal_b._equal_b_true
@@ -5112,12 +5116,12 @@ _true        lda  #1
         .pend
 
 less_uw        .proc
-        lda  P8ESTACK_HI+2,x
-        cmp  P8ESTACK_HI+1,x
+        lda  stack.hi+2,x
+        cmp  stack.hi+1,x
         bcc  equal_b._equal_b_true
         bne  equal_b._equal_b_false
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
         bcc  equal_b._equal_b_true
         bcs  equal_b._equal_b_false
         .pend
@@ -5137,10 +5141,10 @@ _true        lda  #1
         .pend
 
 less_w        .proc
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
-        lda  P8ESTACK_HI+2,x
-        sbc  P8ESTACK_HI+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
+        lda  stack.hi+2,x
+        sbc  stack.hi+1,x
         bvc  +
         eor  #$80
 +        bmi  equal_b._equal_b_true
@@ -5149,29 +5153,29 @@ less_w        .proc
 
 equal_b        .proc
     ; -- are the two bytes on the stack identical?
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
         bne  _equal_b_false
 _equal_b_true    lda  #1
 _equal_b_store    inx
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
 _equal_b_false    lda  #0
         beq  _equal_b_store
         .pend
 
 lesseq_ub    .proc
-        lda  P8ESTACK_LO+1,x
-        cmp  P8ESTACK_LO+2,x
+        lda  stack.lo+1,x
+        cmp  stack.lo+2,x
         bcs  equal_b._equal_b_true
         bcc  equal_b._equal_b_false
         .pend
 
 lesseq_b    .proc
     ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  P8ESTACK_LO+2,x
+        lda  stack.lo+2,x
         clc
-        sbc  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
         bvc  +
         eor  #$80
 +        bmi  equal_b._equal_b_true
@@ -5195,12 +5199,12 @@ _true        lda  #1
         .pend
 
 lesseq_uw    .proc
-        lda  P8ESTACK_HI+1,x
-        cmp  P8ESTACK_HI+2,x
+        lda  stack.hi+1,x
+        cmp  stack.hi+2,x
         bcc  equal_b._equal_b_false
         bne  equal_b._equal_b_true
-        lda  P8ESTACK_LO+1,x
-        cmp  P8ESTACK_LO+2,x
+        lda  stack.lo+1,x
+        cmp  stack.lo+2,x
         bcs  equal_b._equal_b_true
         bcc  equal_b._equal_b_false
         .pend
@@ -5220,10 +5224,10 @@ reg_lesseq_w    .proc
         .pend
 
 lesseq_w    .proc
-        lda  P8ESTACK_LO+1,x
-        cmp  P8ESTACK_LO+2,x
-        lda  P8ESTACK_HI+1,x
-        sbc  P8ESTACK_HI+2,x
+        lda  stack.lo+1,x
+        cmp  stack.lo+2,x
+        lda  stack.hi+1,x
+        sbc  stack.hi+2,x
         bvc  +
         eor  #$80
 +        bpl  equal_b._equal_b_true
@@ -5231,8 +5235,8 @@ lesseq_w    .proc
         .pend
 
 greater_ub    .proc
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
         beq  equal_b._equal_b_false
         bcs  equal_b._equal_b_true
         bcc  equal_b._equal_b_false
@@ -5240,9 +5244,9 @@ greater_ub    .proc
 
 greater_b    .proc
     ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  P8ESTACK_LO+2,x
+        lda  stack.lo+2,x
         clc
-        sbc  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
         bvc  +
         eor  #$80
 +        bpl  equal_b._equal_b_true
@@ -5250,21 +5254,21 @@ greater_b    .proc
         .pend
 
 greater_uw    .proc
-        lda  P8ESTACK_HI+1,x
-        cmp  P8ESTACK_HI+2,x
+        lda  stack.hi+1,x
+        cmp  stack.hi+2,x
         bcc  equal_b._equal_b_true
         bne  equal_b._equal_b_false
-        lda  P8ESTACK_LO+1,x
-        cmp  P8ESTACK_LO+2,x
+        lda  stack.lo+1,x
+        cmp  stack.lo+2,x
         bcc  equal_b._equal_b_true
         bcs  equal_b._equal_b_false
         .pend
 
 greater_w    .proc
-        lda  P8ESTACK_LO+1,x
-        cmp  P8ESTACK_LO+2,x
-        lda  P8ESTACK_HI+1,x
-        sbc  P8ESTACK_HI+2,x
+        lda  stack.lo+1,x
+        cmp  stack.lo+2,x
+        lda  stack.hi+1,x
+        sbc  stack.hi+2,x
         bvc  +
         eor  #$80
 +        bmi  equal_b._equal_b_true
@@ -5272,17 +5276,17 @@ greater_w    .proc
         .pend
 
 greatereq_ub    .proc
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
         bcs  equal_b._equal_b_true
         bcc  equal_b._equal_b_false
         .pend
 
 greatereq_b    .proc
     ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  P8ESTACK_LO+2,x
+        lda  stack.lo+2,x
         sec
-        sbc  P8ESTACK_LO+1,x
+        sbc  stack.lo+1,x
         bvc  +
         eor  #$80
 +        bpl  equal_b._equal_b_true
@@ -5290,21 +5294,21 @@ greatereq_b    .proc
         .pend
 
 greatereq_uw    .proc
-        lda  P8ESTACK_HI+2,x
-        cmp  P8ESTACK_HI+1,x
+        lda  stack.hi+2,x
+        cmp  stack.hi+1,x
         bcc  equal_b._equal_b_false
         bne  equal_b._equal_b_true
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
         bcs  equal_b._equal_b_true
         bcc  equal_b._equal_b_false
         .pend
 
 greatereq_w    .proc
-        lda  P8ESTACK_LO+2,x
-        cmp  P8ESTACK_LO+1,x
-        lda  P8ESTACK_HI+2,x
-        sbc  P8ESTACK_HI+1,x
+        lda  stack.lo+2,x
+        cmp  stack.lo+1,x
+        lda  stack.hi+2,x
+        sbc  stack.hi+1,x
         bvc  +
         eor  #$80
 +        bmi  equal_b._equal_b_false
@@ -5314,126 +5318,126 @@ greatereq_w    .proc
 
 shiftleft_b    .proc
         inx
-        ldy  P8ESTACK_LO,x
+        ldy  stack.lo,x
         bne  +
         rts
-+        lda  P8ESTACK_LO+1,x
++        lda  stack.lo+1,x
 -        asl  a
         dey
         bne  -
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 shiftright_b    .proc
         inx
-        ldy  P8ESTACK_LO,x
+        ldy  stack.lo,x
         bne  +
         rts
-+        lda  P8ESTACK_LO+1,x
++        lda  stack.lo+1,x
 -        lsr  a
         dey
         bne  -
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 
 equalzero_b    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         beq  _true
         bne  _false
 _true        lda  #1
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
 _false        lda  #0
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
 equalzero_w    .proc
-        lda  P8ESTACK_LO+1,x
-        ora  P8ESTACK_HI+1,x
+        lda  stack.lo+1,x
+        ora  stack.hi+1,x
         beq  equalzero_b._true
         bne  equalzero_b._false
         .pend
 
 notequalzero_b    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         beq  equalzero_b._false
         bne  equalzero_b._true
         .pend
 
 notequalzero_w    .proc
-        lda  P8ESTACK_LO+1,x
-        ora  P8ESTACK_HI+1,x
+        lda  stack.lo+1,x
+        ora  stack.hi+1,x
         beq  equalzero_b._false
         bne  equalzero_b._true
         .pend
 
 lesszero_b    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         bmi  equalzero_b._true
         jmp  equalzero_b._false
         .pend
 
 lesszero_w    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         bmi  equalzero_b._true
         jmp  equalzero_b._false
         .pend
 
 greaterzero_ub    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         bne  equalzero_b._true
         beq  equalzero_b._false
         .pend
 
 greaterzero_sb    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         beq  equalzero_b._false
         bpl  equalzero_b._true
         bmi  equalzero_b._false
         .pend
 
 greaterzero_uw    .proc
-        lda  P8ESTACK_LO+1,x
-        ora  P8ESTACK_HI+1,x
+        lda  stack.lo+1,x
+        ora  stack.hi+1,x
         bne  equalzero_b._true
         beq  equalzero_b._false
         .pend
 
 greaterzero_sw    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         bmi  equalzero_b._false
-        ora  P8ESTACK_LO+1,x
+        ora  stack.lo+1,x
         beq  equalzero_b._false
         bne  equalzero_b._true
         .pend
 
 lessequalzero_sb    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         bmi  equalzero_b._true
         beq  equalzero_b._true
         bne  equalzero_b._false
         .pend
 
 lessequalzero_sw    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
         bmi  equalzero_b._true
-        ora  P8ESTACK_LO+1,x
+        ora  stack.lo+1,x
         beq  equalzero_b._true
         bne  equalzero_b._false
         .pend
 
 greaterequalzero_sb    .proc
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
             bpl  equalzero_b._true
             bmi  equalzero_b._false
         .pend
 
 greaterequalzero_sw    .proc
-        lda  P8ESTACK_HI+1,x
+        lda  stack.hi+1,x
             bpl  equalzero_b._true
             bmi  equalzero_b._false
         .pend
@@ -5809,11 +5813,11 @@ _arg_s2        .word  0
 
 sign_extend_stack_byte    .proc
     ; -- sign extend the (signed) byte on the stack to full 16 bits
-        lda  P8ESTACK_LO+1,x
+        lda  stack.lo+1,x
         ora  #$7f
         bmi  +
         lda  #0
-+        sta  P8ESTACK_HI+1,x
++        sta  stack.hi+1,x
         rts
         .pend
 
@@ -5876,14 +5880,14 @@ _found        lda  #1
 
 func_any_b_stack    .proc
         jsr  func_any_b_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
 
 func_all_b_stack    .proc
         jsr  func_all_b_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -5925,7 +5929,7 @@ func_any_w_into_A    .proc
 func_any_w_stack    .proc
         asl  a
         jsr  func_any_b_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -5952,7 +5956,7 @@ _cmp_mod    cpy  #255        ; modified
 
 func_all_w_stack    .proc
         jsr  func_all_w_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -5960,8 +5964,8 @@ func_all_w_stack    .proc
 abs_b_stack    .proc
     ; -- push abs(A) on stack (as unsigned word)
         jsr  abs_b_into_AY
-        sta  P8ESTACK_LO,x
-        stz  P8ESTACK_HI,x
+        sta  stack.lo,x
+        stz  stack.hi,x
         dex
         rts
         .pend
@@ -5981,9 +5985,9 @@ abs_b_into_AY    .proc
 abs_w_stack    .proc
     ; -- push abs(AY) on stack (as word)
         jsr  abs_w_into_AY
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         tya
-        sta  P8ESTACK_HI,x
+        sta  stack.hi,x
         dex
         rts
         .pend
@@ -6018,7 +6022,7 @@ _neg        lda  #-1
 
 func_sign_b_stack    .proc
         jsr  func_sign_b_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6033,7 +6037,7 @@ _pos        lda  #1
 
 func_sign_ub_stack    .proc
         jsr  func_sign_ub_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6050,7 +6054,7 @@ _possibly_zero    cmp  #0
 
 func_sign_uw_stack    .proc
         jsr  func_sign_uw_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6071,14 +6075,14 @@ _possibly_zero    cmp  #0
 
 func_sign_w_stack    .proc
         jsr  func_sign_w_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
 
 func_sqrt16_stack    .proc
         jsr  func_sqrt16_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6120,7 +6124,7 @@ func_sqrt16_into_A    .proc
 func_rnd_stack    .proc
     ; -- put a random ubyte on the estack
         jsr  math.randbyte
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6128,9 +6132,9 @@ func_rnd_stack    .proc
 func_rndw_stack    .proc
     ; -- put a random uword on the estack
         jsr  math.randword
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         tya
-        sta  P8ESTACK_HI,x
+        sta  stack.hi,x
         dex
         rts
         .pend
@@ -6637,7 +6641,7 @@ cast_FAC1_as_w_into_ay    .proc               ; also used for float 2 b
 stack_b2float    .proc
         ; -- b2float operating on the stack
         inx
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         stx  zpx
         jsr  FREADSA
         jmp  push_fac1._internal
@@ -6646,8 +6650,8 @@ stack_b2float    .proc
 stack_w2float    .proc
         ; -- w2float operating on the stack
         inx
-        ldy  P8ESTACK_LO,x
-        lda  P8ESTACK_HI,x
+        ldy  stack.lo,x
+        lda  stack.hi,x
         stx  zpx
         jsr  GIVAYF
         jmp  push_fac1._internal
@@ -6656,7 +6660,7 @@ stack_w2float    .proc
 stack_ub2float    .proc
         ; -- ub2float operating on the stack
         inx
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         stx  zpx
         tay
         lda  #0
@@ -6667,8 +6671,8 @@ stack_ub2float    .proc
 stack_uw2float    .proc
         ; -- uw2float operating on the stack
         inx
-        lda  P8ESTACK_LO,x
-        ldy  P8ESTACK_HI,x
+        lda  stack.lo,x
+        ldy  stack.hi,x
         stx  zpx
         jsr  GIVUAYFAY
         jmp  push_fac1._internal
@@ -6680,9 +6684,9 @@ stack_float2w    .proc               ; also used for float2b
         jsr  AYINT
         ldx  zpx
         lda  floats.AYINT_facmo
-        sta  P8ESTACK_HI,x
+        sta  stack.hi,x
         lda  floats.AYINT_facmo+1
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6692,9 +6696,9 @@ stack_float2uw    .proc               ; also used for float2ub
         stx  zpx
         jsr  GETADR
         ldx  zpx
-        sta  P8ESTACK_HI,x
+        sta  stack.hi,x
         tya
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6706,21 +6710,21 @@ push_float    .proc
         sty  zpWord0+1
         ldy  #0
         lda  (zpWord0),y
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         iny
         lda  (zpWord0),y
-        sta  P8ESTACK_HI,x
+        sta  stack.hi,x
         dex
         iny
         lda  (zpWord0),y
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         iny
         lda  (zpWord0),y
-        sta  P8ESTACK_HI,x
+        sta  stack.hi,x
         dex
         iny
         lda  (zpWord0),y
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -6732,21 +6736,21 @@ pop_float    .proc
         sty  zpWord0+1
         ldy  #4
         inx
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         sta  (zpWord0),y
         dey
         inx
-        lda  P8ESTACK_HI,x
+        lda  stack.hi,x
         sta  (zpWord0),y
         dey
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         sta  (zpWord0),y
         dey
         inx
-        lda  P8ESTACK_HI,x
+        lda  stack.hi,x
         sta  (zpWord0),y
         dey
-        lda  P8ESTACK_LO,x
+        lda  stack.lo,x
         sta  (zpWord0),y
         rts
         .pend
@@ -6891,9 +6895,9 @@ mul_f        .proc
 
 neg_f        .proc
         ; -- toggle the sign bit on the stack
-        lda  P8ESTACK_HI+3,x
+        lda  stack.hi+3,x
         eor  #$80
-        sta  P8ESTACK_HI+3,x
+        sta  stack.hi+3,x
         rts
         .pend
 
@@ -6998,24 +7002,24 @@ equal_f        .proc
         inx
         inx
         inx
-        lda  P8ESTACK_LO-3,x
-        cmp  P8ESTACK_LO,x
+        lda  stack.lo-3,x
+        cmp  stack.lo,x
         bne  _equals_false
-        lda  P8ESTACK_LO-2,x
-        cmp  P8ESTACK_LO+1,x
+        lda  stack.lo-2,x
+        cmp  stack.lo+1,x
         bne  _equals_false
-        lda  P8ESTACK_LO-1,x
-        cmp  P8ESTACK_LO+2,x
+        lda  stack.lo-1,x
+        cmp  stack.lo+2,x
         bne  _equals_false
-        lda  P8ESTACK_HI-2,x
-        cmp  P8ESTACK_HI+1,x
+        lda  stack.hi-2,x
+        cmp  stack.hi+1,x
         bne  _equals_false
-        lda  P8ESTACK_HI-1,x
-        cmp  P8ESTACK_HI+2,x
+        lda  stack.hi-1,x
+        cmp  stack.hi+2,x
         bne  _equals_false
 _equals_true    lda  #1
 _equals_store    inx
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
 _equals_false    lda  #0
         beq  _equals_store
@@ -7025,7 +7029,7 @@ notequal_f    .proc
         ; -- are the two mflpt5 numbers on the stack different?
         jsr  equal_f
         eor  #1        ; invert the result
-        sta  P8ESTACK_LO+1,x
+        sta  stack.lo+1,x
         rts
         .pend
 
@@ -7117,7 +7121,7 @@ compare_floats    .proc
         ldx  zpx
         rts
 _return_false    lda  #0
-_return_result  sta  P8ESTACK_LO,x
+_return_result  sta  stack.lo,x
         dex
         rts
 _return_true    lda  #1
@@ -7189,11 +7193,11 @@ equal_zero    .proc
         beq  _true
         bne  _false
 _true        lda  #1
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
 _false        lda  #0
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -7240,7 +7244,7 @@ lessequal_zero    .proc
 
 func_sign_f_stack    .proc
         jsr  func_sign_f_into_A
-        sta  P8ESTACK_LO,x
+        sta  stack.lo,x
         dex
         rts
         .pend
@@ -7536,20 +7540,20 @@ pixelcolor     = 65     ; zp UBYTE
     tax
     ;    src line: library:/prog8lib/c64/graphics.p8:30
     lda  pixelcolor
-    sta  P8ESTACK_LO,x
+    sta  stack.lo,x
     dex
-    lda  P8ESTACK_LO+1,x
+    lda  stack.lo+1,x
     asl  a
     asl  a
     asl  a
     asl  a
-    sta  P8ESTACK_LO+1,x
+    sta  stack.lo+1,x
     lda  bgcolor
-    sta  P8ESTACK_LO,x
+    sta  stack.lo,x
     dex
     jsr  prog8_lib.bitor_b
     inx
-    lda  P8ESTACK_LO,x
+    lda  stack.lo,x
     pha
     lda  #0
     tay
@@ -7615,28 +7619,28 @@ prog8_label_59_if_end
     sta  separate_pixels
  
     lda  x
-    sta  P8ESTACK_LO,x
+    sta  stack.lo,x
     lda  x+1
-    sta  P8ESTACK_HI,x
+    sta  stack.hi,x
     dex
     lda  #<$fff8
-    sta  P8ESTACK_LO,x
+    sta  stack.lo,x
     lda  #>$fff8
-    sta  P8ESTACK_HI,x
+    sta  stack.hi,x
     dex
     
     jsr  prog8_lib.bitand_w
     ldy  y
     jsr  get_y_lookup
-    sta  P8ESTACK_LO,x
+    sta  stack.lo,x
     tya
-    sta  P8ESTACK_HI,x
+    sta  stack.hi,x
     dex
     jsr  prog8_lib.add_w
     inx
-    lda  P8ESTACK_LO,x
+    lda  stack.lo,x
     sta  addr
-    lda  P8ESTACK_HI,x
+    lda  stack.hi,x
     sta  addr+1
     
     ;    src line: library:/prog8lib/c64/graphics.p8:163

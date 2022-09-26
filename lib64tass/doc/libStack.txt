@@ -1,0 +1,30 @@
+
+###########
+    stack
+###########
+
+    stack
+    
+        .weak
+            lo = $ce00      ;   ce00    +   ff
+            hi = $cf00      ;   cf00    +   ff
+        .endweak
+
+        pointer    .byte    0xff    ;   top
+
+
+        ; ------------------------------------------------- push/pop byte
+        ;
+        ;   input   :   a  -> push
+        ;   output  :   a  <- pop
+        ;
+        
+        #   push_byte
+        #   pop_byte
+;;;
+;;
+;
+
+
+
+ 

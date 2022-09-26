@@ -6,6 +6,7 @@
 .cpu  '6502'
 .enc  'none'
 
+.include "libStack.asm"
 
 ;******
 ;       global
@@ -16,8 +17,6 @@ global  .proc
     hex_digits		.text '0123456789abcdef'
 
 .pend
-
-
 
 ;******
 ;       define
@@ -146,7 +145,6 @@ temp  .proc
     
 .pend
 
-
 ;******
 ;       sys
 ;******
@@ -231,9 +229,6 @@ c64 .proc
         
         COLOR           = $0286     ;
 
-        ;   orig_stackpointer    .byte  0    ; stores the Stack pointer register at program start
-        orig_stackpointer    = 150          ; Unknown. (End of tape indicator during datasette input/output.)
-        
         ;---------------------------------------------------------------  address
         
         .weak
@@ -248,6 +243,10 @@ c64 .proc
         
         screen_control_register_1   =   53265
         screen_control_register_2   =   53270
+
+        ;******
+        ;       sub
+        ;******
 
         ; ........................................... set mode
         
@@ -464,21 +463,34 @@ c64 .proc
         start   .proc
 
             cld
-            tsx
-            stx  c64.orig_stackpointer  ; required for sys.exit()
             
-            ldx  #255                   ; init estack ptr
+            tsx
+            txa
+            sta stack.old
+            
+            ldx  #255                   ; init stack ptr
+            stx  stack.pointer
+            
             clv
             clc
     
             jsr  c64.init_system
             jsr  c64.init_system_phase2 ;   no phase 2 in C64
             
+            ;--------------
+            
             jsr  main.start
+            
+            ;--------------
+
             lda  #31
             sta  $01
             
             jmp  c64.cleanup_at_exit
+            
+            lda stack.old
+            tax
+            txs
             
             rts
             
@@ -729,11 +741,11 @@ else	.macro
 ; --------------------------------------------------------------- logical true false
 
 if_true  .macro
-        bcs \1        ;   non settato     =   0
+    bcs \1        ;   non settato     =   0
 .endm
 
 if_false .macro
-        bcc \1         ;  settato         =   1
+    bcc \1         ;  settato         =   1
 .endm
 
 ;--------------------------------------------------------------- string compare
@@ -907,17 +919,17 @@ mem .proc
     _mod1           
             lda  #0                 ; self-modified
             sta  (zpWord0),y        ; first page
-            sta  (zpWord2),y            ; second page
+            sta  (zpWord2),y        ; second page
             iny
     _mod1b        lda  #0                         ; self-modified
             sta  (zpWord0),y        ; first page
-            sta  (zpWord2),y            ; second page
+            sta  (zpWord2),y        ; second page
             iny
             bne  _fullpage
             inc  zpWord0+1          ; next page pair
             inc  zpWord0+1          ; next page pair
-            inc  zpWord2+1              ; next page pair
-            inc  zpWord2+1              ; next page pair
+            inc  zpWord2+1          ; next page pair
+            inc  zpWord2+1          ; next page pair
             dex
             bne  _fullpage
     _lastpage    
@@ -946,16 +958,16 @@ mem .proc
             
     .pend
 
-    ; ........................................... mem.copy_nbyte_from_to
+    ; ........................................... mem.copy_npage_from_to
     ;
     ;   input   :   
     ;               zpWord0     from
     ;               zpWord1     to
-    ;               xy          value
+    ;               xy          length
 
     copy_npage_from_to    .proc
     
-        ; -- copy memory UP from (zpWord0) to (zpWord1) of length X/Y (16-bit, X=lo, Y=hi)
+        ; -- copy memory from (zpWord0) to (zpWord1) of length X/Y (16-bit, X=lo, Y=hi)
 
             source  = zpWord0
             dest    = zpWord1

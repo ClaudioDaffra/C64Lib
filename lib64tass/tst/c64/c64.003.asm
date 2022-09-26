@@ -33,7 +33,7 @@ program_entry_point
 program .proc
 
        jsr c64.start    ;   call main.start
-        
+       
        rts
        
 .pend
@@ -46,9 +46,12 @@ main	.proc
 
             ;   program
  
-            lda #' '
-            ldy #color.green
-            jsr txt.fill_screen
+            ;lda #' '
+            ;ldy #color.green
+            ;jsr txt.fill_screen
+ 
+            lda #char.a
+            sta 1024
  
             rts
  
