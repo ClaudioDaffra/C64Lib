@@ -6,21 +6,6 @@
 .cpu  '6502'
 .enc  'none'
 
-;---------------------------------------------------------------  temp
-
-;   screen  :    1024   -   2023
-;               $0400   -   $07E7
-;
-;   buffer  :    2024   -   2039    (15)   buffer
-;           :    2040   -   2047    (8)    sprite
-
-;   program :    2049   -   ->
-
-temp  .proc
-
-    buffer15 =   2024   ;   (15) byte
-    
-.pend
 
 ;******
 ;       global
@@ -32,6 +17,11 @@ global  .proc
 
 .pend
 
+
+
+;******
+;       define
+;******
 
 ;---------------------------------------------------------------  bit and or
 
@@ -54,40 +44,6 @@ bit_and_5    =  %11011111
 bit_and_6    =  %10111111
 bit_and_7    =  %01111111
 
-;--------------------------------------------------------------- test flag
-
-test_bit_0   .macro
-    and #%00000001
-.endm
-test_bit_1   .macro
-    and #%00000010
-.endm
-test_bit_2   .macro
-    and #%00000100
-.endm
-test_bit_3   .macro
-    and #%00001000
-.endm
-test_bit_4   .macro
-    and #%00010000
-.endm
-test_bit_5   .macro
-    and #%00100000
-.endm
-test_bit_6   .macro
-    and #%01000000
-.endm
-test_bit_7   .macro
-    and #%10000000
-.endm
-
-if_bit_0 .macro
-        beq \1        ;   non settato     =   0
-.endm
-if_bit_1 .macro
-        bne \1         ;  settato         =   1
-.endm
-   
 
 ;******
 ;       zero page
@@ -141,6 +97,56 @@ zpWord3lo   = $05+1
 ;   189 - 190
 ;   192 - 192
 ;
+
+;******
+;       temp
+;******
+
+temp  .proc
+
+    ;   zp
+    
+    buffer0023.18   =   0023    ;   (18) byte   ;   *
+    ;       *
+    ;       $0017-$0018 23-24	Pointer to previous expression in string stack.
+    ;       $0019-$0021 25-33	String stack, temporary area for processing string expressions (9 bytes, 3 entries).
+    ;       $0022-$0025 34-37	Temporary area for various operations (4 bytes).
+    ;       $0026-$0029 38-41	Auxiliary arithmetical register for division and multiplication (4 bytes).
+    
+    buffer0075.02   =   0073    ;   ( 2) byte   ;   Temporary area for saving original pointer to current BASIC 
+                                                ;   instruction during GET, INPUT and READ.
+    buffer0104.01   =   0104    ;   ( 1) byte   ;   Temporary area for various operations.
+    buffer0146.01   =   0146    ;   ( 1) byte   ;   Unknown. (Timing constant during datasette input.)
+
+    buffer0150.01   =   0150    ;   ( 1) byte   ;   Unknown. (End of tape indicator during datasette input/output.)
+    buffer0151.01   =   0151    ;   ( 1) byte   ;   Temporary area for saving original value of Y register during input from RS232.
+  
+    buffer0155.01   =   0155    ;   ( 1) byte   ;   Unknown. (Parity bit during datasette input/output.)
+    buffer0156.01   =   0156    ;   ( 1) byte   ;   Unknown. (Byte ready indicator during datasette input/output.)
+
+    buffer0176.02   =   0176    ;   ( 2) byte   ;   Unknown.
+    buffer0191.01   =   0191    ;   ( 1) byte   ;   Unknown.
+
+    ;
+    
+    buffer0645.01   =   0645    ;   ( 1) byte   ;   Unused  (Serial bus timeout.)
+    buffer0679.89   =   0679    ;   (89) byte   ;   Unused  (89 bytes).              (64+15)
+    buffer0787.01   =   0787    ;   ( 1) byte   ;   Unused
+    buffer0814.02   =   0814    ;   ( 2) byte   ;   Unused  Default: $FE66.              (2)
+    buffer0820.08   =   0820    ;   (48) byte   ;   Unused (8 bytes).                    (8)
+    buffer0828.192  =   0828    ;  (192) byte   ;   Datasette buffer (192 bytes).   (128+64)
+    buffer1020.04   =   1020    ;   ( 4) byte   ;   Unused (4 bytes).                    (4)
+    buffer2024.15   =   2024    ;   (15) byte   ;   Unused (15 bytes).  **              (15) 
+    ;       **
+    ;       screen  :    1024   -   2023
+    ;                    $0400   -  $07E7
+    ;       buffer  :    2024   -   2039    (15)   buffer
+    ;               :    2040   -   2047    (8)    sprite
+    ;       program :    2049   -   ->
+    
+.pend
+
+
 ;******
 ;       sys
 ;******
@@ -555,6 +561,41 @@ c64 .proc
 ;******
 ;       macro
 ;******
+
+;--------------------------------------------------------------- test flag
+
+test_bit_0   .macro
+    and #%00000001
+.endm
+test_bit_1   .macro
+    and #%00000010
+.endm
+test_bit_2   .macro
+    and #%00000100
+.endm
+test_bit_3   .macro
+    and #%00001000
+.endm
+test_bit_4   .macro
+    and #%00010000
+.endm
+test_bit_5   .macro
+    and #%00100000
+.endm
+test_bit_6   .macro
+    and #%01000000
+.endm
+test_bit_7   .macro
+    and #%10000000
+.endm
+
+if_bit_0 .macro
+        beq \1        ;   non settato     =   0
+.endm
+if_bit_1 .macro
+        bne \1         ;  settato         =   1
+.endm
+   
 
 ; ---------------------------------------------------------------   ay
 ;
