@@ -26,10 +26,9 @@ stack .proc
             ldx stack.pointer
             
             sta stack.lo,x
-            
             dex
-            stx stack.pointer
             
+            stx stack.pointer
             rts
         
         .pend
@@ -37,11 +36,53 @@ stack .proc
         pop_byte    .proc
         
             ldx stack.pointer
-            inx
-            stx stack.pointer 
             
+            inx
             lda stack.lo,x
+            
+            stx stack.pointer
+            rts
 
+        .pend
+
+        ; ------------------------------------------------- push/pop word
+        ;
+        ;   input   :   ay  ->   push
+        ;   output  :   ay  <-   pop
+        ;
+        ;    a y
+        ;   1234
+        ;   255 34  y
+        ;   254 12  a
+        
+        push_word    .proc
+        
+            ldx stack.pointer
+            
+            sta stack.lo,x  ;   lo+0    a<
+            dex
+            
+            tya
+            sta stack.lo,x  ;   hi+1    y>
+            dex
+
+            stx stack.pointer
+            rts
+        
+        .pend
+
+        pop_word    .proc
+        
+            ldx stack.pointer
+            
+            inx
+            lda stack.lo,x  ;   hi+1    y>
+            tay
+            
+            inx
+            lda stack.lo,x  ;   lo+0    a<
+
+            stx stack.pointer 
             rts
 
         .pend

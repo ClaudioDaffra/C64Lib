@@ -31,6 +31,7 @@ screen  .dstruct  screen_s
 ;**********
 ;           txt
 ;**********
+
 txt .proc
 
     ; ........................................... set_char_with_col_2_3
