@@ -3,6 +3,9 @@
 ;       C64
 ;******
 
+.cpu  '6502'
+.enc  'none'
+
 ;---------------------------------------------------------------  temp
 
 ;   screen  :    1024   -   2023
@@ -124,7 +127,20 @@ zpWord3     = $05       ;    $B391, execution address of routine converting inte
 zpWord3hi   = $05
 zpWord3lo   = $05+1
 
-
+;   -------------------------------------------- datasette safe?
+;
+;   142
+;   150
+;   155
+;   158 - 159
+;   163 - 164
+;   165 - 166
+;   172 - 173
+;   174 - 175
+;   178 - 179
+;   189 - 190
+;   192 - 192
+;
 ;******
 ;       sys
 ;******
@@ -139,6 +155,10 @@ sys .proc
     SCREEN_WH       = $ffed     ;   
     SCREEN_CLEAR    = $e544     ;
     SCREEN_HOME     = $e566     ;
+    IOINIT          = $ff84     ;
+    RESTOR          = $ff8a     ;
+    CINT            = $ff81     ;
+    
     
 .pend
 
@@ -195,6 +215,19 @@ char .proc
 
 c64 .proc
 
+        ;---------------------------------------------------------------  c64
+        
+        EXTCOL          = $d020     ;   53280
+        BGCOL0          = $d021     ;
+        BGCOL1          = $d022     ;
+        BGCOL2          = $d023     ;
+        BGCOL4          = $d024     ;
+        
+        COLOR           = $0286     ;
+
+        ;   orig_stackpointer    .byte  0    ; stores the Stack pointer register at program start
+        orig_stackpointer    = 150          ; Unknown. (End of tape indicator during datasette input/output.)
+        
         ;---------------------------------------------------------------  address
         
         .weak
@@ -414,7 +447,109 @@ c64 .proc
             rts
             
         .pend
+
+        ; ...........................................c64.start
+        ;
+        ;   input   :   
+        ;               zpWord0     from
+        ;               zpWord1     to
+        ;               xy          value
         
+        start   .proc
+
+            cld
+            tsx
+            stx  c64.orig_stackpointer  ; required for sys.exit()
+            
+            ldx  #255                   ; init estack ptr
+            clv
+            clc
+    
+            jsr  c64.init_system
+            jsr  c64.init_system_phase2 ;   no phase 2 in C64
+            
+            jsr  main.start
+            lda  #31
+            sta  $01
+            
+            jmp  c64.cleanup_at_exit
+            
+            rts
+            
+        .pend
+
+        init_system    .proc
+
+            sei
+            cld
+            
+            lda  #%00101111
+            sta  $00
+            lda  #%00100111
+            sta  $01
+            
+            jsr  sys.IOINIT
+            jsr  sys.RESTOR
+            jsr  sys.CINT
+            
+            lda  #color.black
+            sta  c64.EXTCOL
+            sta  screen.border_color
+            
+            lda  #color.green
+            sta  c64.COLOR
+            sta  screen.foreground_color
+            
+            lda  #color.black
+            sta  c64.BGCOL0
+            sta  screen.background_color
+            
+            jsr  disable_runstop_and_charsetswitch
+            
+            clc
+            clv
+            cli
+            
+            rts
+                
+    .pend
+
+    init_system_phase2    .proc
+
+        rts     ; no phase 2 steps on the C64
+        
+    .pend
+
+    disable_runstop_and_charsetswitch    .proc
+
+        lda  #$80
+        sta  657    ; disable charset switching
+        lda  #239
+        sta  808    ; disable run/stop key
+        
+        rts
+        
+    .pend
+
+    cleanup_at_exit    .proc
+ 
+            jmp  c64.enable_runstop_and_charsetswitch
+    .pend
+ 
+    enable_runstop_and_charsetswitch    .proc
+
+        lda  #0
+        sta  657    ; enable charset switching
+        
+        lda  #237
+        sta  808    ; enable run/stop key
+        
+        rts
+        
+    .pend
+
+
+
 .pend
 
 ;******
@@ -810,10 +945,6 @@ mem .proc
     .pend
 
 
-
-
-
-    
 .pend
 
 

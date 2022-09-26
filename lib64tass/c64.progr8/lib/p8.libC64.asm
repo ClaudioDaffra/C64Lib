@@ -37,16 +37,16 @@
                 zpWord1hi   = $fd
                 zpWord1lo   = $fe
 
-; ............................................. 
+                ; ............................................. 
 
-;   zpByte4 = $03   ;   3
-;   zpByte5 = $04
-;   zpByte6 = $05   ;   5
-;   zpByte7 = $06
-;   zpWord2 = $03
-;   zpWord3 = $05
+                ;   zpByte4 = $03   ;   3
+                ;   zpByte5 = $04
+                ;   zpByte6 = $05   ;   5
+                ;   zpByte7 = $06
+                ;   zpWord2 = $03
+                ;   zpWord3 = $05
 
-; .............................................
+                ; .............................................
 
 .weak
 P8ESTACK_LO = $ce00
@@ -61,25 +61,25 @@ prog8_interned_strings    .proc
 
 ; non-zeropage variables
 string_0    ; PETSCII:"\uf10d\uf11a\uf139\uf11b     \uf11a\uf13a\uf11b"
-    .byte  $9c, $12, $df, $92, $20, $20, $20, $20, $20, $12, $e9, $92, $00
+.byte  $9c, $12, $df, $92, $20, $20, $20, $20, $20, $12, $e9, $92, $00
 string_1    ; PETSCII:"\uf10b\uf11a\u258e\uf139\uf11b   \uf11a\uf13a\uf130\uf11b"
-    .byte  $9a, $12, $f4, $df, $92, $20, $20, $20, $12, $e9, $ea, $92, $00
+.byte  $9a, $12, $f4, $df, $92, $20, $20, $20, $12, $e9, $ea, $92, $00
 string_2    ; PETSCII:"\uf10f\uf11a\u258c \uf139\uf11b \uf11a\uf13a \uf11b\u258c"
-    .byte  $9f, $12, $e1, $20, $df, $92, $20, $12, $e9, $20, $92, $e1, $00
+.byte  $9f, $12, $e1, $20, $df, $92, $20, $12, $e9, $20, $92, $e1, $00
 string_3    ; PETSCII:"\uf102 \uf132\uf11a\u2596\uf11b \uf11a\u2597\uf11b\uf132"
-    .byte  $1e, $20, $f7, $12, $fb, $92, $20, $12, $ec, $92, $f7, $00
+.byte  $1e, $20, $f7, $12, $fb, $92, $20, $12, $ec, $92, $f7, $00
 string_4    ; PETSCII:"\uf10e \u2582\uf11a\u2598\uf11b \uf11a\u259d\uf11b\u2582"
-    .byte  $9e, $20, $ef, $12, $fe, $92, $20, $12, $fc, $92, $ef, $00
+.byte  $9e, $20, $ef, $12, $fe, $92, $20, $12, $fc, $92, $ef, $00
 string_5    ; PETSCII:"\uf104 \uf11a \uf11b\uf13a\uf11b \uf139\uf11a \uf11b"
-    .byte  $81, $20, $12, $20, $92, $e9, $92, $20, $df, $12, $20, $92, $00
+.byte  $81, $20, $12, $20, $92, $e9, $92, $20, $df, $12, $20, $92, $00
 string_6    ; PETSCII:"\uf101\uf130\uf13a   \uf139\u258e\uf100"
-    .byte  $1c, $ea, $e9, $20, $20, $20, $df, $f4, $05, $00
+.byte  $1c, $ea, $e9, $20, $20, $20, $df, $f4, $05, $00
 string_7    ; PETSCII:"$"
-    .byte  $24, $00
+.byte  $24, $00
 
 ; subroutines in this block
- 
-    .pend
+
+.pend
 
 ;***********************
 ; #LIBRARY : 'conv' 
@@ -87,12 +87,12 @@ string_7    ; PETSCII:"$"
 
 conv    .proc
  
-        ; non-zeropage variables
-        string_out    ; PETSCII:"????????????????"
-            .byte  $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
-            .byte  $00
+                    ; non-zeropage variables
+                    string_out    ; PETSCII:"????????????????"
+                        .byte  $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
+                        .byte  $00
 
-; subroutines in this block
+                    ; subroutines in this block
  
                     str_ub0    .proc
                                 stx  zpx
@@ -806,15 +806,15 @@ txt    .proc
                 
         .pend
  
-fill_screen    .proc
- 
-        pha
-        tya
-        jsr  clear_screencolors
-        pla
-        jmp  clear_screenchars
-        
-.pend
+            fill_screen    .proc
+             
+                    pha
+                    tya
+                    jsr  clear_screencolors
+                    pla
+                    jmp  clear_screenchars
+                    
+            .pend
  
             clear_screenchars    .proc
              
@@ -1307,14 +1307,14 @@ fill_screen    .proc
 ;***********************
 
 c64    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:4
+     
     TIME_HI = $a0
     TIME_MID = $a1
     TIME_LO = $a2
     STATUS = $90
     STKEY = $91
     SFDX = $cb
-    COLOR = $0286
+                        COLOR = $0286
     HIBASE = $0288
     CINV = $0314
     CBINV = $0316
@@ -1365,11 +1365,11 @@ c64    .proc
     XXPAND = $d01d
     SPSPCL = $d01e
     SPBGCL = $d01f
-    EXTCOL = $d020
-    BGCOL0 = $d021
-    BGCOL1 = $d022
-    BGCOL2 = $d023
-    BGCOL4 = $d024
+                        EXTCOL = $d020
+                        BGCOL0 = $d021
+                        BGCOL1 = $d022
+                        BGCOL2 = $d023
+                        BGCOL4 = $d024
     SPMC0 = $d025
     SPMC1 = $d026
     SP0COL = $d027
@@ -1449,8 +1449,8 @@ c64    .proc
     POTY = $d41a
     OSC3 = $d41b
     ENV3 = $d41c
-    Screen = $0400
-    Colors = $d800
+                    Screen = $0400
+                    Colors = $d800
 
 ; non-zeropage variables
                     STROUT = $ab1e
@@ -1458,10 +1458,10 @@ c64    .proc
                     HOMECRSR = $e566
     IRQDFRT = $ea31
     IRQDFEND = $ea81
-    CINT = $ff81
-    IOINIT = $ff84
+                        CINT = $ff81
+                        IOINIT = $ff84
     RAMTAS = $ff87
-    RESTOR = $ff8a
+                        RESTOR = $ff8a
     VECTOR = $ff8d
     SETMSG = $ff90
     SECOND = $ff93
@@ -1531,62 +1531,62 @@ RDTIM16    .proc
     .pend
     ;    src line: library:/prog8lib/c64/syslib.p8:262
 
-init_system    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:269
-        sei
-        cld
-        lda  #%00101111
-        sta  $00
-        lda  #%00100111
-        sta  $01
-        jsr  c64.IOINIT
-        jsr  c64.RESTOR
-        jsr  c64.CINT
-        lda  #6
-        sta  c64.EXTCOL
-        lda  #7
-        sta  c64.COLOR
-        lda  #0
-        sta  c64.BGCOL0
-        jsr  disable_runstop_and_charsetswitch
-        clc
-        clv
-        cli
-        rts
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:293
+                            init_system    .proc
 
-init_system_phase2    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:294
-        rts     ; no phase 2 steps on the C64
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:299
+                                    sei
+                                    cld
+                                    lda  #%00101111
+                                    sta  $00
+                                    lda  #%00100111
+                                    sta  $01
+                                    jsr  c64.IOINIT
+                                    jsr  c64.RESTOR
+                                    jsr  c64.CINT
+                                    lda  #6
+                                    sta  c64.EXTCOL
+                                    lda  #7
+                                    sta  c64.COLOR
+                                    lda  #0
+                                    sta  c64.BGCOL0
+                                    jsr  disable_runstop_and_charsetswitch
+                                    clc
+                                    clv
+                                    cli
+                                    rts
+                                .pend
+   
 
-cleanup_at_exit    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:301
-        jmp  c64.enable_runstop_and_charsetswitch
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:306
+                        init_system_phase2    .proc
+                            ;    src line: library:/prog8lib/c64/syslib.p8:294
+                                rts     ; no phase 2 steps on the C64
+                            .pend
+                            ;    src line: library:/prog8lib/c64/syslib.p8:299
 
-disable_runstop_and_charsetswitch    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:307
-        lda  #$80
-        sta  657    ; disable charset switching
-        lda  #239
-        sta  808    ; disable run/stop key
-        rts
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:316
+                        cleanup_at_exit    .proc
+                            ;    src line: library:/prog8lib/c64/syslib.p8:301
+                                jmp  c64.enable_runstop_and_charsetswitch
+                            .pend
+                            ;    src line: library:/prog8lib/c64/syslib.p8:306
 
-enable_runstop_and_charsetswitch    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:317
-        lda  #0
-        sta  657    ; enable charset switching
-        lda  #237
-        sta  808    ; enable run/stop key
-        rts
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:326
+                                            disable_runstop_and_charsetswitch    .proc
+                                               
+                                                    lda  #$80
+                                                    sta  657    ; disable charset switching
+                                                    lda  #239
+                                                    sta  808    ; disable run/stop key
+                                                    rts
+                                                .pend
+ 
+
+                                                    enable_runstop_and_charsetswitch    .proc
+                                                     
+                                                            lda  #0
+                                                            sta  657    ; enable charset switching
+                                                            lda  #237
+                                                            sta  808    ; enable run/stop key
+                                                            rts
+                                                        .pend
+ 
 
 set_irq    .proc
     ;    src line: library:/prog8lib/c64/syslib.p8:327
@@ -4771,7 +4771,7 @@ prog8_lib    .proc
 ; Generic machine independent 6502 code.
 
 
-orig_stackpointer    .byte  0    ; stores the Stack pointer register at program start
+                        orig_stackpointer    .byte  0    ; stores the Stack pointer register at program start
 
 read_byte_from_address_on_stack    .proc
     ; -- read the byte from the memory address on the top of the stack, return in A (stack remains unchanged)
@@ -7563,11 +7563,11 @@ pixelcolor     = 65     ; zp UBYTE
     ;    src line: library:/prog8lib/c64/graphics.p8:150
 
 horizontal_line    .proc
-length     = 66     ; zp UWORD
-y     = 68     ; zp UBYTE
-x     = 69     ; zp UWORD
-separate_pixels     = 71     ; zp UBYTE
-addr     = 75     ; zp UWORD
+length                  = 66     ; zp UWORD
+y                       = 68     ; zp UBYTE
+x                       = 69     ; zp UWORD
+separate_pixels         = 71     ; zp UBYTE
+addr                    = 75     ; zp UWORD
 ; statements
  
     ldy  length+1

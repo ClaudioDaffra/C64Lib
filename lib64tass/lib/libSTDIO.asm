@@ -188,6 +188,7 @@ txt .proc
     set_foreground_color .proc
     
             lda screen.foreground_color
+            sta c64.COLOR
             ldx screen.col
             ldy screen.row
             pha
@@ -276,16 +277,36 @@ txt .proc
             sta  c64.color_addr+250*3-1,y
             dey
             bne  -
+            
             rts
     .pend
 
     clear_color .proc
      
             sta  screen.foreground_color
+            sta  c64.COLOR
             jmp  clear_screen_colors
 
     .pend
+
+    ; ........................................... fill_screen 
+    ;
+    ;   input   :   
+    ;               a   screen  char
+    ;               y   screen  foreground_color
+    ;
     
+    fill_screen    .proc
+     
+            pha
+            tya
+            jsr  clear_color
+            pla
+            jmp  clear_screen_chars
+            rts
+            
+    .pend
+
     ; ........................................... screen_scroll ( left,right,up,down )
     
     screen_scroll_left    .proc

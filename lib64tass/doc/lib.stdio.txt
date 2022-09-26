@@ -173,6 +173,10 @@ screen struct
     
     input   :   ay  
 
+    #   fill_screen    .proc
+
+    input   :   a(char) y(foreground_color) 
+    
 ##########
     std
 ##########
