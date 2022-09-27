@@ -141,12 +141,17 @@ stack .proc
             
         .pend
 
+        poke    .proc
+                jmp stack.write_byte_to_address_on_stack
+        .pend
+        
         ; ------------------------------------------------- read_byte_from_address_on_stack
         ;
         ;   output   :   a
         ;
         ; -- read the byte from the memory address on the top of the stack 
-            
+
+
         read_byte_from_address_on_stack    .proc
  
             ldx  stack.pointer
@@ -163,7 +168,10 @@ stack .proc
             
         .pend
 
-
+        peek    .proc
+                jmp read_byte_from_address_on_stack
+        .pend
+        
         ;
 .pend
 

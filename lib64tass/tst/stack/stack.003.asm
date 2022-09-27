@@ -90,11 +90,14 @@ main	.proc
             jsr stack.push_word
             
             lda #char.a
-            jsr stack.write_byte_to_address_on_stack
-
+            ;jsr stack.write_byte_to_address_on_stack
+            jsr stack.poke
+            
             ;--------------------------------------------------------------- 
 
-            jsr stack.read_byte_from_address_on_stack
+            ;jsr stack.read_byte_from_address_on_stack
+            jsr stack.peek
+            
             sta 1025
 
             ;--------------------------------------------------------------- 

@@ -21,6 +21,28 @@
         
         #   push_byte
         #   pop_byte
+        
+        ; ------------------------------------------------- push/pop word
+        ;
+        ;   input   :   ay  -> push
+        ;   output  :   ay  <- pop
+        ;
+        
+        #   push_byte
+        #   pop_byte
+
+        ; ------------------------------------------------- poke/peek word
+        ;
+        ;   input   :   a   ->   poke stack.word,a  (stack.lo+1/hi+1)
+        ;   output  :   a   <-   peek stack.word    (stack.lo+1/hi+1)
+        ;
+        
+        #   poke   ,   write_byte_to_address_on_stack   
+        #   peek   ,   read_byte_from_address_on_stack
+        
+        ;
+        
+        
 ;;;
 ;;
 ;
