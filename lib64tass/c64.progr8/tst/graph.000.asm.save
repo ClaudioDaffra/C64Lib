@@ -1,0 +1,99 @@
+
+
+.cpu  '6502'
+.enc  'none'
+
+; ---- basic program with sys call ----
+
+; [start address]
+
+* = $0801
+    ;           [line]
+	.word  (+), 2022
+    ;      [sys]                                     [rem]     [desc]
+	.null  $9e, format(' %d ', program_entry_point), $3a, $8f, ' prg'
++	.word  0
+
+program_entry_point	; assembly code starts here
+
+	jmp main.start
+
+;--------------------------------------------------------------- lib
+
+.include "../../lib/libC64.asm"
+.include "../../lib/libMath.asm"
+.include "../../lib/libSTDIO.asm"
+.include "../../lib/libConv.asm"
+.include "../../lib/libString.asm"
+.include "../../lib/libGraph.asm"
+
+;--------------------------------------------------------------- main
+
+main	.proc
+
+    start	.proc
+
+jmp xxx
+        lda #%10101111
+        sec
+        jsr std.print_u8_bin
+
+        lda #char.nl
+        jsr sys.CHROUT
+        
+        sec
+        lda #%10101111
+        and #%11111100
+        jsr std.print_u8_bin
+        
+        ; e000  57344
+ 
+        jsr c64.processor_port.mem.default
+        lda  #12
+        sta  $e000
+        lda  $e000
+        jsr txt.print_u8_dec
+
+        lda #char.nl
+        jsr sys.CHROUT
+        
+        ;rts
+xxx 
+
+; rom disable
+
+lda	#$fe		;	1111:11[10]
+and	$dc0e		;	 
+sta	$dc0e
+
+lda	#$fd		;	 1111:11[01]	%x01: RAM visible at $A000-$BFFF and $E000-$FFFF.
+and	$01
+sta $01
+        
+        lda  #21
+        sta  $e000
+        lda  $e000
+        sta  zpa
+        
+lda	#$02		;	0000:00[10] %x10:  RAM visible at $A000-$BFFF; 
+ora	$01			;				KERNAL ROM visible at $E000-$FFFF.
+sta $01
+
+lda	#$01		;	0000:0001
+ora	$dc0e
+sta	$dc0e
+        
+        lda  zpa
+        jsr txt.print_u8_dec
+
+        
+        rts
+        
+    .pend
+
+.pend
+
+;;;
+;;
+;
+

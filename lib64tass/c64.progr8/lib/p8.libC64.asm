@@ -771,7 +771,7 @@ logo_lines    .word  prog8_interned_strings.string_0, prog8_interned_strings.str
 ; #LIBRARY : 'txt' 
 ;***********************
 
-txt    .proc
+                    txt    .proc
 
                     DEFAULT_WIDTH  = $28    ;   40
                     DEFAULT_HEIGHT = $19    ;   25
@@ -7646,16 +7646,16 @@ prog8_label_59_if_end
     lda  separate_pixels
     beq  prog8_label_63_if_end
     ;    src line: library:/prog8lib/c64/graphics.p8:164
-                lda  addr
-                sta  zpWord0
-                lda  addr+1
-                sta  zpWord0+1
-                ldy  separate_pixels
-                lda  hline_filled_right,y
-                eor  #255
-                ldy  #0
-                ora  (zpWord0),y
-                sta  (zpWord0),y
+    lda  addr
+    sta  zpWord0
+    lda  addr+1
+    sta  zpWord0+1
+    ldy  separate_pixels
+    lda  hline_filled_right,y
+    eor  #255
+    ldy  #0
+    ora  (zpWord0),y
+    sta  (zpWord0),y
     ;    src line: library:/prog8lib/c64/graphics.p8:176
     lda  addr
     clc

@@ -132,7 +132,6 @@ txt .proc
             rts
     .pend
 
-
     ; ........................................... set_cc ( row,col,char,col )
     
     set_cc   .proc 
@@ -154,13 +153,13 @@ txt .proc
             bcc  +
             inc  screen_ptr+2
             inc  color_ptr+2
-    +		
+    +
             lda  screen.char
             
-    screen_ptr	
+    screen_ptr
             sta  $ffff		; modified
             lda  screen.foreground_color
-    color_ptr	
+    color_ptr
             sta  $ffff		; modified
             rts
     screen_pointer  = set_cc.screen_ptr + 1
@@ -265,8 +264,8 @@ txt .proc
             jsr  clear_screen_chars
             
             rts
-
     .pend
+    
     
     ; ........................................... clear_screen_colors
     

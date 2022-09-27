@@ -162,8 +162,7 @@ sys .proc
     IOINIT          = $ff84     ;
     RESTOR          = $ff8a     ;
     CINT            = $ff81     ;
-    
-    
+
 .pend
 
 ;******
@@ -202,7 +201,7 @@ char .proc
 
         home            =   19
         nl              =   13
-        ;clear_screen   =   147    ;   restore original color
+        clear_screen    =   147    ;   restore original color
         
         ; $0400
         
@@ -210,7 +209,7 @@ char .proc
         dollar          =   '$'
         a               =   1
         b               =   2
-        
+
 .pend
 
 ;******
@@ -235,15 +234,65 @@ c64 .proc
         screen_addr =   $0400
         .endweak
         color_addr  =   $d800
-
-        screen_max_width  = $28    ;   40
-        screen_max_height = $19    ;   25
-
-        ;---------------------------------------------------------------  
         
+        ;---------------------------------------------------------------  constant
+        
+        screen_max_width            =   $28    ;   40
+        screen_max_height           =   $19    ;   25
         screen_control_register_1   =   53265
         screen_control_register_2   =   53270
+        
+        ;******
+        ;       system
+        ;******
 
+        timerA  .proc
+            stop .proc
+                lda	#$fe		;	1111:11[10]
+                and	$dc0e		;	 
+                sta	$dc0e
+                rts
+            .pend
+            start .proc
+                lda	#$01		;	0000:0001
+                ora	$dc0e
+                sta	$dc0e
+                rts
+            .pend
+        .pend
+
+        ;   address 0001    bits 76543[210]
+        
+        processor_port .proc
+            mem .proc
+                default .proc
+                    lda #%00000111
+                    and $01
+                    sta $01
+                    rts
+                .pend
+                to_rom_AE .proc
+                    jsr default
+                    lda	#$02        ;   0000:00[10] %x10:  RAM visible at $A000-$BFFF; 
+                    ora	$01         ;                       KERNAL ROM visible at $E000-$FFFF.
+                    sta $01
+                    rts
+                .pend
+                to_ram_AE .proc
+                    jsr default
+                    lda	#$fd        ;   1111:11[01]	%x01: RAM visible at $A000-$BFFF,
+                    and	$01         ;                                and $E000-$FFFF.
+                    sta $01
+                    rts
+                .pend
+            .pend
+        .pend
+
+       
+        bank    .proc
+        
+        .pend
+        
         ;******
         ;       sub
         ;******

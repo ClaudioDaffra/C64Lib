@@ -147,6 +147,19 @@
 
     #   peekw   (a,y)               := (word)*(zpWord0)
     #   pokew   (word)*(zpWord0)    := (a:y)
+
+    #######
+    # system
+    #######
+    
+        c64.timerA.start
+        c64.timerA.stop
+        
+        c64.processor_port.mem.default
+        c64.processor_port.mem.to_ram_AE
+        c64.processor_port.mem.to_rom_AE
+        
+    #######
     
     #######
     # macro
@@ -219,7 +232,28 @@
     # copy_npage_from_to
     
     
+    #######
+    #   map
+    #######
     
+    ($0001) Processor port. Bits:
+
+    Bits #0-#2: Configuration for memory areas $A000-$BFFF, $D000-$DFFF and $E000-$FFFF. Values:
+
+    %x00: RAM visible at.                       $A000-$BFFF, $D000-$DFFF, $E000-$FFFF.
+    %x01: RAM visible at                        $A000-$BFFF,              $E000-$FFFF.
+    %x10: RAM visible at                        $A000-$BFFF;
+    
+    %x11: ROM visible at                        $A000-$BFFF;              $E000-$FFFF.
+    %0xx: Character ROM visible at $D000-$DFFF. (Except for the value %000, see above.)
+    %1xx: I/O area visible at $D000-$DFFF. (Except for the value %100, see above.)
+
+    Bit #3: Datasette output signal level.
+    Bit #4: Datasette button status; 0 = One or more of PLAY, RECORD, F.FWD or REW pressed; 1 = No button is pressed.
+    Bit #5: Datasette motor control; 0 = On; 1 = Off.
+
+    Default: $37, %00110[111].
+
     
     
 ;;;
