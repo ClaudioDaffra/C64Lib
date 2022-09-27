@@ -566,7 +566,43 @@ c64 .proc
         
     .pend
 
+        ; ........................................... peek_word
+        ;
+        ;   input   :   ay  ->  y   =   peek ( a0:a1,y+0 ) , y
+        ;                       a   =   peek ( a0:a1,y+1 ) , a
+        ;  (a,y) := (word)*(zpWord0)
+        
+        peekw  .proc
+            ; -- read the word value on the address in AY
+            sta  zpWord0
+            sty  zpWord0+1
+            ldy  #0
+            lda  (zpWord0),y
+            pha
+            iny
+            lda  (zpWord0),y
+            tay
+            pla
+            rts
+        .pend
 
+        ; ........................................... poke_word
+        ;
+        ;   input   :   ay  ->  zpWord+1    =   poke ( a0:a1,y+0 ) , y
+        ;                       zpWord+0    =   poke ( a0:a1,y+1 ) , a
+        ;   *(zpWord0) := (a:y)
+
+        pokew   .proc
+            ; -- store the word value in AY in the address in zpWord0
+            sty  zpx
+            ldy  #0
+            sta  (zpWord0),y
+            iny
+            lda  zpx
+            sta  (zpWord0),y
+            rts
+        .pend
+        
 
 .pend
 
@@ -638,6 +674,13 @@ load_address_ay	.macro
 
 .endm
 
+switch_ay .macro
+    sta zpa
+    sty zpy
+    lda zpy
+    ldy zpa
+.endm
+
 ; ---------------------------------------------------------------   xy
 
 load_imm_xy	.macro
@@ -674,13 +717,26 @@ load_imm_zpWord0	.macro
     
 .endm
 
-load_address_zpWord1	.macro
+store_imm_zpWord0	.macro
+    lda <\1
+    sta zpWord0
+    ldy >\1
+    sty zpWord0+1
+.endm
 
+load_address_zpWord1	.macro
 	lda #<\1
     sta zpWord1
 	ldy #>\1
     sty zpWord1+1
-    
+
+.endm
+
+store_imm_zpWord1	.macro
+    lda <\1
+    sta zpWord1
+    ldy >\1
+    sty zpWord1+1
 .endm
 
 ; ---------------------------------------------------------------

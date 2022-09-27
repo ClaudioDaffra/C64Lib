@@ -5821,18 +5821,17 @@ sign_extend_stack_byte    .proc
         rts
         .pend
 
-strlen          .proc
-        ; -- returns the number of bytes in the string in AY, in Y.
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  #0
--        lda  (zpWord0),y
-        beq  +
-        iny
-        bne  -
-+        rts
-        .pend
-
+                                    strlen          .proc
+                                            ; -- returns the number of bytes in the string in AY, in Y.
+                                            sta  zpWord0
+                                            sty  zpWord0+1
+                                            ldy  #0
+                                    -        lda  (zpWord0),y
+                                            beq  +
+                                            iny
+                                            bne  -
+                                    +        rts
+                                            .pend
 
 containment_bytearray    .proc
     ; -- check if a value exists in a byte array.
@@ -6426,31 +6425,31 @@ _loop_hi    ldy  _index_first
         .pend
 
 
-func_peekw   .proc
-    ; -- read the word value on the address in AY
-    sta  zpWord0
-    sty  zpWord0+1
-    ldy  #0
-    lda  (zpWord0),y
-    pha
-    iny
-    lda  (zpWord0),y
-    tay
-    pla
-    rts
-    .pend
+                        func_peekw   .proc
+                            ; -- read the word value on the address in AY
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  #0
+                            lda  (zpWord0),y
+                            pha
+                            iny
+                            lda  (zpWord0),y
+                            tay
+                            pla
+                            rts
+                            .pend
 
 
-func_pokew   .proc
-    ; -- store the word value in AY in the address in zpWord0
-    sty  zpx
-    ldy  #0
-    sta  (zpWord0),y
-    iny
-    lda  zpx
-    sta  (zpWord0),y
-    rts
-    .pend
+                        func_pokew   .proc
+                            ; -- store the word value in AY in the address in zpWord0
+                            sty  zpx
+                            ldy  #0
+                            sta  (zpWord0),y
+                            iny
+                            lda  zpx
+                            sta  (zpWord0),y
+                            rts
+                            .pend
     
 .pend
 

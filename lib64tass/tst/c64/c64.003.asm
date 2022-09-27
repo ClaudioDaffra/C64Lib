@@ -46,13 +46,50 @@ main	.proc
 
             ;   program
  
-            ;lda #' '
-            ;ldy #color.green
-            ;jsr txt.fill_screen
- 
-            lda #char.a
+            lda #' '
+            ldy #color.green
+            jsr txt.fill_screen
+
+            ; .............................................. store
+            
+            load_imm_ay #$3031
+            lda #'0'
             sta 1024
- 
+            ldy #'1'
+            sty 1025
+            store_imm_zpWord0   #$0400
+
+            ; .............................................. peekw
+            
+            load_imm_ay #1024
+            jsr c64.peekw
+            ;   (a,y) := (word)*(zpWord0)
+            switch_ay
+
+            pha
+            tya
+            jsr txt.print_u8_hex
+            pla
+            jsr txt.print_u8_hex
+            
+            ;   3031    -> '0','1'
+
+            ; .............................................. pokew
+
+            lda #char.nl
+            jsr sys.CHROUT
+            
+            store_imm_zpWord0   #$0405
+            jsr txt.print_u16_hex
+            
+            load_imm_ay #$3031
+            switch_ay
+            ;  *(zpWord0) := *(ay)
+            jsr c64.pokew
+
+            ; .............................................. pokew
+            ;   3031 01
+            ;   0405
             rts
  
 

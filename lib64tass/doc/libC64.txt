@@ -144,7 +144,10 @@
             check_multi_color         
             check_bitmap_mode_320x200   
             check_bitmap_mode_160x200   
-            
+
+    #   peekw   (a,y)               := (word)*(zpWord0)
+    #   pokew   (word)*(zpWord0)    := (a:y)
+    
     #######
     # macro
     #######
