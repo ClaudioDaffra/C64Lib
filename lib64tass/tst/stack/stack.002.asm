@@ -95,7 +95,10 @@ c1
             ldx #255
             stx stack.pointer
             jsr stack.pop_byte
-            if_false stack_overflow
+            
+            bvs stack_overflow
+            
+            rts
 
 c2
             ; sp=0    ov 
@@ -104,28 +107,35 @@ c2
             
             lda #'a'
             jsr stack.push_byte
-            if_false stack_overflow
+            
+            bvs stack_overflow
 
+            rts
+            
 c3
             ; sp=255    sp=254    ov
             ldx #254
             stx stack.pointer
             jsr stack.pop_word
-            if_false stack_overflow
+            
+            bvs stack_overflow
 
+            rts
+            
 c4
             ; sp=0  sp=1    ov 
-            ldx #2
+            ldx #0
             stx stack.pointer
             
             lda #'a'
             jsr stack.push_word
-            if_false stack_overflow
             
-            ;--------------------------------------------------------------- 
+            bvs stack_overflow
             
             rts
             
+            ;---------------------------------------------------------------
+             
 stack_overflow
 
             lda #'0'

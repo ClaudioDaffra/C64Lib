@@ -6,6 +6,12 @@
 
 stack .proc
 
+        sev .macro
+            sec
+            lda #$80    ; set overflow
+            sbc #$01
+        .endm
+        
         .weak
             lo = $ce00      ;   ce00    +   ff
             hi = $cf00      ;   cf00    +   ff
@@ -27,6 +33,7 @@ stack .proc
                 cpx #0
                 bne protect
                 clc
+                sev
                 rts
         protect
                 sta stack.lo,x
@@ -34,6 +41,7 @@ stack .proc
                 
                 stx stack.pointer
                 sec
+                clv
                 rts
         
         .pend
@@ -44,6 +52,7 @@ stack .proc
                 cpx #255
                 bne protect
                 clc
+                sev
                 rts
         protect
                 inx
@@ -51,6 +60,7 @@ stack .proc
                 
                 stx stack.pointer
                 sec
+                clv
                 rts
 
         .pend
@@ -67,6 +77,7 @@ stack .proc
                 cpx #2
                 bge protect
                 clc
+                sev
                 rts
         protect
                 sta stack.lo,x  ;   lo+0    a<
@@ -78,6 +89,7 @@ stack .proc
 
                 stx stack.pointer
                 sec
+                clv
                 rts
         
         .pend
@@ -89,6 +101,7 @@ stack .proc
                 blt protect
                 beq protect
                 clc
+                sev
                 rts
         protect
                 inx
@@ -100,6 +113,7 @@ stack .proc
 
                 stx stack.pointer 
                 sec
+                clv
                 rts
 
         .pend
