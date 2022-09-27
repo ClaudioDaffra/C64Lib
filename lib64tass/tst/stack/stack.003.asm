@@ -58,6 +58,18 @@ main	.proc
             rts
     .pend
 
+    print_pop_uword .proc
+    
+            lda #char.nl
+            jsr sys.CHROUT
+            
+            jsr stack.pop_word
+            
+            jsr txt.print_u16_hex
+            
+            rts
+    .pend
+    
     start	.proc
 
             ;   program
@@ -67,54 +79,28 @@ main	.proc
             lda #' '
             ldy #color.green
             jsr txt.fill_screen
- 
-            ;--------------------------------------------------------------- push / pop
-
-            jsr debug_stack
-
-            lda #1
-            jsr stack.push_byte
-            lda #2
-            jsr stack.push_byte
-            lda #3
-            jsr stack.push_byte
-            
-                jsr debug_stack
-
-            lda #char.nl
-            jsr sys.CHROUT
-            
-            jsr stack.pop_byte
-            jsr std.print_u8_dec
-            
-            lda #char.nl
-            jsr sys.CHROUT
-            
-            jsr stack.pop_byte
-            jsr std.print_u8_dec
-            
-            lda #char.nl
-            jsr sys.CHROUT
-
-            jsr stack.pop_byte
-            jsr std.print_u8_dec
-            
-            lda #char.nl
-            jsr sys.CHROUT
-
-                jsr debug_stack
 
             ;--------------------------------------------------------------- 
 
-            ;  [$ff][$fc]
-            ;  3
-            ;  2
-            ;  1
-            ;  [$ff]
+            ;jsr debug_stack
+
+            ;--------------------------------------------------------------- 
+ 
+            load_imm_ay #$0400
+            jsr stack.push_word
             
+            lda #char.a
+            jsr stack.write_byte_to_address_on_stack
+
+            ;--------------------------------------------------------------- 
+
+            jsr stack.read_byte_from_address_on_stack
+            sta 1025
+
+            ;--------------------------------------------------------------- 
+
             rts
             
-
     .pend
 
 .pend

@@ -6,17 +6,23 @@
 
 stack .proc
 
-        sev .macro
-            sec
-            lda #$80    ; set overflow
-            sbc #$01
-        .endm
+        ; ------------------------------------------------- stack address
         
         .weak
             lo = $ce00      ;   ce00    +   ff
             hi = $cf00      ;   cf00    +   ff
         .endweak
+        
+        ; ------------------------------------------------- sev
+        
+        sev .macro
+            sec
+            lda #$80    ; set overflow
+            sbc #$01
+        .endm
 
+        ; ------------------------------------------------- stack pointer
+        
         old     .byte   0       ;  old
         
         pointer .byte   $ff    ;   top
@@ -27,8 +33,8 @@ stack .proc
         ;   output  :   a   pop
         ;           :   c(0) overflow   c(1) push
         
+
         push_byte    .proc
-        
                 ldx stack.pointer
                 cpx #0
                 bne protect
@@ -38,16 +44,14 @@ stack .proc
         protect
                 sta stack.lo,x
                 dex
-                
                 stx stack.pointer
+                
                 sec
                 clv
                 rts
-        
         .pend
 
         pop_byte    .proc
-        
                 ldx stack.pointer
                 cpx #255
                 bne protect
@@ -56,38 +60,36 @@ stack .proc
                 rts
         protect
                 inx
-                lda stack.lo,x
-                
                 stx stack.pointer
+                
+                lda stack.lo,x
+
                 sec
                 clv
                 rts
-
         .pend
 
-        ; ------------------------------------------------- push/pop word
+        ; ------------------------------------------------- push/pop word   [v]
         ;
         ;   input   :   ay  ->   push
         ;   output  :   ay  <-   pop
         ;           :   c(0) overflow   c(1) push
         
         push_word    .proc
-        
                 ldx stack.pointer
-                cpx #2
-                bge protect
+                cpx #0
+                bne protect
                 clc
                 sev
                 rts
         protect
                 sta stack.lo,x  ;   lo+0    a<
-                dex
-                
                 tya
-                sta stack.lo,x  ;   hi+1    y>
-                dex
-
+                sta stack.hi,x  ;   hi+1    y>
+                
+                dex             ;   x
                 stx stack.pointer
+                
                 sec
                 clv
                 rts
@@ -95,23 +97,19 @@ stack .proc
         .pend
 
         pop_word    .proc
-        
                 ldx stack.pointer
-                cpx #253
-                blt protect
-                beq protect
+                cpx #255
+                bne protect
                 clc
                 sev
                 rts
         protect
                 inx
-                lda stack.lo,x  ;   hi+1    y>
-                tay
+                stx stack.pointer
                 
-                inx
+                ldy stack.hi,x  ;   hi+1    y>
                 lda stack.lo,x  ;   lo+0    a<
-
-                stx stack.pointer 
+ 
                 sec
                 clv
                 rts
@@ -127,13 +125,17 @@ stack .proc
         write_byte_to_address_on_stack    .proc
  
             ldx  stack.pointer
-            
+
             ldy  stack.lo+1,x
             sty  zpWord1
+            
             ldy  stack.hi+1,x
             sty  zpWord1+1
+            
             ldy  #0
             sta  (zpWord1),y
+            
+            inx
             
             rts
             
@@ -151,6 +153,7 @@ stack .proc
             
             lda  stack.lo+1,x
             ldy  stack.hi+1,x
+            
             sta  zpWord1
             sty  zpWord1+1
             ldy  #0
