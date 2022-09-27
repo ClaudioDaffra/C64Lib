@@ -33,6 +33,13 @@ main	.proc
 
     start	.proc
 
+        ; bank default
+        
+        lda #bank0
+        jsr c64.bank
+        
+        ;
+        
         lda #%10101111
         sec
         jsr std.print_u8_bin
@@ -48,9 +55,9 @@ main	.proc
         lda #char.nl
         jsr sys.CHROUT
         
-        ; e000  57344
+        ; rom default
  
-        jsr c64.processor_port.mem.default
+        jsr c64.mem.default
         lda  #12
         sta  $e000
         lda  $e000
@@ -59,25 +66,24 @@ main	.proc
         lda #char.nl
         jsr sys.CHROUT
 
-        ; rom disable
+        ; rom disable  $a000 - $e000
 
         jsr c64.timerA.stop
-        jsr c64.processor_port.mem.to_ram_AE
+        jsr c64.mem.to_ram_AE
 
         lda  #21
         sta  $e000
         lda  $e000
         sta  zpa
 
-        ; rom enable
+        ; rom enable  $a000 - $e000
 
         jsr c64.timerA.start
-        jsr c64.processor_port.mem.to_rom_AE
+        jsr c64.mem.to_rom_AE
 
-        lda  zpa
+        lda zpa
         jsr txt.print_u8_dec
 
-        
         rts
         
     .pend

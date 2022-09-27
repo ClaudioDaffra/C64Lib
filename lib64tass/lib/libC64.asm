@@ -6,7 +6,11 @@
 .cpu  '6502'
 .enc  'none'
 
+;--------------------------------------------------------------- include
+
 .include "libStack.asm"
+
+;--------------------------------------------------------------- 
 
 ;******
 ;       global
@@ -25,6 +29,12 @@ global  .proc
 ;---------------------------------------------------------------  bit and or
 
                 ;76543210
+                
+bank3       =   %00000000
+bank2       =   %00000001
+bank1       =   %00000010
+bank0       =   %00000011
+
 bit_or_0    =   %00000000
 bit_or_1    =   %00000010
 bit_or_2    =   %00000100
@@ -231,16 +241,26 @@ c64 .proc
         ;---------------------------------------------------------------  address
         
         .weak
-        screen_addr =   $0400
+        screen_addr     =   $0400
         .endweak
-        color_addr  =   $d800
+        
+        color_addr      =   $d800
+        
+        .weak
+            bitmap_addr =   $e000
+        .endweak
         
         ;---------------------------------------------------------------  constant
         
         screen_max_width            =   $28    ;   40
         screen_max_height           =   $19    ;   25
+
+        ;---------------------------------------------------------------  register
+        
         screen_control_register_1   =   53265
         screen_control_register_2   =   53270
+
+        ;---------------------------------------------------------------  
         
         ;******
         ;       system
@@ -248,13 +268,13 @@ c64 .proc
 
         timerA  .proc
             stop .proc
-                lda	#$fe		;	1111:11[10]
-                and	$dc0e		;	 
+                lda	#$fe        ;   1111:11[10]
+                and	$dc0e       ;
                 sta	$dc0e
                 rts
             .pend
             start .proc
-                lda	#$01		;	0000:0001
+                lda	#$01        ;   0000:0001
                 ora	$dc0e
                 sta	$dc0e
                 rts
@@ -263,34 +283,36 @@ c64 .proc
 
         ;   address 0001    bits 76543[210]
         
-        processor_port .proc
-            mem .proc
-                default .proc
-                    lda #%00000111
-                    and $01
-                    sta $01
-                    rts
-                .pend
-                to_rom_AE .proc
-                    jsr default
-                    lda	#$02        ;   0000:00[10] %x10:  RAM visible at $A000-$BFFF; 
-                    ora	$01         ;                       KERNAL ROM visible at $E000-$FFFF.
-                    sta $01
-                    rts
-                .pend
-                to_ram_AE .proc
-                    jsr default
-                    lda	#$fd        ;   1111:11[01]	%x01: RAM visible at $A000-$BFFF,
-                    and	$01         ;                                and $E000-$FFFF.
-                    sta $01
-                    rts
-                .pend
+        mem .proc
+            default .proc
+                lda #%00000111
+                and $01
+                sta $01
+                rts
+            .pend
+            to_rom_AE .proc
+                jsr default
+                lda	#$02        ;   0000:00[10] %x10:  RAM visible at $A000-$BFFF; 
+                ora	$01         ;                      KERNAL ROM visible at $E000-$FFFF.
+                sta $01
+                rts
+            .pend
+            to_ram_AE .proc
+                jsr default
+                lda	#$fd        ;   1111:11[01]	%x01: RAM visible at $A000-$BFFF,
+                and	$01         ;                                and $E000-$FFFF.
+                sta $01
+                rts
             .pend
         .pend
 
        
         bank    .proc
         
+                ora $dd00
+                sta $dd00
+                rts
+             
         .pend
         
         ;******

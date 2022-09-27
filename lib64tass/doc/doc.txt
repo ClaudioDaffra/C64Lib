@@ -151,8 +151,6 @@ c)  ### text mode   -   multicolor
     -------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------
 
- 
-
 d)  bitmap mode 320x200 2 color
 
         activate    :   poke 53265,peek(53265)or32
@@ -193,13 +191,161 @@ e)  bitmap mode 160x200 4 color
         and $dd00   ;   7654:32[10] %00, 0: Bank #3, $C000-$FFFF, 49152-65535.
         sta $dd00   ;   Bits #0-#1: VIC bank. Values:
 
+#########
+#   $D018
+#   53272   00010101
+#########
 
-* debug test
+new setup
 
-txtio.002.asm
-txtio.003.asm
-conv.000.asm
+      ; ----------------------------------------------------------
+      
+    ** 0010 0101
+    
+        screen   0010    0800
+        bitmap   0101    2000
 
+        c000  49152 (2048)    //        2k
+        c800  51200 (1024)     screen   1k
+        cc00  52224 (256)     //        0,5k
+        cd00        (256)     //
+        ce00        (256)     stack hi  0,5k
+        cf00        (256)     stack lo
+
+    ** 0000 0101
+    
+        c000  49152 (1024)    screen    1k
+        c800  51200 (2560)    //        2k
+        cc00  52224 (256)     //        0,5k
+        cd00        (256)     //
+        ce00        (256)     stack hi  0,5k
+        cf00        (256)     stack lo
+        
+      ; ----------------------------------------------------------
+
+D018	53272   VIC Memory Control Register
+                7-4 screen offset   :   Video Matrix Base Address (inside VIC)
+                3-1 Character Dot-Data Base	Address (inside VIC)
+                  0 Select upper/lower Character Set
+            
+              8765:432:1
+default :     0001:0:101
+
+            8765   %0001,  1: $0400-$07FF, 1024 - 2047.
+                    8543 * 1024 -> start address screen character  ( 1024 = $0400 )
+            4       bitmap position %0 $0000 %1 %2000
+            3       
+
+- pointer to character memory
+- pointer to bitmap memory
+- Pointer to screen memory        
+
+Memory setup register. Bits:
+
+pointer to character memory
+
+    Bits #1-#3: In text mode, pointer to character memory 
+         (bits #11-#13), relative to VIC bank, memory address $DD00. Values:
+
+        %000, 0: $0000-$07FF,    0  -    2047.
+        %001, 1: $0800-$0FFF,  2048 -    4095.
+        %010, 2: $1000-$17FF,  4096 -    6143.
+        %011, 3: $1800-$1FFF,  6144 -    8191.
+        %100, 4: $2000-$27FF,  8192 -   10239.
+        %101, 5: $2800-$2FFF, 10240 -   12287.
+        %110, 6: $3000-$37FF, 12288 -   14335.
+        %111, 7: $3800-$3FFF, 14336 -   16383.
+        
+pointer to bitmap memory
+
+        Values %010 and %011 in VIC bank #0 and #2 select Character ROM instead.
+        In bitmap mode, pointer to bitmap memory (bit #13), 
+        relative to VIC bank, memory address $DD00. Values:
+
+        %0xx, 0: $0000-$1FFF,    0  -    8191.
+        %1xx, 4: $2000-$3FFF, 8192  -   16383.
+
+Pointer to screen memory
+
+    Bits #4-#7: Pointer to screen memory (bits #10-#13), 
+                relative to VIC bank, memory address $DD00. Values:
+
+                                               bank 4 $c000
+        %0000,  0: $0000-$03FF, 0    - 1023.   1024 //
+        %0001,  1: $0400-$07FF, 1024 - 2047.   1024 // 
+        %0010,  2: $0800-$0BFF, 2048 - 3071.   1024 screen 
+        %0011,  3: $0C00-$0FFF, 3072 - 4095.    256 //
+                   $0d00        3328            256 //
+                   $0e00        3584            256 stack hi
+                   $0f00        3840            256 stack lo
+        
+                                                bank 4 $d000
+        %0100,  4: $1000-$13FF, 4096 - 5119.
+        %0101,  5: $1400-$17FF, 5120 - 6143.
+        %0110,  6: $1800-$1BFF, 6144 - 7167.
+        %0111,  7: $1C00-$1FFF, 7168 - 8191.
+        
+        %1000,  8: $2000-$23FF, 8192 - 9215.    bank 4 $e000
+        %1001,  9: $2400-$27FF, 9216 -10239.
+        %1010, 10: $2800-$2BFF, 10240-11263.
+        %1011, 11: $2C00-$2FFF, 11264-12287.
+        %1100, 12: $3000-$33FF, 12288-13311.
+        %1101, 13: $3400-$37FF, 13312-14335.
+        %1110, 14: $3800-$3BFF, 14336-15359.
+        %1111, 15: $3C00-$3FFF, 15360-16383.
+
+_grafON:
+					;	7654:3210	(53265)
+		lda	#$20	;	0010:0000
+		ora $d011	;	Bit #5: 0 = Text mode; 1 = Bitmap mode
+		sta $d011
+		
+		;	pointer to bitmap, screen
+				
+					;	7654:3210	(53272)
+		lda #$38	;	0011:1000
+		sta	$d018	;	%100u,  4: $2000-$3FFF, 8192-16383.	pointer to bitmap memory
+					;	%0011,  3: $0C00-$0FFF, 3072-4095.	Pointer to screen memory
+		
+		;	bank 4
+		
+					;	7654:3210	(56576)	
+		lda #$fc	;	1111:1100
+		and $dd00	;		  %00, 0: Bank #3, $C000-$FFFF, 49152-65535.
+		sta $dd00	;	
+		
+		rts
+
+_grafOFF:
+
+					;	7654:3210	(53265)
+		lda #$df	;	1101:1111
+		and $d011	;	abilita modo testo
+		sta $d011	;	Bit #5: 0 = Text mode; 1 = Bitmap mode
+		
+		;	pointer to bitmap,screen
+				
+					;	7654:3210	(53272)		
+		lda #$15	;	0001:0101
+		sta	$d018	;	%1xxu,  4: $2000-$3FFF,  8192-16383.    pointer to bitmap memory
+					;	%0001,  1: $0400-$07FF,  1024- 2047.    Pointer to screen memory
+		
+		;	bank 1		
+		
+		lda #$03	;	0000:0011
+		ora $dd00	;		  %11, 3: Bank #0, $0000-$3FFF, 0-16383.
+		sta	$dd00	;	
+		
+		lda $d011	; set off 160x200
+		and #abit6       
+		sta 53265
+
+		lda $d016         
+		and #abit5        
+		sta 53270
+	
+		rts
+        
 ;;;
 ;;
 ;

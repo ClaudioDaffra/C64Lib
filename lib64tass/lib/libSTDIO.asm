@@ -3,6 +3,15 @@
 ;           screen
 ;**********
 
+
+; ------------------------------------------------- screen,color address
+
+;   c64.screen_addr
+;   c64.color_addr
+
+; ------------------------------------------------- 
+        
+        
 screen_s    .struct
     row                 .byte   0
     col                 .byte   0
