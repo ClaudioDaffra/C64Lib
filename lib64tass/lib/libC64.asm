@@ -241,13 +241,14 @@ c64 .proc
         ;---------------------------------------------------------------  address
         
         .weak
-        screen_addr     =   $0400
+            screen_addr     =   $0400
         .endweak
         
-        color_addr      =   $d800
+            color_addr      =   $d800
         
         .weak
-            bitmap_addr =   $e000
+            bitmap_addr     =   $e000
+            bitmap_size     =   320*200/8
         .endweak
         
         ;---------------------------------------------------------------  constant
@@ -307,12 +308,10 @@ c64 .proc
         .pend
 
        
-        bank    .proc
-        
+        set_bank    .proc
                 ora $dd00
                 sta $dd00
                 rts
-             
         .pend
         
         ;******
@@ -439,7 +438,25 @@ c64 .proc
             jsr set_bitmap_mode_multicolor_off
             rts
         .pend
-        
+
+        ; ........................................... set screen bitmap offset 
+
+        set_screen_0c00_bitmap_2000_addr    .proc
+                            ;	7654:3210	(53272)
+            lda #%00111000	;	0011:1000
+            sta	$d018	    ;	%100u,  4: $2000-$3FFF, 8192-16383.	pointer to bitmap memory
+                            ;	%0011,  3: $0C00-$0FFF, 3072-4095.	Pointer to screen memory
+            rts
+        .pend
+                            
+        set_screen_0400_bitmap_2000_addr    .proc
+                            ;	7654:3210	(53272)
+            lda #%00010101  ;	0001:1000
+            sta	$d018	    ;	%100u,  4: $2000-$3FFF, 8192-16383.	pointer to bitmap memory
+                            ;	%0001,  3: $0400-$0FFF, 1024-2048.	Pointer to screen memory
+            rts
+        .pend
+                            
         ; ........................................... check mode 
         
         check_text_mode_standard    .proc
@@ -989,7 +1006,6 @@ mem .proc
     set_byte          .proc
     
             ; -- fill memory from (zpWord0), length XY, with value in A.
-            ;    clobbers X, Y
             
             stx  zpy
             sty  zpx
@@ -1010,7 +1026,6 @@ mem .proc
             dey
             sta  (zpWord0),y
             bne  -
-
     +               
             rts
 

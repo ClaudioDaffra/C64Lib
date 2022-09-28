@@ -36,7 +36,7 @@ main	.proc
         ; bank default
         
         lda #bank0
-        jsr c64.bank
+        jsr c64.set_bank
         
         ;
         

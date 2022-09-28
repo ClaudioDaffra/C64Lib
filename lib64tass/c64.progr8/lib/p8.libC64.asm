@@ -796,15 +796,15 @@ logo_lines    .word  prog8_interned_strings.string_0, prog8_interned_strings.str
 
                     .pend
  
-        column    .proc
-         
-                sec
-                jsr  c64.PLOT
-                tay
-                clc
-                jmp  c64.PLOT
-                
-        .pend
+            column    .proc
+             
+                    sec
+                    jsr  c64.PLOT
+                    tay
+                    clc
+                    jmp  c64.PLOT
+                    
+            .pend
  
             fill_screen    .proc
              
@@ -5478,8 +5478,8 @@ greaterequalzero_sw    .proc
                                     ldy  #0
                                     ldx  _save_reg
                                     beq  _lastpage
-
-                            _fullpage    sta  (zpWord0),y
+                            _fullpage    
+                                    sta  (zpWord0),y
                                     iny
                                     bne  _fullpage
                                     inc  zpWord0+1          ; next page
@@ -7502,68 +7502,71 @@ angle    .byte  0,0,0,0,0  ; float
 ;***********************
 
 graphics    .proc
-    ;    src line: library:/prog8lib/c64/graphics.p8:7
+ 
 internal_plotx     = 4     ; zp UWORD
-    BITMAP_ADDRESS = $2000
-    WIDTH = $0140
-    HEIGHT = $c8
+
+                    BITMAP_ADDRESS = $2000
+WIDTH = $0140
+HEIGHT = $c8
 
 ; non-zeropage variables
 
 ; subroutines in this block
  
 
-clear_screen    .proc
-bgcolor     = 64     ; zp UBYTE
-pixelcolor     = 65     ; zp UBYTE
-; simple int arg(s) passed via register(s)
-    sta  pixelcolor
-    sty  bgcolor
-; statements
+                        clear_screen    .proc
+                        bgcolor     = 64        ; zp UBYTE
+                        pixelcolor     = 65     ; zp UBYTE
+                        ; simple int arg(s) passed via register(s)
+                            sta  pixelcolor
+                            sty  bgcolor
+                        ; statements
+                         
+                            txa
+                            pha
+                            
+                                        lda  #<$2000
+                                        sta  cx16.r0
+                                        lda  #>$2000
+                                        sta  cx16.r0+1
+                                        
+                                        lda  #<$1f40
+                                        sta  cx16.r1
+                                        lda  #>$1f40
+                                        sta  cx16.r1+1
+                                        
+                                        lda  #0
+                                        jsr  sys.memset
+                            
+                            pla
+                            tax
  
-    txa
-    pha
-    lda  #<$2000
-    sta  cx16.r0
-    lda  #>$2000
-    sta  cx16.r0+1
-    
-    lda  #<$1f40
-    sta  cx16.r1
-    lda  #>$1f40
-    sta  cx16.r1+1
-    
-    lda  #0
-    jsr  sys.memset
-    pla
-    tax
-    ;    src line: library:/prog8lib/c64/graphics.p8:30
-    lda  pixelcolor
-    sta  stack.lo,x
-    dex
-    lda  stack.lo+1,x
-    asl  a
-    asl  a
-    asl  a
-    asl  a
-    sta  stack.lo+1,x
-    lda  bgcolor
-    sta  stack.lo,x
-    dex
-    jsr  prog8_lib.bitor_b
-    inx
-    lda  stack.lo,x
-    pha
-    lda  #0
-    tay
-    pla
-    jmp  txt.fill_screen
-    ;    src line: library:/prog8lib/c64/graphics.p8:28
-; variables
+                            lda  pixelcolor
+                            sta  stack.lo,x
+                            dex
+                            lda  stack.lo+1,x
+                            asl  a
+                            asl  a
+                            asl  a
+                            asl  a
+                            sta  stack.lo+1,x
+                            lda  bgcolor
+                            sta  stack.lo,x
+                            dex
+                            jsr  prog8_lib.bitor_b
+                            inx
+                            lda  stack.lo,x
+                            pha
+                            lda  #0
+                            tay
+                            pla
+                            jmp  txt.fill_screen
+     
+                        ; variables
 
-; non-zeropage variables
-    .pend
-    ;    src line: library:/prog8lib/c64/graphics.p8:150
+                        ; non-zeropage variables
+                            .pend
+  
 
 horizontal_line    .proc
 length                  = 66     ; zp UWORD
