@@ -443,7 +443,7 @@ c64 .proc
 
         set_screen_0c00_bitmap_2000_addr    .proc
                             ;	7654:3210	(53272)
-            lda #%00111000	;	0011:1000
+            lda #%00110011	;	0011:1000
             sta	$d018	    ;	%100u,  4: $2000-$3FFF, 8192-16383.	pointer to bitmap memory
                             ;	%0011,  3: $0C00-$0FFF, 3072-4095.	Pointer to screen memory
             rts
@@ -451,7 +451,8 @@ c64 .proc
                             
         set_screen_0400_bitmap_2000_addr    .proc
                             ;	7654:3210	(53272)
-            lda #%00010101  ;	0001:1000
+            ;lda #%00010101  ;	0001:1000
+            lda #%00011000  ;	0001:1000
             sta	$d018	    ;	%100u,  4: $2000-$3FFF, 8192-16383.	pointer to bitmap memory
                             ;	%0001,  3: $0400-$0FFF, 1024-2048.	Pointer to screen memory
             rts

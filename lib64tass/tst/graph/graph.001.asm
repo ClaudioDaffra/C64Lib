@@ -33,21 +33,28 @@ main	.proc
 
     start	.proc
 
-
- 
         jsr graph.hires_on
  
         jsr graph.clear
 
+        lda #color.yellow
+        sta screen.foreground_color
+        lda #color.red
+        sta screen.background_color
+
+        jsr graph.hires_color
+        
+rts
+
         jsr graph.hires_off
         
-;
+        ;
 
         lda #color.white
         sta 53281
         lda #char.a
         sta 1024
-       
+xxx       
         
         
         rts

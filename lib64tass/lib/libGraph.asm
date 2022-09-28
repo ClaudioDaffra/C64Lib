@@ -78,6 +78,20 @@ graph .proc
         
         .pend
 
+    hires_color .proc   ;   a:background    y:foreground
+    
+        lda screen.foreground_color
+        sta screen.background_color_2
+        
+        lda screen.background_color
+        sta screen.background_color_3
+        
+        jsr txt.set_char_with_col_2_3
+        
+        jsr txt.clear_screen_chars 
+        
+        rts
+     .pend
 
 .pend
 
