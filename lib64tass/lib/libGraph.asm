@@ -34,6 +34,18 @@ graph .proc
             jsr c64.set_screen_0400_bitmap_2000_addr
             rts
         .pend
+
+        lores_on    .proc   ;   0400
+            jsr c64.set_bitmap_mode_160x200_on
+            jsr c64.set_screen_0400_bitmap_2000_addr
+            rts
+        .pend
+
+        lores_off    .proc   ;   0400
+            jsr c64.set_bitmap_mode_160x200_off
+            jsr c64.set_screen_0400_bitmap_2000_addr
+            rts
+        .pend
         
         clear .proc
 
@@ -52,46 +64,21 @@ graph .proc
             rts            
                             
         .pend
+
+        hires_color .proc   ;   a:background    y:foreground
         
-        clear_old_style .proc
-
-            lda	#$00 	;	00
-            sta	$f9        
-            lda	#$20	;	E0	load pointer bitmap $e000	( bank4 $c000 + $2000 ) 
-            sta	$fa		            
+            lda screen.foreground_color
+            sta screen.background_color_2
             
-            ldx #$20
+            lda screen.background_color
+            sta screen.background_color_3
             
-            lda #$00            
-            tay
-
-    _gclear_loop:			;	clear bitmap	*($f9/$fa) = 0	[00e0]
+            jsr txt.set_char_with_col_2_3
             
-            sta ($f9),y
-            iny
-            bne	_gclear_loop
-            inc $fa
-            dex
-            bne	_gclear_loop
+            jsr txt.clear_screen_chars 
             
             rts
-        
-        .pend
-
-    hires_color .proc   ;   a:background    y:foreground
-    
-        lda screen.foreground_color
-        sta screen.background_color_2
-        
-        lda screen.background_color
-        sta screen.background_color_3
-        
-        jsr txt.set_char_with_col_2_3
-        
-        jsr txt.clear_screen_chars 
-        
-        rts
-     .pend
+         .pend
 
 .pend
 

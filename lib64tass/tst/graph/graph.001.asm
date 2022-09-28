@@ -43,20 +43,16 @@ main	.proc
         sta screen.background_color
 
         jsr graph.hires_color
+
+        ; plot
+        lda #255
+        sta 8192
         
 rts
 
         jsr graph.hires_off
         
-        ;
 
-        lda #color.white
-        sta 53281
-        lda #char.a
-        sta 1024
-xxx       
-        
-        
         rts
         
     .pend

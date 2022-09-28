@@ -1,7 +1,7 @@
 
-;******
-;       C64
-;******
+;**********
+;           C64
+;**********
 
 .cpu  '6502'
 .enc  'none'
@@ -22,9 +22,9 @@ global  .proc
 
 .pend
 
-;******
-;       define
-;******
+;**********
+;           define
+;**********
 
 ;---------------------------------------------------------------  bit and or
 
@@ -54,9 +54,9 @@ bit_and_6    =  %10111111
 bit_and_7    =  %01111111
 
 
-;******
-;       zero page
-;******
+;**********
+;           zero page
+;**********
 
 ;   -------------------------------------------- safe
 
@@ -107,9 +107,9 @@ zpWord3lo   = $05+1
 ;   192 - 192
 ;
 
-;******
-;       temp
-;******
+;**********
+;           temp
+;**********
 
 temp  .proc
 
@@ -155,9 +155,9 @@ temp  .proc
     
 .pend
 
-;******
-;       sys
-;******
+;**********
+;           sys
+;**********
 
 sys .proc
 
@@ -175,9 +175,9 @@ sys .proc
 
 .pend
 
-;******
-;       color
-;******
+;**********
+;           color
+;**********
 
 color .proc
 
@@ -199,6 +199,10 @@ color .proc
     light_blue     =       14              ;       1110
     light_grey     =       15              ;       1111
 
+    default_border      =   254
+    default_background  =   246
+    default_foreground  =   254
+    
 .pend
 
 ;******
@@ -231,6 +235,7 @@ c64 .proc
         ;---------------------------------------------------------------  c64
         
         EXTCOL          = $d020     ;   53280
+        
         BGCOL0          = $d021     ;
         BGCOL1          = $d022     ;
         BGCOL2          = $d023     ;
@@ -388,14 +393,16 @@ c64 .proc
             ora #%00010000  ;ora #16
             sta 53270
 
-            lda screen.border_color
-            sta $d020
+            ;lda screen.border_color
+            ;sta $d020
             lda screen.background_color_0
             sta $d021
             lda screen.background_color_1
             sta $d022
             lda screen.background_color_2
             sta $d023
+            lda screen.background_color_3
+            sta $d024
             
             rts 
 

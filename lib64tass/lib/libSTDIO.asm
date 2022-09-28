@@ -13,26 +13,28 @@
         
         
 screen_s    .struct
-    row                 .byte   0
-    col                 .byte   0
+
+    row                     .byte   0
+    col                     .byte   0
     ;
-    border_color        .byte   0       ;           53280   border_color color    
+    border_color            .byte   color.default_border        ;   53280   border_color color    
     .union
-    background_color    .byte   0       ;   col 0   53181   background color :  color 0
-    background_color_0  .byte   0
+    background_color        .byte   color.default_background    ;   col 0   53181   background color :  color 0
+    background_color_0      .byte   0
     .endunion
-    background_color_1  .byte   0       ;   col 1   53182   extra background :  color 1
-    background_color_2  .byte   0       ;   col 2   53183   extra background :  color 2
-    background_color_3  .byte   0       ;   col 3   53184   extra background :  color 3
+    background_color_1      .byte   0                           ;   col 1   53182   extra background :  color 1
+    background_color_2      .byte   0                           ;   col 2   53183   extra background :  color 2
+    background_color_3      .byte   0                           ;   col 3   53184   extra background :  color 3
     .union
-    foreground_color        .byte   0   ;   foreground_color color
-    background_color_number .byte   0   ;   00  01  10  11
+    foreground_color        .byte   color.default_foreground    ;   foreground_color color
+    background_color_number .byte   0                           ;   00  01  10  11
     .endunion
     ;
-    char                .byte   0
+    char                    .byte   0
     ;
-    width               .byte   c64.screen_max_width
-    height              .byte   c64.screen_max_height
+    width                   .byte   c64.screen_max_width
+    height                  .byte   c64.screen_max_height
+    
 .endstruct
 
 screen  .dstruct  screen_s
@@ -77,6 +79,7 @@ txt .proc
             and #%00111111
             ora txt.char_color_or,x
             sta screen.char
+            
             rts
 
     ; ........................................... set_char
@@ -180,7 +183,7 @@ txt .proc
     
     set_border_color .proc
         lda screen.border_color
-        sta $d020
+        sta c64.EXTCOL  ;   $d020
         rts
     .pend
     
