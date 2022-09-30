@@ -472,10 +472,10 @@ c64 .proc
 
             lda c64.screen_control_register_1
             test_bit_5
-            if_bit_0   + 
+            bne   check_text_mode_standard_1
             clc
             rts
-        +
+            check_text_mode_standard_1
             sec
             rts
             
@@ -485,10 +485,10 @@ c64 .proc
 
             lda c64.screen_control_register_1
             test_bit_6
-            if_bit_1   + 
+            bne   check_text_mode_extended_1 
             clc
             rts
-        +
+        check_text_mode_extended_1
             sec
             rts
             
@@ -498,10 +498,10 @@ c64 .proc
 
             lda c64.screen_control_register_1
             test_bit_5
-            if_bit_1   + 
+            bne   check_bitmap_mode_1 
             clc
             rts
-        +
+        check_bitmap_mode_1
             sec
             rts
             
@@ -511,7 +511,7 @@ c64 .proc
 
             lda c64.screen_control_register_2
             test_bit_4
-            if_bit_1   + 
+            bne   + 
             clc
             rts
         +
@@ -734,11 +734,14 @@ test_bit_7   .macro
     and #%10000000
 .endm
 
+ ;   non settato     =   0
 if_bit_0 .macro
-        beq \1        ;   non settato     =   0
+        beq \1
 .endm
+
+ ;  settato         =   1
 if_bit_1 .macro
-        bne \1         ;  settato         =   1
+        bne \1
 .endm
    
 
@@ -902,6 +905,34 @@ if_string_gt .macro
     cmp #$01
     beq \1
 .endm
+
+;--------------------------------------------------------------- macro graph
+
+graph_imm_x  .macro
+    lda <\1
+    sta zpWord0
+    lda >\1
+    sta zpWord0+1
+.endm
+
+graph_var_x  .macro
+    lda \1
+    sta zpWord0
+    lda \1+1
+    sta zpWord0+1
+.endm
+
+graph_imm_y  .macro
+    lda \1
+    sta zpy
+.endm
+
+graph_var_y  .macro
+    lda \1
+    sta zpy
+.endm
+
+
 
 ;--------------------------------------------------------------- macro
 

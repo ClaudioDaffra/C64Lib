@@ -45,28 +45,59 @@ main	.proc
         jsr txt.set_border_color
         
         lda #color.white
-        sta screen.background_color_0
+        sta graph.color0
+        
         lda #color.red
-        sta screen.background_color_1
+        sta graph.color1
+        
         lda #color.green
-        sta screen.background_color_2
+        sta graph.color2
+        
         lda #color.blue
-        sta screen.background_color_3
+        sta graph.color3
         
         jsr graph.low.set_color
 
         jsr graph.clear
 
         ;
+
+        lda #1
+        sta graph.color_number  ;   color number 1
+        graph_imm_x #0
+        graph_imm_y #0
+        jsr graph.pixel
         
-        lda #%11000110
-        sta 8192
-        lda #%11000110
-        sta 8193
-        lda #%11000110
-        sta 8194
-        lda #%11000110
-        sta 8195
+        lda #2
+        sta graph.color_number  ;   color number 1
+        graph_imm_x #1
+        graph_imm_y #1
+        jsr graph.pixel
+
+        lda #3
+        sta graph.color_number  ;   color number 2
+        graph_imm_x #3
+        graph_imm_y #3
+        jsr graph.pixel
+        
+        lda #0
+        sta graph.color_number  ;   color number 0
+        graph_imm_x #5
+        graph_imm_y #5
+        jsr graph.pixel
+
+        lda #1
+        sta graph.color_number  ;   color number 3
+        graph_imm_x #7
+        graph_imm_y #7
+        jsr graph.pixel
+
+        lda #2
+        sta graph.color_number  ;   color number 1
+        graph_imm_x #159
+        graph_imm_y #199
+        jsr graph.pixel
+        
 rts
 
         jsr graph.low.off

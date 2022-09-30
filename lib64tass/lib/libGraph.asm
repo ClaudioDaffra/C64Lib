@@ -28,7 +28,7 @@ graph .proc
         max_x   = 320
         max_y   = 200
 
-        ; ------------------------------------------------- aliases
+        ; ------------------------------------------------- struct graph.   aliases
         
         color0              =   screen.background_color_0   ;   (0)
         color1              =   screen.background_color_1   ;   (1)
@@ -39,7 +39,7 @@ graph .proc
         background_color    =   screen.background_color
         foreground_color    =   screen.foreground_color
         color_number        =   screen.foreground_color
-        
+
         ; ------------------------------------------------- high 
         
         high    .proc
@@ -57,7 +57,6 @@ graph .proc
             .pend
 
             set_color .proc   ;   a:background    y:foreground
-
                 lda screen.foreground_color
                 sta screen.background_color_2
                 
@@ -71,7 +70,6 @@ graph .proc
                 rts
             .pend
 
-            
         .pend
         
         ; ------------------------------------------------- low
@@ -115,18 +113,17 @@ graph .proc
         
         clear .proc
 
-            ;lda  #<bitmap_addr
-            lda  #$00
+            lda  #<c64.bitmap_addr
             sta  zpWord0
-            ;lda  #>bitmap_addr
-            lda  #$20
+            
+            lda  #>c64.bitmap_addr
             sta  zpWord0+1
             
             ldy  #<8000
             ldx  #>8000
             lda  #0
-            
             jsr  mem.set_byte
+            
             rts            
 
         .pend
@@ -138,8 +135,22 @@ graph .proc
                 N   =   graph.color_number   ;  color number
                 Y   =   zpy                  ;  coord y
                 X   =   zpWord0              ;  coord x
-                P   =   zpWord1              ;  graph pointer address
+                P   =   zpWord1              ;  graph P address
 
+                lda c64.screen_control_register_2   ;   check multi color
+                and #%00010000
+                beq pixel_xy
+                
+                ; if MC mul by 2
+                lda X
+                asl 
+                sta X
+                lda X+1
+                rol
+                sta X+1
+                
+        pixel_xy
+        
                 ;   calc Y-cell, divide by 8	y/8 is y-cell table index
 
                 lda Y
@@ -179,11 +190,17 @@ graph .proc
                 and #%00000111          ;   3 lowest bits = (0-7)
                 tay                     ;   put into index register
     
-                ;----------------------------------------------
-                ;depending on _graphDrawMode, routine draws or erases
-                ;----------------------------------------------
+                ;................................................................   check HR LO res
 
-                lda N       	        ;   (0 = erase, 1 = set)
+                lda c64.screen_control_register_2   ;   check multi color
+                and #%00010000
+                bne plotPointMC
+
+                ;................................................................   _plotPointHR
+                
+plotPointHR
+
+                lda N                   ;   (0 = erase, 1 = set)
                 beq erase               ;   if = 0 then branch to clear the point
 
                 ;..................     set point
@@ -211,6 +228,92 @@ graph .proc
                     .if c64.bitmap_addr == $E000
                     ;jsr _graphIntRomEnable
                     .endif
+                
+                rts
+                
+                ;................................................................   _plotPointMC
+                
+plotPointMC
+
+    .if c64.bitmap_addr == $E000
+	;jsr _graphIntRomDisable
+    .endif
+	
+	lda (P),y             ;erase couple of bit 
+	and tblMC_andbitbit,x  
+	sta (P),y                 
+
+    .if c64.bitmap_addr == $E000
+	;jsr _graphIntRomEnable
+    .endif
+    
+	pha                         ; salva risultato
+
+	lda N          ; get number color
+	
+	cmp #0
+	beq _plotPointMC_00
+	cmp #1
+	beq _plotPointMC_01
+	cmp #2
+	beq _plotPointMC_10
+	cmp #3
+	beq _plotPointMC_11	
+	
+	pla
+
+    .if c64.bitmap_addr == $E000
+	;jsr _graphIntRomEnable
+    .endif
+    
+	rts
+
+_plotPointMC_00:
+
+	pla 
+	ora tblMC_orbitbit00,x 
+	jmp _plotPointMC_end
+	
+_plotPointMC_01:
+
+	pla 
+	ora tblMC_orbitbit01,x 
+	jmp _plotPointMC_end
+	
+_plotPointMC_10:
+
+	pla 
+	ora tblMC_orbitbit10,x 
+	jmp _plotPointMC_end
+	
+_plotPointMC_11:
+
+	pla 
+	ora tblMC_orbitbit11,x 
+
+_plotPointMC_end:
+
+    .if c64.bitmap_addr == $E000
+	;jsr _graphIntRomDisable
+    .endif
+	
+	sta (P),y 
+
+    .if c64.bitmap_addr == $E000
+	;jsr _graphIntRomEnable
+    .endif
+	
+	rts
+
+
+                ;lda #%11000110
+                ;sta 8192
+                ;lda #%11000110
+                ;sta 8193
+                ;lda #%11000110
+                ;sta 8194
+                ;lda #%11000110
+                ;sta 8195
                 
                 rts
 

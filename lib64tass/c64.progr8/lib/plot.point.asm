@@ -70,6 +70,9 @@ pixel
                                 lda _graphDrawMode       	;(0 = erase, 1 = set)
                                 beq erase                   ;if = 0 then branch to clear the point
 
+
+
+
                                 ;---------
                                 ;set point
                                 ;---------
@@ -159,9 +162,7 @@ _plotPointMC:
     .endif
 	
 	lda (pointer),y             ;erase couple of bit 
-	
 	and tblMC_andbitbit,x  
-
 	sta (pointer),y                 
 
     .if c64.bitmap_addr == $E000

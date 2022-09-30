@@ -29,27 +29,13 @@ program_entry_point	; assembly code starts here
 
 ;--------------------------------------------------------------- main
 
-
-            graph_x  .macro
-                lda <\1
-                sta zpWord0
-                lda >\1
-                sta zpWord0+1
-            .endm
-            
-            graph_y  .macro
-                lda \1
-                sta zpy
-            .endm
-            graph_color  .macro
-                lda \1
-                sta zpa
-            .endm
-
-        
+       
         
 main	.proc
 
+    coordy  .byte   199
+    coordx  .word   319
+    
     start	.proc
 
         jsr graph.high.on       ;   320x200
@@ -67,35 +53,35 @@ main	.proc
         lda #1
         sta graph.color_number  ;   color number 0,1
 
-        graph_x #0
-        graph_y #0
+        graph_imm_x #0
+        graph_imm_y #0
         jsr graph.pixel
         
-        graph_x #1
-        graph_y #1
+        graph_imm_x #1
+        graph_imm_y #1
         jsr graph.pixel
 
-        graph_x #3
-        graph_y #3
+        graph_imm_x #3
+        graph_imm_y #3
         jsr graph.pixel
         
-        graph_x #5
-        graph_y #5
+        graph_imm_x #5
+        graph_imm_y #5
         jsr graph.pixel
 
-        graph_x #7
-        graph_y #7
+        graph_imm_x #7
+        graph_imm_y #7
         jsr graph.pixel
 
-        graph_x #319
-        graph_y #199
+        graph_var_y coordy
+        graph_var_x coordx
         jsr graph.pixel
 
         lda #0
         sta graph.color_number  ;   erase 5,5
 
-        graph_x #5
-        graph_y #5
+        graph_imm_x #5
+        graph_imm_y #5
         jsr graph.pixel
         
 rts
