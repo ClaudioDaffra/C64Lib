@@ -20,14 +20,25 @@ screen_s    .struct
     border_color            .byte   color.default_border        ;   53280   border_color color    
     .union
     background_color        .byte   color.default_background    ;   col 0   53181   background color :  color 0
-    background_color_0      .byte   0
+    background_color_0      .byte   color.default_background
+    ;color0                  .byte   color.default_background    ;   ###   graph
     .endunion
+    .union
     background_color_1      .byte   0                           ;   col 1   53182   extra background :  color 1
+    ;color1                  .byte   0                           ;   ###   graph
+    .endunion
+    .union
     background_color_2      .byte   0                           ;   col 2   53183   extra background :  color 2
+    ;color2                  .byte   0                           ;   ###   graph
+    .endunion
+    .union
     background_color_3      .byte   0                           ;   col 3   53184   extra background :  color 3
+    color3                  .byte   0                           ;   ###   graph
+    .endunion
     .union
     foreground_color        .byte   color.default_foreground    ;   foreground_color color
-    background_color_number .byte   0                           ;   00  01  10  11
+    background_color_number .byte   color.default_foreground    ;   00  01  10  11
+    ;color_number            .byte   color.default_foreground    ;   ###   graph
     .endunion
     ;
     char                    .byte   0
@@ -38,6 +49,7 @@ screen_s    .struct
 .endstruct
 
 screen  .dstruct  screen_s
+
 
 ;**********
 ;           txt

@@ -14,19 +14,33 @@ graph .proc
         ;   screen   0010    0800
         ;   bitmap   0101    2000
         ;   
+        ;   bank 4
+        ;
         ;   c000  49152 (2048)    //        2k
         ;   c800  51200 (1024)    screen    1k
         ;   cc00  52224 (256)     //        0,5k
         ;   cd00        (256)     //
         ;   ce00        (256)     stack hi  0,5k
         ;   cf00        (256)     stack lo
-        
+
         ; ------------------------------------------------- 
         
         max_x   = 320
         max_y   = 200
+
+        ; ------------------------------------------------- aliases
         
-        ; ------------------------------------------------- 
+        color0              =   screen.background_color_0   ;   (0)
+        color1              =   screen.background_color_1   ;   (1)
+
+        color2              =   screen.background_color_2   ;   (2)
+        color3              =   screen.background_color_3   ;   (3)
+        
+        background_color    =   screen.background_color
+        foreground_color    =   screen.foreground_color
+        color_number        =   screen.foreground_color
+        
+        ; ------------------------------------------------- high 
         
         high    .proc
         
@@ -41,7 +55,7 @@ graph .proc
                 jsr c64.set_screen_0400_bitmap_2000_addr
                 rts
             .pend
-            
+
             set_color .proc   ;   a:background    y:foreground
 
                 lda screen.foreground_color
@@ -56,9 +70,12 @@ graph .proc
                 
                 rts
             .pend
+
             
         .pend
-
+        
+        ; ------------------------------------------------- low
+        
         low    .proc
         
             on    .proc                                ; TODO  c800 0400
@@ -72,6 +89,7 @@ graph .proc
                 jsr c64.set_screen_0400_bitmap_2000_addr
                 rts
             .pend
+            
             set_color .proc
                 lda screen.background_color_0   ; #0
                 sta $d021
@@ -93,6 +111,8 @@ graph .proc
              
         .pend
         
+        ; -------------------------------------------------     clear
+        
         clear .proc
 
             ;lda  #<bitmap_addr
@@ -111,6 +131,92 @@ graph .proc
 
         .pend
 
+        ; -------------------------------------------------     pixel
+        
+        pixel .proc
+        
+                N   =   graph.color_number   ;  color number
+                Y   =   zpy                  ;  coord y
+                X   =   zpWord0              ;  coord x
+                P   =   zpWord1              ;  graph pointer address
+
+                ;   calc Y-cell, divide by 8	y/8 is y-cell table index
+
+                lda Y
+                lsr                     ;   / 2
+                lsr                     ;   / 4
+                lsr                     ;   / 8
+                tay                     ;   tbl_8,y index  (Y)
+
+                ;............................calc X-cell, divide by 8 divide 2-byte X / 8
+
+                ror X+1                 ;   rotate the high byte into carry flag
+                lda X
+                ror                     ;   lo byte / 2 (rotate C into low byte)
+                lsr                     ;   lo byte / 4
+                lsr                     ;   lo byte / 8
+                tax                     ;   tbl_8,x index  (X)
+                
+                ;............................add x & y to calc cell point is in
+
+                clc
+
+                lda tbl_vbaseLo,y       ;   table of _graphBitMap row base addresses
+                adc tbl_8Lo,x           ;   + (8 * Xcell)
+                sta P                   ;   = cell address
+
+                lda tbl_vbaseHi,y       ;   do the high byte
+                adc tbl_8Hi,x
+                sta P+1
+
+                ;...........................    get in-cell offset to point (0-7)
+
+                lda X                   ;   get X offset from cell topleft
+                and #%00000111          ;   3 lowest bits = (0-7)
+                tax                     ;   put into index register
+
+                lda Y                   ;   get Y offset from cell topleft
+                and #%00000111          ;   3 lowest bits = (0-7)
+                tay                     ;   put into index register
+    
+                ;----------------------------------------------
+                ;depending on _graphDrawMode, routine draws or erases
+                ;----------------------------------------------
+
+                lda N       	        ;   (0 = erase, 1 = set)
+                beq erase               ;   if = 0 then branch to clear the point
+
+                ;..................     set point
+
+                    .if c64.bitmap_addr == $E000
+                    ;jsr _graphIntRomDisable
+                    .endif
+                    
+                    lda (P),y           ;   get row with point in it
+                    ora tbl_orbit,x     ;   isolate and set the point
+                    sta (P),y           ;   write back to _graphBitMap
+
+                    jmp past            ;   skip the erase-point section
+
+                ;..................     unset point
+
+                    erase:              ;   handled same way as setting a point
+
+                    lda (P),y           ;   just with opposite bit-mask
+                    and tbl_andbit,x    ;   isolate and erase the point
+                    sta (P),y           ;   write back to _graphBitMap
+
+                    past:
+                    
+                    .if c64.bitmap_addr == $E000
+                    ;jsr _graphIntRomEnable
+                    .endif
+                
+                rts
+
+        .pend
+
+        
 ;**********
 ;           Tabelle
 ;**********
@@ -129,7 +235,7 @@ table_begin
 
     ;
     
-    tbl_8       :=  range(0, 41, 1) * 8 
+    tbl_8       :=  0+range(0, 41, 1) * 8 
 
     tbl_8Lo     .byte < tbl_8
 

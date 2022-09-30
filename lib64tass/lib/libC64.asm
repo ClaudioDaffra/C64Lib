@@ -18,7 +18,7 @@
 
 global  .proc
 
-    hex_digits		.text '0123456789abcdef'
+    hex_digits      .text '0123456789abcdef'
 
 .pend
 
@@ -751,24 +751,18 @@ if_bit_1 .macro
 ;
 
 load_imm_ay	.macro
-
-	lda <\1
-	ldy >\1
-
+    lda <\1
+    ldy >\1
 .endm
 
 load_var_ay	.macro
-
-	lda \1 
-	ldy \1+1
-
+    lda \1 
+    ldy \1+1
 .endm
 
 load_address_ay	.macro
-
-	lda #<\1
-	ldy #>\1
-
+    lda #<\1
+    ldy #>\1
 .endm
 
 switch_ay .macro
@@ -780,38 +774,30 @@ switch_ay .macro
 
 ; ---------------------------------------------------------------   xy
 
-load_imm_xy	.macro
-
-	ldx <\1
-	ldy >\1
-
+load_imm_xy .macro
+    ldx <\1
+    ldy >\1
 .endm
 
-load_var_xy	.macro
-
-	ldx \1 
-	ldy \1+1
-
+load_var_xy .macro
+    ldx \1 
+    ldy \1+1
 .endm
 
 ; ---------------------------------------------------------------
 
 load_address_zpWord0	.macro
-
-	lda #<\1
+    lda #<\1
     sta zpWord0
-	ldy #>\1
+    ldy #>\1
     sty zpWord0+1
-    
 .endm
 
-load_imm_zpWord0	.macro
-
-	lda <\1
+load_imm_zpWord0    .macro
+    lda <\1
     sta zpWord0
-	ldy >\1
+    ldy >\1
     sty zpWord0+1
-    
 .endm
 
 store_imm_zpWord0	.macro
@@ -826,7 +812,6 @@ load_address_zpWord1	.macro
     sta zpWord1
 	ldy #>\1
     sty zpWord1+1
-
 .endm
 
 store_imm_zpWord1	.macro
