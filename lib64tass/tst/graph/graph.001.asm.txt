@@ -1,0 +1,18 @@
+graph.001.asm:23:10: warning: the file's real name is not '../../lib/libC64.asm' [-Wportable]
+ .include "../../lib/libC64.asm"
+          ^
+graph.001.asm:24:10: warning: the file's real name is not '../../lib/libMath.asm' [-Wportable]
+ .include "../../lib/libMath.asm"
+          ^
+graph.001.asm:25:10: warning: the file's real name is not '../../lib/libSTDIO.asm' [-Wportable]
+ .include "../../lib/libSTDIO.asm"
+          ^
+graph.001.asm:26:10: warning: the file's real name is not '../../lib/libConv.asm' [-Wportable]
+ .include "../../lib/libConv.asm"
+          ^
+graph.001.asm:27:10: warning: the file's real name is not '../../lib/libString.asm' [-Wportable]
+ .include "../../lib/libString.asm"
+          ^
+graph.001.asm:28:10: warning: the file's real name is not '../../lib/libGraph.asm' [-Wportable]
+ .include "../../lib/libGraph.asm"
+          ^

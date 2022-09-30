@@ -252,7 +252,8 @@ c64 .proc
             color_addr      =   $d800
         
         .weak
-            bitmap_addr     =   $e000
+            ;bitmap_addr     =   $e000
+            bitmap_addr     =   $2000
             bitmap_size     =   320*200/8
         .endweak
         

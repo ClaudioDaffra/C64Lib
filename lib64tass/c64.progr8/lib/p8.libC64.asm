@@ -7506,8 +7506,8 @@ graphics    .proc
 internal_plotx     = 4     ; zp UWORD
 
                     BITMAP_ADDRESS = $2000
-WIDTH = $0140
-HEIGHT = $c8
+                    WIDTH = $0140
+                    HEIGHT = $c8
 
 ; non-zeropage variables
 
@@ -7819,11 +7819,14 @@ _plot_y_values := $2000 + 320*(range(200)>>3) + (range(200) & 7)
 
 _y_lookup_lo    .byte  <_plot_y_values
 _y_lookup_hi    .byte  >_plot_y_values
+
+
+
     .pend
-    ;    src line: library:/prog8lib/c64/graphics.p8:363
+    
 
 get_y_lookup    .proc
-    ;    src line: library:/prog8lib/c64/graphics.p8:364
+    
             lda  internal_plot._y_lookup_lo,y
             pha
             lda  internal_plot._y_lookup_hi,y

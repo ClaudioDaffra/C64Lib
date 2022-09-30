@@ -1,0 +1,110 @@
+
+###########
+        graph
+###########
+
+        ; ------------------------------------------------- bitmap address
+        ;
+        ;   c64.bitmap_addr
+        ;   
+        ;   ** 0010 0101
+        ;   
+        ;   screen   0010    0800
+        ;   bitmap   0101    2000
+        ;   
+        ;   c000  49152 (2048)    //                2k
+        ;   c800  51200 (1024)    screen            1k
+        ;   cc00  52224 (256)     //                0,5k
+        ;   cd00        (256)     //
+        ;   ce00        (256)     stack hi          0,5k
+        ;   cf00        (256)     stack lo
+        ;
+        ;   e000        (8000)   bitmap address     8k
+        ;
+        
+        ; ############################################################################## high 320x200x4
+
+        ;
+        
+        ; ....................................................... graph hires start
+        
+        jsr graph.high.on
+
+        ; ....................................................... graph hires clear bitmap
+        
+        jsr graph.clear
+
+        ; ....................................................... graph hires setup color
+        
+        lda #color.yellow
+        sta screen.foreground_color
+        lda #color.red
+        sta screen.background_color
+
+        jsr graph.high.set_color
+
+        ; ....................................................... graph plot pixel
+        
+        lda #255
+        sta 8192
+        
+        ; ....................................................... graph hires stop
+
+        jsr graph.high.off
+
+        ;
+        
+        
+        ; ############################################################################## low 160x200x4
+
+        ;
+        
+        ; ....................................................... graph low start
+        
+        jsr graph.low.on
+
+        lda #color.red
+        sta screen.border_color
+        jsr txt.set_border_color
+        
+        ; ....................................................... graph setup color
+        
+        lda #color.white
+        sta screen.background_color_0
+        lda #color.red
+        sta screen.background_color_1
+        lda #color.green
+        sta screen.background_color_2
+        lda #color.blue
+        sta screen.background_color_3
+        
+        jsr graph.low.set_color
+        
+        ; ....................................................... graph bitmap clear
+        
+        jsr graph.clear
+        
+        ; ....................................................... graph plot pixel
+        
+        lda #%11000110
+        sta 8192
+        lda #%11000110
+        sta 8193
+        lda #%11000110
+        sta 8194
+        lda #%11000110
+        sta 8195
+        
+        ; ....................................................... graph low stop
+        
+        jsr graph.low.off
+
+        ;
+        
+;;;
+;;
+;
+
+
+
+ 

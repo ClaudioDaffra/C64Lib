@@ -33,7 +33,7 @@ main	.proc
 
     start	.proc
 
-        jsr graph.hires_on
+        jsr graph.high.on
  
         jsr graph.clear
 
@@ -42,7 +42,7 @@ main	.proc
         lda #color.red
         sta screen.background_color
 
-        jsr graph.hires_color
+        jsr graph.high.set_color
 
         ; plot
         lda #255
@@ -50,7 +50,7 @@ main	.proc
         
 rts
 
-        jsr graph.hires_off
+        jsr graph.high.off
         
 
         rts
