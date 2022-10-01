@@ -7503,7 +7503,7 @@ angle    .byte  0,0,0,0,0  ; float
 
 graphics    .proc
  
-internal_plotx     = 4     ; zp UWORD
+zpWord0     = 4     ; zp UWORD
 
                     BITMAP_ADDRESS = $2000
                     WIDTH = $0140
@@ -7525,18 +7525,18 @@ internal_plotx     = 4     ; zp UWORD
                             txa
                             pha
                             
-                                        lda  #<$2000
-                                        sta  cx16.r0
-                                        lda  #>$2000
-                                        sta  cx16.r0+1
-                                        
-                                        lda  #<$1f40
-                                        sta  cx16.r1
-                                        lda  #>$1f40
-                                        sta  cx16.r1+1
-                                        
-                                        lda  #0
-                                        jsr  sys.memset
+                            lda  #<$2000
+                            sta  cx16.r0
+                            lda  #>$2000
+                            sta  cx16.r0+1
+                            
+                            lda  #<$1f40
+                            sta  cx16.r1
+                            lda  #>$1f40
+                            sta  cx16.r1+1
+                            
+                            lda  #0
+                            jsr  sys.memset
                             
                             pla
                             tax
@@ -7568,283 +7568,276 @@ internal_plotx     = 4     ; zp UWORD
                             .pend
   
 
-horizontal_line    .proc
-length                  = 66     ; zp UWORD
-y                       = 68     ; zp UBYTE
-x                       = 69     ; zp UWORD
-separate_pixels         = 71     ; zp UBYTE
-addr                    = 75     ; zp UWORD
-; statements
- 
-    ldy  length+1
-    lda  length
-    cpy  #>8
-    bcc  +
-    bne  prog8_label_59_if_end
-    cmp  #<8
-    bcs  prog8_label_59_if_end
-+
-    ;    src line: library:/prog8lib/c64/graphics.p8:152
-    lda  x
-    ldy  x+1
-    sta  internal_plotx
-    sty  internal_plotx+1
-    
-    ;    src line: library:/prog8lib/c64/graphics.p8:153
-    ldy  length
-    beq  prog8_label_60_repeatend
-    sty  prog8_label_62_counter
-prog8_label_61_repeat
-    ;    src line: library:/prog8lib/c64/graphics.p8:154
-    txa
-    pha
-    lda  y
-    jsr  internal_plot
-    pla
-    tax
-    ;    src line: library:/prog8lib/c64/graphics.p8:155
-    inc  internal_plotx
-    bne  +
-    inc  internal_plotx+1
-+
-    dec  prog8_label_62_counter
-    bne  prog8_label_61_repeat
-prog8_label_60_repeatend
-    ;    src line: library:/prog8lib/c64/graphics.p8:157
-    rts
-prog8_label_59_if_end
- 
-    lda  x
-    sta  separate_pixels
- 
-    and  #7
-    sta  separate_pixels
- 
-    lda  x
-    sta  stack.lo,x
-    lda  x+1
-    sta  stack.hi,x
-    dex
-    lda  #<$fff8
-    sta  stack.lo,x
-    lda  #>$fff8
-    sta  stack.hi,x
-    dex
-    
-    jsr  prog8_lib.bitand_w
-    ldy  y
-    jsr  get_y_lookup
-    sta  stack.lo,x
-    tya
-    sta  stack.hi,x
-    dex
-    jsr  prog8_lib.add_w
-    inx
-    lda  stack.lo,x
-    sta  addr
-    lda  stack.hi,x
-    sta  addr+1
-    
-    ;    src line: library:/prog8lib/c64/graphics.p8:163
-    lda  separate_pixels
-    beq  prog8_label_63_if_end
-    ;    src line: library:/prog8lib/c64/graphics.p8:164
-    lda  addr
-    sta  zpWord0
-    lda  addr+1
-    sta  zpWord0+1
-    ldy  separate_pixels
-    lda  hline_filled_right,y
-    eor  #255
-    ldy  #0
-    ora  (zpWord0),y
-    sta  (zpWord0),y
-    ;    src line: library:/prog8lib/c64/graphics.p8:176
-    lda  addr
-    clc
-    adc  #8
-    sta  addr
-    bcc  +
-    inc  addr+1
-+
-    ;    src line: library:/prog8lib/c64/graphics.p8:177
-    lda  length
-    clc
-    adc  separate_pixels
-    sta  length
-    bcc  +
-    inc  length+1
-+
-    ;    src line: library:/prog8lib/c64/graphics.p8:178
-    lda  length
-    sec
-    sbc  #8
-    sta  length
-    bcs  +
-    dec  length+1
-+
-prog8_label_63_if_end
-    ;    src line: library:/prog8lib/c64/graphics.p8:181
-    lda  length
-    ora  length+1
-    beq  prog8_label_64_if_end
-    ;    src line: library:/prog8lib/c64/graphics.p8:182
-                lda  length
-                and  #7
-                sta  separate_pixels
-                stx  zpx
-                lsr  length+1
-                ror  length
-                lsr  length+1
-                ror  length
-                lsr  length+1
-                ror  length
-                lda  addr
-                sta  _modified+1
-                lda  addr+1
-                sta  _modified+2
-                lda  length
-                ora  length+1
-                beq  _zero
-                ldy  length
-                ldx  #$ff
-_modified       stx  $ffff      ; modified
-                lda  _modified+1
-                clc
-                adc  #8
-                sta  _modified+1
-                bcc  +
-                inc  _modified+2
-+               dey
-                bne  _modified
-_zero           ldx  zpx
+                            horizontal_line    .proc
+                            length                  = 66     ; zp UWORD
+                            y                       = 68     ; zp UBYTE
+                            x                       = 69     ; zp UWORD
+                            separate_pixels         = 71     ; zp UBYTE
+                            addr                    = 75     ; zp UWORD
+                            ; statements
+                             
+                                ldy  length+1
+                                lda  length
+                                cpy  #>8
+                                bcc  +
+                                bne  prog8_label_59_if_end
+                                cmp  #<8
+                                bcs  prog8_label_59_if_end
+                            +
+                                ;    src line: library:/prog8lib/c64/graphics.p8:152
+                                lda  x
+                                ldy  x+1
+                                sta  zpWord0
+                                sty  zpWord0+1
+                                
+                                ;    src line: library:/prog8lib/c64/graphics.p8:153
+                                ldy  length
+                                beq  prog8_label_60_repeatend
+                                sty  prog8_label_62_counter
+                            prog8_label_61_repeat
+                                ;    src line: library:/prog8lib/c64/graphics.p8:154
+                                txa
+                                pha
+                                lda  y
+                                jsr  graph.pixel
+                                pla
+                                tax
+                                ;    src line: library:/prog8lib/c64/graphics.p8:155
+                                inc  zpWord0
+                                bne  +
+                                inc  zpWord0+1
+                            +
+                                dec  prog8_label_62_counter
+                                bne  prog8_label_61_repeat
+                            prog8_label_60_repeatend
+                                ;    src line: library:/prog8lib/c64/graphics.p8:157
+                                rts
+                            prog8_label_59_if_end
+                             
+                                lda  x
+                                sta  separate_pixels
+                             
+                                and  #7
+                                sta  separate_pixels
+                             
+                                lda  x
+                                sta  stack.lo,x
+                                lda  x+1
+                                sta  stack.hi,x
+                                dex
+                                lda  #<$fff8
+                                sta  stack.lo,x
+                                lda  #>$fff8
+                                sta  stack.hi,x
+                                dex
+                                
+                                jsr  prog8_lib.bitand_w
+                                ldy  y
+                                jsr  get_y_lookup
+                                sta  stack.lo,x
+                                tya
+                                sta  stack.hi,x
+                                dex
+                                jsr  prog8_lib.add_w
+                                inx
+                                lda  stack.lo,x
+                                sta  addr
+                                lda  stack.hi,x
+                                sta  addr+1
+                                
+                                ;    src line: library:/prog8lib/c64/graphics.p8:163
+                                lda  separate_pixels
+                                beq  prog8_label_63_if_end
+                                ;    src line: library:/prog8lib/c64/graphics.p8:164
+                                lda  addr
+                                sta  zpWord0
+                                lda  addr+1
+                                sta  zpWord0+1
+                                ldy  separate_pixels
+                                lda  hline_filled_right,y
+                                eor  #255
+                                ldy  #0
+                                ora  (zpWord0),y
+                                sta  (zpWord0),y
+                                ;    src line: library:/prog8lib/c64/graphics.p8:176
+                                lda  addr
+                                clc
+                                adc  #8
+                                sta  addr
+                                bcc  +
+                                inc  addr+1
+                            +
+                                ;    src line: library:/prog8lib/c64/graphics.p8:177
+                                lda  length
+                                clc
+                                adc  separate_pixels
+                                sta  length
+                                bcc  +
+                                inc  length+1
+                            +
+                                ;    src line: library:/prog8lib/c64/graphics.p8:178
+                                lda  length
+                                sec
+                                sbc  #8
+                                sta  length
+                                bcs  +
+                                dec  length+1
+                            +
+                            prog8_label_63_if_end
+                                ;    src line: library:/prog8lib/c64/graphics.p8:181
+                                lda  length
+                                ora  length+1
+                                beq  prog8_label_64_if_end
+                                ;    src line: library:/prog8lib/c64/graphics.p8:182
+                                            lda  length
+                                            and  #7
+                                            sta  separate_pixels
+                                            stx  zpx
+                                            lsr  length+1
+                                            ror  length
+                                            lsr  length+1
+                                            ror  length
+                                            lsr  length+1
+                                            ror  length
+                                            lda  addr
+                                            sta  _modified+1
+                                            lda  addr+1
+                                            sta  _modified+2
+                                            lda  length
+                                            ora  length+1
+                                            beq  _zero
+                                            ldy  length
+                                            ldx  #$ff
+                            _modified       stx  $ffff      ; modified
+                                            lda  _modified+1
+                                            clc
+                                            adc  #8
+                                            sta  _modified+1
+                                            bcc  +
+                                            inc  _modified+2
+                            +               dey
+                                            bne  _modified
+                            _zero           ldx  zpx
 
-                ldy  separate_pixels
-                beq  hline_zero2
-                lda  _modified+1
-                sta  zpWord0
-                lda  _modified+2
-                sta  zpWord0+1
-                lda  hline_filled_right,y
-                ldy  #0
-                ora  (zpWord0),y
-                sta  (zpWord0),y
-                jmp  hline_zero2
-hline_filled_right   .byte  0, %10000000, %11000000, %11100000, %11110000, %11111000, %11111100, %11111110
-hline_zero2
-prog8_label_64_if_end
-    ;    src line: library:/prog8lib/c64/graphics.p8:150
-    rts
-; variables
-prog8_label_62_counter = 115
-
-; non-zeropage variables
-    .pend
-    ;    src line: library:/prog8lib/c64/graphics.p8:230
-
-vertical_line    .proc
-height     = 72     ; zp UBYTE
-y     = 77     ; zp UBYTE
-x     = 78     ; zp UWORD
-; statements
- 
-    lda  x
-    ldy  x+1
-    sta  internal_plotx
-    sty  internal_plotx+1
-    
-    ;    src line: library:/prog8lib/c64/graphics.p8:232
-    ldy  height
-    beq  prog8_label_65_repeatend
-    sty  prog8_label_67_counter
-prog8_label_66_repeat
-    ;    src line: library:/prog8lib/c64/graphics.p8:233
-    txa
-    pha
-    lda  y
-    jsr  internal_plot
-    pla
-    tax
-    ;    src line: library:/prog8lib/c64/graphics.p8:234
-    inc  y
-    dec  prog8_label_67_counter
-    bne  prog8_label_66_repeat
-prog8_label_65_repeatend
-    ;    src line: library:/prog8lib/c64/graphics.p8:230
-    rts
-; variables
-prog8_label_67_counter = 116
+                                            ldy  separate_pixels
+                                            beq  hline_zero2
+                                            lda  _modified+1
+                                            sta  zpWord0
+                                            lda  _modified+2
+                                            sta  zpWord0+1
+                                            lda  hline_filled_right,y
+                                            ldy  #0
+                                            ora  (zpWord0),y
+                                            sta  (zpWord0),y
+                                            jmp  hline_zero2
+                                            
+                            hline_filled_right   .byte  0, %10000000, %11000000, %11100000, %11110000, %11111000, %11111100, %11111110
+                            hline_zero2
+                            prog8_label_64_if_end
+                             
+                                rts
+                            ; variables
+                            prog8_label_62_counter = 115
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/c64/graphics.p8:307
-    ;    src line: library:/prog8lib/c64/graphics.p8:320
-
-internal_plot    .proc
-    ;    src line: library:/prog8lib/c64/graphics.p8:321
-        tay
-        lda  internal_plotx+1
-        sta  zpWord1+1
-        lsr  a            ; 0
-        sta  zpWord1
-        lda  internal_plotx
-        pha
-        and  #7
-        tax
-
-        lda  _y_lookup_lo,y
-        clc
-        adc  zpWord1
-        sta  zpWord1
-        lda  _y_lookup_hi,y
-        adc  zpWord1+1
-        sta  zpWord1+1
-
-        pla     ; internal_plotx
-        and  #%11111000
-        tay
-        lda  (zpWord1),y
-        ora  _ormask,x
-        sta  (zpWord1),y
-        rts
-
-_ormask     .byte 128, 64, 32, 16, 8, 4, 2, 1
-
-; note: this can be even faster if we also have a 256 byte x-lookup table, but hey.
-; see http://codebase64.org/doku.php?id=base:various_techniques_to_calculate_adresses_fast_common_screen_formats_for_pixel_graphics
-; the y lookup tables encodes this formula:  BITMAP_ADDRESS + 320*(py>>3) + (py & 7)    (y from 0..199)
-; We use the 64tass syntax for range expressions to calculate this table on assembly time.
-
-_plot_y_values := $2000 + 320*(range(200)>>3) + (range(200) & 7)
-
-_y_lookup_lo    .byte  <_plot_y_values
-_y_lookup_hi    .byte  >_plot_y_values
-
-
-
-    .pend
     
 
-get_y_lookup    .proc
+                    vertical_line    .proc
+
+                        ;   zpa         height
+                        ;   zpWord0     X
+                        ;   zpy         Y
+
+                        ldy  zpa
+                        beq  prog8_label_65_repeatend
+                        sty  zpByte24
+                    prog8_label_66_repeat
+                        txa
+                        pha
+                        lda  zpy
+                        jsr  graph.pixel
+                        pla
+                        tax
+                        inc  zpy
+                        dec  zpByte24
+                        bne  prog8_label_66_repeat
+                    prog8_label_65_repeatend
+
+                        rts
+
+                    .pend
+
+
+                    graph.pixel    .proc
+                        ;    src line: library:/prog8lib/c64/graphics.p8:321
+                            tay
+                            lda  zpWord0+1
+                            sta  zpWord1+1
+                            lsr  a            ; 0
+                            sta  zpWord1
+                            lda  zpWord0
+                            pha
+                            and  #7
+                            tax
+
+                            lda  _y_lookup_lo,y
+                            clc
+                            adc  zpWord1
+                            sta  zpWord1
+                            lda  _y_lookup_hi,y
+                            adc  zpWord1+1
+                            sta  zpWord1+1
+
+                            pla     ; zpWord0
+                            and  #%11111000
+                            tay
+                            lda  (zpWord1),y
+                            ora  _ormask,x
+                            sta  (zpWord1),y
+                            rts
+
+                    _ormask     .byte 128, 64, 32, 16, 8, 4, 2, 1
+
+                    ; note: this can be even faster if we also have a 256 byte x-lookup table, but hey.
+                    ; see http://codebase64.org/doku.php?id=base:various_techniques_to_calculate_adresses_fast_common_screen_formats_for_pixel_graphics
+                    ; the y lookup tables encodes this formula:  BITMAP_ADDRESS + 320*(py>>3) + (py & 7)    (y from 0..199)
+                    ; We use the 64tass syntax for range expressions to calculate this table on assembly time.
+
+                    _plot_y_values := $2000 + 320*(range(200)>>3) + (range(200) & 7)
+
+                    _y_lookup_lo    .byte  <_plot_y_values
+                    _y_lookup_hi    .byte  >_plot_y_values
+
+
+
+                    .pend
+                    
+
+                get_y_lookup    .proc
+                    
+                            lda  graph.pixel._y_lookup_lo,y
+                            pha
+                            lda  graph.pixel._y_lookup_hi,y
+                            tay
+                            pla
+                            rts
+                        .pend
     
-            lda  internal_plot._y_lookup_lo,y
-            pha
-            lda  internal_plot._y_lookup_hi,y
-            tay
-            pla
-            rts
-    .pend
-prog8_init_vars    .block
-    ;    src line: library:/prog8lib/c64/graphics.p8:318
-    lda  #0
-    sta  internal_plotx
-    sta  internal_plotx+1
     
-    rts
-    .bend
+                prog8_init_vars    .block
+                    ;    src line: library:/prog8lib/c64/graphics.p8:318
+                    lda  #0
+                    sta  zpWord0
+                    sta  zpWord0+1
+                    
+                    rts
+                    .bend
+    
+    
     .pend
-; global float constants
-; memory slabs
-prog8_slabs    .block
-    .bend
+                    ; global float constants
+                    ; memory slabs
+                    prog8_slabs    .block
+                        .bend
 prog8_program_end    ; end of program label for progend()

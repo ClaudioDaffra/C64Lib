@@ -64,10 +64,10 @@ zpa		= $02
 zpx		= $2a
 zpy		= $52
 
-zpByte0 = $fb
-zpByte1 = $fc
-zpByte2 = $fd
-zpByte3 = $fe
+zpByte0 = $fb   ;   zpWord  10
+zpByte1 = $fc   ;           11
+zpByte2 = $fd   ;           20
+zpByte3 = $fe   ;           21
 
 zpWord0     = $fb
 zpWord0hi   = $fb
@@ -79,10 +79,11 @@ zpWord1lo   = $fd+1
 
 ;   -------------------------------------------- safe?
 
-zpByte4 = $03
-zpByte5 = $04
-zpByte6 = $05
-zpByte7 = $06
+zpByte24    = $03       ;   zpWord  20
+zpByte25    = $04       ;           21
+
+zpByte36    = $05       ;           30
+zpByte37    = $06       ;           31
 
 zpWord2     = $03       ;    $B1AA, execution address of routine converting floating point to integer.
 zpWord2hi   = $03
@@ -91,21 +92,6 @@ zpWord2lo   = $03+1
 zpWord3     = $05       ;    $B391, execution address of routine converting integer to floating point.
 zpWord3hi   = $05
 zpWord3lo   = $05+1
-
-;   -------------------------------------------- datasette safe?
-;
-;   142
-;   150
-;   155
-;   158 - 159
-;   163 - 164
-;   165 - 166
-;   172 - 173
-;   174 - 175
-;   178 - 179
-;   189 - 190
-;   192 - 192
-;
 
 ;**********
 ;           temp
@@ -931,7 +917,6 @@ graph_var_y  .macro
     lda \1
     sta zpy
 .endm
-
 
 
 ;--------------------------------------------------------------- macro

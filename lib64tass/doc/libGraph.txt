@@ -21,85 +21,88 @@
         ;
         ;   e000        (8000)   bitmap address     8k
         ;
-        
+
         ; ############################################################################## high 320x200x4
 
-        ;
-        
-        ; ....................................................... graph hires start
-        
-        jsr graph.high.on
+                jsr graph.high.on           ;   activate graphics hires
+         
+                jsr graph.clear             ;   clear bitmap
 
-        ; ....................................................... graph hires clear bitmap
-        
-        jsr graph.clear
+                lda #color.yellow           ;   graph high color    (0,1)
+                sta graph.foreground_color
+                
+                lda #color.red
+                sta graph.background_color
 
-        ; ....................................................... graph hires setup color
-        
-        lda #color.yellow
-        sta screen.foreground_color
-        lda #color.red
-        sta screen.background_color
+                jsr graph.high.set_color    ;   set colors
 
-        jsr graph.high.set_color
+                lda #1
+                sta graph.color_number      ;   choose color
 
-        ; ....................................................... graph plot pixel
-        
-        lda #255
-        sta 8192
-        
-        ; ....................................................... graph hires stop
+            #-----------------------------------------
+            #   graph.pixel             ;   draw pixel
+            #-----------------------------------------
+            
+            N   =   graph.color_number   ;  color number
+            Y   =   zpy                  ;  coord y
+            X   =   zpWord0              ;  coord x
+            P   =   zpWord1              ;  graph P address
+                
+                graph_imm_x #1              ;   X
+                graph_imm_y #1              ;   Y
+                jsr graph.pixel             ;   draw pixel
 
-        jsr graph.high.off
+                graph_var_y coordy
+                graph_var_x coordx
+                jsr graph.pixel
 
-        ;
-        
+                lda #0
+                sta graph.color_number  ;   erase 5,5
+
+                graph_imm_x #5
+                graph_imm_y #5
+                jsr graph.pixel
+
+                jsr graph.high.off      ;   graph off
+
+                rts
         
         ; ############################################################################## low 160x200x4
 
-        ;
-        
-        ; ....................................................... graph low start
-        
-        jsr graph.low.on
+                jsr graph.low.on            ;   graph low on
 
-        lda #color.red
-        sta screen.border_color
-        jsr txt.set_border_color
-        
-        ; ....................................................... graph setup color
-        
-        lda #color.white
-        sta screen.background_color_0
-        lda #color.red
-        sta screen.background_color_1
-        lda #color.green
-        sta screen.background_color_2
-        lda #color.blue
-        sta screen.background_color_3
-        
-        jsr graph.low.set_color
-        
-        ; ....................................................... graph bitmap clear
-        
-        jsr graph.clear
-        
-        ; ....................................................... graph plot pixel
-        
-        lda #%11000110
-        sta 8192
-        lda #%11000110
-        sta 8193
-        lda #%11000110
-        sta 8194
-        lda #%11000110
-        sta 8195
-        
-        ; ....................................................... graph low stop
-        
-        jsr graph.low.off
+                lda #color.red
+                sta screen.border_color
+                jsr txt.set_border_color
+                
+                lda #color.white            ;   set colors 0,1,2,3
+                sta graph.color0
+                
+                lda #color.red
+                sta graph.color1
+                
+                lda #color.green
+                sta graph.color2
+                
+                lda #color.blue
+                sta graph.color3
+                
+                jsr graph.low.set_color     ;   set colors
 
-        ;
+                jsr graph.clear             ;   clear bitmap
+
+                ;
+
+                lda #1
+                sta graph.color_number      ;   choose number
+                graph_imm_x #0
+                graph_imm_y #0
+                jsr graph.pixel             ;   draw pixel
+
+                jsr graph.low.off           ;   graph off
+                
+
+                rts
         
 ;;;
 ;;

@@ -198,7 +198,7 @@ graph .proc
 
                 ;................................................................   _plotPointHR
                 
-plotPointHR
+        plotPointHR
 
                 lda N                   ;   (0 = erase, 1 = set)
                 beq erase               ;   if = 0 then branch to clear the point
@@ -233,89 +233,71 @@ plotPointHR
                 
                 ;................................................................   _plotPointMC
                 
-plotPointMC
+        plotPointMC
 
-    .if c64.bitmap_addr == $E000
-	;jsr _graphIntRomDisable
-    .endif
-	
-	lda (P),y             ;erase couple of bit 
-	and tblMC_andbitbit,x  
-	sta (P),y                 
+                    .if c64.bitmap_addr == $E000
+                    ;jsr _graphIntRomDisable
+                    .endif
+                    
+                    lda (P),y                   ;erase couple of bit 
+                    and tblMC_andbitbit,x  
+                    sta (P),y                 
 
-    .if c64.bitmap_addr == $E000
-	;jsr _graphIntRomEnable
-    .endif
-    
-	pha                         ; salva risultato
+                    .if c64.bitmap_addr == $E000
+                    ;jsr _graphIntRomEnable
+                    .endif
+                    
+                    pha                         ; salva risultato
 
-	lda N          ; get number color
-	
-	cmp #0
-	beq _plotPointMC_00
-	cmp #1
-	beq _plotPointMC_01
-	cmp #2
-	beq _plotPointMC_10
-	cmp #3
-	beq _plotPointMC_11	
-	
-	pla
+                    lda N                       ; get number color
+                    
+                    cmp #1
+                    beq _plotPointMC_01
+                    cmp #2
+                    beq _plotPointMC_10
+                    cmp #3
+                    beq _plotPointMC_11	
+                    
+                    pla
 
-    .if c64.bitmap_addr == $E000
-	;jsr _graphIntRomEnable
-    .endif
-    
-	rts
+                    .if c64.bitmap_addr == $E000
+                    ;jsr _graphIntRomEnable
+                    .endif
+                    
+                    rts
 
-_plotPointMC_00:
-
-	pla 
-	ora tblMC_orbitbit00,x 
-	jmp _plotPointMC_end
-	
-_plotPointMC_01:
-
-	pla 
-	ora tblMC_orbitbit01,x 
-	jmp _plotPointMC_end
-	
-_plotPointMC_10:
-
-	pla 
-	ora tblMC_orbitbit10,x 
-	jmp _plotPointMC_end
-	
-_plotPointMC_11:
-
-	pla 
-	ora tblMC_orbitbit11,x 
-
-_plotPointMC_end:
-
-    .if c64.bitmap_addr == $E000
-	;jsr _graphIntRomDisable
-    .endif
-	
-	sta (P),y 
-
-    .if c64.bitmap_addr == $E000
-	;jsr _graphIntRomEnable
-    .endif
-	
-	rts
-
-
-                ;lda #%11000110
-                ;sta 8192
-                ;lda #%11000110
-                ;sta 8193
-                ;lda #%11000110
-                ;sta 8194
-                ;lda #%11000110
-                ;sta 8195
+                _plotPointMC_00:       ;     already reset (color0)
                 
-                rts
+                _plotPointMC_01:
+
+                    pla 
+                    ora tblMC_orbitbit01,x 
+                    jmp _plotPointMC_end
+
+                _plotPointMC_10:
+
+                    pla 
+                    ora tblMC_orbitbit10,x 
+                    jmp _plotPointMC_end
+
+                _plotPointMC_11:
+
+                    pla 
+                    ora tblMC_orbitbit11,x 
+
+                _plotPointMC_end:
+
+                    .if c64.bitmap_addr == $E000
+                    ;jsr _graphIntRomDisable
+                    .endif
+
+                    sta (P),y 
+
+                    .if c64.bitmap_addr == $E000
+                    ;jsr _graphIntRomEnable
+                    .endif
+
+                    rts
 
         .pend
 
