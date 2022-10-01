@@ -3,13 +3,25 @@
     math
 ###########
 
+;............................................... 
+
 ;   every logical compare, return always 0/1 Carry set or Not
 ;   if_true / if_false check carry
+
+;...............................................    useful macro
+
+    u16_add_1   (word)
+    u16_sub_1   (word)
+    if_u16_gt_0 (word),(jump)
+
+;...............................................    types 
 
 ;   .byte   unsigned byte   u8
 ;   .char   signed   byte   s8
 ;   .word   unsigned word   u16
 ;   .sint   signed   word   s16
+
+;...............................................    math (c) zpWord0    / zpWord1
 
     #   math.u8_cmp_eq      ?=
     #   math.u8_cmp_gt      >    
@@ -35,10 +47,8 @@
     #   math.s16_cmp_gt     >=
     #   math.s16_cmp_lt     <=
 
+;............................................... 
 
-
-
-    
 ;;;
 ;;
 ;

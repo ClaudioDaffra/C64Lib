@@ -41,27 +41,31 @@ program_entry_point	; assembly code starts here
     ;............................................................ horizontal_line
     ;
     ;   input   :
-    ;               a       height
+    ;               ay      height
     ;               zpWord0 X
     ;               zpy     Y
-        
+    ;               zpWord2 (lengh counter)
+    
     horizontal_line    .proc
 
-        sta  zpa
-        beq  +
-    -
-        jsr  graph.pixel
-
-        clc
-        lda  #1
-        adc  zpWord0
-        sta  zpWord0
-        lda  #0
-        adc  zpWord0+1
-        sta  zpWord0+1
+        sta zpWord2     ;   salva la lunghezza ( w0,w1,w2 used )
+        sty zpWord2+1
         
-        dec  zpa
-        bne  -
+        sta zpa
+        beq +
+    -
+        jsr graph.pixel
+        
+        ;   zpWord  (++x)       ex  0001    (1)
+
+        u16_add_1   zpWord0
+        
+        ;  zpword  (--length)   ex  0140    (320)
+
+        u16_sub_1   zpWord2
+        
+        if_u16_gt_0 zpWord2 ,   -
+        
     +
         rts
 
@@ -113,7 +117,7 @@ main	.proc
     
         lda #1
         sta graph.color_number  ;   color number 0,1
-        
+jmp xxx        
         ;
         
         graph_imm_x #1
@@ -124,11 +128,11 @@ main	.proc
         jsr vertical_line
         
         ;............................................................   horizontal_line 
-    
+xxx   
         graph_imm_x #1
         graph_imm_y #1
         
-        lda #10 ;   length
+        load_imm_ay #257 ;   length
         
         jsr horizontal_line
         
