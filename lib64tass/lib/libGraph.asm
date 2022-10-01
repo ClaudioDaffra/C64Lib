@@ -139,7 +139,7 @@ graph .proc
 
                 lda c64.screen_control_register_2   ;   check multi color
                 and #%00010000
-                beq pixel_xy
+                beq pixel_xy                        ;   se modolaità hires
                 
                 ; if MC mul by 2
                 lda X

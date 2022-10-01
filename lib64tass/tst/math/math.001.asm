@@ -31,8 +31,8 @@ program_entry_point	; assembly code starts here
 
 main	.proc
 
-    au16   .word   1
-    bu16   .word   2
+    au16   .word    1
+    bu16   .word    2
 
     as16   .sint   -1
     bs16   .sint    2

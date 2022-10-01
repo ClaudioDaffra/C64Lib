@@ -767,9 +767,9 @@ logo_lines    .word  prog8_interned_strings.string_0, prog8_interned_strings.str
  
     .pend
 
-;***********************
-; #LIBRARY : 'txt' 
-;***********************
+                    ;***********************
+                    ; #LIBRARY : 'txt' 
+                    ;***********************
 
                     txt    .proc
 
@@ -1321,6 +1321,7 @@ c64    .proc
     NMINV = $0318
     NMI_VEC = $fffa
     RESET_VEC = $fffc
+    
     IRQ_VEC = $fffe
     SPRPTR0 = $07f8
     SPRPTR1 = $07f9
@@ -1330,7 +1331,8 @@ c64    .proc
     SPRPTR5 = $07fd
     SPRPTR6 = $07fe
     SPRPTR7 = $07ff
-    SPRPTR = $07f8
+    SPRPTR  = $07f8
+    
     SP0X = $d000
     SP0Y = $d001
     SP1X = $d002
@@ -1347,6 +1349,7 @@ c64    .proc
     SP6Y = $d00d
     SP7X = $d00e
     SP7Y = $d00f
+    
     SPXY = $d000
     SPXYW = $d000
     MSIGX = $d010
@@ -1602,8 +1605,10 @@ set_irq    .proc
         sta  c64.CINV+1
         cli
         rts
-_irq_handler    jsr  _irq_handler_init
-_modified    jsr  $ffff                      ; modified
+_irq_handler    
+        jsr  _irq_handler_init
+_modified    
+        jsr  $ffff                      ; modified
         jsr  _irq_handler_end
         lda  _use_kernal
         bne  +
@@ -1617,7 +1622,8 @@ _modified    jsr  $ffff                      ; modified
         tax
         pla
         rti
-+        jmp  c64.IRQDFRT        ; continue with normal kernal irq routine
++        
+        jmp  c64.IRQDFRT        ; continue with normal kernal irq routine
 
 _use_kernal     .byte  0
 
@@ -2980,86 +2986,99 @@ prog8_init_vars    .block
 ; ******************* 
 
 math    .proc
-    ;    src line: library:/prog8lib/math.p8:3
-
-; non-zeropage variables
-
-; subroutines in this block
-    ;    src line: library:/prog8lib/math.p8:4
-; Internal Math library routines - always included by the compiler
-; Generic machine independent 6502 code.
-;
-;  some more interesting routines can be found here:
-;    http://6502org.wikidot.com/software-math
-;    http://codebase64.org/doku.php?id=base:6502_6510_maths
-;
 
 
-math_store_reg    .byte  0        ; temporary storage
+                                ; non-zeropage variables
+
+                                ; subroutines in this block
+                                    ;    src line: library:/prog8lib/math.p8:4
+                                ; Internal Math library routines - always included by the compiler
+                                ; Generic machine independent 6502 code.
+                                ;
+                                ;  some more interesting routines can be found here:
+                                ;    http://6502org.wikidot.com/software-math
+                                ;    http://codebase64.org/doku.php?id=base:6502_6510_maths
+                                ;
 
 
-multiply_bytes    .proc
-    ; -- multiply 2 bytes A and Y, result as byte in A  (signed or unsigned)
-        sta  zpy         ; num1
-        sty  zpx        ; num2
-        lda  #0
-        beq  _enterloop
-_doAdd        clc
-        adc  zpy
-_loop        asl  zpy
-_enterloop    lsr  zpx
-        bcs  _doAdd
-        bne  _loop
-        rts
-        .pend
+                                math_store_reg    .byte  0        ; temporary storage
 
 
-multiply_bytes_into_word    .proc
-    ; -- multiply 2 bytes A and Y, result as word in A/Y (unsigned)
-        sta  zpy
-        sty  zpx
-        stx  math_store_reg
-        lda  #0
-        ldx  #8
-        lsr  zpy
--        bcc  +
-        clc
-        adc  zpx
-+        ror  a
-        ror  zpy
-        dex
-        bne  -
-        tay
-        lda  zpy
-        ldx  math_store_reg
-        rts
-        .pend
+                                multiply_bytes    .proc
+                                    ; -- multiply 2 bytes A and Y, result as byte in A  (signed or unsigned)
+                                        sta  zpy         ; num1
+                                        sty  zpx        ; num2
+                                        lda  #0
+                                        beq  _enterloop
+                                _doAdd        
+                                        clc
+                                        adc  zpy
+                                _loop        
+                                        asl  zpy
+                                _enterloop    
+                                        lsr  zpx
+                                        bcs  _doAdd
+                                        bne  _loop
+                                        rts
+                                .pend
+
+
+                    multiply_bytes_into_word    .proc
+                        ; -- multiply 2 bytes A and Y, result as word in A/Y (unsigned)
+                            sta  zpy
+                            sty  zpx
+                            stx  math_store_reg
+                            lda  #0
+                            ldx  #8
+                            lsr  zpy
+                    -        
+                            bcc  +
+                            clc
+                            adc  zpx
+                    +        
+                            ror  a
+                            ror  zpy
+                            dex
+                            bne  -
+                            tay
+                            lda  zpy
+                            ldx  math_store_reg
+                            rts
+                            .pend
 
 
 multiply_words    .proc
+
     ; -- multiply two 16-bit words into a 32-bit result  (signed and unsigned)
-    ;      input: A/Y = first 16-bit number, zpWord0 in ZP = second 16-bit number
-    ;      output: multiply_words.result  4-bytes/32-bits product, LSB order (low-to-high)
-    ;      clobbers: A
+    ;
+    ;      input: 
+    ;           A/Y             = first 16-bit number, 
+    ;           zpWord0 in ZP   = second 16-bit number
+    ;      output: 
+    ;           multiply_words.result  4-bytes/32-bits product, LSB order (low-to-high)
+    ;
+    ;   ->  zpWord0 * zpWord1 = zpWord3
 
         sta  zpWord1
         sty  zpWord1+1
         stx  zpx
-
-mult16        lda  #0
-        sta  result+2    ; clear upper bits of product
+mult16        
+        lda  #0
+        sta  result+2       ; clear upper bits of product
         sta  result+3
         ldx  #16            ; for all 16 bits...
--         lsr  zpWord0+1    ; divide multiplier by 2
+-         
+        lsr  zpWord0+1      ; divide multiplier by 2
         ror  zpWord0
         bcc  +
-        lda  result+2    ; get upper half of product and add multiplicand
+        lda  result+2       ; get upper half of product and add multiplicand
         clc
         adc  zpWord1
         sta  result+2
         lda  result+3
         adc  zpWord1+1
-+         ror  a                ; rotate partial product
++         
+        ror  a              ; rotate partial product
         sta  result+3
         ror  result+2
         ror  result+1
@@ -3067,6 +3086,7 @@ mult16        lda  #0
         dex
         bne  -
         ldx  zpx
+        
         rts
 
 result        .byte  0,0,0,0
@@ -3144,7 +3164,8 @@ divmod_w_asm    .proc
         lda  #0
         sbc  zpWord0+1
         sta  zpWord0+1
-+        lda  zpWord1+1
++        
+        lda  zpWord1+1
         bpl  +
         lda  #0
         sec
@@ -3153,7 +3174,8 @@ divmod_w_asm    .proc
         lda  #0
         sbc  zpWord1+1
         sta  zpWord1+1
-+        tay
++        
+        tay
         lda  zpWord1
         jsr  divmod_uw_asm
         plp            ; restore sign
@@ -3168,7 +3190,8 @@ divmod_w_asm    .proc
         sbc  zpWord1+1
         tay
         pla
-+        rts
++        
+        rts
         .pend
 
 divmod_uw_asm    .proc
@@ -3189,8 +3212,8 @@ result = dividend ;save memory by reusing divident to store the result
         sta  remainder
         sta  remainder+1
         ldx  #16            ;repeat for each bit: ...
-
--        asl  dividend        ;dividend lb & hb*2, msb -> Carry
+-        
+        asl  dividend        ;dividend lb & hb*2, msb -> Carry
         rol  dividend+1
         rol  remainder        ;remainder lb & hb * 2 + msb from carry
         rol  remainder+1
@@ -3205,8 +3228,8 @@ result = dividend ;save memory by reusing divident to store the result
         sta  remainder+1    ;else save substraction result as new remainder,
         sty  remainder
         inc  result        ;and INCrement result cause divisor fit in 1 times
-
-+        dex
++        
+        dex
         bne  -
 
         lda  result
@@ -3334,7 +3357,7 @@ stack_mul_byte_6    .proc
         ; (X*2 + X)*2
         lda  stack.lo+1,x
         asl  a
-                clc
+        clc
         adc  stack.lo+1,x
         asl  a
         sta  stack.lo+1,x
@@ -3354,7 +3377,7 @@ stack_mul_word_6    .proc
         lda  zpx
         adc  stack.hi+1,x
         asl  stack.lo+1,x
-                rol  a
+        rol  a
         sta  stack.hi+1,x
         rts
         .pend
@@ -5347,13 +5370,15 @@ equalzero_b    .proc
         lda  stack.lo+1,x
         beq  _true
         bne  _false
-_true        lda  #1
+_true        
+        lda  #1
         sta  stack.lo+1,x
         rts
-_false        lda  #0
+_false        
+        lda  #0
         sta  stack.lo+1,x
         rts
-        .pend
+.pend
 
 equalzero_w    .proc
         lda  stack.lo+1,x
@@ -5817,7 +5842,8 @@ sign_extend_stack_byte    .proc
         ora  #$7f
         bmi  +
         lda  #0
-+        sta  stack.hi+1,x
++        
+        sta  stack.hi+1,x
         rts
         .pend
 
@@ -6183,7 +6209,8 @@ func_sort_b    .proc
         bne  +
         dec  zpWord0+1
 +        dec  zpWord0
-_sortloop    ldy  zpy        ;start of subroutine sort
+_sortloop    
+        ldy  zpy        ;start of subroutine sort
         lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
         sta  zpx        ;save value. will be over-written by largest number
         jmp  _l2
@@ -6192,10 +6219,12 @@ _l1        dey
         lda  (zpWord0),y
         cmp  zpWord1+1
         bmi  _l1
-_l2        sty  zpWord1    ;index of potentially largest value
+_l2        
+        sty  zpWord1    ;index of potentially largest value
         sta  zpWord1+1    ;potentially largest value
         jmp  _l1
-_l3        ldy  zpy        ;where the largest value shall be put
+_l3        
+        ldy  zpy        ;where the largest value shall be put
         lda  zpWord1+1    ;the largest value
         sta  (zpWord0),y    ;put largest value in place
         ldy  zpWord1    ;index of free space
@@ -6220,7 +6249,8 @@ func_sort_uw    .proc
         sta  zpWord0
         bcs  _sort_loop
         dec  zpWord0+1
-_sort_loop    ldy  zpy        ;start of subroutine sort
+_sort_loop    
+        ldy  zpy        ;start of subroutine sort
         lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
         sta  _work3                  ;save value. will be over-written by largest number
         iny
@@ -6238,8 +6268,10 @@ _l1        dey
         bne  +
         lda  (zpWord0),y
         cmp  zpWord1
-+        bcc  _l1
-_l2        sty  _work1                  ;index of potentially largest value
++        
+        bcc  _l1
+_l2        
+        sty  _work1                  ;index of potentially largest value
         lda  (zpWord0),y
         sta  zpWord1          ;potentially largest value
         iny
@@ -6247,7 +6279,8 @@ _l2        sty  _work1                  ;index of potentially largest value
         sta  zpWord1+1
         dey
         jmp  _l1
-_l3        ldy  zpy           ;where the largest value shall be put
+_l3        
+        ldy  zpy           ;where the largest value shall be put
         lda  zpWord1          ;the largest value
         sta  (zpWord0),y      ;put largest value in place
         iny
@@ -7497,21 +7530,21 @@ angle    .byte  0,0,0,0,0  ; float
     .pend
     .pend
 
-;***********************
-; #LIBRARY : 'graphics' 
-;***********************
+                        ;***********************
+                        ; #LIBRARY : 'graphics' 
+                        ;***********************
 
-graphics    .proc
- 
-zpWord0     = 4     ; zp UWORD
+                        graphics    .proc
+                         
+                        zpWord0     = 4     ; zp UWORD
 
-                    BITMAP_ADDRESS = $2000
-                    WIDTH = $0140
-                    HEIGHT = $c8
+                                            BITMAP_ADDRESS = $2000
+                                            WIDTH = $0140
+                                            HEIGHT = $c8
 
-; non-zeropage variables
+                        ; non-zeropage variables
 
-; subroutines in this block
+                        ; subroutines in this block
  
 
                         clear_screen    .proc
@@ -7739,8 +7772,8 @@ zpWord0     = 4     ; zp UWORD
                             ; variables
                             prog8_label_62_counter = 115
 
-; non-zeropage variables
-    .pend
+                        ; non-zeropage variables
+                            .pend
     
 
                     vertical_line    .proc
@@ -7814,7 +7847,7 @@ zpWord0     = 4     ; zp UWORD
                     .pend
                     
 
-                get_y_lookup    .proc
+                        get_y_lookup    .proc
                     
                             lda  graph.pixel._y_lookup_lo,y
                             pha
@@ -7825,19 +7858,19 @@ zpWord0     = 4     ; zp UWORD
                         .pend
     
     
-                prog8_init_vars    .block
-                    ;    src line: library:/prog8lib/c64/graphics.p8:318
-                    lda  #0
-                    sta  zpWord0
-                    sta  zpWord0+1
-                    
-                    rts
-                    .bend
+                        prog8_init_vars    .block
+                            ;    src line: library:/prog8lib/c64/graphics.p8:318
+                            lda  #0
+                            sta  zpWord0
+                            sta  zpWord0+1
+                            
+                            rts
+                            .bend
     
     
-    .pend
-                    ; global float constants
-                    ; memory slabs
-                    prog8_slabs    .block
-                        .bend
-prog8_program_end    ; end of program label for progend()
+                            .pend
+                                            ; global float constants
+                                            ; memory slabs
+                                            prog8_slabs    .block
+                                                .bend
+                        prog8_program_end    ; end of program label for progend()

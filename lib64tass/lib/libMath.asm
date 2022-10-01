@@ -37,6 +37,10 @@ if_u16_gt_0   .macro
 
 math    .proc
 
+    ;--------------------------------------------------------------- 
+    
+    math_store_reg    .byte  0        ; temporary storage
+
     ;---------------------------------------------------------------   u8/s8 ?=
 
     s8_cmp_eq
@@ -269,9 +273,68 @@ math    .proc
     u16_cmp_gt_else
         clc
         rts
+
+    ; ---------------------------------------------------------------   mul_bytes
+    ;
+    ;   multiply 2 bytes A and Y, result as byte in A  
+    ;   (signed or unsigned)
+    ;
+    ;   input   :   a,y
+    ;   output  :   a
+    
+    mul_bytes    .proc
         
+            sta  zpa            ; num1
+            sty  zpy            ; num2
+            lda  #0
+            beq  _enterloop
+    _doAdd        
+            clc
+            adc  zpa
+    _loop        
+            asl  zpa
+    _enterloop    
+            lsr  zpy
+            bcs  _doAdd
+            bne  _loop
+            
+            rts
+    .pend
 
+    ; --------------------------------------------------------------- mul_bytes_into_u16
+    ;
+    ;   multiply 2 bytes A and Y, result as word in A/Y (unsigned)
+    ;
+    ;   input   :   a,y
+    ;   output  :   a:y
+    ;
+    
+    mul_bytes_into_u16    .proc
+            sta  zpa
+            sty  zpy
+            stx  zpx
 
+            lda  #0
+            ldx  #8
+            lsr  zpa
+    -        
+            bcc  +
+            clc
+            adc  zpy
+    +        
+            ror  a
+            ror  zpa
+            dex
+            bne  -
+            tay
+            lda  zpa
+            ldx  zpx
+            
+            rts
+    .pend
+        
+        
+        
         
 .pend
 

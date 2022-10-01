@@ -16,10 +16,10 @@
 
 ;...............................................    types 
 
-;   .byte   unsigned byte   u8
-;   .char   signed   byte   s8
-;   .word   unsigned word   u16
-;   .sint   signed   word   s16
+    .byte   unsigned byte   u8
+    .char   signed   byte   s8
+    .word   unsigned word   u16
+    .sint   signed   word   s16
 
 ;...............................................    math (c) zpWord0    / zpWord1
 
@@ -47,8 +47,26 @@
     #   math.s16_cmp_gt     >=
     #   math.s16_cmp_lt     <=
 
-;............................................... 
+    ; ---------------------------------------------------------------   mul_bytes
+    ;
+    ;   multiply 2 bytes A and Y, result as byte in A  
+    ;   (signed or unsigned)
+    ;
+    ;   input   :   a,y
+    ;   output  :   a
+    
+    #   mul_bytes
 
+    ; --------------------------------------------------------------- mul_bytes_into_u16
+    ;
+    ;   multiply 2 bytes A and Y, result as word in A/Y (unsigned)
+    ;
+    ;   input   :   a,y
+    ;   output  :   a:y
+    ;
+    
+    mul_bytes_into_u16
+    
 ;;;
 ;;
 ;

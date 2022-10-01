@@ -31,19 +31,17 @@ program_entry_point	; assembly code starts here
 
 main	.proc
 
-    au8   .byte   1
-    bu8   .byte   2
-    cu8   .byte   1
+    au8   .byte    1
+    bu8   .byte    2
+    cu8   .byte    1
     
     as8   .char   -1
     bs8   .char    2
     cs8   .char   -3
 
-
     debug_carry .proc
         lda #'0'
         adc #0
-        
         rts
     .pend
     

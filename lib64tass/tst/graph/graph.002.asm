@@ -80,7 +80,7 @@ main	.proc
         graph_imm_y #3
         jsr graph.pixel
         
-        lda #0
+        lda #1
         sta graph.color_number  ;   color number 0
         graph_imm_x #5
         graph_imm_y #5

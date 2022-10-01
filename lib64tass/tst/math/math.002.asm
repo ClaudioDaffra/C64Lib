@@ -31,9 +31,9 @@ program_entry_point	; assembly code starts here
 
 main	.proc
 
-    au8   .byte   1
-    bu8   .byte   2
-    cu8   .char   1
+    au8   .byte    1
+    bu8   .byte    2
+    cu8   .char    1
     
     as8   .char   -1
     bs8   .char    2
