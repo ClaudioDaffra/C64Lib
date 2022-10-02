@@ -4,6 +4,14 @@
 ;       stack
 ; *********
 
+; ------------------------------------------------- sev
+
+sev .macro
+    sec
+    lda #$80    ; set overflow
+    sbc #$01
+.endm
+        
 stack .proc
 
         ; ------------------------------------------------- stack address
@@ -13,14 +21,6 @@ stack .proc
             hi = $cf00      ;   cf00    +   ff
         .endweak
         
-        ; ------------------------------------------------- sev
-        
-        sev .macro
-            sec
-            lda #$80    ; set overflow
-            sbc #$01
-        .endm
-
         ; ------------------------------------------------- stack pointer
         
         old     .byte   0       ;  old

@@ -3151,96 +3151,96 @@ math    .proc
                                     rts
                                     .pend
 
-divmod_w_asm    .proc
-    ; signed word division: make everything positive and fix sign afterwards
-        sta  zpWord1
-        sty  zpWord1+1
-        lda  zpWord0+1
-        eor  zpWord1+1
-        php            ; save sign
-        lda  zpWord0+1
-        bpl  +
-        lda  #0
-        sec
-        sbc  zpWord0
-        sta  zpWord0
-        lda  #0
-        sbc  zpWord0+1
-        sta  zpWord0+1
-+        
-        lda  zpWord1+1
-        bpl  +
-        lda  #0
-        sec
-        sbc  zpWord1
-        sta  zpWord1
-        lda  #0
-        sbc  zpWord1+1
-        sta  zpWord1+1
-+        
-        tay
-        lda  zpWord1
-        jsr  divmod_uw_asm
-        plp            ; restore sign
-        bpl  +
-        sta  zpWord1
-        sty  zpWord1+1
-        lda  #0
-        sec
-        sbc  zpWord1
-        pha
-        lda  #0
-        sbc  zpWord1+1
-        tay
-        pla
-+        
-        rts
-        .pend
+                                    divmod_w_asm    .proc
+                                        ; signed word division: make everything positive and fix sign afterwards
+                                            sta  zpWord1
+                                            sty  zpWord1+1
+                                            lda  zpWord0+1
+                                            eor  zpWord1+1
+                                            php            ; save sign
+                                            lda  zpWord0+1
+                                            bpl  +
+                                            lda  #0
+                                            sec
+                                            sbc  zpWord0
+                                            sta  zpWord0
+                                            lda  #0
+                                            sbc  zpWord0+1
+                                            sta  zpWord0+1
+                                    +        
+                                            lda  zpWord1+1
+                                            bpl  +
+                                            lda  #0
+                                            sec
+                                            sbc  zpWord1
+                                            sta  zpWord1
+                                            lda  #0
+                                            sbc  zpWord1+1
+                                            sta  zpWord1+1
+                                    +        
+                                            tay
+                                            lda  zpWord1
+                                            jsr  divmod_uw_asm
+                                            plp            ; restore sign
+                                            bpl  +
+                                            sta  zpWord1
+                                            sty  zpWord1+1
+                                            lda  #0
+                                            sec
+                                            sbc  zpWord1
+                                            pha
+                                            lda  #0
+                                            sbc  zpWord1+1
+                                            tay
+                                            pla
+                                    +        
+                                            rts
+                                            .pend
 
-divmod_uw_asm    .proc
-    ; -- divide two unsigned words (16 bit each) into 16 bit results
-    ;    input:  zpWord0 in ZP: 16 bit number, A/Y: 16 bit divisor
-    ;    output: zpWord1 in ZP: 16 bit remainder, A/Y: 16 bit division result
-    ;    division by zero will result in quotient = 65535 and remainder = divident
+                                    divmod_uw_asm    .proc
+                                        ; -- divide two unsigned words (16 bit each) into 16 bit results
+                                        ;    input:  zpWord0 in ZP: 16 bit number, A/Y: 16 bit divisor
+                                        ;    output: zpWord1 in ZP: 16 bit remainder, A/Y: 16 bit division result
+                                        ;    division by zero will result in quotient = 65535 and remainder = divident
 
 
-dividend = zpWord0
-remainder = zpWord1
-result = dividend ;save memory by reusing divident to store the result
+                                    dividend = zpWord0
+                                    remainder = zpWord1
+                                    result = dividend ;save memory by reusing divident to store the result
 
-        sta  _divisor
-        sty  _divisor+1
-        stx  zpx
-        lda  #0                ;preset remainder to 0
-        sta  remainder
-        sta  remainder+1
-        ldx  #16            ;repeat for each bit: ...
--        
-        asl  dividend        ;dividend lb & hb*2, msb -> Carry
-        rol  dividend+1
-        rol  remainder        ;remainder lb & hb * 2 + msb from carry
-        rol  remainder+1
-        lda  remainder
-        sec
-        sbc  _divisor        ;substract divisor to see if it fits in
-        tay                   ;lb result -> Y, for we may need it later
-        lda  remainder+1
-        sbc  _divisor+1
-        bcc  +            ;if carry=0 then divisor didn't fit in yet
+                                            sta  _divisor
+                                            sty  _divisor+1
+                                            stx  zpx
+                                            lda  #0                ;preset remainder to 0
+                                            sta  remainder
+                                            sta  remainder+1
+                                            ldx  #16            ;repeat for each bit: ...
+                                    -        
+                                            asl  dividend        ;dividend lb & hb*2, msb -> Carry
+                                            rol  dividend+1
+                                            rol  remainder        ;remainder lb & hb * 2 + msb from carry
+                                            rol  remainder+1
+                                            lda  remainder
+                                            sec
+                                            sbc  _divisor        ;substract divisor to see if it fits in
+                                            tay                   ;lb result -> Y, for we may need it later
+                                            lda  remainder+1
+                                            sbc  _divisor+1
+                                            bcc  +            ;if carry=0 then divisor didn't fit in yet
 
-        sta  remainder+1    ;else save substraction result as new remainder,
-        sty  remainder
-        inc  result        ;and INCrement result cause divisor fit in 1 times
-+        
-        dex
-        bne  -
+                                            sta  remainder+1    ;else save substraction result as new remainder,
+                                            sty  remainder
+                                            inc  result        ;and INCrement result cause divisor fit in 1 times
+                                    +        
+                                            dex
+                                            bne  -
 
-        lda  result
-        ldy  result+1
-        ldx  zpx
-        rts
-_divisor    .word 0
-        .pend
+                                            lda  result
+                                            ldy  result+1
+                                            ldx  zpx
+                                            rts
+                                    _divisor    .word 0
+                                            .pend
 
 
 randseed    .proc

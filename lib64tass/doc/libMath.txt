@@ -65,7 +65,7 @@
     ;   output  :   a:y
     ;
     
-    mul_bytes_into_u16
+    #   mul_bytes_into_u16
 
     ;..........................................................................
     ;
@@ -83,7 +83,7 @@
     ;     result    :     zpDWord0  :=  zpWord0 * zpWord1
     ;
     
-    multiply_words    
+    #   multiply_words    
 
     ;........................................ div_s8
     ;
@@ -97,7 +97,7 @@
     ;       y       =   remainder   ( unsigned ) 
     ;
     
-    div_s8    
+    #   div_s8    
 
     ;........................................ div_u8
     ;
@@ -111,9 +111,39 @@
     ;       y       =   remainder   ( unsigned ) 
     ;
 
-    div_u8
-    
+    #   div_u8
+
+    ;.......................................................................    div_u16
     ;
+    ;   divide two unsigned words (16 bit each) into 16 bit results
+    ;
+    ;    input:  
+    ;            zpWord0    :   16 bit number, 
+    ;            A/Y        :   16 bit divisor
+    ;    output: 
+    ;            zpWord1    :   16 bit remainder, 
+    ;            A/Y        :   16 bit division result
+    ;            flag V     :   1 = division by zero
+    ;
+    ;   signed word division: make everything positive and fix sign afterwards
+        
+    #   div_s16
+    
+    ;.......................................................................    div_u16
+    ;
+    ;   divide two unsigned words (16 bit each) into 16 bit results
+    ;
+    ;    input:  
+    ;            zpWord0    :   16 bit number, 
+    ;            A/Y        :   16 bit divisor
+    ;    output: 
+    ;            zpWord1    :   in ZP: 16 bit remainder, 
+    ;            A/Y        :   16 bit division result
+    ;            flag V     :   1 = division by zero
+    ;
+    
+    #    div_u16
+    
     
 ;;;
 ;;
