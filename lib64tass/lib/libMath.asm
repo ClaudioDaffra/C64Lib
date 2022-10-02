@@ -6,6 +6,7 @@
 ;   macro
 
 ; --------------------------------------------------------------- u16 add 1
+
 u16_add_1   .macro
     clc
     lda \1
@@ -15,7 +16,9 @@ u16_add_1   .macro
     adc #0
     sta \1+1
 .endm
+
 ; --------------------------------------------------------------- u16_sub_1
+
 u16_sub_1   .macro
     sec
     lda \1
@@ -25,6 +28,7 @@ u16_sub_1   .macro
     sbc #0
     sta \1 +1
 .endm
+
 ; --------------------------------------------------------------- if_u16_gt_0
 if_u16_gt_0   .macro
         lda \1
@@ -36,10 +40,6 @@ if_u16_gt_0   .macro
 ;
 
 math    .proc
-
-    ;--------------------------------------------------------------- 
-    
-    math_store_reg    .byte  0        ; temporary storage
 
     ;---------------------------------------------------------------   u8/s8 ?=
 
@@ -199,7 +199,6 @@ math    .proc
         clc
         rts
 
-    
     ; --------------------------------------------------------------- u16/s16 >
 
     s16_cmp_ge
@@ -643,8 +642,506 @@ math    .proc
 
     .pend
 
+    ;............................... 
+    ;   optimized multiplications    
+    ;............................... 
 
-.pend
+    mul_byte_3    .proc
+            ; A = A + A*2
+            sta  zpa
+            asl  a
+            clc
+            adc  zpa
+            rts
+    .pend
+
+    mul_word_3    .proc
+            ; AY = AY*2 + AY
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            tay
+            lda  zpWord0
+            rts
+    .pend
+
+    mul_byte_5    .proc
+            ; A = A*4 + A
+            sta  zpa
+            asl  a
+            asl  a
+            clc
+            adc  zpa
+            rts
+    .pend
+
+    mul_word_5    .proc
+            ; AY = AY*4 + AY
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            tay
+            lda  zpWord0
+            rts
+    .pend
+
+    mul_byte_6    .proc
+            ; A = (A*2 + A)*2
+            sta  zpa
+            asl  a
+            clc
+            adc  zpa
+            asl  a
+            rts
+    .pend
+
+    mul_word_6    .proc
+            ; AY = (AY*2 + AY)*2
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            tay
+            lda  zpWord0+1
+            adc  zpWord1+1
+            sta  zpWord0+1
+            tya
+            asl  a
+            rol  zpWord0+1
+            ldy  zpWord0+1
+            rts
+    .pend
+
+    mul_byte_7    .proc
+            ; A = A*8 - A
+            sta  zpa
+            asl  a
+            asl  a
+            asl  a
+            sec
+            sbc  zpa
+            rts
+    .pend
+
+    mul_word_7    .proc
+            ; AY = AY*8 - AY
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            sec
+            sbc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            sbc  zpWord1+1
+            tay
+            lda  zpWord0
+            rts
+    .pend
+
+    mul_byte_9    .proc
+            ; A = A*8 + A
+            sta  zpa
+            asl  a
+            asl  a
+            asl  a
+            clc
+            adc  zpa
+            rts
+    .pend
+
+    mul_word_9    .proc
+            ; AY = AY*8 + AY
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            tay
+            lda  zpWord0
+            rts
+            rts
+    .pend
+
+    mul_byte_10    .proc
+            ; A=(A*4 + A)*2
+            sta  zpa
+            asl  a
+            asl  a
+            clc
+            adc  zpa
+            asl  a
+            rts
+    .pend
+
+    mul_word_10    .proc
+            ; AY=(AY*4 + AY)*2
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            sta  zpWord0+1
+            lda  zpWord0
+            asl  a
+            rol  zpWord0+1
+            ldy  zpWord0+1
+            rts
+    .pend
+
+    mul_byte_11    .proc
+            ; A=(A*2 + A)*4 - A
+            sta  zpa
+            asl  a
+            clc
+            adc  zpa
+            asl  a
+            asl  a
+            sec
+            sbc  zpa
+            rts
+    .pend
+
+    ; mul_word_11 is skipped (too much code)
+
+    mul_byte_12    .proc
+            ; A=(A*2 + A)*4
+            sta  zpa
+            asl  a
+            clc
+            adc  zpa
+            asl  a
+            asl  a
+            rts
+    .pend
+
+    mul_word_12    .proc
+            ; AY=(AY*2 + AY)*4
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            sta  zpWord0+1
+            lda  zpWord0
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            ldy  zpWord0+1
+            rts
+    .pend
+
+    mul_byte_13    .proc
+            ; A=(A*2 + A)*4 + A
+            sta  zpa
+            asl  a
+            clc
+            adc  zpa
+            asl  a
+            asl  a
+            clc
+            adc  zpa
+            rts
+    .pend
+
+    ; mul_word_13 is skipped (too much code)
+
+    mul_byte_14    .proc
+            ; A=(A*8 - A)*2
+            sta  zpa
+            asl  a
+            asl  a
+            asl  a
+            sec
+            sbc  zpa
+            asl  a
+            rts
+    .pend
+
+    ; mul_word_14 is skipped (too much code)
+
+    mul_byte_15    .proc
+            ; A=A*16 - A
+            sta  zpa
+            asl  a
+            asl  a
+            asl  a
+            asl  a
+            sec
+            sbc  zpa
+            rts
+    .pend
+
+    mul_word_15    .proc
+            ; AY = AY * 16 - AY
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            sec
+            sbc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            sbc  zpWord1+1
+            tay
+            lda  zpWord0
+            rts
+    .pend
+
+    mul_byte_20    .proc
+            ; A=(A*4 + A)*4
+            sta  zpa
+            asl  a
+            asl  a
+            clc
+            adc  zpa
+            asl  a
+            asl  a
+            rts
+    .pend
+
+    mul_word_20    .proc
+            ; AY = AY * 10 * 2
+            jsr  mul_word_10
+            sty  zpa
+            asl  a
+            rol  zpa
+            ldy  zpa
+            rts
+    .pend
+
+    mul_byte_25    .proc
+            ; A=(A*2 + A)*8 + A
+            sta  zpa
+            asl  a
+            clc
+            adc  zpa
+            asl  a
+            asl  a
+            asl  a
+            clc
+            adc  zpa
+            rts
+    .pend
+
+    mul_word_25    .proc
+            ; AY = (AY*2 + AY) *8 + AY
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            sta  zpWord0+1
+            lda  zpWord0
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            tay
+            lda  zpWord0
+            rts
+    .pend
+
+    mul_byte_40    .proc
+            and  #7
+            tay
+            lda  _forties,y
+            rts
+    _forties    .byte  0*40, 1*40, 2*40, 3*40, 4*40, 5*40, 6*40, 7*40 & 255
+    .pend
+
+    mul_word_40    .proc
+            ; AY = (AY*4 + AY)*8
+            sta  zpWord0
+            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
+            asl  a
+            rol  zpWord0+1
+            asl  a
+            rol  zpWord0+1
+            clc
+            adc  zpWord1
+            sta  zpWord0
+            lda  zpWord0+1
+            adc  zpWord1+1
+            asl  zpWord0
+            rol  a
+            asl  zpWord0
+            rol  a
+            asl  zpWord0
+            rol  a
+            tay
+            lda  zpWord0
+            rts
+    .pend
+
+    mul_byte_50    .proc
+            and  #7
+            tay
+            lda  _fifties, y
+            rts
+    _fifties    .byte  0*50, 1*50, 2*50, 3*50, 4*50, 5*50, 6*50 & 255, 7*50 & 255
+    .pend
+
+    mul_word_50    .proc
+            ; AY = AY * 25 * 2
+            jsr  mul_word_25
+            sty  zpa
+            asl  a
+            rol  zpa
+            ldy  zpa
+            rts
+            .pend
+
+    mul_byte_80    .proc
+            and  #3
+            tay
+            lda  _eighties, y
+            rts
+    _eighties    .byte  0*80, 1*80, 2*80, 3*80
+    .pend
+
+    mul_word_80    .proc
+            ; AY = AY * 40 * 2
+            jsr  mul_word_40
+            sty  zpa
+            asl  a
+            rol  zpa
+            ldy  zpa
+            rts
+    .pend
+
+    mul_byte_100    .proc
+            and  #3
+            tay
+            lda  _hundreds, y
+            rts
+    _hundreds    .byte  0*100, 1*100, 2*100, 3*100 & 255
+    .pend
+
+    mul_word_100    .proc
+            ; AY = AY * 25 * 4
+            jsr  mul_word_25
+            sty  zpa
+            asl  a
+            rol  zpa
+            asl  a
+            rol  zpa
+            ldy  zpa
+            rts
+    .pend
+
+    mul_word_320    .proc
+            ; AY = A * 256 + A * 64     (msb in Y doesn't matter)
+            sta  zpy
+            ldy  #0
+            sty  zpa
+            asl  a
+            rol  zpa
+            asl  a
+            rol  zpa
+            asl  a
+            rol  zpa
+            asl  a
+            rol  zpa
+            asl  a
+            rol  zpa
+            asl  a
+            rol  zpa
+            pha
+            clc
+            lda  zpy
+            adc  zpa
+            tay
+            pla
+            rts
+    .pend
+
+    mul_word_640    .proc
+            ; AY = (A * 2 * 320) (msb in Y doesn't matter)
+            asl  a
+            jmp  mul_word_320
+    .pend
+
+    ;
+    
+.pend   
 
 
 
