@@ -151,7 +151,6 @@ stack .proc
         ;
         ; -- read the byte from the memory address on the top of the stack 
 
-
         read_byte_from_address_on_stack    .proc
  
             ldx  stack.pointer
@@ -171,8 +170,27 @@ stack .proc
         peek    .proc
                 jmp read_byte_from_address_on_stack
         .pend
+
+        ; ------------------------------------------------- push_sp , pop_sp
+        ;
+        ;   input    :   /
+        ;   output   :   /
+        ;   
+        
+        push_sp .proc
+            lda stack.pointer
+            jsr push_byte
+            rts
+        .pend
+        
+        pop_sp .proc
+            jsr pop_byte
+            sta stack.pointer
+            rts
+        .pend
         
         ;
+        
 .pend
 
 
