@@ -281,8 +281,8 @@ math    .proc
     ;   input   :   a,y
     ;   output  :   a
 
-    mul_u8
-    mul_s8
+    mul_u8  =   mul_bytes
+    mul_s8  =   mul_bytes
     mul_bytes    .proc
         
             sta  zpa            ; num1
@@ -641,6 +641,32 @@ math    .proc
             rts
 
     .pend
+
+    ;............................................................   lsr_byte_A
+    ;
+    ; support for bit shifting that is too large to be unrolled:
+    ; -- lsr signed byte in A times the value in Y (assume >0)        
+    ;
+    ;   shift a >> y
+    ;
+    
+    shift_right = lsr_byte_A
+    lsr_byte_A    .proc
+            cmp  #0
+            bmi  _negative
+    -        
+            lsr  a
+            dey
+            bne  -
+            rts
+    _negative    
+            lsr  a
+            ora  #$80
+            dey
+            bne  _negative
+            rts
+    .pend
+
 
     ;............................... 
     ;   optimized multiplications    

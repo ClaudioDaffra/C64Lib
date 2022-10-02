@@ -318,9 +318,16 @@ main	.proc
             load_imm_ay #12
             jsr math.mul_word_640
             jsr std.print_u16_dec
-            
-            lda #' '
+
+            lda #char.nl
             jsr sys.CHROUT
+            
+            ;--------------------------------------------   math.lsr_byte_A  (16 (3)>>2 )
+            
+            lda #16
+            ldy #3
+            jsr math.shift_right    ;  16    00010000    00000010    2
+            jsr std.print_u8_dec
             
             ;
             
