@@ -281,7 +281,9 @@ math    .proc
     ;
     ;   input   :   a,y
     ;   output  :   a
-    
+
+    mul_u8
+    mul_s8
     mul_bytes    .proc
         
             sta  zpa            ; num1
@@ -333,9 +335,165 @@ math    .proc
             rts
     .pend
         
+    ;..........................................................................
+    ;
+    ;   multiply two 16-bit words into a 32-bit zpDWord0  (signed and unsigned)
+    ;
+    ;      input    :
+    ;   
+    ;           A/Y             = first 16-bit number, 
+    ;           zpWord0 in ZP   = second 16-bit number
+    ;
+    ;      output   :
+    ;        
+    ;           zpDWord0  4-bytes/32-bits product, LSB order (low-to-high)
+    ;
+    ;     result    :     zpDWord0  :=  zpWord0 * zpWord1
+    ;
+
+    multiply_words    .proc
+
+            sta  zpWord1
+            sty  zpWord1+1
+            stx  zpx
+    mult16        
+            lda  #0
+            sta  zpDWord0+2     ; clear upper bits of product
+            sta  zpDWord0+3
+            ldx  #16            ; for all 16 bits...
+    -         
+            lsr  zpWord0+1      ; divide multiplier by 2
+            ror  zpWord0
+            bcc  +
+            lda  zpDWord0+2     ; get upper half of product and add multiplicand
+            clc
+            adc  zpWord1
+            sta  zpDWord0+2
+            lda  zpDWord0+3
+            adc  zpWord1+1
+    +         
+            ror  a              ; rotate partial product
+            sta  zpDWord0+3
+            ror  zpDWord0+2
+            ror  zpDWord0+1
+            ror  zpDWord0
+            dex
+            bne  -
+            ldx  zpx
+            
+            rts
+
+    .pend
+
+    ;........................................ div_s8
+    ;
+    ;   divide A by Y, result quotient in A, remainder in Y   (signed)
+    ;
+    ;   Inputs:
+    ;       a       =   8-bit numerator
+    ;       y       =   8-bit denominator
+    ;   Outputs:
+    ;       a       =   a / y       ( signed   )
+    ;       y       =   remainder   ( unsigned ) 
+    ;
+    
+    div_s8    .proc
+         
+            sta  zpa
+            tya
+            eor  zpa
+            php             ; save sign
+            lda  zpa
+            bpl  +
+            eor  #$ff
+            sec
+            adc  #0         ; make it positive
+    +        
+            pha
+            tya
+            bpl  +
+            eor  #$ff
+            sec
+            adc  #0         ; make it positive
+            tay
+    +        
+            pla
+            jsr  internal_div_u8
+            sta  zpByte0
+            plp
+            bpl  +
+            tya
+            eor  #$ff
+            sec
+            adc  #0         ; negate result
+                            ;   a   result
+            ldy zpByte0     ;   y   remainder
+    +        
+            rts
+
+    .pend
+
+    internal_div_u8    .proc
+
+            sty  zpy
+            sta  zpa
+            stx  zpx
+
+            lda  #0
+            ldx  #8
+            asl  zpa
+    -        
+            rol  a
+            cmp  zpy
+            bcc  +
+            sbc  zpy
+    +        
+            rol  zpa
+            dex
+            bne  -
+            ldy  zpa
+            ldx  zpx
+            
+            rts
+    .pend
+    
+    ;........................................ div_u8
+    ;
+    ;   divide A by Y, result quotient in A, remainder in Y   (unsigned)
+    ;
+    ;   Inputs:
+    ;       a       =   8-bit numerator
+    ;       y       =   8-bit denominator
+    ;   Outputs:
+    ;       a       =   a / y       ( unsigned   )
+    ;       y       =   remainder   ( unsigned ) 
+    ;
+
+    div_u8    .proc
+    
+        sta zpByte0
+        sty zpByte1
         
+        lda #0
+        ldx #8
+        asl zpByte0
+    L1  
+        rol
+        cmp zpByte1
+        bcc L2
+        sbc zpByte1
+    L2 
+        rol zpByte0
+        dex
+        bne L1
+        tay
+        lda zpByte0
         
-        
+        rts
+    .pend
+    
+    ;
+
 .pend
 
 

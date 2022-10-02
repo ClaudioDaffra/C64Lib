@@ -66,6 +66,54 @@
     ;
     
     mul_bytes_into_u16
+
+    ;..........................................................................
+    ;
+    ;   multiply two 16-bit words into a 32-bit zpDWord0  (signed and unsigned)
+    ;
+    ;      input    :
+    ;   
+    ;           A/Y             = first 16-bit number, 
+    ;           zpWord0 in ZP   = second 16-bit number
+    ;
+    ;      output   :
+    ;        
+    ;           zpDWord0  4-bytes/32-bits product, LSB order (low-to-high)
+    ;
+    ;     result    :     zpDWord0  :=  zpWord0 * zpWord1
+    ;
+    
+    multiply_words    
+
+    ;........................................ div_s8
+    ;
+    ;   divide A by Y, result quotient in A, remainder in Y   (signed)
+    ;
+    ;   Inputs:
+    ;       a       =   8-bit numerator
+    ;       y       =   8-bit denominator
+    ;   Outputs:
+    ;       a       =   a / y       ( signed   )
+    ;       y       =   remainder   ( unsigned ) 
+    ;
+    
+    div_s8    
+
+    ;........................................ div_u8
+    ;
+    ;   divide A by Y, result quotient in A, remainder in Y   (unsigned)
+    ;
+    ;   Inputs:
+    ;       a       =   8-bit numerator
+    ;       y       =   8-bit denominator
+    ;   Outputs:
+    ;       a       =   a / y       ( unsigned   )
+    ;       y       =   remainder   ( unsigned ) 
+    ;
+
+    div_u8
+    
+    ;
     
 ;;;
 ;;

@@ -3047,106 +3047,109 @@ math    .proc
                             .pend
 
 
-multiply_words    .proc
+                            multiply_words    .proc
 
-    ; -- multiply two 16-bit words into a 32-bit result  (signed and unsigned)
-    ;
-    ;      input: 
-    ;           A/Y             = first 16-bit number, 
-    ;           zpWord0 in ZP   = second 16-bit number
-    ;      output: 
-    ;           multiply_words.result  4-bytes/32-bits product, LSB order (low-to-high)
-    ;
-    ;   ->  zpWord0 * zpWord1 = zpWord3
+                                ; -- multiply two 16-bit words into a 32-bit result  (signed and unsigned)
+                                ;
+                                ;      input: 
+                                ;           A/Y             = first 16-bit number, 
+                                ;           zpWord0 in ZP   = second 16-bit number
+                                ;      output: 
+                                ;           multiply_words.result  4-bytes/32-bits product, LSB order (low-to-high)
+                                ;
+                                ;   ->  zpWord0 * zpWord1 = zpWord3
 
-        sta  zpWord1
-        sty  zpWord1+1
-        stx  zpx
-mult16        
-        lda  #0
-        sta  result+2       ; clear upper bits of product
-        sta  result+3
-        ldx  #16            ; for all 16 bits...
--         
-        lsr  zpWord0+1      ; divide multiplier by 2
-        ror  zpWord0
-        bcc  +
-        lda  result+2       ; get upper half of product and add multiplicand
-        clc
-        adc  zpWord1
-        sta  result+2
-        lda  result+3
-        adc  zpWord1+1
-+         
-        ror  a              ; rotate partial product
-        sta  result+3
-        ror  result+2
-        ror  result+1
-        ror  result
-        dex
-        bne  -
-        ldx  zpx
-        
-        rts
+                                    sta  zpWord1
+                                    sty  zpWord1+1
+                                    stx  zpx
+                            mult16        
+                                    lda  #0
+                                    sta  result+2       ; clear upper bits of product
+                                    sta  result+3
+                                    ldx  #16            ; for all 16 bits...
+                            -         
+                                    lsr  zpWord0+1      ; divide multiplier by 2
+                                    ror  zpWord0
+                                    bcc  +
+                                    lda  result+2       ; get upper half of product and add multiplicand
+                                    clc
+                                    adc  zpWord1
+                                    sta  result+2
+                                    lda  result+3
+                                    adc  zpWord1+1
+                            +         
+                                    ror  a              ; rotate partial product
+                                    sta  result+3
+                                    ror  result+2
+                                    ror  result+1
+                                    ror  result
+                                    dex
+                                    bne  -
+                                    ldx  zpx
+                                    
+                                    rts
 
-result        .byte  0,0,0,0
-        .pend
-
-
-divmod_b_asm    .proc
-    ; signed byte division: make everything positive and fix sign afterwards
-        sta  zpy
-        tya
-        eor  zpy
-        php            ; save sign
-        lda  zpy
-        bpl  +
-        eor  #$ff
-        sec
-        adc  #0            ; make it positive
-+        pha
-        tya
-        bpl  +
-        eor  #$ff
-        sec
-        adc  #0            ; make it positive
-        tay
-+        pla
-        jsr  divmod_ub_asm
-        sta  _remainder
-        plp
-        bpl  +
-        tya
-        eor  #$ff
-        sec
-        adc  #0            ; negate result
-        tay
-+        rts
-_remainder    .byte  0
-        .pend
+                            result        .byte  0,0,0,0
+                                    .pend
 
 
-divmod_ub_asm    .proc
-    ; -- divide A by Y, result quotient in Y, remainder in A   (unsigned)
-    ;    division by zero will result in quotient = 255 and remainder = original number
-        sty  zpx
-        sta  zpy
-        stx  math_store_reg
+                            divmod_b_asm    .proc
+                                ; signed byte division: make everything positive and fix sign afterwards
+                                    sta  zpy
+                                    tya
+                                    eor  zpy
+                                    php            ; save sign
+                                    lda  zpy
+                                    bpl  +
+                                    eor  #$ff
+                                    sec
+                                    adc  #0            ; make it positive
+                            +        
+                                    pha
+                                    tya
+                                    bpl  +
+                                    eor  #$ff
+                                    sec
+                                    adc  #0            ; make it positive
+                                    tay
+                            +        
+                                    pla
+                                    jsr  divmod_ub_asm
+                                    sta  _remainder
+                                    plp
+                                    bpl  +
+                                    tya
+                                    eor  #$ff
+                                    sec
+                                    adc  #0            ; negate result
+                                    tay
+                            +        
+                                    rts
+                            _remainder    .byte  0
+                            .pend
 
-        lda  #0
-        ldx  #8
-        asl  zpy
--        rol  a
-        cmp  zpx
-        bcc  +
-        sbc  zpx
-+        rol  zpy
-        dex
-        bne  -
-        ldy  zpy
-        ldx  math_store_reg
-        rts
-        .pend
+
+                            divmod_ub_asm    .proc
+                                ; -- divide A by Y, result quotient in Y, remainder in A   (unsigned)
+                                ;    division by zero will result in quotient = 255 and remainder = original number
+                                    sty  zpx
+                                    sta  zpy
+                                    stx  math_store_reg
+
+                                    lda  #0
+                                    ldx  #8
+                                    asl  zpy
+                            -        rol  a
+                                    cmp  zpx
+                                    bcc  +
+                                    sbc  zpx
+                            +        rol  zpy
+                                    dex
+                                    bne  -
+                                    ldy  zpy
+                                    ldx  math_store_reg
+                                    rts
+                                    .pend
 
 divmod_w_asm    .proc
     ; signed word division: make everything positive and fix sign afterwards

@@ -45,12 +45,12 @@ main	.proc
 
             lda #8
             ldy #3
-            jsr math.mul_bytes
+            jsr math.mul_u8         ;   mul_bytes
             jsr std.print_u8_dec    ;   unsigned
 
             lda #8
             ldy #-3
-            jsr math.mul_bytes
+            jsr math.mul_s8         ;   mul_bytes
             jsr std.print_s8_dec    ;   signed
 
             ;--------------------------------------------   mul bytes into word
@@ -64,6 +64,28 @@ main	.proc
             ldy #40 
             jsr math.mul_bytes_into_u16
             jsr std.print_u16_dec
+
+            ;--------------------------------------------   mul words in dwords
+
+            lda #char.nl
+            jsr sys.CHROUT
+            
+            load_imm_zpWord0    #1234
+            load_imm_zpWord1    #5678
+            jsr math.multiply_words
+            
+            ;   $BCE96A00
+            
+            lda zpDWord0+3
+            jsr std.print_u8_hex
+            lda zpDWord0+2
+            jsr std.print_u8_hex
+            lda zpDWord0+1
+            jsr std.print_u8_hex
+            lda zpDWord0+0
+            jsr std.print_u8_hex
+            
+            ;
             
             rts
             

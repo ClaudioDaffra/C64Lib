@@ -79,19 +79,21 @@ zpWord1lo   = $fd+1
 
 ;   -------------------------------------------- safe?
 
-zpByte24    = $03       ;   zpWord  20
-zpByte25    = $04       ;           21
+zpByte24    = $03           ;   zpWord  20
+zpByte25    = $04           ;           21
 
-zpByte36    = $05       ;           30
-zpByte37    = $06       ;           31
+zpByte36    = $05           ;           30
+zpByte37    = $06           ;           31
 
-zpWord2     = $03       ;    $B1AA, execution address of routine converting floating point to integer.
-zpWord2hi   = $03
-zpWord2lo   = $03+1
+zpDWord0    = $03           ;   32 bit
 
-zpWord3     = $05       ;    $B391, execution address of routine converting integer to floating point.
-zpWord3hi   = $05
-zpWord3lo   = $05+1
+    zpWord2     = $03       ;   $B1AA, execution address of routine converting floating point to integer.
+        zpWord2hi   = $03
+        zpWord2lo   = $03+1
+
+    zpWord3     = $05       ;   $B391, execution address of routine converting integer to floating point.
+        zpWord3hi   = $05
+        zpWord3lo   = $05+1
 
 ;**********
 ;           temp
