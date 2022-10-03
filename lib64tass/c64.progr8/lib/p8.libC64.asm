@@ -782,136 +782,136 @@ string_7    ; PETSCII:"$"
 
                     ; subroutines in this block
  
-                    nl    .proc
+                            nl    .proc
 
-                        lda  #$8d
-                        jmp  txt.chrout
+                                lda  #$8d
+                                jmp  txt.chrout
 
-            .pend
-                     
-                    spc    .proc
-                     
-                        lda  #$20
-                        jmp  txt.chrout
+                    .pend
+                             
+                            spc    .proc
+                             
+                                lda  #$20
+                                jmp  txt.chrout
 
-            .pend
- 
-            column    .proc
+                        .pend
              
-                    sec
-                    jsr  c64.PLOT
-                    tay
-                    clc
-                    jmp  c64.PLOT
-                    
-    .pend
+                        column    .proc
+                         
+                                sec
+                                jsr  c64.PLOT
+                                tay
+                                clc
+                                jmp  c64.PLOT
+                                
+                            .pend
+                         
+                                    fill_screen    .proc
+                                     
+                                            pha
+                                            tya
+                                            jsr  clear_screencolors
+                                            pla
+                                            jmp  clear_screenchars
+                                            
+                            .pend
  
-            fill_screen    .proc
-             
-                    pha
-                    tya
-                    jsr  clear_screencolors
-                    pla
-                    jmp  clear_screenchars
-                    
-    .pend
+                                        clear_screenchars    .proc
+                                         
+                                                ldy  #250
+                                        -        
+                                                sta  c64.Screen+250*0-1,y
+                                                sta  c64.Screen+250*1-1,y
+                                                sta  c64.Screen+250*2-1,y
+                                                sta  c64.Screen+250*3-1,y
+                                                dey
+                                                bne  -
+                                                
+                                                rts
+
+                                .pend
  
-            clear_screenchars    .proc
-             
-                    ldy  #250
-            -        
-                    sta  c64.Screen+250*0-1,y
-                    sta  c64.Screen+250*1-1,y
-                    sta  c64.Screen+250*2-1,y
-                    sta  c64.Screen+250*3-1,y
-                    dey
-                    bne  -
-                    
-                    rts
+                                            clear_screencolors    .proc
 
-    .pend
- 
-            clear_screencolors    .proc
+                                                    ldy  #250
+                                            -        
+                                                    sta  c64.Colors+250*0-1,y
+                                                    sta  c64.Colors+250*1-1,y
+                                                    sta  c64.Colors+250*2-1,y
+                                                    sta  c64.Colors+250*3-1,y
+                                                    dey
+                                                    bne  -
+                                                    rts
+                                    .pend
+                                 
+                                    scroll_left    .proc
+                                     
+                                            stx  zpx
+                                            bcc _scroll_screen
 
-                    ldy  #250
-            -        
-                    sta  c64.Colors+250*0-1,y
-                    sta  c64.Colors+250*1-1,y
-                    sta  c64.Colors+250*2-1,y
-                    sta  c64.Colors+250*3-1,y
-                    dey
-                    bne  -
-                    rts
-    .pend
- 
-            scroll_left    .proc
-             
-                    stx  zpx
-                    bcc _scroll_screen
+                                    +       ; scroll the screen and the color memory
 
-            +       ; scroll the screen and the color memory
+                                            ldx  #0
+                                            ldy  #38
+                                    -
+                                            .for row=0, row<=24, row+=1
+                                                lda  c64.Screen + 40*row + 1,x
+                                                sta  c64.Screen + 40*row + 0,x
+                                                lda  c64.Colors + 40*row + 1,x
+                                                sta  c64.Colors + 40*row + 0,x
+                                            .next
+                                            inx
+                                            dey
+                                            bpl  -
+                                            rts
 
-                    ldx  #0
-                    ldy  #38
-            -
-                    .for row=0, row<=24, row+=1
-                        lda  c64.Screen + 40*row + 1,x
-                        sta  c64.Screen + 40*row + 0,x
-                        lda  c64.Colors + 40*row + 1,x
-                        sta  c64.Colors + 40*row + 0,x
-                    .next
-                    inx
-                    dey
-                    bpl  -
-                    rts
+                                            _scroll_screen  ; scroll only the screen memory
+                                                    ldx  #0
+                                                    ldy  #38
+                                            -
+                                                    .for row=0, row<=24, row+=1
+                                                        lda  c64.Screen + 40*row + 1,x
+                                                        sta  c64.Screen + 40*row + 0,x
+                                                    .next
+                                                    inx
+                                                    dey
+                                                    bpl  -
 
-            _scroll_screen  ; scroll only the screen memory
-                    ldx  #0
-                    ldy  #38
-            -
-                    .for row=0, row<=24, row+=1
-                        lda  c64.Screen + 40*row + 1,x
-                        sta  c64.Screen + 40*row + 0,x
-                    .next
-                    inx
-                    dey
-                    bpl  -
+                                                    ldx  zpx
+                                                    rts
+                                    .pend
 
-                    ldx  zpx
-                    rts
-    .pend
+                                        scroll_right    .proc
+                                         
+                                                stx  zpx
+                                                bcc  _scroll_screen
 
-            scroll_right    .proc
-             
-                    stx  zpx
-                    bcc  _scroll_screen
+                                        +       ; scroll the screen and the color memory
+                                                ldx  #38
+                                        -
+                                                .for row=0, row<=24, row+=1
+                                                    lda  c64.Screen + 40*row + 0,x
+                                                    sta  c64.Screen + 40*row + 1,x
+                                                    lda  c64.Colors + 40*row + 0,x
+                                                    sta  c64.Colors + 40*row + 1,x
+                                                .next
+                                                dex
+                                                bpl  -
+                                                rts
 
-            +       ; scroll the screen and the color memory
-                    ldx  #38
-            -
-                    .for row=0, row<=24, row+=1
-                        lda  c64.Screen + 40*row + 0,x
-                        sta  c64.Screen + 40*row + 1,x
-                        lda  c64.Colors + 40*row + 0,x
-                        sta  c64.Colors + 40*row + 1,x
-                    .next
-                    dex
-                    bpl  -
-                    rts
+                                        _scroll_screen  ; scroll only the screen memory
+                                                ldx  #38
+                                        -
+                                                .for row=0, row<=24, row+=1
+                                                    lda  c64.Screen + 40*row + 0,x
+                                                    sta  c64.Screen + 40*row + 1,x
+                                                .next
+                                                dex
+                                                bpl  -
 
-            _scroll_screen  ; scroll only the screen memory
-                    ldx  #38
-            -
-                    .for row=0, row<=24, row+=1
-                        lda  c64.Screen + 40*row + 0,x
-                        sta  c64.Screen + 40*row + 1,x
-                    .next
-                    dex
-                    bpl  -
-
-                    ldx  zpx
-                    rts
-    .pend
+                                                ldx  zpx
+                                                rts
+                                .pend
  
             scroll_up    .proc
              
@@ -1308,230 +1308,231 @@ string_7    ; PETSCII:"$"
 
 c64    .proc
      
-    TIME_HI = $a0
-    TIME_MID = $a1
-    TIME_LO = $a2
-    STATUS = $90
-    STKEY = $91
-    SFDX = $cb
+                        TIME_HI = $a0
+                        TIME_MID = $a1
+                        TIME_LO = $a2
+                        STATUS = $90
+                        STKEY = $91
+                        SFDX = $cb
                         COLOR = $0286
-    HIBASE = $0288
-    CINV = $0314
-    CBINV = $0316
-    NMINV = $0318
-    NMI_VEC = $fffa
-    RESET_VEC = $fffc
+                        HIBASE = $0288
+                        CINV = $0314
+                        CBINV = $0316
+                        NMINV = $0318
+                        NMI_VEC = $fffa
+                        RESET_VEC = $fffc
     
-    IRQ_VEC = $fffe
-    SPRPTR0 = $07f8
-    SPRPTR1 = $07f9
-    SPRPTR2 = $07fa
-    SPRPTR3 = $07fb
-    SPRPTR4 = $07fc
-    SPRPTR5 = $07fd
-    SPRPTR6 = $07fe
-    SPRPTR7 = $07ff
-    SPRPTR  = $07f8
+                        IRQ_VEC = $fffe
+                        SPRPTR0 = $07f8
+                        SPRPTR1 = $07f9
+                        SPRPTR2 = $07fa
+                        SPRPTR3 = $07fb
+                        SPRPTR4 = $07fc
+                        SPRPTR5 = $07fd
+                        SPRPTR6 = $07fe
+                        SPRPTR7 = $07ff
+                        SPRPTR  = $07f8
+                        
+                        SP0X = $d000
+                        SP0Y = $d001
+                        SP1X = $d002
+                        SP1Y = $d003
+                        SP2X = $d004
+                        SP2Y = $d005
+                        SP3X = $d006
+                        SP3Y = $d007
+                        SP4X = $d008
+                        SP4Y = $d009
+                        SP5X = $d00a
+                        SP5Y = $d00b
+                        SP6X = $d00c
+                        SP6Y = $d00d
+                        SP7X = $d00e
+                        SP7Y = $d00f
     
-    SP0X = $d000
-    SP0Y = $d001
-    SP1X = $d002
-    SP1Y = $d003
-    SP2X = $d004
-    SP2Y = $d005
-    SP3X = $d006
-    SP3Y = $d007
-    SP4X = $d008
-    SP4Y = $d009
-    SP5X = $d00a
-    SP5Y = $d00b
-    SP6X = $d00c
-    SP6Y = $d00d
-    SP7X = $d00e
-    SP7Y = $d00f
-    
-    SPXY = $d000
-    SPXYW = $d000
-    MSIGX = $d010
-    SCROLY = $d011
-    RASTER = $d012
-    LPENX = $d013
-    LPENY = $d014
-    SPENA = $d015
-    SCROLX = $d016
-    YXPAND = $d017
-    VMCSB = $d018
-    VICIRQ = $d019
-    IREQMASK = $d01a
-    SPBGPR = $d01b
-    SPMC = $d01c
-    XXPAND = $d01d
-    SPSPCL = $d01e
-    SPBGCL = $d01f
+                        SPXY = $d000
+                        SPXYW = $d000
+                        MSIGX = $d010
+                        SCROLY = $d011
+                        RASTER = $d012
+                        LPENX = $d013
+                        LPENY = $d014
+                        SPENA = $d015
+                        SCROLX = $d016
+                        YXPAND = $d017
+                        VMCSB = $d018
+                        VICIRQ = $d019
+                        IREQMASK = $d01a
+                        SPBGPR = $d01b
+                        SPMC = $d01c
+                        XXPAND = $d01d
+                        SPSPCL = $d01e
+                        SPBGCL = $d01f
+                        
                         EXTCOL = $d020
                         BGCOL0 = $d021
                         BGCOL1 = $d022
                         BGCOL2 = $d023
                         BGCOL4 = $d024
-    SPMC0 = $d025
-    SPMC1 = $d026
-    SP0COL = $d027
-    SP1COL = $d028
-    SP2COL = $d029
-    SP3COL = $d02a
-    SP4COL = $d02b
-    SP5COL = $d02c
-    SP6COL = $d02d
-    SP7COL = $d02e
-    SPCOL = $d027
-    CIA1PRA = $dc00
-    CIA1PRB = $dc01
-    CIA1DDRA = $dc02
-    CIA1DDRB = $dc03
-    CIA1TAL = $dc04
-    CIA1TAH = $dc05
-    CIA1TBL = $dc06
-    CIA1TBH = $dc07
-    CIA1TOD10 = $dc08
-    CIA1TODSEC = $dc09
-    CIA1TODMMIN = $dc0a
-    CIA1TODHR = $dc0b
-    CIA1SDR = $dc0c
-    CIA1ICR = $dc0d
-    CIA1CRA = $dc0e
-    CIA1CRB = $dc0f
-    CIA2PRA = $dd00
-    CIA2PRB = $dd01
-    CIA2DDRA = $dd02
-    CIA2DDRB = $dd03
-    CIA2TAL = $dd04
-    CIA2TAH = $dd05
-    CIA2TBL = $dd06
-    CIA2TBH = $dd07
-    CIA2TOD10 = $dd08
-    CIA2TODSEC = $dd09
-    CIA2TODMIN = $dd0a
-    CIA2TODHR = $dd0b
-    CIA2SDR = $dd0c
-    CIA2ICR = $dd0d
-    CIA2CRA = $dd0e
-    CIA2CRB = $dd0f
-    FREQLO1 = $d400
-    FREQHI1 = $d401
-    FREQ1 = $d400
-    PWLO1 = $d402
-    PWHI1 = $d403
-    PW1 = $d402
-    CR1 = $d404
-    AD1 = $d405
-    SR1 = $d406
-    FREQLO2 = $d407
-    FREQHI2 = $d408
-    FREQ2 = $d407
-    PWLO2 = $d409
-    PWHI2 = $d40a
-    PW2 = $d409
-    CR2 = $d40b
-    AD2 = $d40c
-    SR2 = $d40d
-    FREQLO3 = $d40e
-    FREQHI3 = $d40f
-    FREQ3 = $d40e
-    PWLO3 = $d410
-    PWHI3 = $d411
-    PW3 = $d410
-    CR3 = $d412
-    AD3 = $d413
-    SR3 = $d414
-    FCLO = $d415
-    FCHI = $d416
-    FC = $d415
-    RESFILT = $d417
-    MVOL = $d418
-    POTX = $d419
-    POTY = $d41a
-    OSC3 = $d41b
-    ENV3 = $d41c
+                        SPMC0 = $d025
+                        SPMC1 = $d026
+                        SP0COL = $d027
+                        SP1COL = $d028
+                        SP2COL = $d029
+                        SP3COL = $d02a
+                        SP4COL = $d02b
+                        SP5COL = $d02c
+                        SP6COL = $d02d
+                        SP7COL = $d02e
+                        SPCOL = $d027
+                        CIA1PRA = $dc00
+                        CIA1PRB = $dc01
+                        CIA1DDRA = $dc02
+                        CIA1DDRB = $dc03
+                        CIA1TAL = $dc04
+                        CIA1TAH = $dc05
+                        CIA1TBL = $dc06
+                        CIA1TBH = $dc07
+                        CIA1TOD10 = $dc08
+                        CIA1TODSEC = $dc09
+                        CIA1TODMMIN = $dc0a
+                        CIA1TODHR = $dc0b
+                        CIA1SDR = $dc0c
+                        CIA1ICR = $dc0d
+                        CIA1CRA = $dc0e
+                        CIA1CRB = $dc0f
+                        CIA2PRA = $dd00
+                        CIA2PRB = $dd01
+                        CIA2DDRA = $dd02
+                        CIA2DDRB = $dd03
+                        CIA2TAL = $dd04
+                        CIA2TAH = $dd05
+                        CIA2TBL = $dd06
+                        CIA2TBH = $dd07
+                        CIA2TOD10 = $dd08
+                        CIA2TODSEC = $dd09
+                        CIA2TODMIN = $dd0a
+                        CIA2TODHR = $dd0b
+                        CIA2SDR = $dd0c
+                        CIA2ICR = $dd0d
+                        CIA2CRA = $dd0e
+                        CIA2CRB = $dd0f
+                        FREQLO1 = $d400
+                        FREQHI1 = $d401
+                        FREQ1 = $d400
+                        PWLO1 = $d402
+                        PWHI1 = $d403
+                        PW1 = $d402
+                        CR1 = $d404
+                        AD1 = $d405
+                        SR1 = $d406
+                        FREQLO2 = $d407
+                        FREQHI2 = $d408
+                        FREQ2 = $d407
+                        PWLO2 = $d409
+                        PWHI2 = $d40a
+                        PW2 = $d409
+                        CR2 = $d40b
+                        AD2 = $d40c
+                        SR2 = $d40d
+                        FREQLO3 = $d40e
+                        FREQHI3 = $d40f
+                        FREQ3 = $d40e
+                        PWLO3 = $d410
+                        PWHI3 = $d411
+                        PW3 = $d410
+                        CR3 = $d412
+                        AD3 = $d413
+                        SR3 = $d414
+                        FCLO = $d415
+                        FCHI = $d416
+                        FC = $d415
+                        RESFILT = $d417
+                        MVOL = $d418
+                        POTX = $d419
+                        POTY = $d41a
+                        OSC3 = $d41b
+                        ENV3 = $d41c
                     Screen = $0400
                     Colors = $d800
 
 ; non-zeropage variables
-                    STROUT = $ab1e
-                    CLEARSCR = $e544
-                    HOMECRSR = $e566
-    IRQDFRT = $ea31
-    IRQDFEND = $ea81
-                        CINT = $ff81
-                        IOINIT = $ff84
-    RAMTAS = $ff87
-                        RESTOR = $ff8a
-    VECTOR = $ff8d
-    SETMSG = $ff90
-    SECOND = $ff93
-    TKSA = $ff96
-    MEMTOP = $ff99
-    MEMBOT = $ff9c
-    SCNKEY = $ff9f
-    SETTMO = $ffa2
-    ACPTR = $ffa5
-    CIOUT = $ffa8
-    UNTLK = $ffab
-    UNLSN = $ffae
-    LISTEN = $ffb1
-    TALK = $ffb4
-    READST = $ffb7
-    SETLFS = $ffba
-    SETNAM = $ffbd
-    OPEN = $ffc0
-    CLOSE = $ffc3
-    CHKIN = $ffc6
-    CHKOUT = $ffc9
-    CLRCHN = $ffcc
-                    CHRIN = $ffcf
-                    CHROUT = $ffd2
-    LOAD = $ffd5
-    SAVE = $ffd8
-    SETTIM = $ffdb
-    RDTIM = $ffde
-    STOP = $ffe1
-    GETIN = $ffe4
-    CLALL = $ffe7
-    UDTIM = $ffea
-                    SCREEN = $ffed
-                    PLOT = $fff0
-    IOBASE = $fff3
+                                                    STROUT = $ab1e
+                                                    CLEARSCR = $e544
+                                                    HOMECRSR = $e566
+                                    IRQDFRT = $ea31
+                                    IRQDFEND = $ea81
+                                                        CINT = $ff81
+                                                        IOINIT = $ff84
+                                    RAMTAS = $ff87
+                                                        RESTOR = $ff8a
+                                    VECTOR = $ff8d
+                                    SETMSG = $ff90
+                                    SECOND = $ff93
+                                    TKSA = $ff96
+                                    MEMTOP = $ff99
+                                    MEMBOT = $ff9c
+                                    SCNKEY = $ff9f
+                                    SETTMO = $ffa2
+                                    ACPTR = $ffa5
+                                    CIOUT = $ffa8
+                                    UNTLK = $ffab
+                                    UNLSN = $ffae
+                                    LISTEN = $ffb1
+                                    TALK = $ffb4
+                                    READST = $ffb7
+                                    SETLFS = $ffba
+                                    SETNAM = $ffbd
+                                    OPEN = $ffc0
+                                    CLOSE = $ffc3
+                                    CHKIN = $ffc6
+                                    CHKOUT = $ffc9
+                                    CLRCHN = $ffcc
+                                                    CHRIN = $ffcf
+                                                    CHROUT = $ffd2
+                                    LOAD = $ffd5
+                                    SAVE = $ffd8
+                                    SETTIM = $ffdb
+                                    RDTIM = $ffde
+                                    STOP = $ffe1
+                                    GETIN = $ffe4
+                                    CLALL = $ffe7
+                                    UDTIM = $ffea
+                                                    SCREEN = $ffed
+                                                    PLOT = $fff0
+                                    IOBASE = $fff3
 
 ; subroutines in this block
  
  
-STOP2    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:228
-        txa
-        pha
-        jsr  c64.STOP
-        beq  +
-        pla
-        tax
-        lda  #0
-        rts
-+       pla
-        tax
-        lda  #1
-        rts
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:244
+                STOP2    .proc
 
-RDTIM16    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:246
-        stx  zpx
-        jsr  c64.RDTIM
-        pha
-        txa
-        tay
-        pla
-        ldx  zpx
-        rts
-    .pend
+                        txa
+                        pha
+                        jsr  c64.STOP
+                        beq  +
+                        pla
+                        tax
+                        lda  #0
+                        rts
+                +       pla
+                        tax
+                        lda  #1
+                        rts
+                    .pend
+ 
+
+                    RDTIM16    .proc
+                     
+                            stx  zpx
+                            jsr  c64.RDTIM
+                            pha
+                            txa
+                            tay
+                            pla
+                            ldx  zpx
+                            rts
+                        .pend
     ;    src line: library:/prog8lib/c64/syslib.p8:262
 
                             init_system    .proc
@@ -4295,7 +4296,7 @@ stack_mul_word_640    .proc
 ; ----------- end optimized multiplications -----------
 
 
-; bit shifts.
+; ???? bit shifts.
 ; anything below 3 is done inline. anything above 7 is done via other optimizations.
 
 shift_left_w_7    .proc
