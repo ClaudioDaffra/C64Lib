@@ -84,12 +84,16 @@
         light_grey     =       15              ;       1111
 
 
-        ;   ------------------------------------------------------- sys.?
+        ;   ------------------------------------------------------- sys.(xxxx)
         
-        istop       ;   ffe1    jmp ($0328) (istop) Test-Stop Vector [f6ed]
+        istop           ;   ffe1    jmp ($0328) (istop) Test-Stop Vector [f6ed]
     
-        RDTIM16     ;   jmp $f6dd   rdtim   Read Real-Time Clock
-        
+        RDTIM16         ;   jmp $f6dd   rdtim   Read Real-Time Clock
+
+        reset_system    ;   Execution address of cold reset.
+
+        wait_vsync      ;   wait raster vsync ( Screen control register #1. Bits: )   
+    
         ;   -------------------------------------------------------
                 
         ;

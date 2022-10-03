@@ -1756,31 +1756,31 @@ _setup_raster_irq
 ; #LIBRARY : 'sys' 
 ;***********************
 
-sys    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:487
-    target = $40
+                                sys    .proc
+                                    ;    src line: library:/prog8lib/c64/syslib.p8:487
+                                    target = $40
 
-; non-zeropage variables
+                                ; non-zeropage variables
 
-; subroutines in this block
+                                ; subroutines in this block
  
-reset_system    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:495
-            sei
-            lda  #14
-            sta  $01        ; bank the kernal in
-            jmp  (c64.RESET_VEC)
-    .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:514
+                                    reset_system    .proc
+                                     
+                                                sei
+                                                lda  #14
+                                                sta  $01        ; bank the kernal in
+                                                jmp  (c64.RESET_VEC)
+                                        .pend
+                                     
 
-waitvsync    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:517
--           bit  c64.SCROLY
-            bpl  -
--           bit  c64.SCROLY
-            bmi  -
-            rts
-    .pend
+                                    waitvsync    .proc
+                                     
+                                    -           bit  c64.SCROLY
+                                                bpl  -
+                                    -           bit  c64.SCROLY
+                                                bmi  -
+                                                rts
+                                    .pend
  
 internal_stringcopy    .proc
     ;    src line: library:/prog8lib/c64/syslib.p8:537

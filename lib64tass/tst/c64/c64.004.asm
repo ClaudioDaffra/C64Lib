@@ -54,7 +54,7 @@ main	.proc
             ldy #color.green
             jsr txt.fill_screen
 
-            ; .............................................. store
+            ; .............................................. sys call
  
             jsr sys.istop
             jsr std.print_u8_dec
@@ -64,6 +64,10 @@ main	.proc
             
             jsr sys.RDTIM16
             jsr std.print_u8_bin
+
+            jsr sys.wait_vsync
+            
+            jsr sys.reset_system
             
             rts
  

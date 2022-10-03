@@ -160,7 +160,7 @@ sys .proc
     CBINV       = $0316
     NMINV       = $0318
     NMI_VEC     = $fffa
-    RESET_VEC   = $fffc
+    RESET_VEC           = $fffc ; Execution address of cold reset.
     IRQ_VEC     = $fffe
     
     SPRPTR0     = $07f8
@@ -194,7 +194,7 @@ sys .proc
     SPXY        = $d000
     SPXYW       = $d000
     MSIGX       = $d010
-    SCROLY      = $d011
+    SCROLY              = $d011
     RASTER      = $d012
     LPENX       = $d013
     LPENY       = $d014
@@ -387,6 +387,36 @@ sys .proc
         
     .pend
     
+    ;   -------------------------------------------------------
+    ;
+    ;   fffc   ; Execution address of cold reset. 
+    ;
+    ;   -------------------------------------------------------
+    
+    reset_system    .proc   
+     
+                sei
+                lda  #14
+                sta  $01                ; bank the kernal in
+                jmp  (sys.RESET_VEC)
+                
+    .pend
+    
+    ;   -------------------------------------------------------
+    ;
+    ;  wait raster sync ( Screen control register #1. Bits: )
+    ;
+    ;   -------------------------------------------------------
+    
+    wait_vsync    .proc
+     
+    -           bit  sys.SCROLY
+                bpl  -
+    -           bit  sys.SCROLY
+                bmi  -
+                rts
+    .pend
+
 .pend
 
 ;**********
