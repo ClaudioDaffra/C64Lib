@@ -1456,7 +1456,7 @@ c64    .proc
                     Screen = $0400
                     Colors = $d800
 
-; non-zeropage variables
+                    ; non-zeropage variables
                                                     STROUT = $ab1e
                                                     CLEARSCR = $e544
                                                     HOMECRSR = $e566
@@ -1502,7 +1502,7 @@ c64    .proc
                                                     PLOT = $fff0
                                     IOBASE = $fff3
 
-; subroutines in this block
+                ; subroutines in this block
  
  
                 STOP2    .proc
@@ -1533,7 +1533,6 @@ c64    .proc
                             ldx  zpx
                             rts
                         .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:262
 
                             init_system    .proc
 
@@ -1591,14 +1590,15 @@ c64    .proc
                                                             rts
                                                 .pend
  
+; 1234
 
 set_irq    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:327
-            sta  _modified+1
-            sty  _modified+2
-            lda  #0
-            adc  #0
-            sta  _use_kernal
+
+        sta  _modified+1
+        sty  _modified+2
+        lda  #0
+        adc  #0
+        sta  _use_kernal
         sei
         lda  #<_irq_handler
         sta  c64.CINV
@@ -1609,13 +1609,13 @@ set_irq    .proc
 _irq_handler    
         jsr  _irq_handler_init
 _modified    
-        jsr  $ffff                      ; modified
+        jsr  $ffff                  ; modified
         jsr  _irq_handler_end
         lda  _use_kernal
         bne  +
         lda  #$ff
-        sta  c64.VICIRQ            ; acknowledge raster irq
-        lda  c64.CIA1ICR        ; acknowledge CIA1 interrupt
+        sta  c64.VICIRQ             ; acknowledge raster irq
+        lda  c64.CIA1ICR            ; acknowledge CIA1 interrupt
         ; end irq processing - don't use kernal's irq handling
         pla
         tay
@@ -1629,7 +1629,8 @@ _modified
 _use_kernal     .byte  0
 
 _irq_handler_init
-        ; save all zp scratch registers and the X register as these might be clobbered by the irq routine
+        ;   save all zp scratch registers and the X register as 
+        ;   these might be clobbered by the irq routine
         stx  IRQ_X_REG
         lda  zpy
         sta  IRQ_SCRATCH_ZPB1
@@ -1651,6 +1652,7 @@ _irq_handler_init
         dex
         dex
         cld
+        
         rts
 
 _irq_handler_end
@@ -1668,18 +1670,19 @@ _irq_handler_end
         lda  IRQ_SCRATCH_ZPWORD2+1
         sta  zpWord1+1
         ldx  IRQ_X_REG
+        
         rts
 
-IRQ_X_REG        .byte  0
-IRQ_SCRATCH_ZPB1    .byte  0
-IRQ_SCRATCH_ZPREG    .byte  0
-IRQ_SCRATCH_ZPWORD1    .word  0
-IRQ_SCRATCH_ZPWORD2    .word  0
+        IRQ_X_REG           .byte  0
+        IRQ_SCRATCH_ZPB1    .byte  0
+        IRQ_SCRATCH_ZPREG   .byte  0
+        IRQ_SCRATCH_ZPWORD1 .word  0
+        IRQ_SCRATCH_ZPWORD2 .word  0
+    
     .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:410
 
 restore_irq    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:411
+
         sei
         lda  #<c64.IRQDFRT
         sta  c64.CINV
@@ -1690,17 +1693,19 @@ restore_irq    .proc
         lda  #%10000001
         sta  c64.CIA1ICR    ; restore CIA1 irq
         cli
+        
         rts
+        
     .pend
-    ;    src line: library:/prog8lib/c64/syslib.p8:426
+
 
 set_rasterirq    .proc
-    ;    src line: library:/prog8lib/c64/syslib.p8:427
-            sta  _modified+1
-            sty  _modified+2
-            lda  #0
-            adc  #0
-            sta  set_irq._use_kernal
+ 
+        sta  _modified+1
+        sty  _modified+2
+        lda  #0
+        adc  #0
+        sta  set_irq._use_kernal
         lda  cx16.r0
         ldy  cx16.r0+1
         sei
@@ -1710,14 +1715,16 @@ set_rasterirq    .proc
         lda  #>_raster_irq_handler
         sta  c64.CINV+1
         cli
+        
         rts
 
 _raster_irq_handler
         jsr  set_irq._irq_handler_init
-_modified    jsr  $ffff              ; modified
+_modified    
+        jsr  $ffff                 ; modified
         jsr  set_irq._irq_handler_end
-                lda  #$ff
-                sta  c64.VICIRQ            ; acknowledge raster irq
+        lda  #$ff
+        sta  c64.VICIRQ         ; acknowledge raster irq
         lda  set_irq._use_kernal
         bne  +
         ; end irq processing - don't use kernal's irq handling
@@ -1727,7 +1734,8 @@ _modified    jsr  $ffff              ; modified
         tax
         pla
         rti
-+        jmp  c64.IRQDFRT                ; continue with kernal irq routine
++        
+        jmp  c64.IRQDFRT    ; continue with kernal irq routine
 
 _setup_raster_irq
         pha
@@ -1745,11 +1753,18 @@ _setup_raster_irq
         lda  c64.SCROLY
         ora  #%10000000
         sta  c64.SCROLY     ; set most significant bit of raster position
-+        lda  #%00000001
++        
+        lda  #%00000001
         sta  c64.IREQMASK   ;enable raster interrupt signals from vic
         rts
+        
     .pend
-    .pend
+    
+    
+    
+    
+    
+.pend
 
 
 ;***********************
@@ -1782,7 +1797,7 @@ _setup_raster_irq
                                                 rts
                                     .pend
  
-internal_stringcopy    .proc
+internal_stringcopy    .proc ; not used
     ;    src line: library:/prog8lib/c64/syslib.p8:537
         sta  zpWord0
         sty  zpWord0+1
@@ -1790,9 +1805,6 @@ internal_stringcopy    .proc
         ldy  cx16.r0+1
         jmp  prog8_lib.strcpy
     .pend
-    
-    
-    ;    src line: library:/prog8lib/c64/syslib.p8:546
 
                                         memcopy    .proc
                                          
@@ -1994,13 +2006,13 @@ internal_stringcopy    .proc
 ;***********************
  
 diskio    .proc
-    ;    src line: library:/prog8lib/diskio.p8:7
-first_byte     = 146     ; zp UBYTE
-list_skip_disk_name     = 150     ; zp UBYTE
-list_pattern     = 6     ; zp UWORD
-list_blocks     = 8     ; zp UWORD
-iteration_in_progress     = 249     ; zp UBYTE
-have_first_byte     = 10     ; zp UBYTE
+
+first_byte              = 146   ; zp UBYTE
+list_skip_disk_name     = 150   ; zp UBYTE
+list_pattern            = 6     ; zp UWORD
+list_blocks             = 8     ; zp UWORD
+iteration_in_progress   = 249   ; zp UBYTE
+have_first_byte         = 10    ; zp UBYTE
 
 ; non-zeropage variables
 list_filename    ; PETSCII:"??????????????????????????????????????????????????"
@@ -2015,6 +2027,7 @@ list_filename    ; PETSCII:"??????????????????????????????????????????????????"
 lf_start_list    .proc
 pattern_ptr     = 11     ; zp UWORD
 drivenumber     = 13     ; zp UBYTE
+
 ; statements
  
     jsr  lf_end_list
@@ -2026,58 +2039,58 @@ drivenumber     = 13     ; zp UBYTE
  
     lda  #1
     sta  list_skip_disk_name
-    ;    src line: library:/prog8lib/diskio.p8:148
+ 
     sta  iteration_in_progress
-    ;    src line: library:/prog8lib/diskio.p8:150
+ 
     stx  prog8_regsaveX
     ldy  #>prog8_interned_strings.string_7
     ldx  #<prog8_interned_strings.string_7
     lda  #1
     jsr  c64.SETNAM
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:151
+ 
     stx  prog8_regsaveX
     ldy  #0
     ldx  drivenumber
     lda  #12
     jsr  c64.SETLFS
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:152
+ 
     stx  prog8_regsaveX
     jsr  c64.OPEN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:153
+ 
     bcs  io_error
-    ;    src line: library:/prog8lib/diskio.p8:155
+ 
     stx  prog8_regsaveX
     ldx  #12
     jsr  c64.CHKIN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:156
+ 
     bcs  io_error
-    ;    src line: library:/prog8lib/diskio.p8:159
+ 
     lda  #4
     sta  prog8_label_37_counter
 prog8_label_36_repeat
-    ;    src line: library:/prog8lib/diskio.p8:160
+ 
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     ldx  prog8_regsaveX
     dec  prog8_label_37_counter
     bne  prog8_label_36_repeat
-    ;    src line: library:/prog8lib/diskio.p8:163
+ 
     jsr  c64.READST
     cmp  #0
     bne  prog8_label_38_if_end
-    ;    src line: library:/prog8lib/diskio.p8:164
+ 
     lda  #1
     rts
 prog8_label_38_if_end
-    ;    src line: library:/prog8lib/diskio.p8:166
+ 
 io_error
-    ;    src line: library:/prog8lib/diskio.p8:167
+ 
     jsr  lf_end_list
-    ;    src line: library:/prog8lib/diskio.p8:168
+  
     lda  #0
     rts
 ; variables
@@ -2086,13 +2099,13 @@ prog8_regsaveX     .byte  0
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:171
+  
 
 lf_next_entry    .proc
-blocks_msb     = 14     ; zp UBYTE
-blocks_lsb     = 15     ; zp UBYTE
-nameptr     = 19     ; zp UWORD
-char     = 21     ; zp UBYTE
+blocks_msb      = 14     ; zp UBYTE
+blocks_lsb      = 15     ; zp UBYTE
+nameptr         = 19     ; zp UWORD
+char            = 21     ; zp UBYTE
 ; statements
  
     lda  iteration_in_progress
@@ -2101,119 +2114,118 @@ char     = 21     ; zp UBYTE
     lda  #0
     rts
 prog8_label_39_if_end
-    ;    src line: library:/prog8lib/diskio.p8:179
+ 
 prog8_label_21_repeat
-    ;    src line: library:/prog8lib/diskio.p8:180
+ 
     stx  prog8_regsaveX
     ldx  #12
     jsr  c64.CHKIN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:182
+ 
     lda  #<list_filename
     ldy  #>list_filename
     sta  nameptr
     sty  nameptr+1
-    
-    ;    src line: library:/prog8lib/diskio.p8:183
+ 
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     sta  blocks_lsb
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:184
+ 
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     sta  blocks_msb
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:186
+ 
     jsr  c64.READST
     cmp  #0
     bne  close_end
-    ;    src line: library:/prog8lib/diskio.p8:189
+ 
     lda  blocks_lsb
     ldy  blocks_msb
     sta  list_blocks
     sty  list_blocks+1
-    ;    src line: library:/prog8lib/diskio.p8:192
+ 
 prog8_label_14_whileloop
-    ;    src line: library:/prog8lib/diskio.p8:192
+ 
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     ldx  prog8_regsaveX
     cmp  #$22
     beq  prog8_label_15_afterwhile
-    ;    src line: library:/prog8lib/diskio.p8:193
+ 
     jsr  c64.READST
     cmp  #0
     bne  close_end
-    ;    src line: library:/prog8lib/diskio.p8:192
+ 
     jmp  prog8_label_14_whileloop
-    ;    src line: library:/prog8lib/diskio.p8:192
+ 
 prog8_label_15_afterwhile
-    ;    src line: library:/prog8lib/diskio.p8:198
+ 
 prog8_label_18_repeat
-    ;    src line: library:/prog8lib/diskio.p8:199
+ 
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     sta  char
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:200
+ 
     lda  char
     beq  prog8_label_16_after
-    ;    src line: library:/prog8lib/diskio.p8:202
+ 
     lda  char
     cmp  #34
     beq  prog8_label_17_after
-    ;    src line: library:/prog8lib/diskio.p8:204
+ 
     lda  char
     ldy  #0
     sta  (nameptr),y
-    ;    src line: library:/prog8lib/diskio.p8:205
+ 
     inc  nameptr
     bne  +
     inc  nameptr+1
 +
-    ;    src line: library:/prog8lib/diskio.p8:198
+ 
     jmp  prog8_label_18_repeat
-    ;    src line: library:/prog8lib/diskio.p8:203
+ 
 prog8_label_17_after
-    ;    src line: library:/prog8lib/diskio.p8:201
+ 
 prog8_label_16_after
-    ;    src line: library:/prog8lib/diskio.p8:208
+ 
     lda  #0
     ldy  #0
     sta  (nameptr),y
-    ;    src line: library:/prog8lib/diskio.p8:210
+ 
 prog8_label_19_whileloop
-    ;    src line: library:/prog8lib/diskio.p8:210
+ 
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     ldx  prog8_regsaveX
     cmp  #0
     beq  prog8_label_20_afterwhile
-    ;    src line: library:/prog8lib/diskio.p8:210
+ 
     jmp  prog8_label_19_whileloop
-    ;    src line: library:/prog8lib/diskio.p8:210
+   
 prog8_label_20_afterwhile
-    ;    src line: library:/prog8lib/diskio.p8:214
+  
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:215
+  
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:217
+  
     lda  list_skip_disk_name
     bne  prog8_label_40_if_end
-    ;    src line: library:/prog8lib/diskio.p8:218
+   
     lda  list_pattern
     ora  list_pattern+1
     bne  prog8_label_41_if_end
-    ;    src line: library:/prog8lib/diskio.p8:219
+ 
     lda  #1
     rts
 prog8_label_41_if_end
-    ;    src line: library:/prog8lib/diskio.p8:220
+  
     lda  list_pattern
     sta  cx16.r0
     lda  list_pattern+1
@@ -2224,21 +2236,21 @@ prog8_label_41_if_end
     jsr  string.pattern_match
     cmp  #0
     beq  prog8_label_42_if_end
-    ;    src line: library:/prog8lib/diskio.p8:221
+  
     lda  #1
     rts
 prog8_label_42_if_end
 prog8_label_40_if_end
-    ;    src line: library:/prog8lib/diskio.p8:223
+ 
     lda  #0
     sta  list_skip_disk_name
-    ;    src line: library:/prog8lib/diskio.p8:179
+    
     jmp  prog8_label_21_repeat
-    ;    src line: library:/prog8lib/diskio.p8:226
+    
 close_end
-    ;    src line: library:/prog8lib/diskio.p8:227
+    
     jsr  lf_end_list
-    ;    src line: library:/prog8lib/diskio.p8:228
+   
     lda  #0
     rts
 ; variables
@@ -2253,27 +2265,27 @@ lf_end_list    .proc
  
     lda  iteration_in_progress
     beq  prog8_label_43_if_end
-    ;    src line: library:/prog8lib/diskio.p8:234
+ 
     stx  prog8_regsaveX
     jsr  c64.CLRCHN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:235
+   
     stx  prog8_regsaveX
     lda  #12
     jsr  c64.CLOSE
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:236
+    
     lda  #0
     sta  iteration_in_progress
 prog8_label_43_if_end
-    ;    src line: library:/prog8lib/diskio.p8:231
+   
     rts
 ; variables
 prog8_regsaveX     .byte  0
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:243
+    
 
 f_open    .proc
 filenameptr     = 22     ; zp UWORD
@@ -2281,7 +2293,7 @@ drivenumber     = 24     ; zp UBYTE
 ; statements
  
     jsr  f_close
-    ;    src line: library:/prog8lib/diskio.p8:248
+ 
     stx  prog8_regsaveX
     ldy  filenameptr+1
     lda  filenameptr
@@ -2298,58 +2310,58 @@ drivenumber     = 24     ; zp UBYTE
     pla
     jsr  c64.SETNAM
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:249
+ 
     stx  prog8_regsaveX
     ldy  #0
     ldx  drivenumber
     lda  #11
     jsr  c64.SETLFS
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:250
+ 
     stx  prog8_regsaveX
     jsr  c64.OPEN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:251
+   
     bcs  prog8_label_44_branch_else
-    ;    src line: library:/prog8lib/diskio.p8:252
+ 
     jsr  c64.READST
     cmp  #0
     bne  prog8_label_45_if_end
-    ;    src line: library:/prog8lib/diskio.p8:253
+ 
     lda  #1
     sta  iteration_in_progress
-    ;    src line: library:/prog8lib/diskio.p8:254
+ 
     lda  #0
     sta  have_first_byte
-    ;    src line: library:/prog8lib/diskio.p8:255
+ 
     stx  prog8_regsaveX
     ldx  #11
     jsr  c64.CHKIN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:256
+ 
     bcs  prog8_label_46_branch_else
-    ;    src line: library:/prog8lib/diskio.p8:257
+   
     stx  prog8_regsaveX
     jsr  c64.CHRIN
     sta  first_byte
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:258
+  
     jsr  c64.READST
     cmp  #0
     bne  prog8_label_47_if_end
-    ;    src line: library:/prog8lib/diskio.p8:259
+   
     lda  #1
     sta  have_first_byte
-    ;    src line: library:/prog8lib/diskio.p8:260
+    
     lda  #1
     rts
 prog8_label_47_if_end
 prog8_label_46_branch_else
 prog8_label_45_if_end
 prog8_label_44_branch_else
-    ;    src line: library:/prog8lib/diskio.p8:265
+   
     jsr  f_close
-    ;    src line: library:/prog8lib/diskio.p8:266
+    
     lda  #0
     rts
 ; variables
@@ -2357,11 +2369,11 @@ prog8_regsaveX     .byte  0
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:269
+   
 
 f_read    .proc
-num_bytes     = 25     ; zp UWORD
-bufferpointer     = 27     ; zp UWORD
+num_bytes       = 25     ; zp UWORD
+bufferpointer   = 27     ; zp UWORD
 ; statements
  
     lda  iteration_in_progress
@@ -2378,53 +2390,53 @@ bufferpointer     = 27     ; zp UWORD
     inx
     lda  stack.lo,x
     beq  prog8_label_48_if_end
-    ;    src line: library:/prog8lib/diskio.p8:275
+   
     ldy  #>0
     lda  #<0
     rts
 prog8_label_48_if_end
-    ;    src line: library:/prog8lib/diskio.p8:277
+    
     lda  #0
     sta  list_blocks
     sta  list_blocks+1
     
-    ;    src line: library:/prog8lib/diskio.p8:278
+   
     lda  have_first_byte
     beq  prog8_label_49_if_end
-    ;    src line: library:/prog8lib/diskio.p8:279
+   
     lda  #0
     sta  have_first_byte
-    ;    src line: library:/prog8lib/diskio.p8:280
+ 
     lda  first_byte
     ldy  #0
     sta  (bufferpointer),y
-    ;    src line: library:/prog8lib/diskio.p8:281
+ 
     inc  bufferpointer
     bne  +
     inc  bufferpointer+1
 +
-    ;    src line: library:/prog8lib/diskio.p8:282
+ 
     inc  list_blocks
     bne  +
     inc  list_blocks+1
 +
-    ;    src line: library:/prog8lib/diskio.p8:283
+    
     lda  num_bytes
     bne  +
     dec  num_bytes+1
 +       dec  num_bytes 
 prog8_label_49_if_end
-    ;    src line: library:/prog8lib/diskio.p8:286
+   
     stx  prog8_regsaveX
     ldx  #11
     jsr  c64.CHKIN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:288
+    
             lda  bufferpointer
             sta  m_in_buffer+1
             lda  bufferpointer+1
             sta  m_in_buffer+2
-    ;    src line: library:/prog8lib/diskio.p8:294
+    
     ldy  num_bytes+1
     lda  num_bytes
     sta  prog8_label_52_counter
@@ -2437,7 +2449,7 @@ prog8_label_51_repeat    lda  prog8_label_52_counter
     bne  +
     dec  prog8_label_52_counter+1
 +               dec  prog8_label_52_counter
-    ;    src line: library:/prog8lib/diskio.p8:295
+    
                 jsr  c64.CHRIN
                 sta  cx16.r5
 m_in_buffer     sta  $ffff
@@ -2448,7 +2460,7 @@ m_in_buffer     sta  $ffff
                 bne  +
                 inc  list_blocks+1
 +
-    ;    src line: library:/prog8lib/diskio.p8:308
+   
     lda  cx16.r5
     cmp  #<13
     bne  prog8_label_53_if_end
@@ -2480,7 +2492,7 @@ prog8_label_55_if_end
 prog8_label_53_if_end
     jmp  prog8_label_51_repeat
 prog8_label_50_repeatend
-    ;    src line: library:/prog8lib/diskio.p8:318
+   
     ldy  list_blocks+1
     lda  list_blocks
     rts
@@ -2490,10 +2502,10 @@ prog8_regsaveX     .byte  0
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:342
+   
 
 f_readline    .proc
-    ;    src line: library:/prog8lib/diskio.p8:348
+   
             sta  zpWord0
             sty  zpWord0+1
             ldx  #11
@@ -2519,64 +2531,61 @@ _line_end   dey     ; get rid of the trailing end-of-line char
             sta  (zpWord0),y
 _end        rts
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:377
+    
 
 f_close    .proc
 ; statements
-    ;    src line: library:/prog8lib/diskio.p8:379
+ 
     lda  iteration_in_progress
     beq  prog8_label_56_if_end
-    ;    src line: library:/prog8lib/diskio.p8:380
+  
     stx  prog8_regsaveX
     jsr  c64.CLRCHN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:381
+ 
     stx  prog8_regsaveX
     lda  #11
     jsr  c64.CLOSE
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:382
+  
     lda  #0
     sta  iteration_in_progress
 prog8_label_56_if_end
-    ;    src line: library:/prog8lib/diskio.p8:377
+   
     rts
 ; variables
 prog8_regsaveX     .byte  0
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:417
+ 
 
 f_close_w    .proc
 ; statements
-    ;    src line: library:/prog8lib/diskio.p8:419
+  
     stx  prog8_regsaveX
     jsr  c64.CLRCHN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:420
+  
     stx  prog8_regsaveX
     lda  #14
     jsr  c64.CLOSE
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:417
+ 
     rts
 ; variables
 prog8_regsaveX     .byte  0
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:497
+  
 
 load    .proc
 address_override     = 29     ; zp UWORD
 filenameptr     = 31     ; zp UWORD
 drivenumber     = 33     ; zp UBYTE
 ; statements
-    ;    src line: library:/prog8lib/diskio.p8:497
-    ;    src line: library:/prog8lib/diskio.p8:497
-    ;    src line: library:/prog8lib/diskio.p8:497
-    ;    src line: library:/prog8lib/diskio.p8:498
+ 
     lda  drivenumber
     sta  diskio.load_headerless_cx16.drivenumber
     
@@ -2597,14 +2606,14 @@ drivenumber     = 33     ; zp UBYTE
 
 ; non-zeropage variables
     .pend
-    ;    src line: library:/prog8lib/diskio.p8:527
+  
 
 load_headerless_cx16    .proc
-headerless     = 57     ; zp UBYTE
-address_override     = 58     ; zp UWORD
-filenameptr     = 60     ; zp UWORD
-drivenumber     = 62     ; zp UBYTE
-secondary     = 63     ; zp UBYTE
+headerless          = 57     ; zp UBYTE
+address_override    = 58     ; zp UWORD
+filenameptr         = 60     ; zp UWORD
+drivenumber         = 62     ; zp UBYTE
+secondary           = 63     ; zp UBYTE
 ; statements
  
     stx  prog8_regsaveX
@@ -2623,39 +2632,37 @@ secondary     = 63     ; zp UBYTE
     pla
     jsr  c64.SETNAM
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:529
-    ;    src line: library:/prog8lib/diskio.p8:529
+ 
     lda  #1
     sta  secondary
-    ;    src line: library:/prog8lib/diskio.p8:530
+ 
     lda  #0
     sta  cx16.r1
     sta  cx16.r1+1
-    
-    ;    src line: library:/prog8lib/diskio.p8:531
+ 
     lda  address_override
     ora  address_override+1
     beq  prog8_label_57_if_end
-    ;    src line: library:/prog8lib/diskio.p8:532
+ 
     lda  #0
     sta  secondary
 prog8_label_57_if_end
-    ;    src line: library:/prog8lib/diskio.p8:533
+ 
     lda  headerless
     beq  prog8_label_58_if_end
-    ;    src line: library:/prog8lib/diskio.p8:534
+ 
     lda  secondary
     ora  #2
     sta  secondary
 prog8_label_58_if_end
-    ;    src line: library:/prog8lib/diskio.p8:535
+ 
     stx  prog8_regsaveX
     ldy  secondary
     ldx  drivenumber
     lda  #1
     jsr  c64.SETLFS
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:536
+ 
             stx  zpx
             lda  #0
             ldx  address_override
@@ -2665,16 +2672,16 @@ prog8_label_58_if_end
             stx  cx16.r1
             sty  cx16.r1+1
 +           ldx  zpx
-    ;    src line: library:/prog8lib/diskio.p8:548
+ 
     stx  prog8_regsaveX
     jsr  c64.CLRCHN
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:549
+ 
     stx  prog8_regsaveX
     lda  #1
     jsr  c64.CLOSE
     ldx  prog8_regsaveX
-    ;    src line: library:/prog8lib/diskio.p8:550
+ 
     lda  cx16.r1
     ldy  cx16.r1+1
     rts
@@ -2684,24 +2691,22 @@ prog8_regsaveX     .byte  0
 ; non-zeropage variables
     .pend
 prog8_init_vars    .block
-    ;    src line: library:/prog8lib/diskio.p8:106
+ 
     lda  #0
     sta  list_skip_disk_name
-    ;    src line: library:/prog8lib/diskio.p8:107
+ 
     sta  list_pattern
     sta  list_pattern+1
-    
-    ;    src line: library:/prog8lib/diskio.p8:108
+ 
     lda  #0
     sta  list_blocks
     sta  list_blocks+1
-    
-    ;    src line: library:/prog8lib/diskio.p8:109
+ 
     lda  #0
     sta  iteration_in_progress
-    ;    src line: library:/prog8lib/diskio.p8:110
+ 
     sta  first_byte
-    ;    src line: library:/prog8lib/diskio.p8:111
+ 
     sta  have_first_byte
     rts
     .bend
@@ -2982,11 +2987,11 @@ prog8_init_vars    .block
     
     .pend
 
-; ****************** 
-; #LIBRARY : 'math' 
-; ******************* 
+                                ; ****************** 
+                                ; #LIBRARY : 'math' 
+                                ; ******************* 
 
-math    .proc
+                                math    .proc
 
 
                                 ; non-zeropage variables
@@ -3300,6 +3305,7 @@ sr2         .word $7653
 
 
 ; ----------- optimized multiplications (stack) : ---------
+
 stack_mul_byte_3    .proc
         ; X + X*2
         lda  stack.lo+1,x
@@ -3624,9 +3630,9 @@ stack_mul_word_20    .proc
         lda  zpx
         adc  stack.hi+1,x
         asl  stack.lo+1,x
-                rol  a
+        rol  a
         asl  stack.lo+1,x
-                rol  a
+        rol  a
         sta  stack.hi+1,x
         rts
 .pend
@@ -4563,74 +4569,74 @@ _shift
                 .pend
 
 
-square          .proc
-; -- calculate square root of signed word in AY, result in AY
-; routine by Lee Davsion, source: http://6502.org/source/integers/square.htm
-; using this routine is about twice as fast as doing a regular multiplication.
-;
-; Calculates the 16 bit unsigned integer square of the signed 16 bit integer in
-; Numberl/Numberh.  The result is always in the range 0 to 65025 and is held in
-; Squarel/Squareh
-;
-; The maximum input range is only +/-255 and no checking is done to ensure that
-; this is so.
-;
-; This routine is useful if you are trying to draw circles as for any circle
-;
-; x^2+y^2=r^2 where x and y are the co-ordinates of any point on the circle and
-; r is the circle radius
+                            square          .proc
+                            ; -- calculate square root of signed word in AY, result in AY
+                            ; routine by Lee Davsion, source: http://6502.org/source/integers/square.htm
+                            ; using this routine is about twice as fast as doing a regular multiplication.
+                            ;
+                            ; Calculates the 16 bit unsigned integer square of the signed 16 bit integer in
+                            ; Numberl/Numberh.  The result is always in the range 0 to 65025 and is held in
+                            ; Squarel/Squareh
+                            ;
+                            ; The maximum input range is only +/-255 and no checking is done to ensure that
+                            ; this is so.
+                            ;
+                            ; This routine is useful if you are trying to draw circles as for any circle
+                            ;
+                            ; x^2+y^2=r^2 where x and y are the co-ordinates of any point on the circle and
+                            ; r is the circle radius
 
-numberl = zpWord0       ; number to square low byte
-numberh = zpWord0+1     ; number to square high byte
-squarel = zpWord1       ; square low byte
-squareh = zpWord1+1     ; square high byte
-tempsq = zpy        ; temp byte for intermediate result
+                            numberl = zpWord0       ; number to square low byte
+                            numberh = zpWord0+1     ; number to square high byte
+                            squarel = zpWord1       ; square low byte
+                            squareh = zpWord1+1     ; square high byte
+                            tempsq = zpy        ; temp byte for intermediate result
 
-    sta  numberl
-    sty  numberh
-    stx  zpx
+                                sta  numberl
+                                sty  numberh
+                                stx  zpx
 
-    lda     #$00        ; clear a
-    sta     squarel     ; clear square low byte
-                    ; (no need to clear the high byte, it gets shifted out)
-    lda    numberl     ; get number low byte
-    ldx    numberh     ; get number high  byte
-    bpl    _nonneg      ; if +ve don't negate it
-                    ; else do a two's complement
-    eor    #$ff        ; invert
-    sec                ; +1
-    adc    #$00        ; and add it
+                                lda     #$00        ; clear a
+                                sta     squarel     ; clear square low byte
+                                                    ; (no need to clear the high byte, it gets shifted out)
+                                lda    numberl      ; get number low byte
+                                ldx    numberh      ; get number high  byte
+                                bpl    _nonneg      ; if +ve don't negate it
+                                                    ; else do a two's complement
+                                eor    #$ff         ; invert
+                                sec                 ; +1
+                                adc    #$00         ; and add it
 
-_nonneg:
-    sta    tempsq      ; save abs(number)
-    ldx    #$08        ; set bit count
+                            _nonneg:
+                                sta    tempsq       ; save abs(number)
+                                ldx    #$08         ; set bit count
 
-_nextr2bit:
-    asl    squarel     ; low byte *2
-    rol    squareh     ; high byte *2+carry from low
-    asl    a           ; shift number byte
-    bcc    _nosqadd     ; don't do add if c = 0
-    tay                 ; save a
-    clc                 ; clear carry for add
-    lda    tempsq      ; get number
-    adc    squarel     ; add number^2 low byte
-    sta    squarel     ; save number^2 low byte
-    lda    #$00        ; clear a
-    adc    squareh     ; add number^2 high byte
-    sta    squareh     ; save number^2 high byte
-    tya                 ; get a back
+                            _nextr2bit:
+                                asl    squarel      ; low byte *2
+                                rol    squareh      ; high byte *2+carry from low
+                                asl    a            ; shift number byte
+                                bcc    _nosqadd     ; don't do add if c = 0
+                                tay                 ; save a
+                                clc                 ; clear carry for add
+                                lda    tempsq       ; get number
+                                adc    squarel      ; add number^2 low byte
+                                sta    squarel      ; save number^2 low byte
+                                lda    #$00         ; clear a
+                                adc    squareh      ; add number^2 high byte
+                                sta    squareh      ; save number^2 high byte
+                                tya                 ; get a back
 
-_nosqadd:
-    dex                 ; decrement bit count
-    bne    _nextr2bit   ; go do next bit
+                            _nosqadd:
+                                dex                 ; decrement bit count
+                                bne    _nextr2bit   ; go do next bit
 
-    lda  squarel
-    ldy  squareh
-    ldx  zpx
-    rts
+                                lda  squarel
+                                ldy  squareh
+                                ldx  zpx
+                                rts
 
-.pend
-    ;    src line: library:/prog8lib/math.p8:6
+                            .pend
+
 
 sin8u    .proc
     ;    src line: library:/prog8lib/math.p8:7
@@ -4884,6 +4890,7 @@ bitand_b    .proc
         lda  stack.lo+2,x
         and  stack.lo+1,x
         inx
+        ;   stx stack.pointer
         sta  stack.lo+1,x
         rts
 .pend
@@ -4893,6 +4900,7 @@ bitor_b        .proc
         lda  stack.lo+2,x
         ora  stack.lo+1,x
         inx
+        ;   stx stack.pointer
         sta  stack.lo+1,x
         rts
 .pend
@@ -5006,14 +5014,16 @@ idiv_b        .proc
         eor  #$ff
         sec
         adc  #0            ; make num1 positive
-+        tay
++        
+        tay
         inx
         lda  stack.lo,x
         bpl  +
         eor  #$ff
         sec
         adc  #0            ; make num2 positive
-+        jsr  math.divmod_ub_asm
++        
+        jsr  math.divmod_ub_asm
         sta  _remainder
         tya
         plp            ; get sign of result
@@ -5021,7 +5031,8 @@ idiv_b        .proc
         eor  #$ff
         sec
         adc  #0            ; negate result
-+        sta  stack.lo,x
++        
+        sta  stack.lo,x
         dex
         rts
 _remainder    .byte  0
@@ -5045,11 +5056,13 @@ idiv_w        .proc
         lda  stack.hi+1,x
         bpl  +
         jsr  neg_w            ; make value positive
-+        inx
++        
+        inx
         lda  stack.hi+1,x
         bpl  +
         jsr  neg_w            ; make value positive
-+        lda  stack.lo+1,x
++        
+        lda  stack.lo+1,x
         sta  zpWord0
         lda  stack.hi+1,x
         sta  zpWord0+1
@@ -5062,7 +5075,8 @@ idiv_w        .proc
         plp
         bpl  +
         jmp  neg_w        ; negate result
-+        rts
++        
+        rts
 .pend
 
 idiv_uw        .proc
@@ -5181,10 +5195,12 @@ reg_less_w    .proc
         sbc  zpWord1+1
         bvc  +
         eor  #$80
-+        bmi  _true
++        
+        bmi  _true
         lda  #0
         rts
-_true        lda  #1
+_true        
+        lda  #1
         rts
 .pend
 
@@ -5195,7 +5211,8 @@ less_w        .proc
         sbc  stack.hi+1,x
         bvc  +
         eor  #$80
-+        bmi  equal_b._equal_b_true
++        
+        bmi  equal_b._equal_b_true
         bpl  equal_b._equal_b_false
 .pend
 
@@ -6190,297 +6207,297 @@ func_rndw_stack    .proc
 .pend
 
 
-func_sort_ub    .proc
-        ; 8bit unsigned sort
-        ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-        ; input:  address of array to sort in zpWord0, length in S
-        ; first, put pointer BEFORE array
-        sta  zpy
-        lda  zpWord0
-        bne  +
-        dec  zpWord0+1
-+        dec  zpWord0
-_sortloop    ldy  zpy        ;start of subroutine sort
-        lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
-        sta  zpx        ;save value. will be over-written by largest number
-        jmp  _l2
-_l1        dey
-        beq  _l3
-        lda  (zpWord0),y
-        cmp  zpWord1+1
-        bcc  _l1
-_l2        sty  zpWord1    ;index of potentially largest value
-        sta  zpWord1+1    ;potentially largest value
-        jmp  _l1
-_l3        ldy  zpy        ;where the largest value shall be put
-        lda  zpWord1+1    ;the largest value
-        sta  (zpWord0),y    ;put largest value in place
-        ldy  zpWord1    ;index of free space
-        lda  zpx        ;the over-written value
-        sta  (zpWord0),y    ;put the over-written value in the free space
-        dec  zpy        ;end of the shorter sequence still left
-        bne  _sortloop            ;start working with the shorter sequence
-        rts
-.pend
+                    func_sort_ub    .proc
+                            ; 8bit unsigned sort
+                            ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+                            ; input:  address of array to sort in zpWord0, length in S
+                            ; first, put pointer BEFORE array
+                            sta  zpy
+                            lda  zpWord0
+                            bne  +
+                            dec  zpWord0+1
+                    +        dec  zpWord0
+                    _sortloop    ldy  zpy        ;start of subroutine sort
+                            lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
+                            sta  zpx        ;save value. will be over-written by largest number
+                            jmp  _l2
+                    _l1        dey
+                            beq  _l3
+                            lda  (zpWord0),y
+                            cmp  zpWord1+1
+                            bcc  _l1
+                    _l2        sty  zpWord1    ;index of potentially largest value
+                            sta  zpWord1+1    ;potentially largest value
+                            jmp  _l1
+                    _l3        ldy  zpy        ;where the largest value shall be put
+                            lda  zpWord1+1    ;the largest value
+                            sta  (zpWord0),y    ;put largest value in place
+                            ldy  zpWord1    ;index of free space
+                            lda  zpx        ;the over-written value
+                            sta  (zpWord0),y    ;put the over-written value in the free space
+                            dec  zpy        ;end of the shorter sequence still left
+                            bne  _sortloop            ;start working with the shorter sequence
+                            rts
+                    .pend
 
 
-func_sort_b    .proc
-        ; 8bit signed sort
-        ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-        ; input:  address of array to sort in zpWord0, length in A
-        ; first, put pointer BEFORE array
-        sta  zpy
-        lda  zpWord0
-        bne  +
-        dec  zpWord0+1
-+        dec  zpWord0
-_sortloop    
-        ldy  zpy        ;start of subroutine sort
-        lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
-        sta  zpx        ;save value. will be over-written by largest number
-        jmp  _l2
-_l1        dey
-        beq  _l3
-        lda  (zpWord0),y
-        cmp  zpWord1+1
-        bmi  _l1
-_l2        
-        sty  zpWord1    ;index of potentially largest value
-        sta  zpWord1+1    ;potentially largest value
-        jmp  _l1
-_l3        
-        ldy  zpy        ;where the largest value shall be put
-        lda  zpWord1+1    ;the largest value
-        sta  (zpWord0),y    ;put largest value in place
-        ldy  zpWord1    ;index of free space
-        lda  zpx        ;the over-written value
-        sta  (zpWord0),y    ;put the over-written value in the free space
-        dec  zpy        ;end of the shorter sequence still left
-        bne  _sortloop            ;start working with the shorter sequence
-        rts
-.pend
+                    func_sort_b    .proc
+                            ; 8bit signed sort
+                            ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+                            ; input:  address of array to sort in zpWord0, length in A
+                            ; first, put pointer BEFORE array
+                            sta  zpy
+                            lda  zpWord0
+                            bne  +
+                            dec  zpWord0+1
+                    +        dec  zpWord0
+                    _sortloop    
+                            ldy  zpy        ;start of subroutine sort
+                            lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
+                            sta  zpx        ;save value. will be over-written by largest number
+                            jmp  _l2
+                    _l1        dey
+                            beq  _l3
+                            lda  (zpWord0),y
+                            cmp  zpWord1+1
+                            bmi  _l1
+                    _l2        
+                            sty  zpWord1    ;index of potentially largest value
+                            sta  zpWord1+1    ;potentially largest value
+                            jmp  _l1
+                    _l3        
+                            ldy  zpy        ;where the largest value shall be put
+                            lda  zpWord1+1    ;the largest value
+                            sta  (zpWord0),y    ;put largest value in place
+                            ldy  zpWord1    ;index of free space
+                            lda  zpx        ;the over-written value
+                            sta  (zpWord0),y    ;put the over-written value in the free space
+                            dec  zpy        ;end of the shorter sequence still left
+                            bne  _sortloop            ;start working with the shorter sequence
+                            rts
+                    .pend
 
 
-func_sort_uw    .proc
-        ; 16bit unsigned sort
-        ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-        ; input:  address of array to sort in zpWord0, length in A
-        ; first: subtract 2 of the pointer
-        asl  a
-        sta  zpy
-        lda  zpWord0
-        sec
-        sbc  #2
-        sta  zpWord0
-        bcs  _sort_loop
-        dec  zpWord0+1
-_sort_loop    
-        ldy  zpy        ;start of subroutine sort
-        lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
-        sta  _work3                  ;save value. will be over-written by largest number
-        iny
-        lda  (zpWord0),y
-        sta  _work3+1
-        dey
-        jmp  _l2
-_l1        dey
-        dey
-        beq  _l3
-        iny
-        lda  (zpWord0),y
-        dey
-        cmp  zpWord1+1
-        bne  +
-        lda  (zpWord0),y
-        cmp  zpWord1
-+        
-        bcc  _l1
-_l2        
-        sty  _work1                  ;index of potentially largest value
-        lda  (zpWord0),y
-        sta  zpWord1          ;potentially largest value
-        iny
-        lda  (zpWord0),y
-        sta  zpWord1+1
-        dey
-        jmp  _l1
-_l3        
-        ldy  zpy           ;where the largest value shall be put
-        lda  zpWord1          ;the largest value
-        sta  (zpWord0),y      ;put largest value in place
-        iny
-        lda  zpWord1+1
-        sta  (zpWord0),y
-        ldy  _work1                  ;index of free space
-        lda  _work3                  ;the over-written value
-        sta  (zpWord0),y      ;put the over-written value in the free space
-        iny
-        lda  _work3+1
-        sta  (zpWord0),y
-        dey
-        dec  zpy           ;end of the shorter sequence still left
-        dec  zpy
-        bne  _sort_loop           ;start working with the shorter sequence
-        rts
-_work1    .byte  0
-_work3    .word  0
-.pend
+                            func_sort_uw    .proc
+                                    ; 16bit unsigned sort
+                                    ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+                                    ; input:  address of array to sort in zpWord0, length in A
+                                    ; first: subtract 2 of the pointer
+                                    asl  a
+                                    sta  zpy
+                                    lda  zpWord0
+                                    sec
+                                    sbc  #2
+                                    sta  zpWord0
+                                    bcs  _sort_loop
+                                    dec  zpWord0+1
+                            _sort_loop    
+                                    ldy  zpy        ;start of subroutine sort
+                                    lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
+                                    sta  _work3                  ;save value. will be over-written by largest number
+                                    iny
+                                    lda  (zpWord0),y
+                                    sta  _work3+1
+                                    dey
+                                    jmp  _l2
+                            _l1        dey
+                                    dey
+                                    beq  _l3
+                                    iny
+                                    lda  (zpWord0),y
+                                    dey
+                                    cmp  zpWord1+1
+                                    bne  +
+                                    lda  (zpWord0),y
+                                    cmp  zpWord1
+                            +        
+                                    bcc  _l1
+                            _l2        
+                                    sty  _work1                  ;index of potentially largest value
+                                    lda  (zpWord0),y
+                                    sta  zpWord1          ;potentially largest value
+                                    iny
+                                    lda  (zpWord0),y
+                                    sta  zpWord1+1
+                                    dey
+                                    jmp  _l1
+                            _l3        
+                                    ldy  zpy           ;where the largest value shall be put
+                                    lda  zpWord1          ;the largest value
+                                    sta  (zpWord0),y      ;put largest value in place
+                                    iny
+                                    lda  zpWord1+1
+                                    sta  (zpWord0),y
+                                    ldy  _work1                  ;index of free space
+                                    lda  _work3                  ;the over-written value
+                                    sta  (zpWord0),y      ;put the over-written value in the free space
+                                    iny
+                                    lda  _work3+1
+                                    sta  (zpWord0),y
+                                    dey
+                                    dec  zpy           ;end of the shorter sequence still left
+                                    dec  zpy
+                                    bne  _sort_loop           ;start working with the shorter sequence
+                                    rts
+                            _work1    .byte  0
+                            _work3    .word  0
+                            .pend
 
 
-func_sort_w    .proc
-        ; 16bit signed sort
-        ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-        ; input:  address of array to sort in zpWord0, length in A
-        ; first: subtract 2 of the pointer
-        asl  a
-        sta  zpy
-        lda  zpWord0
-        sec
-        sbc  #2
-        sta  zpWord0
-        bcs  _sort_loop
-        dec  zpWord0+1
-_sort_loop    ldy  zpy        ;start of subroutine sort
-        lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
-        sta  _work3                  ;save value. will be over-written by largest number
-        iny
-        lda  (zpWord0),y
-        sta  _work3+1
-        dey
-        jmp  _l2
-_l1        dey
-        dey
-        beq  _l3
-        lda  (zpWord0),y
-        cmp  zpWord1
-        iny
-        lda  (zpWord0),y
-        dey
-        sbc  zpWord1+1
-        bvc  +
-        eor  #$80
-+        bmi  _l1
-_l2        sty  _work1                  ;index of potentially largest value
-        lda  (zpWord0),y
-        sta  zpWord1          ;potentially largest value
-        iny
-        lda  (zpWord0),y
-        sta  zpWord1+1
-        dey
-        jmp  _l1
-_l3        ldy  zpy           ;where the largest value shall be put
-        lda  zpWord1          ;the largest value
-        sta  (zpWord0),y      ;put largest value in place
-        iny
-        lda  zpWord1+1
-        sta  (zpWord0),y
-        ldy  _work1                  ;index of free space
-        lda  _work3                  ;the over-written value
-        sta  (zpWord0),y      ;put the over-written value in the free space
-        iny
-        lda  _work3+1
-        sta  (zpWord0),y
-        dey
-        dec  zpy           ;end of the shorter sequence still left
-        dec  zpy
-        bne  _sort_loop           ;start working with the shorter sequence
-        rts
-_work1    .byte  0
-_work3    .word  0
-.pend
+                        func_sort_w    .proc
+                                ; 16bit signed sort
+                                ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+                                ; input:  address of array to sort in zpWord0, length in A
+                                ; first: subtract 2 of the pointer
+                                asl  a
+                                sta  zpy
+                                lda  zpWord0
+                                sec
+                                sbc  #2
+                                sta  zpWord0
+                                bcs  _sort_loop
+                                dec  zpWord0+1
+                        _sort_loop    ldy  zpy        ;start of subroutine sort
+                                lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
+                                sta  _work3                  ;save value. will be over-written by largest number
+                                iny
+                                lda  (zpWord0),y
+                                sta  _work3+1
+                                dey
+                                jmp  _l2
+                        _l1        dey
+                                dey
+                                beq  _l3
+                                lda  (zpWord0),y
+                                cmp  zpWord1
+                                iny
+                                lda  (zpWord0),y
+                                dey
+                                sbc  zpWord1+1
+                                bvc  +
+                                eor  #$80
+                        +        bmi  _l1
+                        _l2        sty  _work1                  ;index of potentially largest value
+                                lda  (zpWord0),y
+                                sta  zpWord1          ;potentially largest value
+                                iny
+                                lda  (zpWord0),y
+                                sta  zpWord1+1
+                                dey
+                                jmp  _l1
+                        _l3        ldy  zpy           ;where the largest value shall be put
+                                lda  zpWord1          ;the largest value
+                                sta  (zpWord0),y      ;put largest value in place
+                                iny
+                                lda  zpWord1+1
+                                sta  (zpWord0),y
+                                ldy  _work1                  ;index of free space
+                                lda  _work3                  ;the over-written value
+                                sta  (zpWord0),y      ;put the over-written value in the free space
+                                iny
+                                lda  _work3+1
+                                sta  (zpWord0),y
+                                dey
+                                dec  zpy           ;end of the shorter sequence still left
+                                dec  zpy
+                                bne  _sort_loop           ;start working with the shorter sequence
+                                rts
+                        _work1    .byte  0
+                        _work3    .word  0
+                        .pend
 
 
-func_reverse_b    .proc
-        ; --- reverse an array of bytes (in-place)
-        ; inputs:  pointer to array in zpWord0, length in A
-_index_right = zpWord1
-_index_left = zpWord1+1
-_loop_count = zpx
-        sta  _loop_count
-        lsr  _loop_count
-        sec
-        sbc  #1
-        sta  _index_right
-        lda  #0
-        sta  _index_left
-_loop        ldy  _index_right
-        lda  (zpWord0),y
-        pha
-        ldy  _index_left
-        lda  (zpWord0),y
-        ldy  _index_right
-        sta  (zpWord0),y
-        pla
-        ldy  _index_left
-        sta  (zpWord0),y
-        inc  _index_left
-        dec  _index_right
-        dec  _loop_count
-        bne  _loop
-        rts
-.pend
+                        func_reverse_b    .proc
+                                ; --- reverse an array of bytes (in-place)
+                                ; inputs:  pointer to array in zpWord0, length in A
+                        _index_right = zpWord1
+                        _index_left = zpWord1+1
+                        _loop_count = zpx
+                                sta  _loop_count
+                                lsr  _loop_count
+                                sec
+                                sbc  #1
+                                sta  _index_right
+                                lda  #0
+                                sta  _index_left
+                        _loop        ldy  _index_right
+                                lda  (zpWord0),y
+                                pha
+                                ldy  _index_left
+                                lda  (zpWord0),y
+                                ldy  _index_right
+                                sta  (zpWord0),y
+                                pla
+                                ldy  _index_left
+                                sta  (zpWord0),y
+                                inc  _index_left
+                                dec  _index_right
+                                dec  _loop_count
+                                bne  _loop
+                                rts
+                        .pend
 
 
-func_reverse_w    .proc
-        ; --- reverse an array of words (in-place)
-        ; inputs:  pointer to array in zpWord0, length in A
-_index_first = zpWord1
-_index_second = zpWord1+1
-_loop_count = zpx
-        pha
-        asl  a     ; *2 because words
-        sec
-        sbc  #2
-        sta  _index_first
-        lda  #0
-        sta  _index_second
-        pla
-        lsr  a
-        pha
-        sta  _loop_count
-        ; first reverse the lsbs
-_loop_lo    ldy  _index_first
-        lda  (zpWord0),y
-        pha
-        ldy  _index_second
-        lda  (zpWord0),y
-        ldy  _index_first
-        sta  (zpWord0),y
-        pla
-        ldy  _index_second
-        sta  (zpWord0),y
-        inc  _index_second
-        inc  _index_second
-        dec  _index_first
-        dec  _index_first
-        dec  _loop_count
-        bne  _loop_lo
-        ; now reverse the msbs
-        dec  _index_second
-        inc  _index_first
-        inc  _index_first
-        inc  _index_first
-        pla
-        sta  _loop_count
-_loop_hi    ldy  _index_first
-        lda  (zpWord0),y
-        pha
-        ldy  _index_second
-        lda  (zpWord0),y
-        ldy  _index_first
-        sta  (zpWord0),y
-        pla
-        ldy  _index_second
-        sta  (zpWord0),y
-        dec  _index_second
-        dec  _index_second
-        inc  _index_first
-        inc  _index_first
-        dec  _loop_count
-        bne  _loop_hi
+                    func_reverse_w    .proc
+                            ; --- reverse an array of words (in-place)
+                            ; inputs:  pointer to array in zpWord0, length in A
+                    _index_first = zpWord1
+                    _index_second = zpWord1+1
+                    _loop_count = zpx
+                            pha
+                            asl  a     ; *2 because words
+                            sec
+                            sbc  #2
+                            sta  _index_first
+                            lda  #0
+                            sta  _index_second
+                            pla
+                            lsr  a
+                            pha
+                            sta  _loop_count
+                            ; first reverse the lsbs
+                    _loop_lo    ldy  _index_first
+                            lda  (zpWord0),y
+                            pha
+                            ldy  _index_second
+                            lda  (zpWord0),y
+                            ldy  _index_first
+                            sta  (zpWord0),y
+                            pla
+                            ldy  _index_second
+                            sta  (zpWord0),y
+                            inc  _index_second
+                            inc  _index_second
+                            dec  _index_first
+                            dec  _index_first
+                            dec  _loop_count
+                            bne  _loop_lo
+                            ; now reverse the msbs
+                            dec  _index_second
+                            inc  _index_first
+                            inc  _index_first
+                            inc  _index_first
+                            pla
+                            sta  _loop_count
+                    _loop_hi    ldy  _index_first
+                            lda  (zpWord0),y
+                            pha
+                            ldy  _index_second
+                            lda  (zpWord0),y
+                            ldy  _index_first
+                            sta  (zpWord0),y
+                            pla
+                            ldy  _index_second
+                            sta  (zpWord0),y
+                            dec  _index_second
+                            dec  _index_second
+                            inc  _index_first
+                            inc  _index_first
+                            dec  _loop_count
+                            bne  _loop_hi
 
-        rts
-.pend
+                            rts
+                    .pend
 
 
                         func_peekw   .proc

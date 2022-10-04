@@ -25,7 +25,7 @@ stack .proc
         
         old     .byte   0       ;  old
         
-        pointer .byte   $ff    ;   top
+        pointer .byte   $ff     ;   top
 
         ; ------------------------------------------------- push/pop byte
         ;

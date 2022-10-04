@@ -1068,6 +1068,13 @@ store_imm_zpWord1	.macro
     sty zpWord1+1
 .endm
 
+load_address_zpWord2	.macro
+	lda #<\1
+    sta zpWord2
+	ldy #>\1
+    sty zpWord2+1
+.endm
+
 ; ---------------------------------------------------------------
 
 load_zpByte0	.macro

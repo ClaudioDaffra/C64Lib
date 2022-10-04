@@ -1,0 +1,72 @@
+
+;***********
+;   array
+;***********
+
+    ;........................................................................... sort_u8
+    ; 
+    ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+    ;
+    ; input:    address of array to sort in zpWord0, 
+    ;           length in A
+    ;
+    
+    sort_u8
+
+    ;........................................................................... sort_s8  [KO]
+    ;
+    ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+    ;
+    ; input:    address of array to sort in zpWord0, 
+    ;           length in A
+    ; first, put pointer BEFORE array
+    
+    sort_s8
+    
+
+    ;........................................................................... sort_u16  
+    ; 
+    ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+    ;
+    ; input:    address of array to sort in zpWord0, 
+    ;           length in A
+    ;
+    ; P.S.      first: subtract 2 of the pointer
+    ;    
+            
+    sort_u16 
+    
+
+    ;........................................................................... sort_s16
+    ; 
+    ; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
+    ; input:  address of array to sort in zpWord0, length in A
+    ; first: subtract 2 of the pointer
+    
+    sort_s16    
+    
+    ; .................................................... reverse_us8
+    ;
+    ; reverse an array of bytes (in-place)
+    ;
+    ; inputs:   pointer to array in zpWord0, 
+    ;           length in A
+    ;
+    
+    reverse_us8    
+    
+
+    ;........................................................................... reverse_u16
+    ;
+    ; reverse an array of words (in-place)
+    ;
+    ; inputs:  pointer to array in zpWord0, 
+    ;           length in A
+
+    reverse_us16   
+    
+    
+
+    
+    
+    

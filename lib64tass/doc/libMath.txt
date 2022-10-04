@@ -161,7 +161,33 @@
     
     #   shift_right
     #   lsr_byte_A  
-        
+
+    ;............................................................   lsr_byte_A
+    ;
+    ;   -- calculate square root of signed word in AY, result in AY
+    ;
+    ;   input   :   ay
+    ;   output  :   ay
+    ;
+    ; routine by Lee Davsion, source: http://6502.org/source/integers/square.htm
+    ; using this routine is about twice as fast as doing a regular multiplication.
+    ;
+    ; Calculates the 16 bit unsigned integer square of the signed 16 bit integer in
+    ; Numberl/Numberh.  The result is always in the range 0 to 65025 and is held in
+    ; Squarel/Squareh
+    ;
+    ; The maximum input range is only +/-255 and no checking is done to ensure that
+    ; this is so.
+    ;
+    ; This routine is useful if you are trying to draw circles as for any circle
+    ;
+    ; x^2+y^2=r^2 where x and y are the co-ordinates of any point on the circle and
+    ; r is the circle radius
+    
+    #   square
+    
+    ;
+    
 ;;;
 ;;
 ;
