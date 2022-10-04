@@ -26,14 +26,11 @@ program_entry_point	; assembly code starts here
 .include "../../lib/libConv.asm"
 .include "../../lib/libString.asm"
 
-
 ;--------------------------------------------------------------- main
 
 main	.proc
 
     start	.proc
-
-            ;   program
 
             ;--------------------------------------------   div u16 / u16
  
@@ -46,16 +43,19 @@ main	.proc
             
             load_imm_zpWord0    #1234
             load_imm_ay         #57
-            
             jsr math.div_u16
- 
+            
+            ; zpWord0               ; risultato zpWord0 
             jsr std.print_u16_dec
-
-            lda #'.'
+            lda #'*'
             jsr sys.CHROUT
-            
+            ; zpWord3               ; divisore  zpWord3
+            load_var_ay zpWord3
+            jsr std.print_u16_dec
+            ; zpWord1               ;   resto   zpWord1
+            lda #'+'
+            jsr sys.CHROUT
             load_var_ay zpWord1
-            
             jsr std.print_u16_dec
             
             ;--------------------------------------------       unsigned 16 division / 0   
@@ -84,9 +84,8 @@ main	.proc
 
             lda #char.nl
             jsr sys.CHROUT
-            
-            ;               -745,76   
-            ;  -25356/34    -745,26 
+
+            ;  -25356/34    -745,26     (-745*32+26)
            
             load_imm_zpWord0    #-25356
             load_imm_ay         #34
@@ -94,14 +93,19 @@ main	.proc
             jsr math.div_s16
             bvs divisionByZero
 
-            jsr std.print_s16_dec
+            jsr std.print_s16_dec   ;   ay ->   risultato divisione
 
-            lda #'.'
+            lda #'*'
             jsr sys.CHROUT
-            ; zpWord1 remaider
-            load_var_ay zpWord1
+            ; zpWord3               ; divisore  zpWord3
+            load_var_ay zpWord3
+            jsr std.print_s16_dec
             
-            jsr std.print_u16_dec
+            lda #'+'
+            jsr sys.CHROUT
+            load_var_ay zpWord1
+            jsr std.print_u16_dec   ;resto;
+
             
             rts
 

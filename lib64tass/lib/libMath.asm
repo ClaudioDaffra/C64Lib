@@ -517,6 +517,9 @@ math    .proc
             
      check_divByZero
      
+            sta saveA
+            sty saveY
+            
             sta  zpWord1
             sty  zpWord1+1
             lda  zpWord0+1
@@ -572,9 +575,19 @@ math    .proc
             lda zpWord3+1
             sta zpWord1+1
             pla
+
+            pha
+            lda saveA
+            sta zpWord3
+            lda saveY
+            sta zpWord3+1
+            pla
             
             clv
             rts
+     
+     saveA  .byte   0
+     saveY  .byte   0
     .pend
 
     ;.......................................................................    div_u16
