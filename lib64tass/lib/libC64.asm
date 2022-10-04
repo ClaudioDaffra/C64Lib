@@ -1214,7 +1214,6 @@ pstring_type   .macro
 ;       mem
 ;******
 
-
 mem .proc
 
     ; ........................................... mem.copy
@@ -1415,11 +1414,76 @@ mem .proc
     .pend
 
 
+    ;
+  
 
 .pend
 
 
 
+    ;................................................. macro compare
+    
+    ;                                             unsigned 8 cmp
+    
+    u8_cmp_lt   .macro      ;   <
+        bcc \1
+    .endm
+    
+    u8_cmp_le   .macro      ;   <=
+        beq \1
+        bcc \1
+    .endm
+    
+    u8_cmp_gt   .macro      ;   >
+      .block
+        beq +
+        bcs \1
+      +
+     .endblock
+    .endm
+    
+    u8_cmp_ge   .macro      ;   >=
+        bcs \1
+    .endm
+
+    u8_cmp_eq   .macro      ;   ?=
+        beq \1
+    .endm
+
+    u8_cmp_ne   .macro      ;   !=
+        bne \1
+    .endm
+
+    ;                                             signed 8 cmp
+    
+    s8_cmp_lt   .macro      ;   <
+        bmi \1
+    .endm
+
+    s8_cmp_le   .macro      ;   <=
+        beq \1
+        bmi \1
+    .endm
+
+    s8_cmp_gt   .macro      ;   >
+      .block
+        beq +
+        bpl \1
+      +
+     .endblock
+    .endm
+
+    s8_cmp_ge   .macro      ;   >=
+        bpl   \1
+    .endm
+    
+    s8_cmp_eq   .macro      ;   ?=
+        beq \1
+    .endm
+
+    s8_cmp_ne   .macro      ;   !=
+        bne \1
+    .endm
     
 
 ;;;

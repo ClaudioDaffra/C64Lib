@@ -182,20 +182,29 @@
     load_zpWord0    var
     load_zpWord1    var
 
-    load_address_zpWord0	address
-    load_address_zpWord1	address
+    load_address_zpWord0    address
+    load_address_zpWord1    address
 
-    load_var_ay	    var
-    load_imm_ay	imm
-    load_address_ay	address
+    load_var_ay     var
+    load_imm_ay     imm
+    load_address_ay address
 
     if_true  jmp
     if_false jmp
 
-    uByte   a,1
-    sByte   b,2
-    uWord   a,1
-    sWord   b,2
+    #######
+    #   compare
+    #######
+    
+    ;   unsigned 8 cmp      signed 8 cmp
+    
+        u8_cmp_lt           s8_cmp_lt  
+        u8_cmp_le           s8_cmp_le
+        u8_cmp_gt           s8_cmp_gt
+        u8_cmp_ge           s8_cmp_ge
+        u8_cmp_eq           s8_cmp_eq
+        u8_cmp_ne           s8_cmp_ne
+
 
     #######
     #   mem
@@ -366,6 +375,11 @@ $DD00 56576     Default: 151    $97 ,  %10010111
                 Bit #5: Serial bus DATA OUT;    0 = High;   1 = Low.
                 Bit #6: Serial bus CLOCK IN;    0 = Low;    1 = High.
                 Bit #7: Serial bus DATA IN;     0 = Low;    1 = High.
+
+
+
+    ;   
+
 
 ;;;
 ;;

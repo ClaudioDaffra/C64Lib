@@ -1,3 +1,0 @@
-
-
-divmod    remainder error      ko
