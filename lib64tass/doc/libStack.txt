@@ -86,8 +86,83 @@
         mul_word_100
         mul_word_320
         mul_word_640
-    
+
+        ; ------------------------------------------------- fast stack operator
+
+        neg_b
+        neg_w
+        inv_w
         
+        bitand_b
+        bitor_b
+        bitxor_b
+        bitand_w
+        bitor_w
+        bitxor_w
+        
+        add_w
+        sub_w
+        
+        mul_b
+        mul_w
+        
+        idiv_b
+        idiv_ub
+        idiv_uw
+        idiv_w
+
+ ; ------------------------------------------------------------- compare
+    
+        equal_b
+        equal_w
+        
+        notequal_b
+        notequal_w
+        
+        less_ub
+        less_b
+        less_uw
+        less_w
+        
+        lesseq_ub
+        lesseq_b
+        lesseq_u 
+        lesseq_w
+        
+        greater_ub
+        greater_b
+        greater_uw
+        greater_w
+        
+        greatereq_ub
+        greatereq_b
+        greatereq_uw
+        greatereq_w
+        
+
+        ; ------------------------------------------------------------- compare 0
+        
+        equalzero_b
+        equalzero_w
+        
+        notequalzero_b
+        notequalzero_w
+        
+        lesszero_b
+        lesszero_w
+        
+        greaterzero_ub
+        greaterzero_sb
+        
+        greaterzero_uw
+        greaterzero_sw
+        
+        lessequalzero_sb
+        lessequalzero_sw
+        
+        greaterequalzero_sb
+        greaterequalzero_sw
+    
 ;;;
 ;;
 ;

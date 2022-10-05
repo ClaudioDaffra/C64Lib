@@ -89,6 +89,7 @@ main	.proc
             jsr math.div_s16
             bvs divisionByZero
 
+            load_var_ay zpWord0
             jsr std.print_s16_dec   ;   ay ->   risultato divisione
 
             lda #'*'

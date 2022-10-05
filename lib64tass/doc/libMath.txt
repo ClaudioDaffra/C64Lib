@@ -47,6 +47,19 @@
     #   math.s16_cmp_gt     >=
     #   math.s16_cmp_lt     <=
 
+    ; ......................................................... AY cmp zpWord1
+    ;
+    ;   input   :   ay , zpWord1
+    ;   output  :   a   0 >=
+    ;           :       1 <
+    ;
+    
+    reg_cmp_s16_lt   
+
+    reg_cmp_lesseq_u16    
+    
+    reg_cmp_lesseq_s16 
+    
     ; ---------------------------------------------------------------   mul_bytes
     ;
     ;   multiply 2 bytes A and Y, result as byte in A  

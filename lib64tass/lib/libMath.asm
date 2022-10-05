@@ -15,6 +15,12 @@ if_false .macro ;  settato         =   1
     bcc \1         
 .endm
 
+sev .macro
+    sec
+    lda #$80    ; set overflow
+    sbc #$01
+.endm
+        
 ; --------------------------------------------------------------- u16 add 1
 
 u16_add_1   .macro
@@ -292,8 +298,10 @@ math    .proc
     ;   input   :   a,y
     ;   output  :   a
 
-    mul_u8  =   mul_bytes
-    mul_s8  =   mul_bytes
+    mul_u8          =   mul_bytes
+    mul_s8          =   mul_bytes
+    multiply_bytes  =   mul_bytes
+    
     mul_bytes    .proc
         
             sta  zpa            ; num1
@@ -363,6 +371,8 @@ math    .proc
 
     multiply_words    .proc
 
+    result = zpDWord0
+    
             sta  zpWord1
             sty  zpWord1+1
             stx  zpx
@@ -475,8 +485,8 @@ math    .proc
     ;       a       =   8-bit numerator
     ;       y       =   8-bit denominator
     ;   Outputs:
-    ;       a       =   a / y       ( unsigned   )
-    ;       y       =   remainder   ( unsigned ) 
+    ;       a       =   a / y       ( unsigned  )
+    ;       y       =   remainder   ( unsigned  ) 
     ;
 
     div_u8    .proc
@@ -513,6 +523,7 @@ math    .proc
     ;    output: 
     ;            zpWord1    :   16 bit remainder, 
     ;            A/Y        :   16 bit division result
+    ;            zpWord0
     ;            flag V     :   1 = division by zero
     ;
     ;   signed word division: make everything positive and fix sign afterwards
@@ -594,6 +605,9 @@ math    .proc
             sta zpWord3+1
             pla
             
+            sta zpWord0
+            sty zpWord0+1
+            
             clv
             rts
      
@@ -611,6 +625,7 @@ math    .proc
     ;    output: 
     ;            zpWord1    :   in ZP: 16 bit remainder, 
     ;            A/Y        :   16 bit division result
+    ;            zpWord0
     ;            flag V     :   1 = division by zero
     ;
     
@@ -1262,6 +1277,63 @@ math    .proc
         ldx  zpx
         rts
 
+    .pend
+
+    ; ......................................................... AY < zpWord0
+    ;
+    ;   input   :   ay , zpWord1
+    ;   output  :   a   0 >=
+    ;           :       1 <
+    ;
+    
+    reg_cmp_s16_lt    .proc
+        ; -- AY < zpWord1?
+        cmp  zpWord1
+        tya
+        sbc  zpWord1+1
+        bvc  +
+        eor  #$80
+    +        
+        bmi  _true
+        lda  #0
+        rts
+    _true        
+        lda  #1
+        rts
+    .pend
+
+    reg_cmp_lesseq_u16    .proc
+            ; AY <= zpWord1?
+            cpy  zpWord1+1
+            beq  +
+            bcc  _true
+            lda  #0
+            rts
+    +        
+            cmp  zpWord1
+            bcc  _true
+            beq  _true
+            lda  #0
+            rts
+    _true        
+            lda  #1
+            rts
+    .pend
+
+    reg_cmp_lesseq_s16    .proc
+            ; -- zpWord1 <= AY ?   (note: order different from other routines)
+            cmp  zpWord1
+            tya
+            sbc  zpWord1+1
+            bvc  +
+            eor  #$80
+    +        
+            bpl  +
+            lda  #0
+            rts
+    +        
+            lda  #1
+            rts
     .pend
 
 .pend   

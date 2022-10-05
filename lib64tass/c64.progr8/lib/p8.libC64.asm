@@ -3248,6 +3248,7 @@ prog8_init_vars    .block
                                     _divisor    .word 0
                                     .pend
 
+1234
 
 randseed    .proc
     ; -- reset the random seeds for the byte and word random generators
@@ -3550,7 +3551,7 @@ sr2         .word $7653
                         rts
                 .pend
 
-; mul_word_13 is skipped (too much code)
+            ; mul_word_13 is skipped (too much code)
 
             stack_mul_byte_14    .proc
                     ; (X*8 - X)*2
@@ -4636,7 +4637,7 @@ sr2         .word $7653
                                 rts
 
                             .pend
-
+1234
 
 sin8u    .proc
     ;    src line: library:/prog8lib/math.p8:7
@@ -4856,321 +4857,322 @@ prog8_lib    .proc
 
 
 
-neg_b        .proc
-        lda  #0
-        sec
-        sbc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
+                        neg_b        .proc
+                                lda  #0
+                                sec
+                                sbc  stack.lo+1,x
+                                sta  stack.lo+1,x
+                                rts
+                        .pend
 
-neg_w        .proc
-        sec
-        lda  #0
-        sbc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  #0
-        sbc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+                        neg_w        .proc
+                                sec
+                                lda  #0
+                                sbc  stack.lo+1,x
+                                sta  stack.lo+1,x
+                                lda  #0
+                                sbc  stack.hi+1,x
+                                sta  stack.hi+1,x
+                                rts
+                        .pend
 
-inv_word    .proc
-        lda  stack.lo+1,x
-        eor  #255
-        sta  stack.lo+1,x
-        lda  stack.hi+1,x
-        eor  #255
-        sta  stack.hi+1,x
-        rts
-.pend
+                        inv_word    .proc
+                                lda  stack.lo+1,x
+                                eor  #255
+                                sta  stack.lo+1,x
+                                lda  stack.hi+1,x
+                                eor  #255
+                                sta  stack.hi+1,x
+                                rts
+                        .pend
 
-bitand_b    .proc
-        ; -- bitwise and (of 2 bytes)
-        lda  stack.lo+2,x
-        and  stack.lo+1,x
-        inx
-        ;   stx stack.pointer
-        sta  stack.lo+1,x
-        rts
-.pend
+                        bitand_b    .proc
+                                ; -- bitwise and (of 2 bytes)
+                                lda  stack.lo+2,x
+                                and  stack.lo+1,x
+                                inx
+                                stx stack.pointer
+                                sta  stack.lo+1,x
+                                rts
+                        .pend
 
-bitor_b        .proc
-        ; -- bitwise or (of 2 bytes)
-        lda  stack.lo+2,x
-        ora  stack.lo+1,x
-        inx
-        ;   stx stack.pointer
-        sta  stack.lo+1,x
-        rts
-.pend
+                        bitor_b        .proc
+                                ; -- bitwise or (of 2 bytes)
+                                lda  stack.lo+2,x
+                                ora  stack.lo+1,x
+                                inx
+                                stx stack.pointer
+                                sta  stack.lo+1,x
+                                rts
+                        .pend
 
-bitxor_b    .proc
-        ; -- bitwise xor (of 2 bytes)
-        lda  stack.lo+2,x
-        eor  stack.lo+1,x
-        inx
-        ;   stx stack.pointer
-        sta  stack.lo+1,x
-        rts
-.pend
+                        bitxor_b    .proc
+                                ; -- bitwise xor (of 2 bytes)
+                                lda  stack.lo+2,x
+                                eor  stack.lo+1,x
+                                inx
+                                ;   stx stack.pointer
+                                sta  stack.lo+1,x
+                                rts
+                        .pend
 
-bitand_w    .proc
-        ; -- bitwise and (of 2 words)
-        lda  stack.lo+2,x
-        and  stack.lo+1,x
-        sta  stack.lo+2,x
-        lda  stack.hi+2,x
-        and  stack.hi+1,x
-        sta  stack.hi+2,x
-        inx
-        ;   stx stack.pointer
-        rts
-.pend
+                        bitand_w    .proc
+                                ; -- bitwise and (of 2 words)
+                                lda  stack.lo+2,x
+                                and  stack.lo+1,x
+                                sta  stack.lo+2,x
+                                lda  stack.hi+2,x
+                                and  stack.hi+1,x
+                                sta  stack.hi+2,x
+                                inx
+                                ;   stx stack.pointer
+                                rts
+                        .pend
 
-bitor_w        .proc
-        ; -- bitwise or (of 2 words)
-        lda  stack.lo+2,x
-        ora  stack.lo+1,x
-        sta  stack.lo+2,x
-        lda  stack.hi+2,x
-        ora  stack.hi+1,x
-        sta  stack.hi+2,x
-        inx
-        ;   stx stack.pointer
-        rts
-.pend
+                        bitor_w        .proc
+                                ; -- bitwise or (of 2 words)
+                                lda  stack.lo+2,x
+                                ora  stack.lo+1,x
+                                sta  stack.lo+2,x
+                                lda  stack.hi+2,x
+                                ora  stack.hi+1,x
+                                sta  stack.hi+2,x
+                                inx
+                                stx stack.pointer
+                                rts
+                        .pend
 
-bitxor_w    .proc
-        ; -- bitwise xor (of 2 bytes)
-        lda  stack.lo+2,x
-        eor  stack.lo+1,x
-        sta  stack.lo+2,x
-        lda  stack.hi+2,x
-        eor  stack.hi+1,x
-        sta  stack.hi+2,x
-        inx
-        ;   stx stack.pointer
-        rts
-.pend
+                        bitxor_w    .proc
+                                ; -- bitwise xor (of 2 bytes)
+                                lda  stack.lo+2,x
+                                eor  stack.lo+1,x
+                                sta  stack.lo+2,x
+                                lda  stack.hi+2,x
+                                eor  stack.hi+1,x
+                                sta  stack.hi+2,x
+                                inx
+                                stx stack.pointer
+                                rts
+                        .pend
 
 
-add_w        .proc
-    ; -- push word+word / uword+uword
-        inx
-        ;   stx stack.pointer
-        clc
-        lda  stack.lo,x
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  stack.hi,x
-        adc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+                        add_w        .proc
+                                ; -- push word+word / uword+uword
+                                inx
+                                stx stack.pointer
+                                clc
+                                lda  stack.lo,x
+                                adc  stack.lo+1,x
+                                sta  stack.lo+1,x
+                                lda  stack.hi,x
+                                adc  stack.hi+1,x
+                                sta  stack.hi+1,x
+                                rts
+                        .pend
 
-sub_w        .proc
-    ; -- push word-word
-        inx
-        ;   stx stack.pointer
-        sec
-        lda  stack.lo+1,x
-        sbc  stack.lo,x
-        sta  stack.lo+1,x
-        lda  stack.hi+1,x
-        sbc  stack.hi,x
-        sta  stack.hi+1,x
-        rts
-.pend
+                        sub_w        .proc
+                                ; -- push word-word
+                                inx
+                                stx stack.pointer
+                                sec
+                                lda  stack.lo+1,x
+                                sbc  stack.lo,x
+                                sta  stack.lo+1,x
+                                lda  stack.hi+1,x
+                                sbc  stack.hi,x
+                                sta  stack.hi+1,x
+                                rts
+                        .pend
 
-mul_byte    .proc
-    ; -- b*b->b (signed and unsigned)
-        inx
-        ;   stx stack.pointer
-        lda  stack.lo,x
-        ldy  stack.lo+1,x
-        jsr  math.multiply_bytes
-        sta  stack.lo+1,x
-        rts
-.pend
+                mul_byte    .proc
+                    ; -- b*b->b (signed and unsigned)
+                        inx
+                        ;   stx stack.pointer
+                        lda  stack.lo,x
+                        ldy  stack.lo+1,x
+                        jsr  math.multiply_bytes
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-mul_word    .proc
-        inx
-        ;   stx stack.pointer
-        lda  stack.lo,x
-        sta  zpWord0
-        lda  stack.hi,x
-        sta  zpWord0+1
-        lda  stack.lo+1,x
-        ldy  stack.hi+1,x
-        jsr  math.multiply_words
-        lda  math.multiply_words.result
-        sta  stack.lo+1,x
-        lda  math.multiply_words.result+1
-        sta  stack.hi+1,x
-        rts
-.pend
+                    mul_word    .proc
+                            inx
+                            ;   stx stack.pointer
+                            lda  stack.lo,x
+                            sta  zpWord0
+                            lda  stack.hi,x
+                            sta  zpWord0+1
+                            lda  stack.lo+1,x
+                            ldy  stack.hi+1,x
+                            jsr  math.multiply_words
+                            lda  math.multiply_words.result
+                            sta  stack.lo+1,x
+                            lda  math.multiply_words.result+1
+                            sta  stack.hi+1,x
+                            rts
+                    .pend
 
-idiv_b        .proc
-    ; signed division: use unsigned division and fix sign of result afterwards
-        inx
-        lda  stack.lo,x
-        eor  stack.lo+1,x
-        php            ; save sign of result
-        lda  stack.lo,x
-        bpl  +
-        eor  #$ff
-        sec
-        adc  #0            ; make num1 positive
-+        
-        tay
-        inx
-        lda  stack.lo,x
-        bpl  +
-        eor  #$ff
-        sec
-        adc  #0            ; make num2 positive
-+        
-        jsr  math.divmod_ub_asm
-        sta  _remainder
-        tya
-        plp            ; get sign of result
-        bpl  +
-        eor  #$ff
-        sec
-        adc  #0            ; negate result
-+        
-        sta  stack.lo,x
-        dex
-        rts
-_remainder    .byte  0
-.pend
+                    idiv_b        .proc
+                        ; signed division: use unsigned division and fix sign of result afterwards
+                            inx
+                            lda  stack.lo,x
+                            eor  stack.lo+1,x
+                            php            ; save sign of result
+                            lda  stack.lo,x
+                            bpl  +
+                            eor  #$ff
+                            sec
+                            adc  #0            ; make num1 positive
+                    +        
+                            tay
+                            inx
+                            lda  stack.lo,x
+                            bpl  +
+                            eor  #$ff
+                            sec
+                            adc  #0            ; make num2 positive
+                    +        
+                            jsr  math.divmod_ub_asm
+                            sta  _remainder
+                            tya
+                            plp            ; get sign of result
+                            bpl  +
+                            eor  #$ff
+                            sec
+                            adc  #0            ; negate result
+                    +        
+                            sta  stack.lo,x
+                            dex
+                            rts
+                    _remainder    .byte  0
+                    .pend
 
-idiv_ub        .proc
-        inx
-        ldy  stack.lo,x
-        lda  stack.lo+1,x
-        jsr  math.divmod_ub_asm
-        tya
-        sta  stack.lo+1,x
-        rts
-.pend
+                    idiv_ub        .proc
+                            inx
+                            ldy  stack.lo,x
+                            lda  stack.lo+1,x
+                            jsr  math.divmod_ub_asm
+                            tya
+                            sta  stack.lo+1,x
+                            rts
+                    .pend
 
-idiv_w        .proc
-    ; signed division: use unsigned division and fix sign of result afterwards
-        lda  stack.hi+2,x
-        eor  stack.hi+1,x
-        php                ; save sign of result
-        lda  stack.hi+1,x
-        bpl  +
-        jsr  neg_w            ; make value positive
-+        
-        inx
-        lda  stack.hi+1,x
-        bpl  +
-        jsr  neg_w            ; make value positive
-+        
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        lda  stack.lo,x
-        ldy  stack.hi,x
-        jsr  math.divmod_uw_asm
-        sta  stack.lo+1,x
-        tya
-        sta  stack.hi+1,x
-        plp
-        bpl  +
-        jmp  neg_w        ; negate result
-+        
-        rts
-.pend
+                    idiv_w        .proc
+                        ; signed division: use unsigned division and fix sign of result afterwards
+                            lda  stack.hi+2,x
+                            eor  stack.hi+1,x
+                            php                ; save sign of result
+                            lda  stack.hi+1,x
+                            bpl  +
+                            jsr  neg_w            ; make value positive
+                    +        
+                            inx
+                            lda  stack.hi+1,x
+                            bpl  +
+                            jsr  neg_w            ; make value positive
+                    +        
+                            lda  stack.lo+1,x
+                            sta  zpWord0
+                            lda  stack.hi+1,x
+                            sta  zpWord0+1
+                            lda  stack.lo,x
+                            ldy  stack.hi,x
+                            jsr  math.divmod_uw_asm
+                            sta  stack.lo+1,x
+                            tya
+                            sta  stack.hi+1,x
+                            plp
+                            bpl  +
+                            jmp  neg_w        ; negate result
+                    +        
+                            rts
+                    .pend
 
-idiv_uw        .proc
-        inx
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        lda  stack.lo,x
-        ldy  stack.hi,x
-        jsr  math.divmod_uw_asm
-        sta  stack.lo+1,x
-        tya
-        sta  stack.hi+1,x
-        rts
-.pend
+                    idiv_uw        .proc
+                            inx
+                            lda  stack.lo+1,x
+                            sta  zpWord0
+                            lda  stack.hi+1,x
+                            sta  zpWord0+1
+                            lda  stack.lo,x
+                            ldy  stack.hi,x
+                            jsr  math.divmod_uw_asm
+                            sta  stack.lo+1,x
+                            tya
+                            sta  stack.hi+1,x
+                            rts
+                    .pend
 
-remainder_ub    .proc
-        inx
-        ldy  stack.lo,x    ; right operand
-        lda  stack.lo+1,x  ; left operand
-        jsr  math.divmod_ub_asm
-        sta  stack.lo+1,x
-        rts
-.pend
+                                remainder_ub    .proc
+                                        inx
+                                        ldy  stack.lo,x    ; right operand
+                                        lda  stack.lo+1,x  ; left operand
+                                        jsr  math.divmod_ub_asm
+                                        sta  stack.lo+1,x
+                                        rts
+                                .pend
 
-remainder_uw    .proc
-        inx
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        lda  stack.lo,x
-        ldy  stack.hi,x
-        jsr  math.divmod_uw_asm
-        lda  zpWord1
-        sta  stack.lo+1,x
-        lda  zpWord1+1
-        sta  stack.hi+1,x
-        rts
-.pend
+                                remainder_uw    .proc
+                                        inx
+                                        lda  stack.lo+1,x
+                                        sta  zpWord0
+                                        lda  stack.hi+1,x
+                                        sta  zpWord0+1
+                                        lda  stack.lo,x
+                                        ldy  stack.hi,x
+                                        jsr  math.divmod_uw_asm
+                                        lda  zpWord1
+                                        sta  stack.lo+1,x
+                                        lda  zpWord1+1
+                                        sta  stack.hi+1,x
+                                        rts
+                                .pend
+123456
 
-equal_w        .proc
-    ; -- are the two words on the stack identical?
-        lda  stack.lo+1,x
-        cmp  stack.lo+2,x
-        bne  equal_b._equal_b_false
-        lda  stack.hi+1,x
-        cmp  stack.hi+2,x
-        bne  equal_b._equal_b_false
-        beq  equal_b._equal_b_true
-.pend
+                    equal_w        .proc
+                            ; -- are the two words on the stack identical?
+                            lda  stack.lo+1,x
+                            cmp  stack.lo+2,x
+                            bne  equal_b._equal_b_false
+                            lda  stack.hi+1,x
+                            cmp  stack.hi+2,x
+                            bne  equal_b._equal_b_false
+                            beq  equal_b._equal_b_true
+                    .pend
 
-notequal_b    .proc
-    ; -- are the two bytes on the stack different?
-        lda  stack.lo+1,x
-        cmp  stack.lo+2,x
-        beq  equal_b._equal_b_false
-        bne  equal_b._equal_b_true
-.pend
+                    notequal_b    .proc
+                        ; -- are the two bytes on the stack different?
+                            lda  stack.lo+1,x
+                            cmp  stack.lo+2,x
+                            beq  equal_b._equal_b_false
+                            bne  equal_b._equal_b_true
+                    .pend
 
-notequal_w    .proc
-    ; -- are the two words on the stack different?
-        lda  stack.hi+1,x
-        cmp  stack.hi+2,x
-        beq  notequal_b
-        bne  equal_b._equal_b_true
-.pend
+                    notequal_w    .proc
+                        ; -- are the two words on the stack different?
+                            lda  stack.hi+1,x
+                            cmp  stack.hi+2,x
+                            beq  notequal_b
+                            bne  equal_b._equal_b_true
+                    .pend
 
-less_ub        .proc
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        bcc  equal_b._equal_b_true
-        bcs  equal_b._equal_b_false
-.pend
+                    less_ub        .proc
+                            lda  stack.lo+2,x
+                            cmp  stack.lo+1,x
+                            bcc  equal_b._equal_b_true
+                            bcs  equal_b._equal_b_false
+                    .pend
 
-less_b        .proc
-    ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  stack.lo+2,x
-        sec
-        sbc  stack.lo+1,x
-        bvc  +
-        eor  #$80
-+        bmi  equal_b._equal_b_true
-        bpl  equal_b._equal_b_false
-.pend
+                    less_b        .proc
+                        ; see http://www.6502.org/tutorials/compare_beyond.html
+                            lda  stack.lo+2,x
+                            sec
+                            sbc  stack.lo+1,x
+                            bvc  +
+                            eor  #$80
+                    +        bmi  equal_b._equal_b_true
+                            bpl  equal_b._equal_b_false
+                    .pend
 
 reg_less_uw    .proc
         ;  AY < zpWord1?
@@ -5185,208 +5187,218 @@ _true        lda  #1
         rts
 .pend
 
-less_uw        .proc
-        lda  stack.hi+2,x
-        cmp  stack.hi+1,x
-        bcc  equal_b._equal_b_true
-        bne  equal_b._equal_b_false
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        bcc  equal_b._equal_b_true
-        bcs  equal_b._equal_b_false
-.pend
+                less_uw        .proc
+                        lda  stack.hi+2,x
+                        cmp  stack.hi+1,x
+                        bcc  equal_b._equal_b_true
+                        bne  equal_b._equal_b_false
+                        lda  stack.lo+2,x
+                        cmp  stack.lo+1,x
+                        bcc  equal_b._equal_b_true
+                        bcs  equal_b._equal_b_false
+                .pend
 
-reg_less_w    .proc
-        ; -- AY < zpWord1?
-        cmp  zpWord1
-        tya
-        sbc  zpWord1+1
-        bvc  +
-        eor  #$80
-+        
-        bmi  _true
-        lda  #0
-        rts
-_true        
-        lda  #1
-        rts
-.pend
+                                            reg_less_w    .proc
+                                                    ; -- AY < zpWord1?
+                                                    cmp  zpWord1
+                                                    tya
+                                                    sbc  zpWord1+1
+                                                    bvc  +
+                                                    eor  #$80
+                                            +        
+                                                    bmi  _true
+                                                    lda  #0
+                                                    rts
+                                            _true        
+                                                    lda  #1
+                                                    rts
+                                            .pend
 
-less_w        .proc
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        lda  stack.hi+2,x
-        sbc  stack.hi+1,x
-        bvc  +
-        eor  #$80
-+        
-        bmi  equal_b._equal_b_true
-        bpl  equal_b._equal_b_false
-.pend
+                less_w        .proc
+                        lda  stack.lo+2,x
+                        cmp  stack.lo+1,x
+                        lda  stack.hi+2,x
+                        sbc  stack.hi+1,x
+                        bvc  +
+                        eor  #$80
+                +        
+                        bmi  equal_b._equal_b_true
+                        bpl  equal_b._equal_b_false
+                .pend
 
-equal_b        .proc
-    ; -- are the two bytes on the stack identical?
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        bne  _equal_b_false
-_equal_b_true    lda  #1
-_equal_b_store    inx
-        sta  stack.lo+1,x
-        rts
-_equal_b_false    lda  #0
-        beq  _equal_b_store
-.pend
+                    equal_b        .proc
+                            ; -- are the two bytes on the stack identical?
+                            lda  stack.lo+2,x
+                            cmp  stack.lo+1,x
+                            bne  _equal_b_false
+                    _equal_b_true    
+                            lda  #1
+                    _equal_b_store    
+                           
+                            
+                            inx
+                            ;stx stack.pointer
+                            
+                            sta  stack.lo+1,x
+                            rts
+                    _equal_b_false    
+                            lda  #0
+                            beq  _equal_b_store
+                    .pend
 
-lesseq_ub    .proc
-        lda  stack.lo+1,x
-        cmp  stack.lo+2,x
-        bcs  equal_b._equal_b_true
-        bcc  equal_b._equal_b_false
-.pend
+                    lesseq_ub    .proc
+                            lda  stack.lo+1,x
+                            cmp  stack.lo+2,x
+                            bcs  equal_b._equal_b_true
+                            bcc  equal_b._equal_b_false
+                    .pend
 
-lesseq_b    .proc
-    ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  stack.lo+2,x
-        clc
-        sbc  stack.lo+1,x
-        bvc  +
-        eor  #$80
-+        bmi  equal_b._equal_b_true
-        bpl  equal_b._equal_b_false
-.pend
+                    lesseq_b    .proc
+                        ; see http://www.6502.org/tutorials/compare_beyond.html
+                            lda  stack.lo+2,x
+                            clc
+                            sbc  stack.lo+1,x
+                            bvc  +
+                            eor  #$80
+                    +        bmi  equal_b._equal_b_true
+                            bpl  equal_b._equal_b_false
+                    .pend
 
-reg_lesseq_uw    .proc
-        ; AY <= zpWord1?
-        cpy  zpWord1+1
-        beq  +
-        bcc  _true
-        lda  #0
-        rts
-+        cmp  zpWord1
-        bcc  _true
-        beq  _true
-        lda  #0
-        rts
-_true        lda  #1
-        rts
-.pend
+                    reg_lesseq_uw    .proc
+                            ; AY <= zpWord1?
+                            cpy  zpWord1+1
+                            beq  +
+                            bcc  _true
+                            lda  #0
+                            rts
+                    +        cmp  zpWord1
+                            bcc  _true
+                            beq  _true
+                            lda  #0
+                            rts
+                    _true        lda  #1
+                            rts
+                    .pend
 
-lesseq_uw    .proc
-        lda  stack.hi+1,x
-        cmp  stack.hi+2,x
-        bcc  equal_b._equal_b_false
-        bne  equal_b._equal_b_true
-        lda  stack.lo+1,x
-        cmp  stack.lo+2,x
-        bcs  equal_b._equal_b_true
-        bcc  equal_b._equal_b_false
-.pend
+                    lesseq_uw    .proc
+                            lda  stack.hi+1,x
+                            cmp  stack.hi+2,x
+                            bcc  equal_b._equal_b_false
+                            bne  equal_b._equal_b_true
+                            lda  stack.lo+1,x
+                            cmp  stack.lo+2,x
+                            bcs  equal_b._equal_b_true
+                            bcc  equal_b._equal_b_false
+                    .pend
 
-reg_lesseq_w    .proc
-        ; -- zpWord1 <= AY ?   (note: order different from other routines)
-        cmp  zpWord1
-        tya
-        sbc  zpWord1+1
-        bvc  +
-        eor  #$80
-+        bpl  +
-        lda  #0
-        rts
-+        lda  #1
-        rts
-.pend
+                reg_lesseq_w    .proc
+                        ; -- zpWord1 <= AY ?   (note: order different from other routines)
+                        cmp  zpWord1
+                        tya
+                        sbc  zpWord1+1
+                        bvc  +
+                        eor  #$80
+                +        
+                        bpl  +
+                        lda  #0
+                        rts
+                +        
+                        lda  #1
+                        rts
+                .pend
 
-lesseq_w    .proc
-        lda  stack.lo+1,x
-        cmp  stack.lo+2,x
-        lda  stack.hi+1,x
-        sbc  stack.hi+2,x
-        bvc  +
-        eor  #$80
-+        bpl  equal_b._equal_b_true
-        bmi  equal_b._equal_b_false
-.pend
+                lesseq_w    .proc
+                        lda  stack.lo+1,x
+                        cmp  stack.lo+2,x
+                        lda  stack.hi+1,x
+                        sbc  stack.hi+2,x
+                        bvc  +
+                        eor  #$80
+                +        
+                        bpl  equal_b._equal_b_true
+                        bmi  equal_b._equal_b_false
+                .pend
 
-greater_ub    .proc
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        beq  equal_b._equal_b_false
-        bcs  equal_b._equal_b_true
-        bcc  equal_b._equal_b_false
-.pend
+                greater_ub    .proc
+                        lda  stack.lo+2,x
+                        cmp  stack.lo+1,x
+                        beq  equal_b._equal_b_false
+                        bcs  equal_b._equal_b_true
+                        bcc  equal_b._equal_b_false
+                .pend
 
-greater_b    .proc
-    ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  stack.lo+2,x
-        clc
-        sbc  stack.lo+1,x
-        bvc  +
-        eor  #$80
-+        bpl  equal_b._equal_b_true
-        bmi  equal_b._equal_b_false
-.pend
+                greater_b    .proc
+                    ; see http://www.6502.org/tutorials/compare_beyond.html
+                        lda  stack.lo+2,x
+                        clc
+                        sbc  stack.lo+1,x
+                        bvc  +
+                        eor  #$80
+                +        bpl  equal_b._equal_b_true
+                        bmi  equal_b._equal_b_false
+                .pend
 
-greater_uw    .proc
-        lda  stack.hi+1,x
-        cmp  stack.hi+2,x
-        bcc  equal_b._equal_b_true
-        bne  equal_b._equal_b_false
-        lda  stack.lo+1,x
-        cmp  stack.lo+2,x
-        bcc  equal_b._equal_b_true
-        bcs  equal_b._equal_b_false
-.pend
+                greater_uw    .proc
+                        lda  stack.hi+1,x
+                        cmp  stack.hi+2,x
+                        bcc  equal_b._equal_b_true
+                        bne  equal_b._equal_b_false
+                        lda  stack.lo+1,x
+                        cmp  stack.lo+2,x
+                        bcc  equal_b._equal_b_true
+                        bcs  equal_b._equal_b_false
+                .pend
 
-greater_w    .proc
-        lda  stack.lo+1,x
-        cmp  stack.lo+2,x
-        lda  stack.hi+1,x
-        sbc  stack.hi+2,x
-        bvc  +
-        eor  #$80
-+        bmi  equal_b._equal_b_true
-        bpl  equal_b._equal_b_false
-.pend
+                greater_w    .proc
+                        lda  stack.lo+1,x
+                        cmp  stack.lo+2,x
+                        lda  stack.hi+1,x
+                        sbc  stack.hi+2,x
+                        bvc  +
+                        eor  #$80
+                +        bmi  equal_b._equal_b_true
+                        bpl  equal_b._equal_b_false
+                .pend
 
-greatereq_ub    .proc
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        bcs  equal_b._equal_b_true
-        bcc  equal_b._equal_b_false
-.pend
+                greatereq_ub    .proc
+                        lda  stack.lo+2,x
+                        cmp  stack.lo+1,x
+                        bcs  equal_b._equal_b_true
+                        bcc  equal_b._equal_b_false
+                .pend
 
-greatereq_b    .proc
-    ; see http://www.6502.org/tutorials/compare_beyond.html
-        lda  stack.lo+2,x
-        sec
-        sbc  stack.lo+1,x
-        bvc  +
-        eor  #$80
-+        bpl  equal_b._equal_b_true
-        bmi  equal_b._equal_b_false
-.pend
+                greatereq_b    .proc
+                    ; see http://www.6502.org/tutorials/compare_beyond.html
+                        lda  stack.lo+2,x
+                        sec
+                        sbc  stack.lo+1,x
+                        bvc  +
+                        eor  #$80
+                +        bpl  equal_b._equal_b_true
+                        bmi  equal_b._equal_b_false
+                .pend
 
-greatereq_uw    .proc
-        lda  stack.hi+2,x
-        cmp  stack.hi+1,x
-        bcc  equal_b._equal_b_false
-        bne  equal_b._equal_b_true
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        bcs  equal_b._equal_b_true
-        bcc  equal_b._equal_b_false
-.pend
+                greatereq_uw    .proc
+                        lda  stack.hi+2,x
+                        cmp  stack.hi+1,x
+                        bcc  equal_b._equal_b_false
+                        bne  equal_b._equal_b_true
+                        lda  stack.lo+2,x
+                        cmp  stack.lo+1,x
+                        bcs  equal_b._equal_b_true
+                        bcc  equal_b._equal_b_false
+                .pend
 
-greatereq_w    .proc
-        lda  stack.lo+2,x
-        cmp  stack.lo+1,x
-        lda  stack.hi+2,x
-        sbc  stack.hi+1,x
-        bvc  +
-        eor  #$80
-+        bmi  equal_b._equal_b_false
-        bpl  equal_b._equal_b_true
-.pend
+                greatereq_w    .proc
+                        lda  stack.lo+2,x
+                        cmp  stack.lo+1,x
+                        lda  stack.hi+2,x
+                        sbc  stack.hi+1,x
+                        bvc  +
+                        eor  #$80
+                +        bmi  equal_b._equal_b_false
+                        bpl  equal_b._equal_b_true
+                .pend
 
 
 shiftleft_b    .proc
@@ -5416,106 +5428,106 @@ shiftright_b    .proc
 .pend
 
 
-equalzero_b    .proc
-        lda  stack.lo+1,x
-        beq  _true
-        bne  _false
-_true        
-        lda  #1
-        sta  stack.lo+1,x
-        rts
-_false        
-        lda  #0
-        sta  stack.lo+1,x
-        rts
-.pend
+            equalzero_b    .proc
+                    lda  stack.lo+1,x
+                    beq  _true
+                    bne  _false
+            _true        
+                    lda  #1
+                    sta  stack.lo+1,x
+                    rts
+            _false        
+                    lda  #0
+                    sta  stack.lo+1,x
+                    rts
+            .pend
 
-equalzero_w    .proc
-        lda  stack.lo+1,x
-        ora  stack.hi+1,x
-        beq  equalzero_b._true
-        bne  equalzero_b._false
-.pend
+            equalzero_w    .proc
+                    lda  stack.lo+1,x
+                    ora  stack.hi+1,x
+                    beq  equalzero_b._true
+                    bne  equalzero_b._false
+            .pend
 
-notequalzero_b    .proc
-        lda  stack.lo+1,x
-        beq  equalzero_b._false
-        bne  equalzero_b._true
-.pend
+            notequalzero_b    .proc
+                    lda  stack.lo+1,x
+                    beq  equalzero_b._false
+                    bne  equalzero_b._true
+            .pend
 
-notequalzero_w    .proc
-        lda  stack.lo+1,x
-        ora  stack.hi+1,x
-        beq  equalzero_b._false
-        bne  equalzero_b._true
-.pend
+            notequalzero_w    .proc
+                    lda  stack.lo+1,x
+                    ora  stack.hi+1,x
+                    beq  equalzero_b._false
+                    bne  equalzero_b._true
+            .pend
 
-lesszero_b    .proc
-        lda  stack.lo+1,x
-        bmi  equalzero_b._true
-        jmp  equalzero_b._false
-.pend
+            lesszero_b    .proc
+                    lda  stack.lo+1,x
+                    bmi  equalzero_b._true
+                    jmp  equalzero_b._false
+            .pend
 
-lesszero_w    .proc
-        lda  stack.hi+1,x
-        bmi  equalzero_b._true
-        jmp  equalzero_b._false
-.pend
+            lesszero_w    .proc
+                    lda  stack.hi+1,x
+                    bmi  equalzero_b._true
+                    jmp  equalzero_b._false
+            .pend
 
-greaterzero_ub    .proc
-        lda  stack.lo+1,x
-        bne  equalzero_b._true
-        beq  equalzero_b._false
-.pend
+                greaterzero_ub    .proc
+                        lda  stack.lo+1,x
+                        bne  equalzero_b._true
+                        beq  equalzero_b._false
+                .pend
 
-greaterzero_sb    .proc
-        lda  stack.lo+1,x
-        beq  equalzero_b._false
-        bpl  equalzero_b._true
-        bmi  equalzero_b._false
-.pend
+                greaterzero_sb    .proc
+                        lda  stack.lo+1,x
+                        beq  equalzero_b._false
+                        bpl  equalzero_b._true
+                        bmi  equalzero_b._false
+                .pend
 
-greaterzero_uw    .proc
-        lda  stack.lo+1,x
-        ora  stack.hi+1,x
-        bne  equalzero_b._true
-        beq  equalzero_b._false
-.pend
+                greaterzero_uw    .proc
+                        lda  stack.lo+1,x
+                        ora  stack.hi+1,x
+                        bne  equalzero_b._true
+                        beq  equalzero_b._false
+                .pend
 
-greaterzero_sw    .proc
-        lda  stack.hi+1,x
-        bmi  equalzero_b._false
-        ora  stack.lo+1,x
-        beq  equalzero_b._false
-        bne  equalzero_b._true
-.pend
+                greaterzero_sw    .proc
+                        lda  stack.hi+1,x
+                        bmi  equalzero_b._false
+                        ora  stack.lo+1,x
+                        beq  equalzero_b._false
+                        bne  equalzero_b._true
+                .pend
 
-lessequalzero_sb    .proc
-        lda  stack.lo+1,x
-        bmi  equalzero_b._true
-        beq  equalzero_b._true
-        bne  equalzero_b._false
-.pend
+                lessequalzero_sb    .proc
+                        lda  stack.lo+1,x
+                        bmi  equalzero_b._true
+                        beq  equalzero_b._true
+                        bne  equalzero_b._false
+                .pend
 
-lessequalzero_sw    .proc
-        lda  stack.hi+1,x
-        bmi  equalzero_b._true
-        ora  stack.lo+1,x
-        beq  equalzero_b._true
-        bne  equalzero_b._false
-.pend
+                lessequalzero_sw    .proc
+                        lda  stack.hi+1,x
+                        bmi  equalzero_b._true
+                        ora  stack.lo+1,x
+                        beq  equalzero_b._true
+                        bne  equalzero_b._false
+                .pend
 
-greaterequalzero_sb    .proc
-        lda  stack.lo+1,x
-            bpl  equalzero_b._true
-            bmi  equalzero_b._false
-.pend
+                greaterequalzero_sb    .proc
+                        lda  stack.lo+1,x
+                            bpl  equalzero_b._true
+                            bmi  equalzero_b._false
+                .pend
 
-greaterequalzero_sw    .proc
-        lda  stack.hi+1,x
-            bpl  equalzero_b._true
-            bmi  equalzero_b._false
-.pend
+                greaterequalzero_sw    .proc
+                        lda  stack.hi+1,x
+                            bpl  equalzero_b._true
+                            bmi  equalzero_b._false
+                .pend
 
                                 memcopy16_up    .proc
                                     ; -- copy memory UP from (zpWord0) to (zpWord1) of length X/Y (16-bit, X=lo, Y=hi)
@@ -5636,7 +5648,7 @@ greaterequalzero_sw    .proc
                                     
                     .pend
 
-
+123456
 
 ror2_mem_ub    .proc
         ; -- in-place 8-bit ror of byte at memory location in AY
