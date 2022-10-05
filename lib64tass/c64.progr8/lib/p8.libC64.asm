@@ -1767,9 +1767,9 @@ _setup_raster_irq
 .pend
 
 
-;***********************
-; #LIBRARY : 'sys' 
-;***********************
+                                ;***********************
+                                ; #LIBRARY : 'sys' 
+                                ;***********************
 
                                 sys    .proc
                                     ;    src line: library:/prog8lib/c64/syslib.p8:487
@@ -3800,7 +3800,7 @@ sr2         .word $7653
                     .pend
 
 
-; ----------- optimized multiplications (in-place A (byte) and ?? (word)) : ---------
+                            ; ----------- optimized multiplications (in-place A (byte) and ?? (word)) : ---------
 
                             mul_byte_3    .proc
                                     ; A = A + A*2
@@ -4305,229 +4305,229 @@ sr2         .word $7653
 ; ???? bit shifts.
 ; anything below 3 is done inline. anything above 7 is done via other optimizations.
 
-shift_left_w_7    .proc
-        lda  stack.hi+1,x
-        sta  zpy
-        lda  stack.lo+1,x
+                            shift_left_w_7    .proc
+                                    lda  stack.hi+1,x
+                                    sta  zpy
+                                    lda  stack.lo+1,x
 
-        asl  a
-        rol  zpy
-_shift6        
-        asl  a
-        rol  zpy
-_shift5        
-        asl  a
-        rol  zpy
-_shift4        
-        asl  a
-        rol  zpy
-_shift3        
-        asl  a
-        rol  zpy
-        asl  a
-        rol  zpy
-        asl  a
-        rol  zpy
+                                    asl  a
+                                    rol  zpy
+                            _shift6        
+                                    asl  a
+                                    rol  zpy
+                            _shift5        
+                                    asl  a
+                                    rol  zpy
+                            _shift4        
+                                    asl  a
+                                    rol  zpy
+                            _shift3        
+                                    asl  a
+                                    rol  zpy
+                                    asl  a
+                                    rol  zpy
+                                    asl  a
+                                    rol  zpy
 
-        sta  stack.lo+1,x
-        lda  zpy
-        sta  stack.hi+1,x
-        rts
-.pend
+                                    sta  stack.lo+1,x
+                                    lda  zpy
+                                    sta  stack.hi+1,x
+                                    rts
+                            .pend
 
-shift_left_w_6    .proc
-        lda  stack.hi+1,x
-        sta  zpy
-        lda  stack.lo+1,x
-        jmp  shift_left_w_7._shift6
-.pend
+                            shift_left_w_6    .proc
+                                    lda  stack.hi+1,x
+                                    sta  zpy
+                                    lda  stack.lo+1,x
+                                    jmp  shift_left_w_7._shift6
+                            .pend
 
-shift_left_w_5    .proc
-        lda  stack.hi+1,x
-        sta  zpy
-        lda  stack.lo+1,x
-        jmp  shift_left_w_7._shift5
-.pend
+                            shift_left_w_5    .proc
+                                    lda  stack.hi+1,x
+                                    sta  zpy
+                                    lda  stack.lo+1,x
+                                    jmp  shift_left_w_7._shift5
+                            .pend
 
-shift_left_w_4    .proc
-        lda  stack.hi+1,x
-        sta  zpy
-        lda  stack.lo+1,x
-        jmp  shift_left_w_7._shift4
-.pend
+                            shift_left_w_4    .proc
+                                    lda  stack.hi+1,x
+                                    sta  zpy
+                                    lda  stack.lo+1,x
+                                    jmp  shift_left_w_7._shift4
+                            .pend
 
-shift_left_w_3    .proc
-        lda  stack.hi+1,x
-        sta  zpy
-        lda  stack.lo+1,x
-        jmp  shift_left_w_7._shift3
-.pend
-
-
-shift_left_w    .proc
-        ; -- variable number of shifts left
-        inx
-        ldy  stack.lo,x
-        bne  _shift
-        rts
-_shift        
-        asl  stack.lo+1,x
-        rol  stack.hi+1,x
-        dey
-        bne  _shift
-        rts
-.pend
-
-shift_right_uw    .proc
-        ; -- uword variable number of shifts right
-        inx
-        ldy  stack.lo,x
-        bne  _shift
-        rts
-_shift        
-        lsr  stack.hi+1,x
-        ror  stack.lo+1,x
-        dey
-        bne  _shift
-        rts
-.pend
-
-shift_right_uw_7    .proc
-        lda  stack.lo+1,x
-        sta  zpy
-        lda  stack.hi+1,x
-
-        lsr  a
-        ror  zpy
-_shift6        
-        lsr  a
-        ror  zpy
-_shift5        
-        lsr  a
-        ror  zpy
-_shift4        
-        lsr  a
-        ror  zpy
-_shift3        
-        lsr  a
-        ror  zpy
-        lsr  a
-        ror  zpy
-        lsr  a
-        ror  zpy
-
-        sta  stack.hi+1,x
-        lda  zpy
-        sta  stack.lo+1,x
-        rts
-.pend
-
-shift_right_uw_6    .proc
-        lda  stack.lo+1,x
-        sta  zpy
-        lda  stack.hi+1,x
-        jmp  shift_right_uw_7._shift6
-.pend
-
-shift_right_uw_5    .proc
-        lda  stack.lo+1,x
-        sta  zpy
-        lda  stack.hi+1,x
-        jmp  shift_right_uw_7._shift5
-.pend
-
-shift_right_uw_4    .proc
-        lda  stack.lo+1,x
-        sta  zpy
-        lda  stack.hi+1,x
-        jmp  shift_right_uw_7._shift4
-.pend
-
-shift_right_uw_3    .proc
-        lda  stack.lo+1,x
-        sta  zpy
-        lda  stack.hi+1,x
-        jmp  shift_right_uw_7._shift3
-.pend
+                            shift_left_w_3    .proc
+                                    lda  stack.hi+1,x
+                                    sta  zpy
+                                    lda  stack.lo+1,x
+                                    jmp  shift_left_w_7._shift3
+                            .pend
 
 
-shift_right_w_7        .proc
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
+                            shift_left_w    .proc
+                                    ; -- variable number of shifts left
+                                    inx
+                                    ldy  stack.lo,x
+                                    bne  _shift
+                                    rts
+                            _shift        
+                                    asl  stack.lo+1,x
+                                    rol  stack.hi+1,x
+                                    dey
+                                    bne  _shift
+                                    rts
+                            .pend
 
-        asl  a
-        ror  zpWord0+1
-        ror  zpWord0
+                            shift_right_uw    .proc
+                                    ; -- uword variable number of shifts right
+                                    inx
+                                    ldy  stack.lo,x
+                                    bne  _shift
+                                    rts
+                            _shift        
+                                    lsr  stack.hi+1,x
+                                    ror  stack.lo+1,x
+                                    dey
+                                    bne  _shift
+                                    rts
+                            .pend
 
-        lda  zpWord0+1
-_shift6        
-        asl  a
-        ror  zpWord0+1
-        ror  zpWord0
-        lda  zpWord0+1
-_shift5        
-        asl  a
-        ror  zpWord0+1
-        ror  zpWord0
-        lda  zpWord0+1
-_shift4        
-        asl  a
-        ror  zpWord0+1
-        ror  zpWord0
-        lda  zpWord0+1
-_shift3        
-        asl  a
-        ror  zpWord0+1
-        ror  zpWord0
-        lda  zpWord0+1
-        asl  a
-        ror  zpWord0+1
-        ror  zpWord0
-        lda  zpWord0+1
-        asl  a
-        ror  zpWord0+1
-        ror  zpWord0
+                    shift_right_uw_7    .proc
+                            lda  stack.lo+1,x
+                            sta  zpy
+                            lda  stack.hi+1,x
 
-        lda  zpWord0
-        sta  stack.lo+1,x
-        lda  zpWord0+1
-        sta  stack.hi+1,x
-        rts
-.pend
+                            lsr  a
+                            ror  zpy
+                    _shift6        
+                            lsr  a
+                            ror  zpy
+                    _shift5        
+                            lsr  a
+                            ror  zpy
+                    _shift4        
+                            lsr  a
+                            ror  zpy
+                    _shift3        
+                            lsr  a
+                            ror  zpy
+                            lsr  a
+                            ror  zpy
+                            lsr  a
+                            ror  zpy
 
-shift_right_w_6    .proc
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        jmp  shift_right_w_7._shift6
-.pend
+                            sta  stack.hi+1,x
+                            lda  zpy
+                            sta  stack.lo+1,x
+                            rts
+                    .pend
 
-shift_right_w_5    .proc
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        jmp  shift_right_w_7._shift5
-.pend
+                    shift_right_uw_6    .proc
+                            lda  stack.lo+1,x
+                            sta  zpy
+                            lda  stack.hi+1,x
+                            jmp  shift_right_uw_7._shift6
+                    .pend
 
-shift_right_w_4    .proc
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        jmp  shift_right_w_7._shift4
-.pend
+                    shift_right_uw_5    .proc
+                            lda  stack.lo+1,x
+                            sta  zpy
+                            lda  stack.hi+1,x
+                            jmp  shift_right_uw_7._shift5
+                    .pend
 
-shift_right_w_3    .proc
-        lda  stack.lo+1,x
-        sta  zpWord0
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        jmp  shift_right_w_7._shift3
-.pend
+                    shift_right_uw_4    .proc
+                            lda  stack.lo+1,x
+                            sta  zpy
+                            lda  stack.hi+1,x
+                            jmp  shift_right_uw_7._shift4
+                    .pend
+
+                    shift_right_uw_3    .proc
+                            lda  stack.lo+1,x
+                            sta  zpy
+                            lda  stack.hi+1,x
+                            jmp  shift_right_uw_7._shift3
+                    .pend
+
+
+                    shift_right_w_7        .proc
+                            lda  stack.lo+1,x
+                            sta  zpWord0
+                            lda  stack.hi+1,x
+                            sta  zpWord0+1
+
+                            asl  a
+                            ror  zpWord0+1
+                            ror  zpWord0
+
+                            lda  zpWord0+1
+                    _shift6        
+                            asl  a
+                            ror  zpWord0+1
+                            ror  zpWord0
+                            lda  zpWord0+1
+                    _shift5        
+                            asl  a
+                            ror  zpWord0+1
+                            ror  zpWord0
+                            lda  zpWord0+1
+                    _shift4        
+                            asl  a
+                            ror  zpWord0+1
+                            ror  zpWord0
+                            lda  zpWord0+1
+                    _shift3        
+                            asl  a
+                            ror  zpWord0+1
+                            ror  zpWord0
+                            lda  zpWord0+1
+                            asl  a
+                            ror  zpWord0+1
+                            ror  zpWord0
+                            lda  zpWord0+1
+                            asl  a
+                            ror  zpWord0+1
+                            ror  zpWord0
+
+                            lda  zpWord0
+                            sta  stack.lo+1,x
+                            lda  zpWord0+1
+                            sta  stack.hi+1,x
+                            rts
+                    .pend
+
+                    shift_right_w_6    .proc
+                            lda  stack.lo+1,x
+                            sta  zpWord0
+                            lda  stack.hi+1,x
+                            sta  zpWord0+1
+                            jmp  shift_right_w_7._shift6
+                    .pend
+
+                    shift_right_w_5    .proc
+                            lda  stack.lo+1,x
+                            sta  zpWord0
+                            lda  stack.hi+1,x
+                            sta  zpWord0+1
+                            jmp  shift_right_w_7._shift5
+                    .pend
+
+                    shift_right_w_4    .proc
+                            lda  stack.lo+1,x
+                            sta  zpWord0
+                            lda  stack.hi+1,x
+                            sta  zpWord0+1
+                            jmp  shift_right_w_7._shift4
+                    .pend
+
+                    shift_right_w_3    .proc
+                            lda  stack.lo+1,x
+                            sta  zpWord0
+                            lda  stack.hi+1,x
+                            sta  zpWord0+1
+                            jmp  shift_right_w_7._shift3
+                    .pend
 
 
 shift_right_w    .proc
