@@ -4530,21 +4530,21 @@ sr2         .word $7653
                     .pend
 
 
-shift_right_w    .proc
-        ; -- signed word variable number of shifts right
-        inx
-        ldy  stack.lo,x
-        bne  _shift
-        rts
-_shift        
-        lda  stack.hi+1,x
-        asl  a
-        ror  stack.hi+1,x
-        ror  stack.lo+1,x
-        dey
-        bne  _shift
-        rts
-.pend
+                    shift_right_w    .proc
+                            ; -- signed word variable number of shifts right
+                            inx
+                            ldy  stack.lo,x
+                            bne  _shift
+                            rts
+                    _shift        
+                            lda  stack.hi+1,x
+                            asl  a
+                            ror  stack.hi+1,x
+                            ror  stack.lo+1,x
+                            dey
+                            bne  _shift
+                            rts
+                    .pend
 
 
                 ; support for bit shifting that is too large to be unrolled:
@@ -4910,6 +4910,7 @@ bitxor_b    .proc
         lda  stack.lo+2,x
         eor  stack.lo+1,x
         inx
+        ;   stx stack.pointer
         sta  stack.lo+1,x
         rts
 .pend
@@ -4923,6 +4924,7 @@ bitand_w    .proc
         and  stack.hi+1,x
         sta  stack.hi+2,x
         inx
+        ;   stx stack.pointer
         rts
 .pend
 
@@ -4935,6 +4937,7 @@ bitor_w        .proc
         ora  stack.hi+1,x
         sta  stack.hi+2,x
         inx
+        ;   stx stack.pointer
         rts
 .pend
 
@@ -4947,6 +4950,7 @@ bitxor_w    .proc
         eor  stack.hi+1,x
         sta  stack.hi+2,x
         inx
+        ;   stx stack.pointer
         rts
 .pend
 
@@ -4954,6 +4958,7 @@ bitxor_w    .proc
 add_w        .proc
     ; -- push word+word / uword+uword
         inx
+        ;   stx stack.pointer
         clc
         lda  stack.lo,x
         adc  stack.lo+1,x
@@ -4967,6 +4972,7 @@ add_w        .proc
 sub_w        .proc
     ; -- push word-word
         inx
+        ;   stx stack.pointer
         sec
         lda  stack.lo+1,x
         sbc  stack.lo,x
@@ -4980,6 +4986,7 @@ sub_w        .proc
 mul_byte    .proc
     ; -- b*b->b (signed and unsigned)
         inx
+        ;   stx stack.pointer
         lda  stack.lo,x
         ldy  stack.lo+1,x
         jsr  math.multiply_bytes
@@ -4989,6 +4996,7 @@ mul_byte    .proc
 
 mul_word    .proc
         inx
+        ;   stx stack.pointer
         lda  stack.lo,x
         sta  zpWord0
         lda  stack.hi,x

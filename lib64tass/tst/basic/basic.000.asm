@@ -20,11 +20,6 @@ program_entry_point
 ;--------------------------------------------------------------- lib
 
 .include "../../lib/libC64.asm"
-.include "../../lib/libMath.asm"
-.include "../../lib/libSTDIO.asm"
-.include "../../lib/libConv.asm"
-.include "../../lib/libString.asm"
-.include "../../lib/libBasic.asm"
 
 ;--------------------------------------------------------------- program
 
@@ -37,16 +32,18 @@ program .proc
 .pend
 
 ;--------------------------------------------------------------- macro
-    forb    .macro  \label,\var,\from,\to,\step
-            \label
-            lda \var
-            adc \step 
-            sta \var
+
+    forb    .macro 
+            \1
+            lda \2
+            adc \5 
+            sta \2
     .endmacro
     
     nextb    .macro
     
     .endmacro
+    
 ;--------------------------------------------------------------- main
 
 main	.proc

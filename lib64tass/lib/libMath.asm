@@ -5,6 +5,16 @@
 
 ;   macro
 
+; --------------------------------------------------------------- logical true false
+
+if_true  .macro ;   non settato     =   0
+    bcs \1        
+.endm
+
+if_false .macro ;  settato         =   1
+    bcc \1         
+.endm
+
 ; --------------------------------------------------------------- u16 add 1
 
 u16_add_1   .macro

@@ -124,7 +124,7 @@ txt .proc
     end            
             lda screen.char
     ptr
-            sta  $0400		; modified
+            sta  $0400      ; modified
             rts
         
     pointer  = set_char.ptr + 1

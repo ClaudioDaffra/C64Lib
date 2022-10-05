@@ -21,11 +21,6 @@ program_entry_point	; assembly code starts here
 ;--------------------------------------------------------------- lib
 
 .include "../../lib/libC64.asm"
-.include "../../lib/libMath.asm"
-.include "../../lib/libSTDIO.asm"
-.include "../../lib/libConv.asm"
-.include "../../lib/libString.asm"
-
 
 ;--------------------------------------------------------------- main
 

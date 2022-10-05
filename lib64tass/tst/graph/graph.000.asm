@@ -21,11 +21,6 @@ program_entry_point	; assembly code starts here
 ;--------------------------------------------------------------- lib
 
 .include "../../lib/libC64.asm"
-.include "../../lib/libMath.asm"
-.include "../../lib/libSTDIO.asm"
-.include "../../lib/libConv.asm"
-.include "../../lib/libString.asm"
-.include "../../lib/libGraph.asm"
 
 ;--------------------------------------------------------------- main
 
@@ -35,7 +30,7 @@ main	.proc
 
         ; bank default
         
-        lda #bank0
+        lda #c64.bank0
         jsr c64.set_bank
         
         ;

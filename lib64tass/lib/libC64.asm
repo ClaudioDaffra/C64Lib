@@ -8,7 +8,13 @@
 
 ;--------------------------------------------------------------- include
 
+.include "libMath.asm"
 .include "libStack.asm"
+.include "libSTDIO.asm"
+.include "libConv.asm"
+.include "libString.asm"
+.include "libArray.asm"
+.include "libGraph.asm"
 
 ;--------------------------------------------------------------- 
 
@@ -596,7 +602,7 @@ c64 .proc
         bank_addr1 = 16384
         bank_addr0 =     0
         
-        setBank .proc
+        set_bank .proc
             sta zpa
             lda 56576
             and #252
@@ -843,10 +849,10 @@ c64 .proc
             lda c64.screen_control_register_1
             test_bit_6
             bne   check_text_mode_extended_1 
-            clc
+            sec
             rts
         check_text_mode_extended_1
-            sec
+            clc
             rts
             
         .pend
@@ -1241,16 +1247,6 @@ then	.macro
 
 else	.macro
 	bcc \1
-.endm
-
-; --------------------------------------------------------------- logical true false
-
-if_true  .macro
-    bcs \1        ;   non settato     =   0
-.endm
-
-if_false .macro
-    bcc \1         ;  settato         =   1
 .endm
 
 ;--------------------------------------------------------------- string compare

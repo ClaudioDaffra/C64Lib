@@ -18,13 +18,7 @@ program_entry_point
     jmp program
 
 ;--------------------------------------------------------------- lib
-
 .include "../../lib/libC64.asm"
-.include "../../lib/libMath.asm"
-.include "../../lib/libSTDIO.asm"
-.include "../../lib/libConv.asm"
-.include "../../lib/libString.asm"
-.include "../../lib/libArray.asm"
 
 ;--------------------------------------------------------------- program
 
