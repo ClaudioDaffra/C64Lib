@@ -56,35 +56,7 @@ ieval           = $030a ; Execution address of routine reading next
         sta ieval
         lda #>cdBasicEvalHex:
         sta ieval+1
-
-        ; ........................... HOOK raster
-
-jmp end
-
-                sei
-
-                lda #$7f        ;       disable
-                sta $dc0d       ;       CIA1
-                lda $dc0d
-
-                ldx #<subRasterIRQ:
-                ldy #>subRasterIRQ:
-                
-                ;jsr setIRQ
-                stx     $0314   ;       hook irq
-                sty     $0315
-                sta     $d012   ;       save raster position
-
-                lda     #01
-                sta     $d019   ;       VIC interrupt request IRR
-                sta     $d01a   ;       VIC interrupt Mask    IMR
-
-                lda #$1b       ;       set VIC default
-                sta $D011
-
-                cli     
-
-end
+        rts
 
         rts
 
@@ -132,21 +104,20 @@ cForeGroundColor         =       1
 
 charDollar      = $24   ;       $
 charAt          = $40   ;       @
-
 charB           = $42   ;       B
 charC           = $43   ;       C
 charG           = $47   ;       G
 charH           = $48   ;       H
+
 charM           = $4d   ;       M
+
 charP           = $50   ;       P
 charR           = $52   ;       R
 charS           = $53   ;       S
 charT           = $54   ;       T
-
-charW           = $57   ;       W
 charX           = $58   ;       X
 
-charDP          = $3a   ;       :
+charDP  = $3a   ;       :
 
 
 ; .................................................... #define
@@ -207,7 +178,7 @@ newdispatch:
         cmp #charS              ;       S
         beq newdispatch_S:
 
-        cmp #charDolLar         ;       $
+        cmp #charDollar         ;       $
         beq newdispatch_Dollar:
 
         jmp SNERR 
@@ -233,9 +204,6 @@ newdispatch_G:
 
         cmp #charM
         beq newdispatch_GM:
-
-        cmp #charW
-        beq newdispatch_GW:
 
         jmp SNERR  
 
@@ -283,13 +251,6 @@ newdispatch_GM: ; @GM0,1,2,3
 
         jsr cbBasicGraphMultiColor:
 
-
-        jmp NEWSTT 
-
-newdispatch_GW: ; @GW
-
-        ;jsr cbBasicGraphMultiColor:
-        ;jsr CHRGET
         jmp NEWSTT 
 
 ; ...........................................
