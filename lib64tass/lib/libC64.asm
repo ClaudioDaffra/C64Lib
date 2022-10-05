@@ -53,7 +53,6 @@ bit_and_5    =  %11011111
 bit_and_6    =  %10111111
 bit_and_7    =  %01111111
 
-
 ;**********
 ;           zero page
 ;**********
@@ -134,6 +133,7 @@ temp  .proc
     buffer0828.192  =   0828    ;  (192) byte   ;   Datasette buffer (192 bytes).   (128+64)
     buffer1020.04   =   1020    ;   ( 4) byte   ;   Unused (4 bytes).                    (4)
     buffer2024.15   =   2024    ;   (15) byte   ;   Unused (15 bytes).  **              (15) 
+    
     ;       **
     ;       screen  :    1024   -   2023
     ;                    $0400   -  $07E7
@@ -299,7 +299,7 @@ sys .proc
     SCREEN_HOME     = $e566     ;
 
     STROUT          = $ab1e
-    CLEARSCR    = $e544
+        CLEARSCR    = $e544
     HOMECRSR    = $e566
     IRQDFRT     = $ea31
     IRQDFEND    = $ea81
@@ -487,6 +487,8 @@ c64 .proc
         
         COLOR           = $0286     ;
 
+        SCRPTR          = 648       ;
+        
         ;---------------------------------------------------------------  address
         
         .weak
@@ -557,13 +559,124 @@ c64 .proc
             .pend
         .pend
 
-       
-        set_bank    .proc
-                ora $dd00
-                sta $dd00
-                rts
-        .pend
+        ;******
+        ;       memory setup
+        ;******
         
+        ; .................................................... setPortA_RW
+        ;
+        ; Port A data direction register..
+        ; default 63 0011:1111
+        ;          3 0000:0011
+        
+        setPortA_RW .proc
+            lda 56578   ;   $DD02
+            ora #3
+            sta 56578   ;   set read and write
+            rts
+        .pend
+
+        ; .................................................... set bank number
+        ;   
+        ;   input   :   a   number bank default (11)
+        ;
+        ;   %00, 0: Bank #3, $C000-$FFFF, 49152 -   65535.
+        ;   %01, 1: Bank #2, $8000-$BFFF, 32768 -   49151.
+        ;   %10, 2: Bank #1, $4000-$7FFF, 16384 -   32767.
+        ;   %11, 3: Bank #0, $0000-$3FFF,     0 -   16383.  
+        ;
+        
+        bank3   =   %00000000
+        bank2   =   %00000001
+        bank1   =   %00000010
+        bank0   =   %00000011
+
+        bank_addr3 = 49152      ;   per il calcolo della locazione 648 ( screen pointer ) 
+        bank_addr2 = 32768
+        bank_addr1 = 16384
+        bank_addr0 =     0
+        
+        setBank .proc
+            sta zpa
+            lda 56576
+            and #252
+            ora zpa
+            sta 56576
+            rts
+        .pend
+
+        ; .................................................... set bitmap offset
+        ;   
+        ;   input   :   a   number bank default (11)
+        ;
+        ;   %0xx, 0: $0000-$1FFF,    0  - 8191.
+        ;   %1xx, 4: $2000-$3FFF, 8192  -16383. 
+        
+                      ;76543210
+                      ;87654321 il 4 bit
+        bitmap0   =   %00000000     ;   $0000
+        bitmap1   =   %00000100     ;   $2000
+
+        bitmap_addr0   =  $0000      ;   per il calcolo della locazione 648 ( screen pointer ) 
+        bitmap_addr1   =  $2000
+        
+        setBitmapOffset .proc
+            sta zpa
+            lda 53272       ;   $D018
+            and #%11111011
+            ora zpa
+            sta 53272
+            rts
+        .pend
+
+        ; ....................................................  set screen offset
+        ;   
+        ;   input   :   a   number bank default (11)
+        ;
+
+        screen0  = %00000000   ;     0: $0000-$03FF,     0-1023.
+        screen1  = %00010000   ;     1: $0400-$07FF,  1024-2047.
+        screen2  = %00100000   ;     2: $0800-$0BFF,  2048-3071.
+        screen3  = %00110000   ;     3: $0C00-$0FFF,  3072-4095.
+        screen4  = %01000000   ;     4: $1000-$13FF,  4096-5119.
+        screen5  = %01010000   ;     5: $1400-$17FF,  5120-6143.
+        screen6  = %01100000   ;     6: $1800-$1BFF,  6144-7167.
+        screen7  = %01110000   ;     7: $1C00-$1FFF,  7168-8191.
+        screen8  = %10000000   ;     8: $2000-$23FF,  8192-9215.
+        screen9  = %10010000   ;     9: $2400-$27FF,  9216-10239.
+        screen10 = %10100000   ;    10: $2800-$2BFF, 10240-11263.
+        screen11 = %10110000   ;    11: $2C00-$2FFF, 11264-12287.
+        screen12 = %11000000   ;    12: $3000-$33FF, 12288-13311.
+        screen13 = %11010000   ;    13: $3400-$37FF, 13312-14335.
+        screen14 = %11100000   ;    14: $3800-$3BFF, 14336-15359.
+        screen15 = %11110000   ;    15: $3C00-$3FFF, 15360-16383.
+
+        screen_addr0  =     0      ;   per il calcolo della locazione 648 ( screen pointer )  
+        screen_addr1  =  1024 
+        screen_addr2  =  2048 
+        screen_addr3  =  3072 
+        screen_addr4  =  4096 
+        screen_addr5  =  5120 
+        screen_addr6  =  6144 
+        screen_addr7  =  7168 
+        screen_addr8  =  8192 
+        screen_addr9  =  9216 
+        screen_addr10 = 10240  
+        screen_addr11 = 11264 
+        screen_addr12 = 12288 
+        screen_addr13 = 13312 
+        screen_addr14 = 14336 
+        screen_addr15 = 15360 
+        
+        setScreenOffset .proc
+            sta zpa
+            lda 53272       ;   $D018
+            and #%00001111
+            ora zpa
+            sta 53272
+            rts
+        .pend
+    
         ;******
         ;       sub
         ;******

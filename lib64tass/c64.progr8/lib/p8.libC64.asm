@@ -2712,31 +2712,31 @@ prog8_init_vars    .block
     .bend
     .pend
 
-            ;***********************
-            ; #LIBRARY : 'string' 
-            ;***********************
+                    ;***********************
+                    ; #LIBRARY : 'string' 
+                    ;***********************
 
-            string    .proc
- 
-            ; non-zeropage variables
+                    string    .proc
+         
+                    ; non-zeropage variables
 
-            ; subroutines in this block
-             
+                    ; subroutines in this block
+                     
 
-            length    .proc
-                
-                    sta  zpWord0
-                    sty  zpWord0+1
-                    ldy  #0
-            -        lda  (zpWord0),y
-                    beq  +
-                    iny
-                    bne  -
-            +        rts
-        .pend
-                
+                    length    .proc
+                        
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  #0
+                    -        lda  (zpWord0),y
+                            beq  +
+                            iny
+                            bne  -
+                    +        rts
+                .pend
+                        
 
-            left    .proc
+                    left    .proc
              
                             ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
                     ldy  cx16.r0
@@ -3529,9 +3529,9 @@ stack_mul_word_12    .proc
         lda  zpx
         adc  stack.hi+1,x
         asl  stack.lo+1,x
-                rol  a
+        rol  a
         asl  stack.lo+1,x
-                rol  a
+        rol  a
         sta  stack.hi+1,x
         rts
 .pend
@@ -3540,11 +3540,11 @@ stack_mul_byte_13    .proc
         ; (X*2 + X)*4 + X
         lda  stack.lo+1,x
         asl  a
-                clc
+        clc
         adc  stack.lo+1,x
         asl  a
         asl  a
-                clc
+        clc
         adc  stack.lo+1,x
         sta  stack.lo+1,x
         rts
@@ -3558,9 +3558,9 @@ stack_mul_byte_14    .proc
         asl  a
         asl  a
         asl  a
-                sec
+        sec
         sbc  stack.lo+1,x
-                asl  a
+        asl  a
         sta  stack.lo+1,x
         rts
 .pend

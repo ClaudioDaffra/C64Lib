@@ -376,11 +376,42 @@ $DD00 56576     Default: 151    $97 ,  %10010111
                 Bit #6: Serial bus CLOCK IN;    0 = Low;    1 = High.
                 Bit #7: Serial bus DATA IN;     0 = Low;    1 = High.
 
+        ; .................................................... setPortA_RW
+        ;
+        ; Port A data direction register..
+        ; default 63 0011:1111
+        ;          3 0000:0011
+        
+        setPortA_RW
+        
+        ; .................................................... set bank number
+        ;   
+        ;   input   :   a   number bank default (11)
+        ;
+        ;   %00, 0: Bank #3, $C000-$FFFF, 49152 -   65535.
+        ;   %01, 1: Bank #2, $8000-$BFFF, 32768 -   49151.
+        ;   %10, 2: Bank #1, $4000-$7FFF, 16384 -   32767.
+        ;   %11, 3: Bank #0, $0000-$3FFF,     0 -   16383.  
+        ;
 
+        setBank
 
-    ;   
+        ; .................................................... set bitmap offset
+        ;   
+        ;   input   :   a   number bank default (11)
+        ;
+        ;   %0xx, 0: $0000-$1FFF,    0  - 8191.
+        ;   %1xx, 4: $2000-$3FFF, 8192  -16383. 
+        
+        setBitmapOffset
 
+        ; .................................................... set screen offset
+        ;   
+        ;   input   :   a   number bank default (11)
+        ;
 
+        setScreenOffset
+        
 ;;;
 ;;
 ;
