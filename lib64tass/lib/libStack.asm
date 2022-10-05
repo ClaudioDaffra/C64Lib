@@ -204,14 +204,14 @@ stack .proc
         mul_word_3    .proc
             ; W*2 + W
             lda  stack.hi+1,x
-            sta  zpx
+            sta  zpa
             lda  stack.lo+1,x
             asl  a
-            rol  zpx
+            rol  zpa
             clc
             adc  stack.lo+1,x
             sta  stack.lo+1,x
-            lda  zpx
+            lda  zpa
             adc  stack.hi+1,x
             sta  stack.hi+1,x
             rts
@@ -231,16 +231,16 @@ stack .proc
         mul_word_5    .proc
                 ; W*4 + W
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 clc
                 adc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 adc  stack.hi+1,x
                 sta  stack.hi+1,x
                 rts
@@ -260,14 +260,14 @@ stack .proc
         mul_word_6    .proc
                 ; (W*2 + W)*2
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 clc
                 adc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 adc  stack.hi+1,x
                 asl  stack.lo+1,x
                 rol  a
@@ -290,18 +290,18 @@ stack .proc
         mul_word_7    .proc
                 ; W*8 - W
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 sec
                 sbc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 sbc  stack.hi+1,x
                 sta  stack.hi+1,x
                 rts
@@ -322,18 +322,18 @@ stack .proc
         mul_word_9    .proc
                 ; W*8 + W
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 clc
                 adc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 adc  stack.hi+1,x
                 sta  stack.hi+1,x
                 rts
@@ -354,16 +354,16 @@ stack .proc
         mul_word_10    .proc
                 ; (W*4 + W)*2
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 clc
                 adc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 adc  stack.hi+1,x
                 asl  stack.lo+1,x
                 rol  a
@@ -400,14 +400,14 @@ stack .proc
         mul_word_12    .proc
                 ; (W*2 + W)*4
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 clc
                 adc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 adc  stack.hi+1,x
                 asl  stack.lo+1,x
                 rol  a
@@ -462,20 +462,20 @@ stack .proc
         mul_word_15    .proc
                 ; W*16 - W
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 sec
                 sbc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 sbc  stack.hi+1,x
                 sta  stack.hi+1,x
                 rts
@@ -497,16 +497,16 @@ stack .proc
         mul_word_20    .proc
                 ; (W*4 + W)*4
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 clc
                 adc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 adc  stack.hi+1,x
                 asl  stack.lo+1,x
                 rol  a
@@ -573,16 +573,16 @@ stack .proc
         mul_word_40    .proc
                 ; (W*4 + W)*8
                 lda  stack.hi+1,x
-                sta  zpx
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpx
+                rol  zpa
                 asl  a
-                rol  zpx
+                rol  zpa
                 clc
                 adc  stack.lo+1,x
                 sta  stack.lo+1,x
-                lda  zpx
+                lda  zpa
                 adc  stack.hi+1,x
                 asl  stack.lo+1,x
                 rol  a
@@ -686,115 +686,115 @@ stack .proc
 
         shift_left_w_7    .proc
                 lda  stack.hi+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.lo+1,x
                 asl  a
-                rol  zpy
+                rol  zpa
         _shift6        
                 asl  a
-                rol  zpy
+                rol  zpa
         _shift5        
                 asl  a
-                rol  zpy
+                rol  zpa
         _shift4        
                 asl  a
-                rol  zpy
+                rol  zpa
         _shift3        
                 asl  a
-                rol  zpy
+                rol  zpa
                 asl  a
-                rol  zpy
+                rol  zpa
                 asl  a
-                rol  zpy
+                rol  zpa
 
                 sta  stack.lo+1,x
-                lda  zpy
+                lda  zpa
                 sta  stack.hi+1,x
                 rts
         .pend
 
         shift_left_w_6    .proc
                 lda  stack.hi+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.lo+1,x
                 jmp  shift_left_w_7._shift6
         .pend
 
         shift_left_w_5    .proc
                 lda  stack.hi+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.lo+1,x
                 jmp  shift_left_w_7._shift5
         .pend
 
         shift_left_w_4    .proc
                 lda  stack.hi+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.lo+1,x
                 jmp  shift_left_w_7._shift4
         .pend
 
         shift_left_w_3    .proc
                 lda  stack.hi+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.lo+1,x
                 jmp  shift_left_w_7._shift3
         .pend
 
         shift_right_uw_7    .proc
                 lda  stack.lo+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.hi+1,x
 
                 lsr  a
-                ror  zpy
+                ror  zpa
         _shift6        
                 lsr  a
-                ror  zpy
+                ror  zpa
         _shift5        
                 lsr  a
-                ror  zpy
+                ror  zpa
         _shift4        
                 lsr  a
-                ror  zpy
+                ror  zpa
         _shift3        
                 lsr  a
-                ror  zpy
+                ror  zpa
                 lsr  a
-                ror  zpy
+                ror  zpa
                 lsr  a
-                ror  zpy
+                ror  zpa
 
                 sta  stack.hi+1,x
-                lda  zpy
+                lda  zpa
                 sta  stack.lo+1,x
                 rts
         .pend
 
         shift_right_uw_6    .proc
                 lda  stack.lo+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.hi+1,x
                 jmp  shift_right_uw_7._shift6
         .pend
 
         shift_right_uw_5    .proc
                 lda  stack.lo+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.hi+1,x
                 jmp  shift_right_uw_7._shift5
         .pend
 
         shift_right_uw_4    .proc
                 lda  stack.lo+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.hi+1,x
                 jmp  shift_right_uw_7._shift4
         .pend
 
         shift_right_uw_3    .proc
                 lda  stack.lo+1,x
-                sta  zpy
+                sta  zpa
                 lda  stack.hi+1,x
                 jmp  shift_right_uw_7._shift3
         .pend
