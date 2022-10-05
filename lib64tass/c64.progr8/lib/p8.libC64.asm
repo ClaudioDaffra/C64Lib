@@ -3306,498 +3306,498 @@ sr2         .word $7653
 
 ; ----------- optimized multiplications (stack) : ---------
 
-stack_mul_byte_3    .proc
-        ; X + X*2
-        lda  stack.lo+1,x
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
+                stack_mul_byte_3    .proc
+                        ; X + X*2
+                        lda  stack.lo+1,x
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-stack_mul_word_3    .proc
-        ; W*2 + W
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
-
-
-stack_mul_byte_5    .proc
-        ; X*4 + X
-        lda  stack.lo+1,x
-        asl  a
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
-
-stack_mul_word_5    .proc
-        ; W*4 + W
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+                stack_mul_word_3    .proc
+                        ; W*2 + W
+                        lda  stack.hi+1,x
+                        sta  zpx
+                        lda  stack.lo+1,x
+                        asl  a
+                        rol  zpx
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        lda  zpx
+                        adc  stack.hi+1,x
+                        sta  stack.hi+1,x
+                        rts
+                .pend
 
 
-stack_mul_byte_6    .proc
-        ; (X*2 + X)*2
-        lda  stack.lo+1,x
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        asl  a
-        sta  stack.lo+1,x
-        rts
-.pend
+                stack_mul_byte_5    .proc
+                        ; X*4 + X
+                        lda  stack.lo+1,x
+                        asl  a
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-stack_mul_word_6    .proc
-        ; (W*2 + W)*2
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        asl  stack.lo+1,x
-        rol  a
-        sta  stack.hi+1,x
-        rts
-.pend
+                stack_mul_word_5    .proc
+                        ; W*4 + W
+                        lda  stack.hi+1,x
+                        sta  zpx
+                        lda  stack.lo+1,x
+                        asl  a
+                        rol  zpx
+                        asl  a
+                        rol  zpx
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        lda  zpx
+                        adc  stack.hi+1,x
+                        sta  stack.hi+1,x
+                        rts
+                .pend
 
-stack_mul_byte_7    .proc
-        ; X*8 - X
-        lda  stack.lo+1,x
-        asl  a
-        asl  a
-        asl  a
-        sec
-        sbc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
 
-stack_mul_word_7    .proc
-        ; W*8 - W
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        sec
-        sbc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        sbc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+                stack_mul_byte_6    .proc
+                        ; (X*2 + X)*2
+                        lda  stack.lo+1,x
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        asl  a
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-stack_mul_byte_9    .proc
-        ; X*8 + X
-        lda  stack.lo+1,x
-        asl  a
-        asl  a
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
+                stack_mul_word_6    .proc
+                        ; (W*2 + W)*2
+                        lda  stack.hi+1,x
+                        sta  zpx
+                        lda  stack.lo+1,x
+                        asl  a
+                        rol  zpx
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        lda  zpx
+                        adc  stack.hi+1,x
+                        asl  stack.lo+1,x
+                        rol  a
+                        sta  stack.hi+1,x
+                        rts
+                .pend
 
-stack_mul_word_9    .proc
-        ; W*8 + W
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+                stack_mul_byte_7    .proc
+                        ; X*8 - X
+                        lda  stack.lo+1,x
+                        asl  a
+                        asl  a
+                        asl  a
+                        sec
+                        sbc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-stack_mul_byte_10    .proc
-        ; (X*4 + X)*2
-        lda  stack.lo+1,x
-        asl  a
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        asl  a
-        sta  stack.lo+1,x
-        rts
-.pend
+                stack_mul_word_7    .proc
+                        ; W*8 - W
+                        lda  stack.hi+1,x
+                        sta  zpx
+                        lda  stack.lo+1,x
+                        asl  a
+                        rol  zpx
+                        asl  a
+                        rol  zpx
+                        asl  a
+                        rol  zpx
+                        sec
+                        sbc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        lda  zpx
+                        sbc  stack.hi+1,x
+                        sta  stack.hi+1,x
+                        rts
+                .pend
 
-stack_mul_word_10    .proc
-        ; (W*4 + W)*2
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        asl  stack.lo+1,x
-                rol  a
-        sta  stack.hi+1,x
-        rts
-.pend
+                stack_mul_byte_9    .proc
+                        ; X*8 + X
+                        lda  stack.lo+1,x
+                        asl  a
+                        asl  a
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-stack_mul_byte_11    .proc
-        ; (X*2 + X)*4 - X
-        lda  stack.lo+1,x
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        asl  a
-        asl  a
-        sec
-        sbc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
+                stack_mul_word_9    .proc
+                        ; W*8 + W
+                        lda  stack.hi+1,x
+                        sta  zpx
+                        lda  stack.lo+1,x
+                        asl  a
+                        rol  zpx
+                        asl  a
+                        rol  zpx
+                        asl  a
+                        rol  zpx
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        lda  zpx
+                        adc  stack.hi+1,x
+                        sta  stack.hi+1,x
+                        rts
+                .pend
 
-; mul_word_11 is skipped (too much code)
+                stack_mul_byte_10    .proc
+                        ; (X*4 + X)*2
+                        lda  stack.lo+1,x
+                        asl  a
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        asl  a
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-stack_mul_byte_12    .proc
-        ; (X*2 + X)*4
-        lda  stack.lo+1,x
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        asl  a
-        asl  a
-        sta  stack.lo+1,x
-        rts
-.pend
+                stack_mul_word_10    .proc
+                        ; (W*4 + W)*2
+                        lda  stack.hi+1,x
+                        sta  zpx
+                        lda  stack.lo+1,x
+                        asl  a
+                        rol  zpx
+                        asl  a
+                        rol  zpx
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        lda  zpx
+                        adc  stack.hi+1,x
+                        asl  stack.lo+1,x
+                        rol  a
+                        sta  stack.hi+1,x
+                        rts
+                .pend
 
-stack_mul_word_12    .proc
-        ; (W*2 + W)*4
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        asl  stack.lo+1,x
-        rol  a
-        asl  stack.lo+1,x
-        rol  a
-        sta  stack.hi+1,x
-        rts
-.pend
+                stack_mul_byte_11    .proc
+                        ; (X*2 + X)*4 - X
+                        lda  stack.lo+1,x
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        asl  a
+                        asl  a
+                        sec
+                        sbc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
-stack_mul_byte_13    .proc
-        ; (X*2 + X)*4 + X
-        lda  stack.lo+1,x
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        asl  a
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
+                ; mul_word_11 is skipped (too much code)
+
+                stack_mul_byte_12    .proc
+                        ; (X*2 + X)*4
+                        lda  stack.lo+1,x
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        asl  a
+                        asl  a
+                        sta  stack.lo+1,x
+                        rts
+                .pend
+
+                stack_mul_word_12    .proc
+                        ; (W*2 + W)*4
+                        lda  stack.hi+1,x
+                        sta  zpx
+                        lda  stack.lo+1,x
+                        asl  a
+                        rol  zpx
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        lda  zpx
+                        adc  stack.hi+1,x
+                        asl  stack.lo+1,x
+                        rol  a
+                        asl  stack.lo+1,x
+                        rol  a
+                        sta  stack.hi+1,x
+                        rts
+                .pend
+
+                stack_mul_byte_13    .proc
+                        ; (X*2 + X)*4 + X
+                        lda  stack.lo+1,x
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        asl  a
+                        asl  a
+                        clc
+                        adc  stack.lo+1,x
+                        sta  stack.lo+1,x
+                        rts
+                .pend
 
 ; mul_word_13 is skipped (too much code)
 
-stack_mul_byte_14    .proc
-        ; (X*8 - X)*2
-        lda  stack.lo+1,x
-        asl  a
-        asl  a
-        asl  a
-        sec
-        sbc  stack.lo+1,x
-        asl  a
-        sta  stack.lo+1,x
-        rts
-.pend
+            stack_mul_byte_14    .proc
+                    ; (X*8 - X)*2
+                    lda  stack.lo+1,x
+                    asl  a
+                    asl  a
+                    asl  a
+                    sec
+                    sbc  stack.lo+1,x
+                    asl  a
+                    sta  stack.lo+1,x
+                    rts
+            .pend
 
-; mul_word_14 is skipped (too much code)
+            ; mul_word_14 is skipped (too much code)
 
-stack_mul_byte_15    .proc
-        ; X*16 - X
-        lda  stack.lo+1,x
-        asl  a
-        asl  a
-        asl  a
-        asl  a
-        sec
-        sbc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
+            stack_mul_byte_15    .proc
+                    ; X*16 - X
+                    lda  stack.lo+1,x
+                    asl  a
+                    asl  a
+                    asl  a
+                    asl  a
+                    sec
+                    sbc  stack.lo+1,x
+                    sta  stack.lo+1,x
+                    rts
+            .pend
 
-stack_mul_word_15    .proc
-        ; W*16 - W
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        sec
-        sbc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        sbc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+            stack_mul_word_15    .proc
+                    ; W*16 - W
+                    lda  stack.hi+1,x
+                    sta  zpx
+                    lda  stack.lo+1,x
+                    asl  a
+                    rol  zpx
+                    asl  a
+                    rol  zpx
+                    asl  a
+                    rol  zpx
+                    asl  a
+                    rol  zpx
+                    sec
+                    sbc  stack.lo+1,x
+                    sta  stack.lo+1,x
+                    lda  zpx
+                    sbc  stack.hi+1,x
+                    sta  stack.hi+1,x
+                    rts
+            .pend
 
-stack_mul_byte_20    .proc
-        ; (X*4 + X)*4
-        lda  stack.lo+1,x
-        asl  a
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        asl  a
-        asl  a
-        sta  stack.lo+1,x
-        rts
-.pend
+            stack_mul_byte_20    .proc
+                    ; (X*4 + X)*4
+                    lda  stack.lo+1,x
+                    asl  a
+                    asl  a
+                    clc
+                    adc  stack.lo+1,x
+                    asl  a
+                    asl  a
+                    sta  stack.lo+1,x
+                    rts
+            .pend
 
-stack_mul_word_20    .proc
-        ; (W*4 + W)*4
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        asl  stack.lo+1,x
-        rol  a
-        asl  stack.lo+1,x
-        rol  a
-        sta  stack.hi+1,x
-        rts
-.pend
+            stack_mul_word_20    .proc
+                    ; (W*4 + W)*4
+                    lda  stack.hi+1,x
+                    sta  zpx
+                    lda  stack.lo+1,x
+                    asl  a
+                    rol  zpx
+                    asl  a
+                    rol  zpx
+                    clc
+                    adc  stack.lo+1,x
+                    sta  stack.lo+1,x
+                    lda  zpx
+                    adc  stack.hi+1,x
+                    asl  stack.lo+1,x
+                    rol  a
+                    asl  stack.lo+1,x
+                    rol  a
+                    sta  stack.hi+1,x
+                    rts
+            .pend
 
-stack_mul_byte_25    .proc
-        ; (X*2 + X)*8 + X
-        lda  stack.lo+1,x
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        asl  a
-        asl  a
-        asl  a
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        rts
-.pend
+            stack_mul_byte_25    .proc
+                    ; (X*2 + X)*8 + X
+                    lda  stack.lo+1,x
+                    asl  a
+                    clc
+                    adc  stack.lo+1,x
+                    asl  a
+                    asl  a
+                    asl  a
+                    clc
+                    adc  stack.lo+1,x
+                    sta  stack.lo+1,x
+                    rts
+            .pend
 
-stack_mul_word_25    .proc
-        ; W = (W*2 + W) *8 + W
-        lda  stack.hi+1,x
-        sta  zpWord0+1
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpWord0+1
-        clc
-        adc  stack.lo+1,x
-        sta  zpWord0
-        lda  zpWord0+1
-        adc  stack.hi+1,x
-        sta  zpWord0+1
-        lda  zpWord0
-        asl  a
-        rol  zpWord0+1
-        asl  a
-        rol  zpWord0+1
-        asl  a
-        rol  zpWord0+1
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpWord0+1
-        adc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+            stack_mul_word_25    .proc
+                    ; W = (W*2 + W) *8 + W
+                    lda  stack.hi+1,x
+                    sta  zpWord0+1
+                    lda  stack.lo+1,x
+                    asl  a
+                    rol  zpWord0+1
+                    clc
+                    adc  stack.lo+1,x
+                    sta  zpWord0
+                    lda  zpWord0+1
+                    adc  stack.hi+1,x
+                    sta  zpWord0+1
+                    lda  zpWord0
+                    asl  a
+                    rol  zpWord0+1
+                    asl  a
+                    rol  zpWord0+1
+                    asl  a
+                    rol  zpWord0+1
+                    clc
+                    adc  stack.lo+1,x
+                    sta  stack.lo+1,x
+                    lda  zpWord0+1
+                    adc  stack.hi+1,x
+                    sta  stack.hi+1,x
+                    rts
+            .pend
 
-stack_mul_byte_40    .proc
-        lda  stack.lo+1,x
-        and  #7
-        tay
-        lda  mul_byte_40._forties,y
-        sta  stack.lo+1,x
-        rts
-.pend
+                                stack_mul_byte_40    .proc
+                                        lda  stack.lo+1,x
+                                        and  #7
+                                        tay
+                                        lda  mul_byte_40._forties,y
+                                        sta  stack.lo+1,x
+                                        rts
+                                .pend
 
-stack_mul_word_40    .proc
-        ; (W*4 + W)*8
-        lda  stack.hi+1,x
-        sta  zpx
-        lda  stack.lo+1,x
-        asl  a
-        rol  zpx
-        asl  a
-        rol  zpx
-        clc
-        adc  stack.lo+1,x
-        sta  stack.lo+1,x
-        lda  zpx
-        adc  stack.hi+1,x
-        asl  stack.lo+1,x
-                rol  a
-        asl  stack.lo+1,x
-                rol  a
-        asl  stack.lo+1,x
-                rol  a
-        sta  stack.hi+1,x
-        rts
-.pend
+                        stack_mul_word_40    .proc
+                                ; (W*4 + W)*8
+                                lda  stack.hi+1,x
+                                sta  zpx
+                                lda  stack.lo+1,x
+                                asl  a
+                                rol  zpx
+                                asl  a
+                                rol  zpx
+                                clc
+                                adc  stack.lo+1,x
+                                sta  stack.lo+1,x
+                                lda  zpx
+                                adc  stack.hi+1,x
+                                asl  stack.lo+1,x
+                                rol  a
+                                asl  stack.lo+1,x
+                                rol  a
+                                asl  stack.lo+1,x
+                                rol  a
+                                sta  stack.hi+1,x
+                                rts
+                        .pend
 
-stack_mul_byte_50    .proc
-        lda  stack.lo+1,x
-        and  #7
-        tay
-        lda  mul_byte_50._fifties, y
-        sta  stack.lo+1,x
-        rts
-.pend
+                        stack_mul_byte_50    .proc
+                                lda  stack.lo+1,x
+                                and  #7
+                                tay
+                                lda  mul_byte_50._fifties, y
+                                sta  stack.lo+1,x
+                                rts
+                        .pend
 
-stack_mul_word_50    .proc
-        ; W = W * 25 * 2
-        jsr  stack_mul_word_25
-        asl  stack.lo+1,x
-        rol  stack.hi+1,x
-        rts
-.pend
+                        stack_mul_word_50    .proc
+                                ; W = W * 25 * 2
+                                jsr  stack_mul_word_25
+                                asl  stack.lo+1,x
+                                rol  stack.hi+1,x
+                                rts
+                        .pend
 
-stack_mul_byte_80    .proc
-        lda  stack.lo+1,x
-        and  #3
-        tay
-        lda  mul_byte_80._eighties, y
-        sta  stack.lo+1,x
-        rts
-.pend
+                        stack_mul_byte_80    .proc
+                                lda  stack.lo+1,x
+                                and  #3
+                                tay
+                                lda  mul_byte_80._eighties, y
+                                sta  stack.lo+1,x
+                                rts
+                        .pend
 
-stack_mul_word_80    .proc
-        ; W = W * 40 * 2
-        jsr  stack_mul_word_40
-        asl  stack.lo+1,x
-        rol  stack.hi+1,x
-        rts
-.pend
+                        stack_mul_word_80    .proc
+                                ; W = W * 40 * 2
+                                jsr  stack_mul_word_40
+                                asl  stack.lo+1,x
+                                rol  stack.hi+1,x
+                                rts
+                        .pend
 
-stack_mul_byte_100    .proc
-        lda  stack.lo+1,x
-        and  #3
-        tay
-        lda  mul_byte_100._hundreds, y
-        sta  stack.lo+1,x
-        rts
-.pend
+                        stack_mul_byte_100    .proc
+                                lda  stack.lo+1,x
+                                and  #3
+                                tay
+                                lda  mul_byte_100._hundreds, y
+                                sta  stack.lo+1,x
+                                rts
+                        .pend
 
-stack_mul_word_100    .proc
-        ; W = W * 25 * 4
-        jsr  stack_mul_word_25
-        asl  stack.lo+1,x
-        rol  stack.hi+1,x
-        asl  stack.lo+1,x
-        rol  stack.hi+1,x
-        rts
-.pend
+                        stack_mul_word_100    .proc
+                                ; W = W * 25 * 4
+                                jsr  stack_mul_word_25
+                                asl  stack.lo+1,x
+                                rol  stack.hi+1,x
+                                asl  stack.lo+1,x
+                                rol  stack.hi+1,x
+                                rts
+                        .pend
 
-stack_mul_word_320    .proc
-        ; stackW = stackLo * 256 + stackLo * 64     (stackHi doesn't matter)
-        ldy  stack.lo+1,x
-        lda  #0
-        sta  stack.hi+1,x
-        tya
-        asl  a
-        rol  stack.hi+1,x
-        asl  a
-        rol  stack.hi+1,x
-        asl  a
-        rol  stack.hi+1,x
-        asl  a
-        rol  stack.hi+1,x
-        asl  a
-        rol  stack.hi+1,x
-        asl  a
-        rol  stack.hi+1,x
-        sta  stack.lo+1,x
-        tya
-        clc
-        adc  stack.hi+1,x
-        sta  stack.hi+1,x
-        rts
-.pend
+                    stack_mul_word_320    .proc
+                            ; stackW = stackLo * 256 + stackLo * 64     (stackHi doesn't matter)
+                            ldy  stack.lo+1,x
+                            lda  #0
+                            sta  stack.hi+1,x
+                            tya
+                            asl  a
+                            rol  stack.hi+1,x
+                            asl  a
+                            rol  stack.hi+1,x
+                            asl  a
+                            rol  stack.hi+1,x
+                            asl  a
+                            rol  stack.hi+1,x
+                            asl  a
+                            rol  stack.hi+1,x
+                            asl  a
+                            rol  stack.hi+1,x
+                            sta  stack.lo+1,x
+                            tya
+                            clc
+                            adc  stack.hi+1,x
+                            sta  stack.hi+1,x
+                            rts
+                    .pend
 
-stack_mul_word_640    .proc
-        ; stackW = (stackLo * 2 * 320)    (stackHi doesn't matter)
-        asl  stack.lo+1,x
-        jmp  stack_mul_word_320
-.pend
+                    stack_mul_word_640    .proc
+                            ; stackW = (stackLo * 2 * 320)    (stackHi doesn't matter)
+                            asl  stack.lo+1,x
+                            jmp  stack_mul_word_320
+                    .pend
 
 
 ; ----------- optimized multiplications (in-place A (byte) and ?? (word)) : ---------

@@ -51,7 +51,43 @@
         #   push_sp
         #   pop_sp
         
-        ;
+        ; ------------------------------------------------- fast stack multiplication
+
+        mul_byte_3
+        mul_word_3
+        mul_byte_5
+        mul_word_5
+        mul_byte_6
+        mul_word_6
+        mul_byte_7
+        mul_word_7
+        mul_byte_9
+        mul_word_9
+        mul_byte_10
+        mul_word_10
+        mul_byte_11
+        mul_byte_12
+        mul_word_12
+        mul_byte_13
+        mul_byte_14
+        mul_byte_15
+        mul_word_15
+        mul_byte_20
+        mul_word_20
+        mul_byte_25
+        mul_word_25
+        mul_byte_40
+        mul_word_40
+        mul_byte_50
+        mul_word_50
+        mul_byte_80
+        mul_word_80
+        mul_byte_100
+        mul_word_100
+        mul_word_320
+        mul_word_640
+    
+        
 ;;;
 ;;
 ;
