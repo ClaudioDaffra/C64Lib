@@ -5650,30 +5650,31 @@ shiftright_b    .proc
 
 123456
 
-ror2_mem_ub    .proc
-        ; -- in-place 8-bit ror of byte at memory location in AY
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  #0
-        lda  (zpWord0),y
-        lsr  a
-        bcc  +
-        ora  #$80
-+        sta  (zpWord0),y
-        rts
-.pend
+                    ror2_mem_ub    .proc
+                            ; -- in-place 8-bit ror of byte at memory location in AY
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  #0
+                            lda  (zpWord0),y
+                            lsr  a
+                            bcc  +
+                            ora  #$80
+                    +        
+                            sta  (zpWord0),y
+                            rts
+                    .pend
 
-rol2_mem_ub    .proc
-        ; -- in-place 8-bit rol of byte at memory location in AY
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  #0
-        lda  (zpWord0),y
-        cmp  #$80
-        rol  a
-        sta  (zpWord0),y
-        rts
-.pend
+                    rol2_mem_ub    .proc
+                            ; -- in-place 8-bit rol of byte at memory location in AY
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  #0
+                            lda  (zpWord0),y
+                            cmp  #$80
+                            rol  a
+                            sta  (zpWord0),y
+                            rts
+                    .pend
 
 rol_array_ub    .proc
         ; -- rol a ubyte in an array

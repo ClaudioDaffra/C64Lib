@@ -249,6 +249,14 @@
 
     # copy_npage_from_to
     
+    ; -- in-place 8-bit ror of byte at memory location in AY
+    
+    # ror_ub
+    
+    ; -- in-place 8-bit rol of byte at memory location in AY
+    
+    # rol_ub
+    
     #######
     #   map
     #######

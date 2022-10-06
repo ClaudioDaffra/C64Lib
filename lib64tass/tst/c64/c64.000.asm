@@ -20,6 +20,8 @@ program_entry_point	; assembly code starts here
 
 ;--------------------------------------------------------------- lib
 
+;--------------------------------------------------------------- main
+
 
 .include "../../lib/libC64.asm"
 
@@ -34,13 +36,52 @@ main	.proc
     u16_type   a,1
     s16_type   b,2
     
+    var1    .word %1010101010101010
+    
     start	.proc
 
             ;   program
+
+            ; -------------------------------------  ror_ub
+            load_var_ay var1
+            sec
+            jsr std.print_u16_bin
+            
+            lda #char.nl
+            jsr sys.CHROUT
+
+            load_address_ay var1
+            jsr mem.ror_ub
+            
+            load_var_ay var1
+            sec
+            jsr std.print_u16_bin
  
+            lda #char.nl
+            jsr sys.CHROUT
+            
+            ; -------------------------------------  rol_ub
  
+            load_var_ay var1
+            sec
+            jsr std.print_u16_bin
+            
+            lda #char.nl
+            jsr sys.CHROUT
+
+            load_address_ay var1
+            jsr mem.rol_ub
+            
+            load_var_ay var1
+            sec
+            jsr std.print_u16_bin
+ 
+            lda #char.nl
+            jsr sys.CHROUT
+            
+            ; -------------------------------------
+             
             rts
- 
 
     .pend
 

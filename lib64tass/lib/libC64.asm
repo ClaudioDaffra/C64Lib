@@ -1521,9 +1521,35 @@ mem .proc
             rts                     ; done
             
     .pend
+    
+    ; -- in-place 8-bit ror of byte at memory location in AY
+    
+    ror_ub    .proc
+            sta  zpWord0
+            sty  zpWord0+1
+            ldy  #0
+            lda  (zpWord0),y
+            lsr  a
+            bcc  +
+            ora  #$80
+    +        
+            sta  (zpWord0),y
+            rts
+    .pend
+    
+    ; -- in-place 8-bit rol of byte at memory location in AY
 
+    rol_ub    .proc
+            sta  zpWord0
+            sty  zpWord0+1
+            ldy  #0
+            lda  (zpWord0),y
+            cmp  #$80
+            rol  a
+            sta  (zpWord0),y
+            rts
+    .pend
 
-    ;
   
 
 .pend
