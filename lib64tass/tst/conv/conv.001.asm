@@ -20,68 +20,89 @@ program_entry_point	; assembly code starts here
 
 ;--------------------------------------------------------------- lib
 
+.include "../../lib/libC64.asm"
+
 ;--------------------------------------------------------------- main
 
 
-.include "../../lib/libC64.asm"
 
 
+    
 ;--------------------------------------------------------------- main
 
 
 main	.proc
 
-    u8_type    a,1
-    s8_type    b,2
-    u16_type   a,1
-    s16_type   b,2
+
+    var_u8      .byte    3
+    var_u16     .word    0
+
+    var_s8      .char   -3
+ 
     
-    var1    .word %1010101010101010
+    print_var   .proc
+    
+            lda var_s8
+            sec
+            jsr std.print_s8_dec
+            
+            lda #char.nl
+            jsr sys.CHROUT
+
+            rts
+    .pend
     
     start	.proc
 
             ;   program
 
-            ; -------------------------------------  ror2_ub
-            load_var_ay var1
+            ;   ......................................... signed ext
+            
+ 
+            lda var_s8
             sec
-            jsr std.print_u16_bin
+            jsr std.print_s8_dec
             
             lda #char.nl
             jsr sys.CHROUT
 
-            load_address_ay var1
-            jsr mem.ror2_ub
+            lda var_s8
             
-            load_var_ay var1
-            sec
-            jsr std.print_u16_bin
- 
+            jsr conv.byte_to_word
+            
             lda #char.nl
             jsr sys.CHROUT
             
-            ; -------------------------------------  rol2_ub
- 
-            load_var_ay var1
+            load_var_ay zpWord0
             sec
-            jsr std.print_u16_bin
+            jsr std.print_s16_dec
+
+            ;   ......................................... unsignedext
+            
+            lda #char.nl
+            jsr sys.CHROUT
+            
+            lda var_u8
+            sec
+            jsr std.print_u8_dec
             
             lda #char.nl
             jsr sys.CHROUT
 
-            load_address_ay var1
-            jsr mem.rol2_ub
+            lda var_u8
             
-            load_var_ay var1
-            sec
-            jsr std.print_u16_bin
- 
+            conv_byte_to_word var_u16
+            
             lda #char.nl
             jsr sys.CHROUT
             
-            ; -------------------------------------
-             
+            load_var_ay var_u16
+            sec
+            jsr std.print_u16_dec
+            
             rts
+            
+
 
     .pend
 

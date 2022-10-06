@@ -66,7 +66,26 @@
     reverse_us16   
     
     
+    ;............................................................ rol/rol2 ror/ro2 ub
+    ;
+    ; -- rol  a ubyte in an array
+    ; -- ror  a ubyte in an array
+    ; -- rol2 a ubyte in an array
+    ; -- ror2 a ubyte in an array
+    ;
+    ;   input   :
+    ;               zpWord0     <-  address array
+    ;               y           <-  length
+    
+    rol_ub
+    ror_ub
+    rol2_ub
+    ror2_ub
+    
+    
+    
+;;;
+;;
+;
 
-    
-    
-    
+

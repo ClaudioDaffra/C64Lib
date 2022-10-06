@@ -119,6 +119,19 @@
 
     #   str2word
     
+    ;   ................................................. byte_to_word
+    ;
+    ;       signed 8 ext to     signed 16
+    ;     unsigned 8 ext to   unsigned 16
+    ;
+    
+    #   byte_to_word
+
+        conv.byte_to_word   (subroutine)
+        conv_byte_to_word   (macro)
     
     
     
+;;;
+;;
+;

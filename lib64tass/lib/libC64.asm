@@ -1524,7 +1524,7 @@ mem .proc
     
     ; -- in-place 8-bit ror of byte at memory location in AY
     
-    ror_ub    .proc
+    ror2_ub    .proc
             sta  zpWord0
             sty  zpWord0+1
             ldy  #0
@@ -1539,7 +1539,7 @@ mem .proc
     
     ; -- in-place 8-bit rol of byte at memory location in AY
 
-    rol_ub    .proc
+    rol2_ub    .proc
             sta  zpWord0
             sty  zpWord0+1
             ldy  #0

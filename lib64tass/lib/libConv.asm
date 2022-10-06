@@ -810,11 +810,38 @@ conv .proc
     _negative	.byte  0
     
     .pend
-    
+
+    ;   ................................................. byte_to_word
+    ;
+    ;       signed 8 ext to     signed 16
+    ;     unsigned 8 ext to   unsigned 16
     ;
     
+    byte_to_word .proc   
+
+        sta zpWord0
+        lda #$7f
+        cmp zpWord0
+        sbc #$7f
+        sta zpWord0+1
+        rts
+
+    .pend
+
 .pend
 
+; macro go outside .proc .pend
+
+conv_byte_to_word .macro
+
+        sta \1
+        lda #$7f
+        cmp \1
+        sbc #$7f
+        sta \1+1
+
+.endmacro
+    
 ;;;
 ;;
 ;

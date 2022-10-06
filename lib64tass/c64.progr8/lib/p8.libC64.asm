@@ -5676,169 +5676,169 @@ shiftright_b    .proc
                             rts
                     .pend
 
-rol_array_ub    .proc
-        ; -- rol a ubyte in an array
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  _arg_index
-        lda  (zpWord0),y
-        rol  a
-        sta  (zpWord0),y
-        rts
-_arg_target    .word    0
-_arg_index    .byte   0
-.pend
+                    rol_array_ub    .proc
+                            ; -- rol a ubyte in an array
+                            lda  _arg_target
+                            ldy  _arg_target+1
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  _arg_index
+                            lda  (zpWord0),y
+                            rol  a
+                            sta  (zpWord0),y
+                            rts
+                    _arg_target    .word    0
+                    _arg_index    .byte   0
+                    .pend
 
 
-ror_array_ub    .proc
-        ; -- ror a ubyte in an array
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  _arg_index
-        lda  (zpWord0),y
-        ror  a
-        sta  (zpWord0),y
-        rts
-_arg_target    .word    0
-_arg_index    .byte   0
-.pend
+                    ror_array_ub    .proc
+                            ; -- ror a ubyte in an array
+                            lda  _arg_target
+                            ldy  _arg_target+1
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  _arg_index
+                            lda  (zpWord0),y
+                            ror  a
+                            sta  (zpWord0),y
+                            rts
+                    _arg_target    .word    0
+                    _arg_index    .byte   0
+                    .pend
 
-ror2_array_ub    .proc
-        ; -- ror2 (8-bit ror) a ubyte in an array
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  _arg_index
-        lda  (zpWord0),y
-        lsr  a
-        bcc  +
-        ora  #$80
-+        sta  (zpWord0),y
-        rts
-_arg_target    .word    0
-_arg_index    .byte   0
-.pend
+                    ror2_array_ub    .proc
+                            ; -- ror2 (8-bit ror) a ubyte in an array
+                            lda  _arg_target
+                            ldy  _arg_target+1
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  _arg_index
+                            lda  (zpWord0),y
+                            lsr  a
+                            bcc  +
+                            ora  #$80
+                    +        sta  (zpWord0),y
+                            rts
+                    _arg_target    .word    0
+                    _arg_index    .byte   0
+                    .pend
 
-rol2_array_ub    .proc
-        ; -- rol2 (8-bit rol) a ubyte in an array
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        ldy  _arg_index
-        lda  (zpWord0),y
-        cmp  #$80
-        rol  a
-        sta  (zpWord0),y
-        rts
-_arg_target    .word    0
-_arg_index    .byte   0
-.pend
+                    rol2_array_ub    .proc
+                            ; -- rol2 (8-bit rol) a ubyte in an array
+                            lda  _arg_target
+                            ldy  _arg_target+1
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            ldy  _arg_index
+                            lda  (zpWord0),y
+                            cmp  #$80
+                            rol  a
+                            sta  (zpWord0),y
+                            rts
+                    _arg_target    .word    0
+                    _arg_index    .byte   0
+                    .pend
 
-ror_array_uw    .proc
-        ; -- ror a uword in an array
-        php
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        lda  _arg_index
-        asl  a
-        tay
-        iny
-        lda  (zpWord0),y
-        plp
-        ror  a
-        sta  (zpWord0),y
-        dey
-        lda  (zpWord0),y
-        ror  a
-        sta  (zpWord0),y
-        rts
-_arg_target    .word  0
-_arg_index    .byte  0
-.pend
+                    ror_array_uw    .proc
+                            ; -- ror a uword in an array
+                            php
+                            lda  _arg_target
+                            ldy  _arg_target+1
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            lda  _arg_index
+                            asl  a
+                            tay
+                            iny
+                            lda  (zpWord0),y
+                            plp
+                            ror  a
+                            sta  (zpWord0),y
+                            dey
+                            lda  (zpWord0),y
+                            ror  a
+                            sta  (zpWord0),y
+                            rts
+                    _arg_target    .word  0
+                    _arg_index    .byte  0
+                    .pend
 
-rol_array_uw    .proc
-        ; -- rol a uword in an array
-        php
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        lda  _arg_index
-        asl  a
-        tay
-        lda  (zpWord0),y
-        plp
-        rol  a
-        sta  (zpWord0),y
-        iny
-        lda  (zpWord0),y
-        rol  a
-        sta  (zpWord0),y
-        rts
-_arg_target    .word  0
-_arg_index    .byte  0
-.pend
+                    rol_array_uw    .proc
+                            ; -- rol a uword in an array
+                            php
+                            lda  _arg_target
+                            ldy  _arg_target+1
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            lda  _arg_index
+                            asl  a
+                            tay
+                            lda  (zpWord0),y
+                            plp
+                            rol  a
+                            sta  (zpWord0),y
+                            iny
+                            lda  (zpWord0),y
+                            rol  a
+                            sta  (zpWord0),y
+                            rts
+                    _arg_target    .word  0
+                    _arg_index    .byte  0
+                    .pend
 
-rol2_array_uw    .proc
-        ; -- rol2 (16-bit rol) a uword in an array
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        lda  _arg_index
-        asl  a
-        tay
-        lda  (zpWord0),y
-        asl  a
-        sta  (zpWord0),y
-        iny
-        lda  (zpWord0),y
-        rol  a
-        sta  (zpWord0),y
-        bcc  +
-        dey
-        lda  (zpWord0),y
-        adc  #0
-        sta  (zpWord0),y
-+        rts
-_arg_target    .word  0
-_arg_index    .byte  0
-.pend
+                rol2_array_uw    .proc
+                        ; -- rol2 (16-bit rol) a uword in an array
+                        lda  _arg_target
+                        ldy  _arg_target+1
+                        sta  zpWord0
+                        sty  zpWord0+1
+                        lda  _arg_index
+                        asl  a
+                        tay
+                        lda  (zpWord0),y
+                        asl  a
+                        sta  (zpWord0),y
+                        iny
+                        lda  (zpWord0),y
+                        rol  a
+                        sta  (zpWord0),y
+                        bcc  +
+                        dey
+                        lda  (zpWord0),y
+                        adc  #0
+                        sta  (zpWord0),y
+                +        rts
+                _arg_target    .word  0
+                _arg_index    .byte  0
+                .pend
 
-ror2_array_uw    .proc
-        ; -- ror2 (16-bit ror) a uword in an array
-        lda  _arg_target
-        ldy  _arg_target+1
-        sta  zpWord0
-        sty  zpWord0+1
-        lda  _arg_index
-        asl  a
-        tay
-        iny
-        lda  (zpWord0),y
-        lsr  a
-        sta  (zpWord0),y
-        dey
-        lda  (zpWord0),y
-        ror  a
-        sta  (zpWord0),y
-        bcc  +
-        iny
-        lda  (zpWord0),y
-        ora  #$80
-        sta  (zpWord0),y
-+        rts
-_arg_target    .word  0
-_arg_index    .byte  0
-.pend
+                ror2_array_uw    .proc
+                        ; -- ror2 (16-bit ror) a uword in an array
+                        lda  _arg_target
+                        ldy  _arg_target+1
+                        sta  zpWord0
+                        sty  zpWord0+1
+                        lda  _arg_index
+                        asl  a
+                        tay
+                        iny
+                        lda  (zpWord0),y
+                        lsr  a
+                        sta  (zpWord0),y
+                        dey
+                        lda  (zpWord0),y
+                        ror  a
+                        sta  (zpWord0),y
+                        bcc  +
+                        iny
+                        lda  (zpWord0),y
+                        ora  #$80
+                        sta  (zpWord0),y
+                +        rts
+                _arg_target    .word  0
+                _arg_index    .byte  0
+                .pend
 
 
                 strcpy        .proc
@@ -5855,18 +5855,18 @@ _arg_index    .byte  0
                         rts
                 .pend
 
-strcmp_expression    .proc
-        ; -- compare strings, result in A
-        lda  _arg_s2
-        ldy  _arg_s2+1
-        sta  zpWord1
-        sty  zpWord1+1
-        lda  _arg_s1
-        ldy  _arg_s1+1
-        jmp  strcmp_mem
-_arg_s1        .word  0
-_arg_s2        .word  0
-.pend
+                strcmp_expression    .proc
+                        ; -- compare strings, result in A
+                        lda  _arg_s2
+                        ldy  _arg_s2+1
+                        sta  zpWord1
+                        sty  zpWord1+1
+                        lda  _arg_s1
+                        ldy  _arg_s1+1
+                        jmp  strcmp_mem
+                _arg_s1        .word  0
+                _arg_s2        .word  0
+                .pend
 
 
             strcmp_mem    .proc

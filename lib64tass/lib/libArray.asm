@@ -342,6 +342,134 @@ array   .proc
             rts
     .pend
 
+    ;............................................................ rol/rol2 ror/ro2 ub
+    ;
+    ; -- rol  a ubyte in an array   ubyte
+    ; -- ror  a ubyte in an array   ubyte
+    ; -- rol2 a ubyte in an array   ubyte
+    ; -- ror2 a ubyte in an array   ubyte
+    ;
+    ;   input   :
+    ;               zpWord0     <-  address array
+    ;               y           <-  index
+
+    rol_ub    .proc
+            lda  (zpWord0),y
+            rol  a
+            sta  (zpWord0),y
+            rts
+    .pend
+
+    ror_ub    .proc
+            lda  (zpWord0),y
+            ror  a
+            sta  (zpWord0),y
+            rts
+    .pend
+
+    ror2_ub    .proc
+            lda  (zpWord0),y
+            lsr  a
+            bcc  +
+            ora  #$80
+    +        
+            sta  (zpWord0),y
+            rts
+    .pend
+
+    rol2_ub    .proc
+            lda  (zpWord0),y
+            cmp  #$80
+            rol  a
+            sta  (zpWord0),y
+            rts
+    .pend
+
+    ;............................................................ rol/rol2 ror/ro2 uw
+    ;
+    ; -- rol  a ubyte in an array   uword
+    ; -- ror  a ubyte in an array   uword
+    ; -- rol2 a ubyte in an array   uword
+    ; -- ror2 a ubyte in an array   uword
+    ;
+    ;   input   :
+    ;               zpWord0     <-  address array
+    ;               y           <-  index
+    
+    ror_uw    .proc
+            ; -- ror a uword in an array
+            php
+            tya
+            asl  a
+            tay
+            iny
+            lda  (zpWord0),y
+            plp
+            ror  a
+            sta  (zpWord0),y
+            dey
+            lda  (zpWord0),y
+            ror  a
+            sta  (zpWord0),y
+            rts
+    .pend
+
+    rol_uw    .proc
+            php
+            tya
+            asl  a
+            tay
+            lda  (zpWord0),y
+            plp
+            rol  a
+            sta  (zpWord0),y
+            iny
+            lda  (zpWord0),y
+            rol  a
+            sta  (zpWord0),y
+            rts
+    .pend
+
+    rol2_uw    .proc
+            tya
+            asl  a
+            tay
+            lda  (zpWord0),y
+            asl  a
+            sta  (zpWord0),y
+            iny
+            lda  (zpWord0),y
+            rol  a
+            sta  (zpWord0),y
+            bcc  +
+            dey
+            lda  (zpWord0),y
+            adc  #0
+            sta  (zpWord0),y
+    +        
+            rts
+    .pend
+
+    ror2_uw    .proc
+            tya
+            asl  a
+            tay
+            iny
+            lda  (zpWord0),y
+            lsr  a
+            sta  (zpWord0),y
+            dey
+            lda  (zpWord0),y
+            ror  a
+            sta  (zpWord0),y
+            bcc  +
+            iny
+            lda  (zpWord0),y
+            ora  #$80
+            sta  (zpWord0),y
+    +        
+            rts
+    .pend
 
 .pend
 

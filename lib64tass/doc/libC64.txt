@@ -114,53 +114,53 @@
     #   c64
     #######
     
-    #   address
-        
-        screen_addr =   $0400
-        color_addr  =   $d800
-        
-    #   kernal  
-        
-        screen_control_register_1   =   53265
-        screen_control_register_2   =   53270
-
-    #   
-        set_text_mode_on 
-        set_text_mode_standard_on
-        set_bitmap_mode_off
-    #   
-        set_text_mode_off 
-        set_text_mode_standard_off
-        set_bitmap_mode_on
-    #
-        set_text_mode_extended_on
-    #
-        set_text_mode_extended_off
-    #
-        set_text_mode_multicolor_on
-        set_bitmap_mode_multicolor_on
-    #
-        set_text_mode_multicolor_off        
-        set_bitmap_mode_multicolor_off
-        
-    #   set
-    
-            set_bitmap_mode_320x200_on
-            set_bitmap_mode_320x200_off
-            set_bitmap_mode_160x200_on  
-            set_bitmap_mode_160x200_off 
+        #   address
             
-    #   check   ( output : c 0/1 )
-    
-            check_text_mode_standard    
-            check_text_mode_extended    
-            check_bitmap_mode         
-            check_multi_color         
-            check_bitmap_mode_320x200   
-            check_bitmap_mode_160x200   
+            screen_addr =   $0400
+            color_addr  =   $d800
+            
+        #   kernal  
+            
+            screen_control_register_1   =   53265
+            screen_control_register_2   =   53270
 
-    #   peekw   (a,y)               := (word)*(zpWord0)
-    #   pokew   (word)*(zpWord0)    := (a:y)
+        #   
+            set_text_mode_on 
+            set_text_mode_standard_on
+            set_bitmap_mode_off
+        #   
+            set_text_mode_off 
+            set_text_mode_standard_off
+            set_bitmap_mode_on
+        #
+            set_text_mode_extended_on
+        #
+            set_text_mode_extended_off
+        #
+            set_text_mode_multicolor_on
+            set_bitmap_mode_multicolor_on
+        #
+            set_text_mode_multicolor_off        
+            set_bitmap_mode_multicolor_off
+            
+        #   set
+        
+                set_bitmap_mode_320x200_on
+                set_bitmap_mode_320x200_off
+                set_bitmap_mode_160x200_on  
+                set_bitmap_mode_160x200_off 
+                
+        #   check   ( output : c 0/1 )
+        
+                check_text_mode_standard    
+                check_text_mode_extended    
+                check_bitmap_mode         
+                check_multi_color         
+                check_bitmap_mode_320x200   
+                check_bitmap_mode_160x200   
+
+        #   peekw   (a,y)               := (word)*  (zpWord0)
+        #   pokew   (word)* (zpWord0)   := (a:y)
 
     #######
     # system
@@ -177,20 +177,20 @@
     # macro
     #######
 
-    load_zpByte0    var
-    load_zpByte1    var
-    load_zpWord0    var
-    load_zpWord1    var
+        load_zpByte0    var
+        load_zpByte1    var
+        load_zpWord0    var
+        load_zpWord1    var
 
-    load_address_zpWord0    address
-    load_address_zpWord1    address
+        load_address_zpWord0    address
+        load_address_zpWord1    address
 
-    load_var_ay     var
-    load_imm_ay     imm
-    load_address_ay address
+        load_var_ay     var
+        load_imm_ay     imm
+        load_address_ay address
 
-    if_true  jmp
-    if_false jmp
+        if_true  jmp
+        if_false jmp
 
     #######
     #   compare
@@ -205,220 +205,216 @@
         u8_cmp_eq           s8_cmp_eq
         u8_cmp_ne           s8_cmp_ne
 
-
     #######
     #   mem
     #######
-    
-    ; ........................................... mem.copy
-    ;
-    ;   input   :
-    ;               source address  ->  zpWord0
-    ;               dest   address  ->  zpWord1
-    ;               ay              ->  size
-    ;   output  :
-    ;               //
-    
-    # copy 
-   
+        
+        ; ........................................... mem.copy
+        ;
+        ;   input   :
+        ;               source address  ->  zpWord0
+        ;               dest   address  ->  zpWord1
+        ;               ay              ->  size
+        ;   output  :
+        ;               //
+        
+        # copy 
+       
+        ; ........................................... mem.set
+        ;
+        ;   input   :   
+        ;               zpWord0     begin
+        ;               xy          length
+        ;               a           value
 
-    ; ........................................... mem.set
-    ;
-    ;   input   :   
-    ;               zpWord0     begin
-    ;               xy          length
-    ;               a           value
+        # set_byte 
 
-    # set_byte 
+        ; ........................................... mem.set_word
+        ;
+        ;   input   :   
+        ;               zpWord0     begin
+        ;               zpWord1     length
+        ;               ay          value
 
-    ; ........................................... mem.set_word
-    ;
-    ;   input   :   
-    ;               zpWord0     begin
-    ;               zpWord1     length
-    ;               ay          value
+        # set_word 
 
-    # set_word 
+        ; ........................................... mem.copy_nbyte_from_to
+        ;
+        ;   input   :   
+        ;               zpWord0     from
+        ;               zpWord1     to
+        ;               xy          value
 
-    ; ........................................... mem.copy_nbyte_from_to
-    ;
-    ;   input   :   
-    ;               zpWord0     from
-    ;               zpWord1     to
-    ;               xy          value
-
-    # copy_npage_from_to
-    
-    ; -- in-place 8-bit ror of byte at memory location in AY
-    
-    # ror_ub
-    
-    ; -- in-place 8-bit rol of byte at memory location in AY
-    
-    # rol_ub
+        # copy_npage_from_to
+        
+        ; -- in-place 8-bit ror of byte at memory location in AY
+        
+        # ror2_ub
+        
+        ; -- in-place 8-bit rol of byte at memory location in AY
+        
+        # rol2_ub
     
     #######
     #   map
     #######
-    
-    ($0001) Processor port. Bits:
+        
+        ($0001) Processor port. Bits:
 
-    Bits #0-#2: Configuration for memory areas $A000-$BFFF, $D000-$DFFF and $E000-$FFFF. Values:
+        Bits #0-#2: Configuration for memory areas $A000-$BFFF, $D000-$DFFF and $E000-$FFFF. Values:
 
-    %x00: RAM visible at.                       $A000-$BFFF, $D000-$DFFF, $E000-$FFFF.
-    %x01: RAM visible at                        $A000-$BFFF,              $E000-$FFFF.
-    %x10: RAM visible at                        $A000-$BFFF;
-    
-    %x11: ROM visible at                        $A000-$BFFF;              $E000-$FFFF.
-    %0xx: Character ROM visible at $D000-$DFFF. (Except for the value %000, see above.)
-    %1xx: I/O area visible at $D000-$DFFF. (Except for the value %100, see above.)
+        %x00: RAM visible at.                       $A000-$BFFF, $D000-$DFFF, $E000-$FFFF.
+        %x01: RAM visible at                        $A000-$BFFF,              $E000-$FFFF.
+        %x10: RAM visible at                        $A000-$BFFF;
+        
+        %x11: ROM visible at                        $A000-$BFFF;              $E000-$FFFF.
+        %0xx: Character ROM visible at $D000-$DFFF. (Except for the value %000, see above.)
+        %1xx: I/O area visible at $D000-$DFFF. (Except for the value %100, see above.)
 
-    Bit #3: Datasette output signal level.
-    Bit #4: Datasette button status; 0 = One or more of PLAY, RECORD, F.FWD or REW pressed; 1 = No button is pressed.
-    Bit #5: Datasette motor control; 0 = On; 1 = Off.
+        Bit #3: Datasette output signal level.
+        Bit #4: Datasette button status; 0 = One or more of PLAY, RECORD, F.FWD or REW pressed; 1 = No button is pressed.
+        Bit #5: Datasette motor control; 0 = On; 1 = Off.
 
-    Default: $37, %00110[111].
-
+        Default: $37, %00110[111].
     
     #######
     #   graph
     #######
-    
 
-$D011   53265   Default: 27 $1B, %00011011.
-                ---------------------------------
-                Screen control register #1. Bits:
-                ---------------------------------
-                Bits #0-#2: Vertical raster scroll.
-                Bit     #3: Screen height; 0 = 24 rows; 1 = 25 rows.
-                Bit     #4: 0 = Screen off, complete screen is covered by border; 
-                            1 = Screen on, normal screen contents are visible.
-                Bit     #5: 0 = Text mode; 1 = Bitmap mode.
-                Bit     #6: 1 = Extended background mode on.
+        $D011   53265   Default: 27 $1B, %00011011.
+                        ---------------------------------
+                        Screen control register #1. Bits:
+                        ---------------------------------
+                        Bits #0-#2: Vertical raster scroll.
+                        Bit     #3: Screen height; 0 = 24 rows; 1 = 25 rows.
+                        Bit     #4: 0 = Screen off, complete screen is covered by border; 
+                                    1 = Screen on, normal screen contents are visible.
+                        Bit     #5: 0 = Text mode; 1 = Bitmap mode.
+                        Bit     #6: 1 = Extended background mode on.
 
-                Bit #7: Read: Current raster line (bit #8).
-                Write: Raster line to generate interrupt at (bit #8).
+                        Bit #7: Read: Current raster line (bit #8).
+                        Write: Raster line to generate interrupt at (bit #8).
 
-$D016   53270   Default: 200    $C8,    %11001000.
-                ---------------------------------
-                Screen control register #2. Bits:
-                ---------------------------------
-                Bits #0-#2: Horizontal raster scroll.
-                Bit     #3: Screen width; 0 = 38 columns; 1 = 40 columns.
-                Bit     #4: 1 = Multicolor mode on.
+        $D016   53270   Default: 200    $C8,    %11001000.
+                        ---------------------------------
+                        Screen control register #2. Bits:
+                        ---------------------------------
+                        Bits #0-#2: Horizontal raster scroll.
+                        Bit     #3: Screen width; 0 = 38 columns; 1 = 40 columns.
+                        Bit     #4: 1 = Multicolor mode on.
 
+                        
+        $D018   53272   Default: 21     $15,    %00010101
+                        ---------------------------------
+                        Memory setup register. Bits:
+                        ---------------------------------
+                        Bits #1-#3: In text mode, pointer to character memory (bits #11-#13), 
+                        relative to VIC bank, memory address $DD00. Values:
+
+                        %000, 0: $0000-$07FF,     0 - 2047.
+                        %001, 1: $0800-$0FFF,  2048 - 4095.
+                        %010, 2: $1000-$17FF,  4096 - 6143.
+                        %011, 3: $1800-$1FFF,  6144 - 8191.
+                        %100, 4: $2000-$27FF,  8192 -10239.
+                        %101, 5: $2800-$2FFF, 10240 -12287.
+                        %110, 6: $3000-$37FF, 12288 -14335.
+                        %111, 7: $3800-$3FFF, 14336 -16383.
+
+                        Values %010 and %011 in VIC bank #0 and #2 select Character ROM instead.
+                        In bitmap mode, pointer to bitmap memory (bit #13), 
+                        relative to VIC bank, memory address $DD00. Values:
+
+                        %0xx, 0: $0000-$1FFF,    0  -    8191.
+                        %1xx, 4: $2000-$3FFF, 8192  -   16383.
+
+                        Bits #4-#7: Pointer to screen memory (bits #10-#13), 
+                        relative to VIC bank, memory address $DD00. Values:
+
+                        %0000,  0: $0000-$03FF ,     0- 1023.
+                        %0001,  1: $0400-$07FF ,  1024- 2047.
+                        %0010,  2: $0800-$0BFF ,  2048- 3071.
+                        %0011,  3: $0C00-$0FFF ,  3072- 4095.
+                        
+                        %0100,  4: $1000-$13FF ,  4096- 5119.
+                        %0101,  5: $1400-$17FF ,  5120- 6143.
+                        %0110,  6: $1800-$1BFF ,  6144- 7167.
+                        %0111,  7: $1C00-$1FFF ,  7168- 8191.
+                        %1000,  8: $2000-$23FF ,  8192- 9215.
+                        %1001,  9: $2400-$27FF ,  9216-10239.
+                        %1010, 10: $2800-$2BFF , 10240-11263.
+                        %1011, 11: $2C00-$2FFF , 11264-12287.
+                        %1100, 12: $3000-$33FF , 12288-13311.
+                        %1101, 13: $3400-$37FF , 13312-14335.
+                        %1110, 14: $3800-$3BFF , 14336-15359.
+                        1111,  15: $3C00-$3FFF , 15360-16383.
+
+        $D020 53280     Border color (only bits #0-#3).
+
+        $D021 53281     Background color (only bits #0-#3).
+
+        $D022 53282	    Extra background color #1 (only bits #0-#3).
+
+        $D023 53283	    Extra background color #2 (only bits #0-#3).
+
+        $D024 53284	    Extra background color #3 (only bits #0-#3).
+
+        $D800-$DBE7     55296-56295
+
+                        Color RAM (1000 bytes, only bits #0-#3).
+
+        $DD00 56576     Default: 151    $97 ,  %10010111
+                        ---------------------------------
+                        Port A, serial bus access. Bits:
+                        ---------------------------------
+                        Bits #0-#1: VIC bank. Values:
+
+                        %00, 0: Bank #3, $C000-$FFFF, 49152 -65535.
+                        %01, 1: Bank #2, $8000-$BFFF, 32768 -49151.
+                        %10, 2: Bank #1, $4000-$7FFF, 16384 -32767.
+                        %11, 3: Bank #0, $0000-$3FFF, 0     -16383.
+
+                        Bit #2: RS232 TXD line, output bit.
+                        Bit #3: Serial bus ATN OUT;     0 = High;   1 = Low.
+                        Bit #4: Serial bus CLOCK OUT;   0 = High;   1 = Low.
+                        Bit #5: Serial bus DATA OUT;    0 = High;   1 = Low.
+                        Bit #6: Serial bus CLOCK IN;    0 = Low;    1 = High.
+                        Bit #7: Serial bus DATA IN;     0 = Low;    1 = High.
+
+                ; .................................................... setPortA_RW
+                ;
+                ; Port A data direction register..
+                ; default 63 0011:1111
+                ;          3 0000:0011
                 
-$D018   53272   Default: 21     $15,    %00010101
-                ---------------------------------
-                Memory setup register. Bits:
-                ---------------------------------
-                Bits #1-#3: In text mode, pointer to character memory (bits #11-#13), 
-                relative to VIC bank, memory address $DD00. Values:
-
-                %000, 0: $0000-$07FF,     0 - 2047.
-                %001, 1: $0800-$0FFF,  2048 - 4095.
-                %010, 2: $1000-$17FF,  4096 - 6143.
-                %011, 3: $1800-$1FFF,  6144 - 8191.
-                %100, 4: $2000-$27FF,  8192 -10239.
-                %101, 5: $2800-$2FFF, 10240 -12287.
-                %110, 6: $3000-$37FF, 12288 -14335.
-                %111, 7: $3800-$3FFF, 14336 -16383.
-
-                Values %010 and %011 in VIC bank #0 and #2 select Character ROM instead.
-                In bitmap mode, pointer to bitmap memory (bit #13), 
-                relative to VIC bank, memory address $DD00. Values:
-
-                %0xx, 0: $0000-$1FFF,    0  -    8191.
-                %1xx, 4: $2000-$3FFF, 8192  -   16383.
-
-                Bits #4-#7: Pointer to screen memory (bits #10-#13), 
-                relative to VIC bank, memory address $DD00. Values:
-
-                %0000,  0: $0000-$03FF ,     0- 1023.
-                %0001,  1: $0400-$07FF ,  1024- 2047.
-                %0010,  2: $0800-$0BFF ,  2048- 3071.
-                %0011,  3: $0C00-$0FFF ,  3072- 4095.
+                setPortA_RW
                 
-                %0100,  4: $1000-$13FF ,  4096- 5119.
-                %0101,  5: $1400-$17FF ,  5120- 6143.
-                %0110,  6: $1800-$1BFF ,  6144- 7167.
-                %0111,  7: $1C00-$1FFF ,  7168- 8191.
-                %1000,  8: $2000-$23FF ,  8192- 9215.
-                %1001,  9: $2400-$27FF ,  9216-10239.
-                %1010, 10: $2800-$2BFF , 10240-11263.
-                %1011, 11: $2C00-$2FFF , 11264-12287.
-                %1100, 12: $3000-$33FF , 12288-13311.
-                %1101, 13: $3400-$37FF , 13312-14335.
-                %1110, 14: $3800-$3BFF , 14336-15359.
-                1111,  15: $3C00-$3FFF , 15360-16383.
+                ; .................................................... set bank number
+                ;   
+                ;   input   :   a   number bank default (11)
+                ;
+                ;   %00, 0: Bank #3, $C000-$FFFF, 49152 -   65535.
+                ;   %01, 1: Bank #2, $8000-$BFFF, 32768 -   49151.
+                ;   %10, 2: Bank #1, $4000-$7FFF, 16384 -   32767.
+                ;   %11, 3: Bank #0, $0000-$3FFF,     0 -   16383.  
+                ;
 
-$D020 53280     Border color (only bits #0-#3).
+                setBank
 
-$D021 53281     Background color (only bits #0-#3).
+                ; .................................................... set bitmap offset
+                ;   
+                ;   input   :   a   number bank default (11)
+                ;
+                ;   %0xx, 0: $0000-$1FFF,    0  - 8191.
+                ;   %1xx, 4: $2000-$3FFF, 8192  -16383. 
+                
+                setBitmapOffset
 
-$D022 53282	    Extra background color #1 (only bits #0-#3).
+                ; .................................................... set screen offset
+                ;   
+                ;   input   :   a   number bank default (11)
+                ;
 
-$D023 53283	    Extra background color #2 (only bits #0-#3).
-
-$D024 53284	    Extra background color #3 (only bits #0-#3).
-
-$D800-$DBE7     55296-56295
-
-                Color RAM (1000 bytes, only bits #0-#3).
-
-$DD00 56576     Default: 151    $97 ,  %10010111
-                ---------------------------------
-                Port A, serial bus access. Bits:
-                ---------------------------------
-                Bits #0-#1: VIC bank. Values:
-
-                %00, 0: Bank #3, $C000-$FFFF, 49152 -65535.
-                %01, 1: Bank #2, $8000-$BFFF, 32768 -49151.
-                %10, 2: Bank #1, $4000-$7FFF, 16384 -32767.
-                %11, 3: Bank #0, $0000-$3FFF, 0     -16383.
-
-                Bit #2: RS232 TXD line, output bit.
-                Bit #3: Serial bus ATN OUT;     0 = High;   1 = Low.
-                Bit #4: Serial bus CLOCK OUT;   0 = High;   1 = Low.
-                Bit #5: Serial bus DATA OUT;    0 = High;   1 = Low.
-                Bit #6: Serial bus CLOCK IN;    0 = Low;    1 = High.
-                Bit #7: Serial bus DATA IN;     0 = Low;    1 = High.
-
-        ; .................................................... setPortA_RW
-        ;
-        ; Port A data direction register..
-        ; default 63 0011:1111
-        ;          3 0000:0011
-        
-        setPortA_RW
-        
-        ; .................................................... set bank number
-        ;   
-        ;   input   :   a   number bank default (11)
-        ;
-        ;   %00, 0: Bank #3, $C000-$FFFF, 49152 -   65535.
-        ;   %01, 1: Bank #2, $8000-$BFFF, 32768 -   49151.
-        ;   %10, 2: Bank #1, $4000-$7FFF, 16384 -   32767.
-        ;   %11, 3: Bank #0, $0000-$3FFF,     0 -   16383.  
-        ;
-
-        setBank
-
-        ; .................................................... set bitmap offset
-        ;   
-        ;   input   :   a   number bank default (11)
-        ;
-        ;   %0xx, 0: $0000-$1FFF,    0  - 8191.
-        ;   %1xx, 4: $2000-$3FFF, 8192  -16383. 
-        
-        setBitmapOffset
-
-        ; .................................................... set screen offset
-        ;   
-        ;   input   :   a   number bank default (11)
-        ;
-
-        setScreenOffset
+                setScreenOffset
         
 ;;;
 ;;
