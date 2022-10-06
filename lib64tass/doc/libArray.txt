@@ -82,7 +82,33 @@
     rol2_ub
     ror2_ub
     
+    ;   ....................................................... containment_byte
+    ;
+    ; -- check if a value exists in a byte array.
+    ;    input  :   
+    ;               zpWord0: address of the byte array
+    ;               A = byte to check
+    ;               Y = length of array (>=1).
+    ;    output :   
+    ;               boolean 0/1 in A.
+    ;               (Carry) 1 , 0 
+    ;
     
+    containment_byte    
+    
+    ;   ....................................................... containment_word
+    ;
+    ; -- check if a value exists in a byte array.
+    ;    input  :   
+    ;               zpWord0: address of the byte array
+    ;               zpWord1: word to check
+    ;               Y = length of array (>=1).
+    ;    output :   
+    ;               boolean 0/1 in A.
+    ;              (Carry) 1 , 0 
+    ;   
+
+    containment_word    
     
 ;;;
 ;;

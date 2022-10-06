@@ -5899,16 +5899,16 @@ shiftright_b    .proc
         .pend
 
 
-sign_extend_stack_byte    .proc
-    ; -- sign extend the (signed) byte on the stack to full 16 bits
-        lda  stack.lo+1,x
-        ora  #$7f
-        bmi  +
-        lda  #0
-+        
-        sta  stack.hi+1,x
-        rts
-.pend
+                    sign_extend_stack_byte    .proc
+                        ; -- sign extend the (signed) byte on the stack to full 16 bits
+                            lda  stack.lo+1,x
+                            ora  #$7f
+                            bmi  +
+                            lda  #0
+                    +        
+                            sta  stack.hi+1,x
+                            rts
+                    .pend
 
                                     strlen          .proc
                                             ; -- returns the number of bytes in the string in AY, in Y.
@@ -5922,46 +5922,49 @@ sign_extend_stack_byte    .proc
                                     +        rts
                                     .pend
 
-containment_bytearray    .proc
-    ; -- check if a value exists in a byte array.
-    ;    parameters: zpWord0: address of the byte array, A = byte to check, Y = length of array (>=1).
-    ;    returns boolean 0/1 in A.
-        dey
--        cmp  (zpWord0),y
-        beq  +
-        dey
-        cpy  #255
-        bne  -
-        lda  #0
-        rts
-+        lda  #1
-        rts
-.pend
+                                containment_bytearray    .proc
+                                    ; -- check if a value exists in a byte array.
+                                    ;    parameters: zpWord0: address of the byte array, A = byte to check, Y = length of array (>=1).
+                                    ;    returns boolean 0/1 in A.
+                                        dey
+                                -        
+                                        cmp  (zpWord0),y
+                                        beq  +
+                                        dey
+                                        cpy  #255
+                                        bne  -
+                                        lda  #0
+                                        rts
+                                +        
+                                        lda  #1
+                                        rts
+                                .pend
 
-containment_wordarray    .proc
-    ; -- check if a value exists in a word array.
-    ;    parameters: zpWord0: value to check, zpWord1: address of the word array, Y = length of array (>=1).
-    ;    returns boolean 0/1 in A.
-        dey
-        tya
-        asl  a
-        tay
--        lda  zpWord0
-        cmp  (zpWord1),y
-        bne  +
-        lda  zpWord0+1
-        iny
-        cmp  (zpWord1),y
-        beq  _found
-+        dey
-        dey
-        cpy  #254
-        bne  -
-        lda  #0
-        rts
-_found        lda  #1
-        rts
-.pend
+                        containment_wordarray    .proc
+                            ; -- check if a value exists in a word array.
+                            ;    parameters: zpWord0: value to check, 
+                                zpWord1: address of the word array, Y = length of array (>=1).
+                            ;    returns boolean 0/1 in A.
+                                dey
+                                tya
+                                asl  a
+                                tay
+                        -        lda  zpWord0
+                                cmp  (zpWord1),y
+                                bne  +
+                                lda  zpWord0+1
+                                iny
+                                cmp  (zpWord1),y
+                                beq  _found
+                        +        dey
+                                dey
+                                cpy  #254
+                                bne  -
+                                lda  #0
+                                rts
+                        _found        lda  #1
+                                rts
+                        .pend
     ;    src line: library:/prog8lib/prog8_lib.p8:5
 ; ---- builtin functions
 

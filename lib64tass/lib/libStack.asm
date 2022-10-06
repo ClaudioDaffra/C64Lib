@@ -1464,6 +1464,23 @@ stack .proc
         bmi  equalzero_b._false
     .pend
 
+    ; ................................................. signed extension
+    ;
+    ; -- sign extend the (signed) byte on the stack to full 16 bits 
+    ;
+    
+    byte_to_word = sign_extend_byte
+    sign_extend_byte    .proc
+            lda  stack.lo+1,x
+            ora  #$7f
+            bmi  +
+            lda  #0
+    +        
+            sta  stack.hi+1,x
+            rts
+    .pend
+
+
 .pend
 
 

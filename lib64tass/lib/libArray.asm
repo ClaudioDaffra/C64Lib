@@ -471,6 +471,74 @@ array   .proc
             rts
     .pend
 
+    ;   ....................................................... containment_byte
+    ;
+    ; -- check if a value exists in a byte array.
+    ;    input  :   
+    ;               zpWord0: address of the byte array
+    ;               A = byte to check
+    ;               Y = length of array (>=1).
+    ;    output :   
+    ;               boolean 0/1 in A.
+    ;               (Carry) 1 , 0 
+    ;
+    
+    containment_byte    .proc
+            dey
+    -        
+            cmp  (zpWord0),y
+            beq  +
+            dey
+            cpy  #255
+            bne  -
+            lda  #0
+            clc
+            rts
+    +        
+            lda  #1
+            sec
+            rts
+    .pend
+
+    ;   ....................................................... containment_byte
+    ;
+    ; -- check if a value exists in a byte array.
+    ;    input  :   
+    ;               zpWord0: address of the byte array
+    ;               zpWord1: word to check
+    ;               Y = length of array (>=1).
+    ;    output :   
+    ;               boolean 0/1 in A.
+    ;              (Carry) 1 , 0 
+    ;
+    
+    containment_word      .proc
+        dey
+        tya
+        asl  a
+        tay
+    -        
+        lda  zpWord1
+        cmp  (zpWord0),y
+        bne  +
+        lda  zpWord1+1
+        iny
+        cmp  (zpWord0),y
+        beq  _found
+    +        
+        dey
+        dey
+        cpy  #254
+        bne  -
+        lda  #0
+        clc
+        rts
+    _found        
+        lda  #1
+        sec
+        rts
+    .pend
+
 .pend
 
 

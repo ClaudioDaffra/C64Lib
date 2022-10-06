@@ -162,6 +162,15 @@
         
         greaterequalzero_sb
         greaterequalzero_sw
+
+        ; ................................................. signed extension
+        ;
+        ; -- sign extend the (signed) byte on the stack to full 16 bits 
+        ;
+        
+        sign_extend_byte
+        
+        
     
 ;;;
 ;;
