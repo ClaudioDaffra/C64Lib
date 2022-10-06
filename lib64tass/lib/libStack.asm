@@ -1482,7 +1482,7 @@ stack .proc
             rts
     .pend
 
-    ;   .......................................................... abs stack
+    ;   .......................................................... abs b/w stack
     
     abs_b    .proc
         lda stack.lo+1,x
@@ -1507,6 +1507,58 @@ stack .proc
         rts
     .pend
 
+    ;   .......................................................... sign b/w stack
+
+    sign_b    .proc
+        lda stack.lo+1,x
+        
+        jsr math.sign_b     ;   -1(-) 1(+)
+        
+        sta stack.lo+1,x
+        lda #0
+        sta stack.hi+1,x
+
+        rts
+    .pend
+
+    sign_ub    .proc
+        lda stack.lo+1,x
+        
+        jsr math.sign_ub     ;   0(=) 1(+)
+        
+        sta stack.lo+1,x
+        lda #0
+        sta stack.hi+1,x
+
+        rts
+    .pend
+
+    sign_w    .proc
+        lda stack.lo+1,x
+        ldy stack.hi+1,x
+        
+        jsr math.sign_w     ;   -1(-) 1(+)
+        
+        sta stack.lo+1,x
+        lda #0
+        sta stack.hi+1,x
+
+        rts
+    .pend
+
+    sign_uw    .proc
+        lda stack.lo+1,x
+        ldy stack.hi+1,x
+        
+        jsr math.sign_uw     ;   0(=) 1(+)
+        
+        sta stack.lo+1,x
+        lda #0
+        sta stack.hi+1,x
+        
+        rts
+    .pend
+    
 .pend
 
 

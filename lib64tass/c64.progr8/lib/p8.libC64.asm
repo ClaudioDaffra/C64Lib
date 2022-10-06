@@ -6121,75 +6121,83 @@ func_all_w_stack    .proc
                         +        rts
                         .pend
 
-func_sign_b_into_A    .proc
-        cmp  #0
-        beq  _zero
-        bmi  _neg
-        lda  #1
-_zero        rts
-_neg        lda  #-1
-        rts
-.pend
+                        func_sign_b_into_A    .proc
+                                cmp  #0
+                                beq  _zero
+                                bmi  _neg
+                                lda  #1
+                        _zero        
+                                rts
+                        _neg        
+                                lda  #-1
+                                rts
+                        .pend
 
-func_sign_b_stack    .proc
-        jsr  func_sign_b_into_A
-        sta  stack.lo,x
-        dex
-        rts
-.pend
+                        func_sign_b_stack    .proc
+                                jsr  func_sign_b_into_A
+                                sta  stack.lo,x
+                                dex
+                                rts
+                        .pend
 
-func_sign_ub_into_A    .proc
-        cmp  #0
-        bne  _pos
-        rts
-_pos        lda  #1
-        rts
-.pend
+                        func_sign_ub_into_A    .proc
+                                cmp  #0
+                                bne  _pos
+                                rts
+                        _pos        lda  #1
+                                rts
+                        .pend
 
-func_sign_ub_stack    .proc
-        jsr  func_sign_ub_into_A
-        sta  stack.lo,x
-        dex
-        rts
-.pend
+                        func_sign_ub_stack    .proc
+                                jsr  func_sign_ub_into_A
+                                sta  stack.lo,x
+                                dex
+                                rts
+                        .pend
 
-func_sign_uw_into_A    .proc
-        cpy  #0
-        beq  _possibly_zero
-_pos        lda  #1
-        rts
-_possibly_zero    cmp  #0
-        bne  _pos
-        rts
-.pend
+                        func_sign_uw_into_A    .proc
+                                cpy  #0
+                                beq  _possibly_zero
+                        _pos        lda  #1
+                                rts
+                        _possibly_zero    cmp  #0
+                                bne  _pos
+                                rts
+                        .pend
 
-func_sign_uw_stack    .proc
-        jsr  func_sign_uw_into_A
-        sta  stack.lo,x
-        dex
-        rts
-.pend
+                        func_sign_uw_stack    .proc
+                                jsr  func_sign_uw_into_A
+                                sta  stack.lo,x
+                                dex
+                                rts
+                        .pend
 
-func_sign_w_into_A    .proc
-        cpy  #0
-        beq  _possibly_zero
-        bmi  _neg
-_pos        lda  #1
-        rts
-_neg        lda  #-1
-        rts
-_possibly_zero    cmp  #0
-        bne  _pos
-        rts
-.pend
+                        func_sign_w_into_A    .proc
+                                cpy  #0
+                                beq  _possibly_zero
+                                bmi  _neg
+                        _pos        lda  #1
+                                rts
+                        _neg        lda  #-1
+                                rts
+                        _possibly_zero    cmp  #0
+                                bne  _pos
+                                rts
+                        .pend
 
 
-func_sign_w_stack    .proc
-        jsr  func_sign_w_into_A
-        sta  stack.lo,x
-        dex
-        rts
-.pend
+                        func_sign_w_stack    .proc
+                                jsr  func_sign_w_into_A
+                                sta  stack.lo,x
+                                dex
+                                rts
+                        .pend
+
+
+
+
+
+
 
 func_sqrt16_stack    .proc
         jsr  func_sqrt16_into_A

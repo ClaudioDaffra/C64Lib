@@ -1375,6 +1375,64 @@ math    .proc
             rts
     .pend
 
+    ;   ........................................................ sign
+    ;
+    ;   sign_b  sign_ub
+    ;   sign_w  sign_uw
+    ;
+    ;   input   :   a   ay
+    ;   output  :   1 + ,   -1  -   ,   0   =
+    ;
+    
+    sign_b    .proc
+            cmp  #0
+            beq  _zero
+            bmi  _neg
+            lda  #1
+    _zero        
+            rts
+    _neg        
+            lda  #-1    ; 255
+            rts
+    .pend
+
+    sign_ub    .proc
+            cmp  #0
+            bne  _pos
+            rts
+    _pos        
+            lda  #1
+            rts
+    .pend
+
+    sign_uw    .proc
+            cpy  #0
+            beq  _possibly_zero
+    _pos        
+            lda  #1
+            rts
+    _possibly_zero    
+            cmp  #0
+            bne  _pos
+            rts
+    .pend
+
+    sign_w   .proc
+            cpy  #0
+            beq  _possibly_zero
+            bmi  _neg
+    _pos        
+            lda  #1
+            rts
+    _neg        
+            lda  #-1
+            rts
+    _possibly_zero    
+            cmp  #0
+            bne  _pos
+            rts
+    .pend
+
 .pend   
 
 

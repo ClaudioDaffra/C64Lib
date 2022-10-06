@@ -180,7 +180,23 @@
         abs_b
         abs_w
     
-    
+        ;   ........................................................ sign
+        ;
+        ;   sign_b  sign_ub
+        ;   sign_w  sign_uw
+        ;
+        ;   input   :   a   ay
+        ;   output  :   1 + ,   -1  -   ,   0   =
+        ;
+        ;               stack.lo+1 = a
+        ;               stack.hi+1 = 0
+        
+        # sign_b
+        # sign_ub
+        # sign_w
+        # sign_uw
+ 
+ 
 ;;;
 ;;
 ;

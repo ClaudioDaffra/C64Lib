@@ -211,6 +211,21 @@
     
     # abs_b
     # abs_w
+
+    ;   ........................................................ sign
+    ;
+    ;   sign_b  sign_ub
+    ;   sign_w  sign_uw
+    ;
+    ;   input   :   a   ay
+    ;   output  :   1 + ,   -1  -   ,   0   =
+    ;
+    
+    # sign_b
+    # sign_ub
+    # sign_uw
+    # sign_w
+ 
     
 ;;;
 ;;
