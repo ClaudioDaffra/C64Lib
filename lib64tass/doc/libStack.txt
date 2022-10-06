@@ -196,7 +196,15 @@
         # sign_w
         # sign_uw
  
- 
+    ;   ..................................................................... sqrt
+    ;
+    ; integer square root from  http://6502org.wikidot.com/software-math-sqrt
+    ;
+    ;   input   :   stack.lo+1 = a stack.hi+1 = y  
+    ;   output  :   stack.lo+1 = a
+    
+    #   sqrt
+    
 ;;;
 ;;
 ;

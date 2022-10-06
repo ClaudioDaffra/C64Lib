@@ -1432,6 +1432,47 @@ math    .proc
             bne  _pos
             rts
     .pend
+    
+    ;   ..................................................................... sqrt
+    ;
+    ; integer square root from  http://6502org.wikidot.com/software-math-sqrt
+    ;
+    ;   input   :   ay  
+    ;   output  :   a
+    
+    sqrt    .proc
+
+            txa
+            pha
+            lda  #0
+            sta  zpa
+            sta  zpy
+            ldx  #8
+    -        
+            sec
+            lda  zpWord0+1
+            sbc  #$40
+            tay
+            lda  zpy
+            sbc  zpa
+            bcc  +
+            sty  zpWord0+1
+            sta  zpy
+    +        
+            rol  zpa
+            asl  zpWord0
+            rol  zpWord0+1
+            rol  zpy
+            asl  zpWord0
+            rol  zpWord0+1
+            rol  zpy
+            dex
+            bne  -
+            pla
+            tax
+            lda  zpa
+            rts
+    .pend
 
 .pend   
 

@@ -1558,6 +1558,26 @@ stack .proc
         
         rts
     .pend
+
+    ;   .......................................................... sqrt
+
+    sqrt    .proc
+    
+        lda stack.lo+1,x
+        ldy stack.hi+1,x
+        
+        sta zpWord0
+        tya
+        sta zpWord0+1
+        
+        jsr math.sqrt
+
+        sta stack.lo+1,x
+        tya
+        sta stack.hi+1,x
+
+        rts
+    .pend
     
 .pend
 

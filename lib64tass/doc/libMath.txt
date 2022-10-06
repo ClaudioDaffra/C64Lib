@@ -226,6 +226,15 @@
     # sign_uw
     # sign_w
  
+    ;   ..................................................................... sqrt
+    ;
+    ; integer square root from  http://6502org.wikidot.com/software-math-sqrt
+    ;
+    ;   input   :   ay  
+    ;   output  :   a
+    
+    #   sqrt
+    
     
 ;;;
 ;;

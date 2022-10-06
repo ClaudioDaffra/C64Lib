@@ -37,7 +37,7 @@ main	.proc
             lda #char.nl
             jsr sys.CHROUT
 
-            ;-------------------------------------------- square signed
+            ;-------------------------------------------- square unsigned
 
             ;   square(27) = 729
             
@@ -46,6 +46,33 @@ main	.proc
             jsr math.square
             
             jsr std.print_u16_dec
+
+            ;-------------------------------------------- square unsigned
+
+            lda #char.nl
+            jsr sys.CHROUT
+            
+            ;   sqrt(81) = 9
+            
+            load_imm_zpWord0 #81
+            
+            jsr math.sqrt
+            
+            jsr std.print_u8_dec
+
+            ;-------------------------------------------- stack sqrt
+
+            lda #char.nl
+            jsr sys.CHROUT
+
+            load_imm_ay #81
+            jsr stack.push_word
+            
+            jsr stack.sqrt
+            
+            jsr stack.pop_byte      ;   remeber stack.hi+1,x    ,   stack.lo+1,x !
+                        
+            jsr std.print_u8_dec
             
             rts
     .pend

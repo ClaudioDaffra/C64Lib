@@ -6193,52 +6193,46 @@ func_all_w_stack    .proc
                                 rts
                         .pend
 
+                    func_sqrt16_stack    .proc
+                            jsr  func_sqrt16_into_A
+                            sta  stack.lo,x
+                            dex
+                            rts
+                    .pend
 
-
-
-
-
-
-func_sqrt16_stack    .proc
-        jsr  func_sqrt16_into_A
-        sta  stack.lo,x
-        dex
-        rts
-.pend
-
-func_sqrt16_into_A    .proc
-        ; integer square root from  http://6502org.wikidot.com/software-math-sqrt
-        sta  zpWord0
-        sty  zpWord0+1
-        txa
-        pha
-        lda  #0
-        sta  zpy
-        sta  zpx
-        ldx  #8
--        sec
-        lda  zpWord0+1
-        sbc  #$40
-        tay
-        lda  zpx
-        sbc  zpy
-        bcc  +
-        sty  zpWord0+1
-        sta  zpx
-+        rol  zpy
-        asl  zpWord0
-        rol  zpWord0+1
-        rol  zpx
-        asl  zpWord0
-        rol  zpWord0+1
-        rol  zpx
-        dex
-        bne  -
-        pla
-        tax
-        lda  zpy
-        rts
-.pend
+                    func_sqrt16_into_A    .proc
+                            ; integer square root from  http://6502org.wikidot.com/software-math-sqrt
+                            sta  zpWord0
+                            sty  zpWord0+1
+                            txa
+                            pha
+                            lda  #0
+                            sta  zpy
+                            sta  zpx
+                            ldx  #8
+                    -        sec
+                            lda  zpWord0+1
+                            sbc  #$40
+                            tay
+                            lda  zpx
+                            sbc  zpy
+                            bcc  +
+                            sty  zpWord0+1
+                            sta  zpx
+                    +        rol  zpy
+                            asl  zpWord0
+                            rol  zpWord0+1
+                            rol  zpx
+                            asl  zpWord0
+                            rol  zpWord0+1
+                            rol  zpx
+                            dex
+                            bne  -
+                            pla
+                            tax
+                            lda  zpy
+                            rts
+                    .pend
 
 func_rnd_stack    .proc
     ; -- put a random ubyte on the estack
