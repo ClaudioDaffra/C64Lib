@@ -37,6 +37,11 @@ stack .proc
             rts
     protect
             sta stack.lo,x
+            pha
+            lda #0
+            sta stack.hi,x
+            pla
+            
             dex
             stx stack.pointer
             
@@ -632,7 +637,7 @@ stack .proc
 
     mul_word_100    .proc
             ; W = W * 25 * 4
-            jsr  stack_mul_word_25
+            jsr  stack.mul_word_25
             asl  stack.lo+1,x
             rol  stack.hi+1,x
             asl  stack.lo+1,x
@@ -1015,7 +1020,7 @@ stack .proc
         rts
     .pend
 
-    add_w        .proc
+    mulw        .proc
         ; -- push word+word / uword+uword
         inx
         stx stack.pointer
@@ -1030,7 +1035,6 @@ stack .proc
     .pend
 
     sub_w        .proc
-        ; -- push word-word
         inx
         stx stack.pointer
         sec
@@ -1043,6 +1047,19 @@ stack .proc
         rts
     .pend
 
+    add_w        .proc
+        inx
+        stx stack.pointer
+        clc
+        lda  stack.lo,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
+        lda  stack.hi,x
+        adc  stack.hi+1,x
+        sta  stack.hi+1,x
+        rts
+    .pend
+                        
     mul_b    .proc
         ; -- b*b->b (signed and unsigned)
         inx
@@ -1575,6 +1592,39 @@ stack .proc
         sta stack.lo+1,x
         tya
         sta stack.hi+1,x
+
+        rts
+    .pend
+
+    ;   ........................................................ add_uw
+
+    add_uw = add_u16
+    add_u16 .proc
+        clc
+        lda stack.lo+1 
+        adc stack.lo+2 
+        sta stack.lo+2
+        lda stack.hi+1 
+        adc stack.hi+2 
+        sta stack.hi+2
+        
+        dex
+        stx stack.pointer
+        
+        rts
+    .pend
+
+    sub_uw = sub_u16
+    sub_u16 .proc
+        sec
+        lda stack.lo+1
+        sbc stack.lo+2
+        sta stack.lo+2
+        lda stack.hi+1
+        sbc stack.hi+2
+        sta stack.hi+2
+        inx
+        stx stack.pointer
 
         rts
     .pend

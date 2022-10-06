@@ -512,7 +512,6 @@ math    .proc
         rts
     .pend
     
-
     ;.......................................................................    div_u16
     ;
     ;   divide two unsigned words (16 bit each) into 16 bit results
@@ -1473,6 +1472,8 @@ math    .proc
             lda  zpa
             rts
     .pend
+
+    ;   ........................................................ add_uw sub_uw
 
 .pend   
 
