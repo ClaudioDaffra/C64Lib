@@ -1,0 +1,29 @@
+
+
+;*********
+; basic
+;*********
+
+GETCHAR         =   $0073   ;   output  ->  a
+
+TXTPTR          =   $007A   ;   pointer to basic
+
+GETBYTE         =   $b79E   ;   output  ->  x
+
+NEWSTATEMENT    =   $a7ae
+
+;
+
+subroutine
+
+    basic.txtptr.push   ;   push txtptr to stack
+
+    basic.txtptr.pop    ;   pop txtptr from stack
+
+    basic.txtptr.set    ;   input   ay ( address )  :   set new txtptr to basic
+
+    basic.get_char      ;   get char -> a           :   char read
+
+;;;
+;;
+;

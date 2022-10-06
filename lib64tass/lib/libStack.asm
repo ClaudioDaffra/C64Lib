@@ -1487,7 +1487,7 @@ stack .proc
     ;    
     ;   input  : stack.lo+1 stack.hi+1
     ;   output : stack.lo+1 stack.hi+1
-    
+
     byte_to_word = sign_extend_byte
     sign_extend_byte    .proc
             lda  stack.lo+1,x
