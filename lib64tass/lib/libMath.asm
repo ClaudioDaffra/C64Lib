@@ -1336,6 +1336,45 @@ math    .proc
             rts
     .pend
 
+    ;............................................... abs_b abs_w
+    ;
+    ; -- AY = abs(A)  (abs always returns unsigned word)
+    ;
+    ;   input   :   signed   a      ,   signed   ay
+    ;   output  :   unsigned ay     ,   unsigned ay 
+    ;
+
+    abs_b    .proc    ; a
+            ldy  #0
+            cmp  #0
+            bmi  +
+            rts
+    +        
+            eor  #$ff
+            clc
+            adc  #1
+            rts
+    .pend
+
+    abs_w    .proc  ;   ay
+            cpy  #0
+            bmi  +
+            rts
+    +        
+            eor  #$ff
+            pha
+            tya
+            eor  #$ff
+            tay
+            pla
+            clc
+            adc  #1
+            bcc  +
+            iny
+    +        
+            rts
+    .pend
+
 .pend   
 
 

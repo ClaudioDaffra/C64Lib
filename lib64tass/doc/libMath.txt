@@ -200,6 +200,17 @@
     #   square
     
     ;
+
+    ;............................................... abs_b abs_w
+    ;
+    ; -- AY = abs(A)  (abs always returns unsigned word)
+    ;
+    ;   input   :   signed   a      ,   signed   ay
+    ;   output  :   unsigned ay     ,   unsigned ay 
+    ;
+    
+    # abs_b
+    # abs_w
     
 ;;;
 ;;

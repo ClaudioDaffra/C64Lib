@@ -5968,6 +5968,7 @@ shiftright_b    .proc
     ;    src line: library:/prog8lib/prog8_lib.p8:5
 ; ---- builtin functions
 
+12345678
 
 func_any_b_stack    .proc
         jsr  func_any_b_into_A
@@ -5983,19 +5984,30 @@ func_all_b_stack    .proc
         rts
 .pend
 
+
+;   input   :
+;               array in zpWord0
+;               num bytes in A
+;   output  :
+
 func_any_b_into_A    .proc
-        ; -- any(array),  array in zpWord0, num bytes in A
-        sta  _cmp_mod+1        ; self-modifying code
-        ldy  #0
--        lda  (zpWord0),y
-        bne  _got_any
-        iny
-_cmp_mod    cpy  #255        ; modified
-        bne  -
-        lda  #0
-        rts
-_got_any    lda  #1
-        rts
+
+    sta  _cmp_mod+1        ; self-modifying code
+    ldy  #0
+-        
+    lda  (zpWord0),y
+    bne  _got_any
+    iny
+_cmp_mod    
+    cpy  #255        ; modified
+    bne  -
+    lda  #0
+    clc
+    rts
+_got_any    
+    lda  #1
+    sec
+    rts
 .pend
 
 
@@ -6003,13 +6015,16 @@ func_all_b_into_A    .proc
         ; -- all(array),  array in zpWord0, num bytes in A
         sta  _cmp_mod+1        ; self-modifying code
         ldy  #0
--        lda  (zpWord0),y
+-        
+        lda  (zpWord0),y
         beq  _got_not_all
         iny
-_cmp_mod    cpy  #255        ; modified
+_cmp_mod    
+        cpy  #255        ; modified
         bne  -
         lda  #1
-_got_not_all    rts
+_got_not_all    
+        rts
 .pend
 
 func_any_w_into_A    .proc
@@ -6030,16 +6045,20 @@ func_all_w_into_A    .proc
         asl  a            ; times 2 because of word
         sta  _cmp_mod+1        ; self-modifying code
         ldy  #0
--        lda  (zpWord0),y
+-        
+        lda  (zpWord0),y
         bne  +
         iny
         lda  (zpWord0),y
         bne  ++
         lda  #0
         rts
-+        iny
-+        iny
-_cmp_mod    cpy  #255        ; modified
++        
+        iny
++        
+        iny
+_cmp_mod    
+        cpy  #255        ; modified
         bne  -
         lda  #1
         rts
@@ -6052,54 +6071,55 @@ func_all_w_stack    .proc
         rts
 .pend
 
-abs_b_stack    .proc
-    ; -- push abs(A) on stack (as unsigned word)
-        jsr  abs_b_into_AY
-        sta  stack.lo,x
-        stz  stack.hi,x
-        dex
-        rts
-.pend
+                abs_b_stack    .proc
+                    ; -- push abs(A) on stack (as unsigned word)
+                        jsr  abs_b_into_AY
+                        sta  stack.lo,x
+                        stz  stack.hi,x
+                        dex
+                        rts
+                .pend
 
-abs_b_into_AY    .proc
-    ; -- AY = abs(A)  (abs always returns unsigned word)
-        ldy  #0
-        cmp  #0
-        bmi  +
-        rts
-+        eor  #$ff
-        clc
-        adc  #1
-        rts
-.pend
+                abs_b_into_AY    .proc
+                    ; -- AY = abs(A)  (abs always returns unsigned word)
+                        ldy  #0
+                        cmp  #0
+                        bmi  +
+                        rts
+                +        
+                        eor  #$ff
+                        clc
+                        adc  #1
+                        rts
+                .pend
 
-abs_w_stack    .proc
-    ; -- push abs(AY) on stack (as word)
-        jsr  abs_w_into_AY
-        sta  stack.lo,x
-        tya
-        sta  stack.hi,x
-        dex
-        rts
-.pend
+                        abs_w_stack    .proc
+                            ; -- push abs(AY) on stack (as word)
+                                jsr  abs_w_into_AY
+                                sta  stack.lo,x
+                                tya
+                                sta  stack.hi,x
+                                dex
+                                rts
+                        .pend
 
-abs_w_into_AY    .proc
-    ; -- AY = abs(AY)
-        cpy  #0
-        bmi  +
-        rts
-+        eor  #$ff
-        pha
-        tya
-        eor  #$ff
-        tay
-        pla
-        clc
-        adc  #1
-        bcc  +
-        iny
-+        rts
-.pend
+                        abs_w_into_AY    .proc
+                            ; -- AY = abs(AY)
+                                cpy  #0
+                                bmi  +
+                                rts
+                        +        eor  #$ff
+                                pha
+                                tya
+                                eor  #$ff
+                                tay
+                                pla
+                                clc
+                                adc  #1
+                                bcc  +
+                                iny
+                        +        rts
+                        .pend
 
 func_sign_b_into_A    .proc
         cmp  #0

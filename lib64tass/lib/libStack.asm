@@ -1466,8 +1466,10 @@ stack .proc
 
     ; ................................................. signed extension
     ;
-    ; -- sign extend the (signed) byte on the stack to full 16 bits 
-    ;
+    ; -- sign extend the (signed) byte on the stack to full 16 bits
+    ;    
+    ;   input  : stack.lo+1 stack.hi+1
+    ;   output : stack.lo+1 stack.hi+1
     
     byte_to_word = sign_extend_byte
     sign_extend_byte    .proc
@@ -1480,6 +1482,30 @@ stack .proc
             rts
     .pend
 
+    ;   .......................................................... abs stack
+    
+    abs_b    .proc
+        lda stack.lo+1,x
+        
+        jsr math.abs_b
+        
+        sta stack.lo+1,x
+        tya
+        sta stack.hi+1,x
+        rts
+    .pend
+
+    abs_w   .proc
+        lda stack.lo+1,x
+        ldy stack.hi+1,x
+        
+        jsr math.abs_w
+        
+        sta stack.lo+1,x
+        tya
+        sta stack.hi+1,x
+        rts
+    .pend
 
 .pend
 

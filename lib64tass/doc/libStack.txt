@@ -170,7 +170,16 @@
         
         sign_extend_byte
         
+        ; ................................................. signed extension
+        ;
+        ; -- sign extend the (signed) byte on the stack to full 16 bits
+        ;    
+        ;   input  : stack.lo+1 stack.hi+1
+        ;   output : stack.lo+1 stack.hi+1
         
+        abs_b
+        abs_w
+    
     
 ;;;
 ;;
