@@ -1473,8 +1473,21 @@ math    .proc
             rts
     .pend
 
-    ;   ........................................................ add_uw sub_uw
+    ;   ........................................................ remainder
 
+    mod_ub    .proc
+        jsr  math.div_u8
+        tya                 ;remainer
+        rts
+    .pend
+
+    mod_uw    .proc
+        jsr  math.div_u16
+        lda zpWord1
+        ldy zpWord1+1   ;   remainder
+        rts
+    .pend
+    
 .pend   
 
 

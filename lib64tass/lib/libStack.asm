@@ -1596,37 +1596,37 @@ stack .proc
         rts
     .pend
 
-    ;   ........................................................ add_uw
+    ;   ........................................................ remainder
 
-    add_uw = add_u16
-    add_u16 .proc
-        clc
-        lda stack.lo+1 
-        adc stack.lo+2 
-        sta stack.lo+2
-        lda stack.hi+1 
-        adc stack.hi+2 
-        sta stack.hi+2
-        
-        dex
-        stx stack.pointer
-        
-        rts
+    mod_ub    .proc
+        jmp mod_uw
     .pend
 
-    sub_uw = sub_u16
-    sub_u16 .proc
-        sec
-        lda stack.lo+1
-        sbc stack.lo+2
-        sta stack.lo+2
-        lda stack.hi+1
-        sbc stack.hi+2
-        sta stack.hi+2
+    mod_uw    .proc
+        
+        lda  stack.lo+2,x
+        sta  zpWord0
+        lda  stack.hi+2,x
+        sta  zpWord0+1
+        
+        lda  stack.lo+1,x
+        pha
+        lda  stack.hi+1,x
+        tay
+        pla
+        
+        inx
         inx
         stx stack.pointer
+        
+        jsr  math.div_u16
 
+        lda zpWord1
+        ldy zpWord1+1
+        jsr stack.push_word
+        
         rts
+        
     .pend
     
 .pend
