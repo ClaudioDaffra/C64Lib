@@ -58,6 +58,21 @@ $DD02 56578 Port A data direction register.
         %1110, 14: $3800-$3BFF, 14336-15359.
         %1111, 15: $3C00-$3FFF, 15360-16383.
 
+        character mode
+        
+        Bits #1-#3: In text mode, pointer to character memory (bits #11-#13), 
+        relative to VIC bank, memory address $DD00. Values:
+
+        %000, 0: $0000-$07FF,     0 - 2047. text mode
+        %001, 1: $0800-$0FFF,  2048 - 4095.
+        %010, 2: $1000-$17FF,  4096 - 6143.
+        %011, 3: $1800-$1FFF,  6144 - 8191.
+        
+        %100, 4: $2000-$27FF,  8192 -10239. bitmap mode
+        %101, 5: $2800-$2FFF, 10240 -12287.
+        %110, 6: $3000-$37FF, 12288 -14335.
+        %111, 7: $3800-$3FFF, 14336 -16383.
+
 ; ---------------------------------------------------------- pointer screen location
 
 $0288 648   High byte of pointer to screen memory for screen input/output.

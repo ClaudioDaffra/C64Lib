@@ -162,6 +162,8 @@
         #   peekw   (a,y)               := (word)*  (zpWord0)
         #   pokew   (word)* (zpWord0)   := (a:y)
 
+        #   copy_charset ( $d000 )
+
     #######
     # system
     #######
@@ -415,7 +417,26 @@
                 ;
 
                 setScreenOffset
+
+        ;.................................................  copy_charset
+        ;   
+        ;   iAN CooG
+        ;   
+        ;   16 mar 2011, 23:33:38
+        ;   
+        ; copy charset from chargen to the RAM at the same address
+        ; else load your favourite charset here
+        ;
         
+        ;-------------------------
+        .weak
+        charset = $d000
+        .endweak
+        ;-------------------------
+
+        #   copy_charset    .proc
+    
+    
 ;;;
 ;;
 ;

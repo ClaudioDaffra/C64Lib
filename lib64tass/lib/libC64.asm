@@ -604,7 +604,7 @@ c64 .proc
         
         set_bank .proc
             sta zpa
-            lda 56576
+            lda 56576       ;   $DD00
             and #252
             ora zpa
             sta 56576
@@ -640,15 +640,15 @@ c64 .proc
         ;   input   :   a   number bank default (11)
         ;
 
-        screen0  = %00000000   ;     0: $0000-$03FF,     0-1023.
-        screen1  = %00010000   ;     1: $0400-$07FF,  1024-2047.
-        screen2  = %00100000   ;     2: $0800-$0BFF,  2048-3071.
-        screen3  = %00110000   ;     3: $0C00-$0FFF,  3072-4095.
-        screen4  = %01000000   ;     4: $1000-$13FF,  4096-5119.
-        screen5  = %01010000   ;     5: $1400-$17FF,  5120-6143.
-        screen6  = %01100000   ;     6: $1800-$1BFF,  6144-7167.
-        screen7  = %01110000   ;     7: $1C00-$1FFF,  7168-8191.
-        screen8  = %10000000   ;     8: $2000-$23FF,  8192-9215.
+        screen0  = %00000000   ;     0: $0000-$03FF,     0- 1023.
+        screen1  = %00010000   ;     1: $0400-$07FF,  1024- 2047.
+        screen2  = %00100000   ;     2: $0800-$0BFF,  2048- 3071.
+        screen3  = %00110000   ;     3: $0C00-$0FFF,  3072- 4095.
+        screen4  = %01000000   ;     4: $1000-$13FF,  4096- 5119.
+        screen5  = %01010000   ;     5: $1400-$17FF,  5120- 6143.
+        screen6  = %01100000   ;     6: $1800-$1BFF,  6144- 7167.
+        screen7  = %01110000   ;     7: $1C00-$1FFF,  7168- 8191.
+        screen8  = %10000000   ;     8: $2000-$23FF,  8192- 9215.
         screen9  = %10010000   ;     9: $2400-$27FF,  9216-10239.
         screen10 = %10100000   ;    10: $2800-$2BFF, 10240-11263.
         screen11 = %10110000   ;    11: $2C00-$2FFF, 11264-12287.
@@ -657,7 +657,7 @@ c64 .proc
         screen14 = %11100000   ;    14: $3800-$3BFF, 14336-15359.
         screen15 = %11110000   ;    15: $3C00-$3FFF, 15360-16383.
 
-        screen_addr0  =     0      ;   per il calcolo della locazione 648 ( screen pointer )  
+        screen_addr0  =     0  ;   per il calcolo della locazione 648 ( screen pointer )  
         screen_addr1  =  1024 
         screen_addr2  =  2048 
         screen_addr3  =  3072 
@@ -1063,7 +1063,55 @@ c64 .proc
             rts
         .pend
         
+    
+    ;.................................................  copy_charset
+    ;   
+    ;   iAN CooG
+    ;   
+    ;   16 mar 2011, 23:33:38
+    ;   
+    ; copy charset from chargen to the RAM at the same address
+    ; else load your favourite charset here
+    ;
+    
+    ;-------------------------
+    .weak
+    charset = $d000
+    .endweak
+    ;-------------------------
 
+    copy_charset    .proc
+
+            sei
+            
+            ldx #$08
+            lda #$33 ; see the chargen at $d000
+            sta $01
+            
+            lda #>charset
+            sta $fc
+            ldy #$00
+            sty $fb
+        lp1
+            lda ($fb),y
+            inc $01
+            sta ($fb),y
+            dec $01
+            iny
+            bne lp1
+            inc $fc
+            dex
+            bne lp1
+            
+            lda #$37 ; ROM active
+            sta $01
+            
+            cli
+            
+            rts
+            
+    .pend
+    
 .pend
 
 ;******
@@ -1550,8 +1598,7 @@ mem .proc
             rts
     .pend
 
-  
-
+    
 .pend
 
 

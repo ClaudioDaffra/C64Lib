@@ -828,20 +828,17 @@ conv .proc
 
     .pend
 
+    ubyte_to_uword .proc   
+
+        sta zpWord0
+        lda #0
+        sta zpword0+1
+        rts
+
+    .pend
+    
 .pend
 
-; macro go outside .proc .pend
-
-conv_byte_to_word .macro
-
-        sta \1
-        lda #$7f
-        cmp \1
-        sbc #$7f
-        sta \1+1
-
-.endmacro
-    
 ;;;
 ;;
 ;

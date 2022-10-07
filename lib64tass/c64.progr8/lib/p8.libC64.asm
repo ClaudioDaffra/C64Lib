@@ -2991,7 +2991,7 @@ prog8_init_vars    .block
                                 ; #LIBRARY : 'math' 
                                 ; ******************* 
 
-                                math    .proc
+math    .proc
 
 
                                 ; non-zeropage variables
@@ -4639,42 +4639,35 @@ sr2         .word $7653
                             .pend
 1234
 
-sin8u    .proc
-    ;    src line: library:/prog8lib/math.p8:7
-    tay
-    lda  _sinecos8u,y
-    rts
-_sinecos8u    .byte  trunc(128.0 + 127.5 * sin(range(256+64) * rad(360.0/256.0)))
+    sin8u    .proc
+        tay
+        lda  _sinecos8u,y
+        rts
+    _sinecos8u    .byte  trunc(128.0 + 127.5 * sin(range(256+64) * rad(360.0/256.0)))
     .pend
-    ;    src line: library:/prog8lib/math.p8:15
 
-cos8u    .proc
-    ;    src line: library:/prog8lib/math.p8:16
+
+    cos8u    .proc
         tay
         lda  sin8u._sinecos8u+64,y
         rts
     .pend
-    ;    src line: library:/prog8lib/math.p8:23
+ 
 
-sin8    .proc
-    ;    src line: library:/prog8lib/math.p8:24
+    sin8    .proc
         tay
         lda  _sinecos8,y
         rts
-_sinecos8    .char  trunc(127.0 * sin(range(256+64) * rad(360.0/256.0)))
+    _sinecos8    .char  trunc(127.0 * sin(range(256+64) * rad(360.0/256.0)))
     .pend
-    ;    src line: library:/prog8lib/math.p8:32
 
-cos8    .proc
-    ;    src line: library:/prog8lib/math.p8:33
+    cos8    .proc
         tay
         lda  sin8._sinecos8+64,y
         rts
     .pend
-    ;    src line: library:/prog8lib/math.p8:40
 
-sin16    .proc
-    ;    src line: library:/prog8lib/math.p8:41
+    sin16    .proc
         tay
         lda  _sinecos8lo,y
         pha
@@ -4682,14 +4675,12 @@ sin16    .proc
         tay
         pla
         rts
-_  :=  trunc(32767.0 * sin(range(256+64) * rad(360.0/256.0)))
-_sinecos8lo     .byte  <_
-_sinecos8hi     .byte  >_
+    _  :=  trunc(32767.0 * sin(range(256+64) * rad(360.0/256.0)))
+    _sinecos8lo     .byte  <_
+    _sinecos8hi     .byte  >_
     .pend
-    ;    src line: library:/prog8lib/math.p8:55
 
-cos16    .proc
-    ;    src line: library:/prog8lib/math.p8:56
+    cos16    .proc
         tay
         lda  sin16._sinecos8lo+64,y
         pha
@@ -4698,10 +4689,9 @@ cos16    .proc
         pla
         rts
     .pend
-    ;    src line: library:/prog8lib/math.p8:67
 
-sin16u    .proc
-    ;    src line: library:/prog8lib/math.p8:68
+
+    sin16u    .proc
         tay
         lda  _sinecos8ulo,y
         pha
@@ -4709,14 +4699,13 @@ sin16u    .proc
         tay
         pla
         rts
-_  :=  trunc(32768.0 + 32767.5 * sin(range(256+64) * rad(360.0/256.0)))
-_sinecos8ulo     .byte  <_
-_sinecos8uhi     .byte  >_
+    _  :=  trunc(32768.0 + 32767.5 * sin(range(256+64) * rad(360.0/256.0)))
+    _sinecos8ulo     .byte  <_
+    _sinecos8uhi     .byte  >_
     .pend
-    ;    src line: library:/prog8lib/math.p8:82
 
-cos16u    .proc
-    ;    src line: library:/prog8lib/math.p8:83
+
+    cos16u    .proc
         tay
         lda  sin16u._sinecos8ulo+64,y
         pha
@@ -4725,44 +4714,34 @@ cos16u    .proc
         pla
         rts
     .pend
-    ;    src line: library:/prog8lib/math.p8:94
 
-sinr8u    .proc
-    ;    src line: library:/prog8lib/math.p8:95
+    sinr8u    .proc
         tay
         lda  _sinecosR8u,y
         rts
-_sinecosR8u    .byte  trunc(128.0 + 127.5 * sin(range(180+45) * rad(360.0/180.0)))
+    _sinecosR8u    .byte  trunc(128.0 + 127.5 * sin(range(180+45) * rad(360.0/180.0)))
     .pend
-    ;    src line: library:/prog8lib/math.p8:103
 
-cosr8u    .proc
-    ;    src line: library:/prog8lib/math.p8:104
+    cosr8u    .proc
         tay
         lda  sinr8u._sinecosR8u+45,y
         rts
     .pend
-    ;    src line: library:/prog8lib/math.p8:111
 
-sinr8    .proc
-    ;    src line: library:/prog8lib/math.p8:112
+    sinr8    .proc
         tay
         lda  _sinecosR8,y
         rts
-_sinecosR8    .char  trunc(127.0 * sin(range(180+45) * rad(360.0/180.0)))
+    _sinecosR8    .char  trunc(127.0 * sin(range(180+45) * rad(360.0/180.0)))
     .pend
-    ;    src line: library:/prog8lib/math.p8:120
 
-cosr8    .proc
-    ;    src line: library:/prog8lib/math.p8:121
+    cosr8    .proc
         tay
         lda  sinr8._sinecosR8+45,y
         rts
     .pend
- 
 
-sinr16    .proc
- 
+    sinr16    .proc
         tay
         lda  _sinecosR8lo,y
         pha
@@ -4770,14 +4749,12 @@ sinr16    .proc
         tay
         pla
         rts
-_  :=  trunc(32767.0 * sin(range(180+45) * rad(360.0/180.0)))
-_sinecosR8lo     .byte  <_
-_sinecosR8hi     .byte  >_
+    _  :=  trunc(32767.0 * sin(range(180+45) * rad(360.0/180.0)))
+    _sinecosR8lo     .byte  <_
+    _sinecosR8hi     .byte  >_
     .pend
- 
 
-cosr16    .proc
- 
+    cosr16    .proc
         tay
         lda  sinr16._sinecosR8lo+45,y
         pha
@@ -4786,10 +4763,8 @@ cosr16    .proc
         pla
         rts
     .pend
-    ;    src line: library:/prog8lib/math.p8:155
 
-sinr16u    .proc
-    ;    src line: library:/prog8lib/math.p8:156
+    sinr16u    .proc
         tay
         lda  _sinecosR8ulo,y
         pha
@@ -4797,14 +4772,12 @@ sinr16u    .proc
         tay
         pla
         rts
-_  :=  trunc(32768.0 + 32767.5 * sin(range(180+45) * rad(360.0/180.0)))
-_sinecosR8ulo     .byte  <_
-_sinecosR8uhi     .byte  >_
+    _  :=  trunc(32768.0 + 32767.5 * sin(range(180+45) * rad(360.0/180.0)))
+    _sinecosR8ulo     .byte  <_
+    _sinecosR8uhi     .byte  >_
     .pend
-    ;    src line: library:/prog8lib/math.p8:170
 
-cosr16u    .proc
-    ;    src line: library:/prog8lib/math.p8:171
+    cosr16u    .proc
         tay
         lda  sinr16u._sinecosR8ulo+45,y
         pha
@@ -4813,7 +4786,8 @@ cosr16u    .proc
         pla
         rts
     .pend
-    .pend
+    
+.pend
 
 ;***********************
 ; #LIBRARY : 'prog8_lib' 
@@ -6579,68 +6553,68 @@ func_rndw_stack    .proc
 ;***********************
 
 floats    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:6
+ 
     AYINT_facmo = $64
     PI = 3.141592653589793
     TWOPI = 6.283185307179586
 
-; non-zeropage variables
-    MOVFM = $bba2
-    FREADMEM = $bba6
-    CONUPK = $ba8c
-    FAREADMEM = $ba90
-    MOVFA = $bbfc
-    MOVAF = $bc0c
-    MOVEF = $bc0f
-    MOVMF = $bbd4
+
+    MOVFM       = $bba2
+    FREADMEM    = $bba6
+    CONUPK      = $ba8c
+    FAREADMEM   = $ba90
+    MOVFA       = $bbfc
+    MOVAF       = $bc0c
+    MOVEF       = $bc0f
+    MOVMF       = $bbd4
     FTOSWORDYA = $b1aa
-    GETADR = $b7f7
-    QINT = $bc9b
-    AYINT = $b1bf
-    GIVAYF = $b391
-    FREADUY = $b3a2
-    FREADSA = $bc3c
-    FREADSTR = $b7b5
-    FPRINTLN = $aabc
-    FOUT = $bddd
-    FADDH = $b849
-    MUL10 = $bae2
-    DIV10 = $bafe
-    FCOMP = $bc5b
-    FADDT = $b86a
-    FADD = $b867
-    FSUBT = $b853
-    FSUB = $b850
-    FMULTT = $ba2b
-    FMULT = $ba28
-    FDIVT = $bb12
-    FDIV = $bb0f
-    FPWRT = $bf7b
-    FPWR = $bf78
-    FINLOG = $bd7e
-    NOTOP = $aed4
-    INT = $bccc
-    LOG = $b9ea
-    SGN = $bc39
-    SIGN = $bc2b
-    ABS = $bc58
-    SQR = $bf71
-    SQRA = $bf74
-    EXP = $bfed
-    NEGOP = $bfb4
-    RND = $e097
-    COS = $e264
-    SIN = $e26b
-    TAN = $e2b4
-    ATN = $e30e
+    GETADR      = $b7f7
+    QINT        = $bc9b
+    AYINT       = $b1bf
+    GIVAYF      = $b391
+    FREADUY     = $b3a2
+    FREADSA     = $bc3c
+    FREADSTR    = $b7b5
+    FPRINTLN    = $aabc
+    FOUT        = $bddd
+    FADDH       = $b849
+    MUL10       = $bae2
+    DIV10       = $bafe
+    FCOMP       = $bc5b
+    FADDT       = $b86a
+    FADD        = $b867
+    FSUBT       = $b853
+    FSUB        = $b850
+    FMULTT      = $ba2b
+    FMULT       = $ba28
+    FDIVT       = $bb12
+    FDIV        = $bb0f
+    FPWRT       = $bf7b
+    FPWR        = $bf78
+    FINLOG      = $bd7e
+    NOTOP       = $aed4
+    INT         = $bccc
+    LOG         = $b9ea
+    SGN         = $bc39
+    SIGN        = $bc2b
+    ABS         = $bc58
+    SQR         = $bf71
+    SQRA        = $bf74
+    EXP         = $bfed
+    NEGOP       = $bfb4
+    RND         = $e097
+    COS         = $e264
+    SIN         = $e26b
+    TAN         = $e2b4
+    ATN         = $e30e
 
 ; subroutines in this block
  
 ; --- low level floating point assembly routines for the C64
 
-FL_ONE_const    .byte  129                 ; 1.0
-FL_ZERO_const    .byte  0,0,0,0,0        ; 0.0
-FL_LOG2_const    .byte  $80, $31, $72, $17, $f8    ; log(2)
+FL_ONE_const        .byte  129                          ; 1.0
+FL_ZERO_const       .byte  0,0,0,0,0                    ; 0.0
+FL_LOG2_const       .byte  $80, $31, $72, $17, $f8      ; log(2)
 
 
 floats_store_reg    .byte  0        ; temp storage
@@ -6648,14 +6622,14 @@ floats_store_reg    .byte  0        ; temp storage
 
 ub2float    .proc
         ; -- convert ubyte in SCRATCH_ZPB1 to float at address A/Y
-        ;    clobbers A, Y
         stx  zpx
         sta  zpWord1
         sty  zpWord1+1
         ldy  zpy
         lda  #0
         jsr  GIVAYF
-_fac_to_mem    ldx  zpWord1
+_fac_to_mem    
+        ldx  zpWord1
         ldy  zpWord1+1
         jsr  MOVMF
         ldx  zpx
@@ -6664,7 +6638,6 @@ _fac_to_mem    ldx  zpWord1
 
 b2float        .proc
         ; -- convert byte in SCRATCH_ZPB1 to float at address A/Y
-        ;    clobbers A, Y
         stx  zpx
         sta  zpWord1
         sty  zpWord1+1
@@ -6683,6 +6656,8 @@ uw2float    .proc
         jsr  GIVUAYFAY
         jmp  ub2float._fac_to_mem
 .pend
+
+; ??? float.conv.w2float
 
 w2float        .proc
         ; -- convert word in SCRATCH_ZPWORD1 to float at address A/Y
@@ -6703,7 +6678,6 @@ cast_from_uw    .proc
         jmp  ub2float._fac_to_mem
 .pend
 
-
 cast_from_w    .proc
         ; -- word in A/Y into float var at (zpWord1)
         stx  zpx
@@ -6711,14 +6685,12 @@ cast_from_w    .proc
         jmp  ub2float._fac_to_mem
 .pend
 
-
 cast_from_ub    .proc
         ; -- ubyte in Y into float var at (zpWord1)
         stx  zpx
         jsr  FREADUY
         jmp  ub2float._fac_to_mem
 .pend
-
 
 cast_from_b    .proc
         ; -- byte in A into float var at (zpWord1)
@@ -6757,6 +6729,9 @@ cast_FAC1_as_w_into_ay    .proc               ; also used for float 2 b
         rts
 .pend
 
+;
+
+;   ??? float.stack.b2float
 
 stack_b2float    .proc
         ; -- b2float operating on the stack
@@ -6822,6 +6797,9 @@ stack_float2uw    .proc               ; also used for float2ub
         dex
         rts
 .pend
+
+;   ??? float.stack.push_float
+
 
 push_float    .proc
         ; ---- push mflpt5 in A/Y onto stack
@@ -6964,7 +6942,8 @@ fmath_float2    .byte 0,0,0,0,0    ; storage for a mflpt5 value
 push_fac1    .proc
         ; -- push the float in FAC1 onto the stack
         stx  zpx
-_internal    ldx  #<fmath_float1
+_internal    
+        ldx  #<fmath_float1
         ldy  #>fmath_float1
         jsr  MOVMF
         lda  #<fmath_float1
@@ -7030,7 +7009,8 @@ var_fac1_less_f    .proc
         beq  +
         lda  #0
         rts
-+        lda  #1
++        
+        lda  #1
         rts
 .pend
 
@@ -7045,7 +7025,8 @@ var_fac1_lesseq_f    .proc
         beq  +
         lda  #0
         rts
-+        lda  #1
++        
+        lda  #1
         rts
 .pend
 
@@ -7058,7 +7039,8 @@ var_fac1_greater_f    .proc
         beq  +
         lda  #0
         rts
-+        lda  #1
++        
+        lda  #1
         rts
 .pend
 
@@ -7073,7 +7055,8 @@ var_fac1_greatereq_f    .proc
         beq  +
         lda  #0
         rts
-+        lda  #1
++        
+        lda  #1
         rts
 .pend
 
@@ -7112,7 +7095,8 @@ vars_equal_f    .proc
         bne  _false
         lda  #1
         rts
-_false        lda  #0
+_false        
+        lda  #0
         rts
 .pend
 
@@ -7137,11 +7121,14 @@ equal_f        .proc
         lda  stack.hi-1,x
         cmp  stack.hi+2,x
         bne  _equals_false
-_equals_true    lda  #1
-_equals_store    inx
+_equals_true    
+        lda  #1
+_equals_store    
+        inx
         sta  stack.lo+1,x
         rts
-_equals_false    lda  #0
+_equals_false    
+        lda  #0
         beq  _equals_store
 .pend
 
@@ -7165,7 +7152,8 @@ vars_less_f    .proc
         bne  +
         lda  #1
         rts
-+        lda  #0
++        
+        lda  #0
         rts
 .pend
 
@@ -7179,9 +7167,11 @@ vars_lesseq_f    .proc
         ldx  zpx
         cmp  #255
         bne  +
--        lda  #1
+-        
+        lda  #1
         rts
-+        cmp  #0
++        
+        cmp  #0
         beq  -
         lda  #0
         rts
@@ -7240,11 +7230,14 @@ compare_floats    .proc
         jsr  FCOMP        ; A = flt1 compared with flt2 (0=equal, 1=flt1>flt2, 255=flt1<flt2)
         ldx  zpx
         rts
-_return_false    lda  #0
-_return_result  sta  stack.lo,x
+_return_false    
+        lda  #0
+_return_result  
+        sta  stack.lo,x
         dex
         rts
-_return_true    lda  #1
+_return_true    
+        lda  #1
         bne  _return_result
 .pend
 
@@ -7260,7 +7253,8 @@ set_array_float_from_fac1    .proc
         adc  zpWord0
         bcc  +
         iny
-+        stx  floats_store_reg
++        
+        stx  floats_store_reg
         tax
         jsr  MOVMF
         ldx  floats_store_reg
@@ -7301,7 +7295,8 @@ set_array_float        .proc
         ldy  zpWord1+1
         bcc  +
         iny
-+        jmp  copy_float
++        
+        jmp  copy_float
             ; -- copies the 5 bytes of the mflt value pointed to by SCRATCH_ZPWORD1,
             ;    into the 5 bytes pointed to by A/Y.  Clobbers A,Y.
 .pend
@@ -7312,11 +7307,13 @@ equal_zero    .proc
         jsr  floats.SIGN
         beq  _true
         bne  _false
-_true        lda  #1
+_true        
+        lda  #1
         sta  stack.lo,x
         dex
         rts
-_false        lda  #0
+_false        
+        lda  #0
         sta  stack.lo,x
         dex
         rts
@@ -7358,7 +7355,7 @@ lessequal_zero    .proc
         bmi  equal_zero._true
         jmp  equal_zero._false
 .pend
-    ;    src line: library:/prog8lib/c64/floats.p8:175
+
 ; --- floating point builtin functions
 
 
@@ -7377,7 +7374,8 @@ func_sign_f_into_A    .proc
 func_swap_f    .proc
         ; -- swap floats pointed to by SCRATCH_ZPWORD1, SCRATCH_ZPWORD2
         ldy  #4
--               lda  (zpWord0),y
+    -               
+        lda  (zpWord0),y
         pha
         lda  (zpWord1),y
         sta  (zpWord0),y
@@ -7390,9 +7388,9 @@ func_swap_f    .proc
 
 func_reverse_f    .proc
         ; --- reverse an array of floats (array in zpWord0, num elements in A)
-_left_index = zpWord1
-_right_index = zpWord1+1
-_loop_count = zpx
+_left_index     = zpWord1
+_right_index    = zpWord1+1
+_loop_count     = zpx
         pha
         jsr  a_times_5
         sec
@@ -7508,7 +7506,7 @@ func_all_f_stack    .proc
  
 
 FREADS32    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:92
+ 
         lda  $62
         eor  #$ff
         asl  a
@@ -7516,19 +7514,19 @@ FREADS32    .proc
         ldx  #$a0
         jmp  $bc4f        ; internal BASIC routine
     .pend
-    ;    src line: library:/prog8lib/c64/floats.p8:102
+ 
 
 FREADUS32    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:104
+ 
         sec
         lda  #0
         ldx  #$a0
         jmp  $bc4f        ; internal BASIC routine
     .pend
-    ;    src line: library:/prog8lib/c64/floats.p8:112
+ 
 
 FREADS24AXY    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:115
+ 
         sty  $62
         stx  $63
         sta  $64
@@ -7540,50 +7538,49 @@ FREADS24AXY    .proc
         ldx  #$98
         jmp  $bc4f        ; internal BASIC routine
     .pend
-    ;    src line: library:/prog8lib/c64/floats.p8:129
+ 
 
 GIVUAYFAY    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:131
+ 
         sty  $62
         sta  $63
         ldx  #$90
         sec
         jmp  $bc49        ; internal BASIC routine
     .pend
-    ;    src line: library:/prog8lib/c64/floats.p8:140
+ 
 
 GIVAYFAY    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:142
+   
         sta  zpx
         tya
         ldy  zpx
         jmp  GIVAYF        ; this uses the inverse order, Y/A
     .pend
-    ;    src line: library:/prog8lib/c64/floats.p8:150
+ 
 
 FTOSWRDAY    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:152
+ 
         jsr  FTOSWORDYA    ; note the inverse Y/A order
         sta  zpx
         tya
         ldy  zpx
         rts
     .pend
-    ;    src line: library:/prog8lib/c64/floats.p8:161
+ 
 
 GETADRAY    .proc
-    ;    src line: library:/prog8lib/c64/floats.p8:163
+  
         jsr  GETADR        ; this uses the inverse order, Y/A
         sta  zpy
         tya
         ldy  zpy
         rts
     .pend
-    ;    src line: library:/prog8lib/floats_functions.p8:54
+  
 
-sin    .proc
-; statements
- 
+    sin    .proc
+
         lda  #<angle
         ldy  #>angle
         jsr  MOVFM
@@ -7591,16 +7588,13 @@ sin    .proc
         jsr  SIN
         ldx  zpx
         rts
-; variables
 
-; non-zeropage variables
-angle    .byte  0,0,0,0,0  ; float
+    angle    .byte  0,0,0,0,0  ; float
     .pend
-    ;    src line: library:/prog8lib/floats_functions.p8:143
+   
 
-rad    .proc
-; statements
- 
+    rad    .proc
+
         lda  #<angle
         ldy  #>angle
         jsr  MOVFM
@@ -7610,13 +7604,12 @@ rad    .proc
         jsr  FMULT
         ldx  zpx
         rts
-_pi_div_180    .byte 123, 14, 250, 53, 18        ; pi / 180
-; variables
+        _pi_div_180    .byte 123, 14, 250, 53, 18        ; pi / 180
 
-; non-zeropage variables
-angle    .byte  0,0,0,0,0  ; float
+        angle    .byte  0,0,0,0,0  ; float
     .pend
-    .pend
+    
+.pend
 
                         ;***********************
                         ; #LIBRARY : 'graphics' 

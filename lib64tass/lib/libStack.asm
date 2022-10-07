@@ -1488,8 +1488,7 @@ stack .proc
     ;   input  : stack.lo+1 stack.hi+1
     ;   output : stack.lo+1 stack.hi+1
 
-    byte_to_word = sign_extend_byte
-    sign_extend_byte    .proc
+    byte_to_word    .proc
             lda  stack.lo+1,x
             ora  #$7f
             bmi  +
@@ -1499,6 +1498,12 @@ stack .proc
             rts
     .pend
 
+    ubyte_to_uword  .proc
+            lda  #0
+            sta  stack.hi+1,x
+            rts
+    .pend
+    
     ;   .......................................................... abs b/w stack
     
     abs_b    .proc
