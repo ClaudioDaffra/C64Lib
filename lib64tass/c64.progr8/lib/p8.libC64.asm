@@ -1681,22 +1681,22 @@ c64    .proc
                         
                         .pend
 
-restore_irq    .proc
+                            restore_irq    .proc
 
-        sei
-        lda  #<c64.IRQDFRT
-        sta  c64.CINV
-        lda  #>c64.IRQDFRT
-        sta  c64.CINV+1
-        lda  #0
-        sta  c64.IREQMASK    ; disable raster irq
-        lda  #%10000001
-        sta  c64.CIA1ICR    ; restore CIA1 irq
-        cli
-        
-        rts
-        
-    .pend
+                                    sei
+                                    lda  #<c64.IRQDFRT
+                                    sta  c64.CINV
+                                    lda  #>c64.IRQDFRT
+                                    sta  c64.CINV+1
+                                    lda  #0
+                                    sta  c64.IREQMASK    ; disable raster irq
+                                    lda  #%10000001
+                                    sta  c64.CIA1ICR    ; restore CIA1 irq
+                                    cli
+                                    
+                                    rts
+                                    
+                                .pend
 
 
                     set_rasterirq    .proc
@@ -1764,7 +1764,7 @@ restore_irq    .proc
     
     
     
-.pend
+                        .pend
 
 
                                 ;***********************
@@ -2991,7 +2991,7 @@ prog8_init_vars    .block
                                 ; #LIBRARY : 'math' 
                                 ; ******************* 
 
-math    .proc
+                            math    .proc
 
 
                                 ; non-zeropage variables
@@ -3263,46 +3263,46 @@ randseed    .proc
 .pend
 
 
-randbyte        .proc
-    ; -- 8 bit pseudo random number generator into A (by just reusing randword)
-        jmp  randword
-.pend
+                    randbyte        .proc
+                        ; -- 8 bit pseudo random number generator into A (by just reusing randword)
+                            jmp  randword
+                    .pend
 
-randword    .proc
-    ; -- 16 bit pseudo random number generator into AY
+                    randword    .proc
+                        ; -- 16 bit pseudo random number generator into AY
 
-        ; rand64k       ;Factors of 65535: 3 5 17 257
-        lda sr1+1
-        asl a
-        asl a
-        eor sr1+1
-        asl a
-        eor sr1+1
-        asl a
-        asl a
-        eor sr1+1
-        asl a
-        rol sr1         ;shift this left, "random" bit comes from low
-        rol sr1+1
-        ; rand32k       ;Factors of 32767: 7 31 151 are independent and can be combined
-        lda sr2+1
-        asl a
-        eor sr2+1
-        asl a
-        asl a
-        ror sr2         ;shift this right, random bit comes from high - nicer when eor with sr1
-        rol sr2+1
-        lda sr1+1         ;can be left out
-        eor sr2+1         ;if you dont use
-        tay               ;y as suggested
-        lda sr1           ;mix up lowbytes of SR1
-        eor sr2           ;and SR2 to combine both
-        rts
+                            ; rand64k       ;Factors of 65535: 3 5 17 257
+                            lda sr1+1
+                            asl a
+                            asl a
+                            eor sr1+1
+                            asl a
+                            eor sr1+1
+                            asl a
+                            asl a
+                            eor sr1+1
+                            asl a
+                            rol sr1         ;shift this left, "random" bit comes from low
+                            rol sr1+1
+                            ; rand32k       ;Factors of 32767: 7 31 151 are independent and can be combined
+                            lda sr2+1
+                            asl a
+                            eor sr2+1
+                            asl a
+                            asl a
+                            ror sr2         ;shift this right, random bit comes from high - nicer when eor with sr1
+                            rol sr2+1
+                            lda sr1+1         ;can be left out
+                            eor sr2+1         ;if you dont use
+                            tay               ;y as suggested
+                            lda sr1           ;mix up lowbytes of SR1
+                            eor sr2           ;and SR2 to combine both
+                            rts
 
-sr1         .word $a55a
-sr2         .word $7653
+                    sr1         .word $a55a
+                    sr2         .word $7653
 
-.pend
+                    .pend
 
 
                 ; ----------- optimized multiplications (stack) : ---------
@@ -5375,31 +5375,41 @@ _true        lda  #1
                 .pend
 
 
-shiftleft_b    .proc
-        inx
-        ldy  stack.lo,x
-        bne  +
-        rts
-+        lda  stack.lo+1,x
--        asl  a
-        dey
-        bne  -
-        sta  stack.lo+1,x
-        rts
-.pend
+                shift_left_b    .proc
+                        inx
+                        stx stack.pointer
+                        
+                        ldy  stack.lo,x
+                        bne  +
+                        rts
+                +        
+                        lda  stack.lo+1,x
+                -        
+                        asl  a
+                        dey
+                        bne  -
+                        sta  stack.lo+1,x
+                        
+                        rts
+                .pend
 
-shiftright_b    .proc
-        inx
-        ldy  stack.lo,x
-        bne  +
-        rts
-+        lda  stack.lo+1,x
--        lsr  a
-        dey
-        bne  -
-        sta  stack.lo+1,x
-        rts
-.pend
+                shift_right_b    .proc
+                        inx
+                        stx stack.pointer
+                        
+                        ldy  stack.lo,x
+                        bne  +
+                        rts
+                +        
+                        lda  stack.lo+1,x
+                -        
+                        lsr  a
+                        dey
+                        bne  -
+                        sta  stack.lo+1,x
+                        
+                        rts
+                .pend
 
 
             equalzero_b    .proc
@@ -6208,23 +6218,23 @@ func_all_w_stack    .proc
                             rts
                     .pend
 
-func_rnd_stack    .proc
-    ; -- put a random ubyte on the estack
-        jsr  math.randbyte
-        sta  stack.lo,x
-        dex
-        rts
-.pend
+                        func_rnd_stack    .proc
+                            ; -- put a random ubyte on the estack
+                                jsr  math.randbyte
+                                sta  stack.lo,x
+                                dex
+                                rts
+                        .pend
 
-func_rndw_stack    .proc
-    ; -- put a random uword on the estack
-        jsr  math.randword
-        sta  stack.lo,x
-        tya
-        sta  stack.hi,x
-        dex
-        rts
-.pend
+                        func_rndw_stack    .proc
+                            ; -- put a random uword on the estack
+                                jsr  math.randword
+                                sta  stack.lo,x
+                                tya
+                                sta  stack.hi,x
+                                dex
+                                rts
+                        .pend
 
 
                     func_sort_ub    .proc

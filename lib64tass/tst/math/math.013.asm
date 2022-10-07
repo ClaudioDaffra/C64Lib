@@ -31,7 +31,7 @@ main	.proc
     start	.proc
 
 
-            lda #2
+            lda #3
             jsr math.get_rand_num_byte
             jsr std.print_u8_dec
 

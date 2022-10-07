@@ -1488,7 +1488,43 @@ math    .proc
         rts
     .pend
 
+    ; ................................................ randword
+    ; -- 16 bit pseudo random number generator into AY
 
+    randword    .proc
+            ; rand64k       ;Factors of 65535: 3 5 17 257
+            lda sr1+1
+            asl a
+            asl a
+            eor sr1+1
+            asl a
+            eor sr1+1
+            asl a
+            asl a
+            eor sr1+1
+            asl a
+            rol sr1    ;shift this left, "random" bit comes from low
+            rol sr1+1
+            ; rand32k  ;Factors of 32767: 7 31 151 are independent and can be combined
+            lda sr2+1
+            asl a
+            eor sr2+1
+            asl a
+            asl a
+            ror sr2    ;shift this right, random bit comes from high - nicer when eor with sr1
+            rol sr2+1
+            lda sr1+1  ;can be left out
+            eor sr2+1  ;if you dont use
+            tay        ;y as suggested
+            lda sr1    ;mix up lowbytes of SR1
+            eor sr2    ;and SR2 to combine both
+            rts
+
+    sr1         .word $a55a
+    sr2         .word $7653
+
+    .pend
+    
     ;  .................................. get_rand_num_byte
     ;
     ;  input   :   a   
@@ -1501,6 +1537,11 @@ math    .proc
             lda $d012   ;   get current raster line
             eor $dc04   ;   Timer A. Read: Current timer value  lo
             sbc $dc05   ;   Timer A. Read: Current timer value  hi
+            
+            sta zpa
+            jsr randword
+            adc zpa
+            
          mod
             cmp #71
             bcs loop
@@ -1512,21 +1553,35 @@ math    .proc
     ;  input   :   ay   
     ;  output  :   (0->ay)
     ;
-
+;TODO
     get_rand_num_word  .proc
-            sta mod_lo+1
-            sty mod_hi+1
-         mod_lo
-            lda #<1000
+            sta lo
+            sty hi
+        loop
+            lda #$ff
             jsr get_rand_num_byte
             pha
-         mod_hi
-            lda #>1000
+ 
+            lda #$ff
             jsr get_rand_num_byte
-            tya
+            tay
             pla
             
+            sta zpWord0
+            sty zpWord0+1
+            
+            lda lo
+            sta zpWord1
+            lda hi
+            sta zpWord1+1
+            
+            jsr u16_cmp_lt
+            
+            bcc loop    ; se ! range
+            
             rts
+       lo   .byte   0
+       hi   .byte   0
     .pend 
  
  

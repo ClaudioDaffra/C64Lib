@@ -209,7 +209,18 @@
 
         #   mod_ub
         #   mod_uw
-    
+
+        ; .......................................................... shift_<<>>_b
+        ;
+        ;   shift byte left/right :     y 
+        ;
+        ;   sp+2    byte        ->  sp+1    byte <<>>
+        ;   sp+1    y           ->  //
+        ;
+        
+        #   shift_left_b
+        #   shift_right_b
+
 ;;;
 ;;
 ;

@@ -1633,7 +1633,51 @@ stack .proc
         rts
         
     .pend
+
+    ; .......................................................... shift_<<>>_b
+    ;
+    ;   shift byte left/right :     y 
+    ;
+    ;   sp+2    byte        ->  sp+1    byte <<>>
+    ;   sp+1    y           ->  //
+    ;
     
+    shift_left_b    .proc
+        inx
+        stx stack.pointer
+        
+        ldy  stack.lo,x
+        bne  +
+        rts
+    +        
+        lda  stack.lo+1,x
+    -        
+        asl  a
+        dey
+        bne  -
+        sta  stack.lo+1,x
+        
+        rts
+    .pend
+
+    shift_right_b    .proc
+        inx
+        stx stack.pointer
+        
+        ldy  stack.lo,x
+        bne  +
+        rts
+    +        
+        lda  stack.lo+1,x
+    -        
+        lsr  a
+        dey
+        bne  -
+        sta  stack.lo+1,x
+        
+        rts
+    .pend
+
 .pend
 
 
