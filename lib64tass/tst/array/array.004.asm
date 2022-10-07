@@ -59,14 +59,14 @@ loop
         jsr std.print_u8_bin
     
         lda #' '
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         ldy counter
         cpy #counter_max
         bne loop
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         rts
  .pend
@@ -78,7 +78,7 @@ loop
         ;   ----------------------------------------------------------- ror/rol ub
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         load_address_zpWord0 arr1
         jsr print_array_u8
@@ -87,7 +87,7 @@ loop
                 
                 ldy #2
                 
-                ;jsr array.rol_ub
+                jsr array.rol_ub
                 ;jsr array.ror_ub
                 ;jsr array.rol2_ub
                 ;jsr array.ror2_ub

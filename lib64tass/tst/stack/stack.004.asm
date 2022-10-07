@@ -43,14 +43,14 @@ main	.proc
     debug_stack .proc
     
             lda #'['
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             sec
             lda stack.pointer
             jsr std.print_u8_hex
             
             lda #']'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
     .pend
@@ -58,7 +58,7 @@ main	.proc
     print_pop_uword .proc
     
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.pop_word
             
@@ -75,7 +75,7 @@ main	.proc
  
             ;--------------------------------------------------------------- clear
  
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
 
             ;---------------------------------------------------------------
             
@@ -85,7 +85,7 @@ main	.proc
             ;---------------------------------------------------------------  stack mul byte
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #13
             jsr stack.push_byte
@@ -99,7 +99,7 @@ main	.proc
             ;---------------------------------------------------------------   stack mul word
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #1234
             
@@ -114,7 +114,7 @@ main	.proc
             ;---------------------------------------------------------------  stack mul byte
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #2
             jsr stack.push_byte
@@ -128,7 +128,7 @@ main	.proc
             ;---------------------------------------------------------------  stack mul byte
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #2
             jsr stack.push_byte
@@ -142,7 +142,7 @@ main	.proc
             ;---------------------------------------------------------------  stack mul byte
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #3
             jsr stack.push_byte
@@ -156,7 +156,7 @@ main	.proc
             ;---------------------------------------------------------------
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #2
             jsr stack.push_byte
@@ -170,7 +170,7 @@ main	.proc
             ;---------------------------------------------------------------   stack mul word
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #12
             

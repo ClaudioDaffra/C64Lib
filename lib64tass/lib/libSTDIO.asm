@@ -490,7 +490,7 @@ txt .proc
     get_cursor_pos  .proc
     
             sec
-            jsr sys.SCREEN_XY
+            jsr c64.SCREEN_XY
             stx screen.col
             sty screen.row
             rts
@@ -505,14 +505,14 @@ txt .proc
     set_cursor_pos_xy
     
             clc
-            jsr sys.SCREEN_XY
+            jsr c64.SCREEN_XY
             rts
             
     ;.pend
     
     get_screen_width  .proc
     
-            jsr  sys.SCREEN_WH
+            jsr  c64.SCREEN_WH
             stx  screen.width
             rts
             
@@ -520,7 +520,7 @@ txt .proc
 
     get_screen_height  .proc
     
-            jsr  sys.SCREEN_WH
+            jsr  c64.SCREEN_WH
             sty  screen.height
             rts
             
@@ -528,7 +528,7 @@ txt .proc
 
     get_screen_dim  .proc
     
-            jsr  sys.SCREEN_WH
+            jsr  c64.SCREEN_WH
             stx  screen.width
             sty  screen.height
             rts
@@ -545,7 +545,7 @@ txt .proc
     -        
             lda  (zpWord0),y
             beq  +
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             iny
             bne  -
     +        
@@ -563,11 +563,11 @@ txt .proc
             jsr  conv.ubyte2decimal
             pha
             tya
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             pla
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             txa
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             ldx  zpx
             rts
             
@@ -586,18 +586,18 @@ txt .proc
             cpy  #'0'
             beq  +
             tya
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             pla
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             jmp  print_ub_ones
     +       
             pla
             cmp  #'0'
             beq  print_ub_ones
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
     print_ub_ones   
             txa
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             ldx  zpx
             rts
             
@@ -614,7 +614,7 @@ txt .proc
             cmp  #0
             bpl  +
             lda  #'-'
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
     +        
             pla
             jsr  conv.byte2decimal
@@ -632,13 +632,13 @@ txt .proc
             bcc  +
             pha
             lda  #'$'
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             pla
     +        
             jsr  conv.ubyte2hex
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             tya
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             ldx  zpx
             rts
             
@@ -654,7 +654,7 @@ txt .proc
             sta  zpy
             bcc  +
             lda  #'%'
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
     +        
             ldy  #8
     -        
@@ -663,7 +663,7 @@ txt .proc
             bcc  +
             lda  #'1'
     +        
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             dey
             bne  -
             ldx  zpx
@@ -711,7 +711,7 @@ txt .proc
     -        
             lda  conv.uword2decimal.decTenThousands,y
             beq  +
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             iny
             bne  -
     +        
@@ -734,14 +734,14 @@ txt .proc
             iny
             bne  -
     _gotdigit
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             iny
             lda  conv.uword2decimal.decTenThousands,y
             bne  _gotdigit
             rts
     _allzero
             lda  #'0'
-            jmp  sys.CHROUT
+            jmp  c64.CHROUT
             
     .pend
     
@@ -755,7 +755,7 @@ txt .proc
             bpl  +
             pha
             lda  #'-'
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             tya
             eor  #255
             tay
@@ -792,15 +792,15 @@ std .proc
 			bcc  +
 			pha
 			lda  #'$'
-			jsr  sys.CHROUT
+			jsr  c64.CHROUT
 			pla
 			
 	print_u8_hex_digits
     
 	+		jsr  conv.u8_to_hex
-			jsr  sys.CHROUT
+			jsr  c64.CHROUT
 			tya
-			jsr  sys.CHROUT
+			jsr  c64.CHROUT
 			rts
 
     ; ........................................... print_u8_bin
@@ -813,7 +813,7 @@ std .proc
 			sta  zpa
 			bcc  +
 			lda  #'%'
-			jsr  sys.CHROUT
+			jsr  c64.CHROUT
             
     print_u8_bin_digits
     
@@ -826,7 +826,7 @@ std .proc
 			bcc  +
 			lda  #'1'
         + 
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
 			dey
 			bne  -
 			ldx  zpx
@@ -874,7 +874,7 @@ std .proc
         - 
             lda  (zpWord0),y
             beq  +
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             iny
             bne  -
         + 
@@ -893,7 +893,7 @@ std .proc
             sty  zpWord0+1
             ldy  #0             ; char counter = 0
         -        
-            jsr  sys.CHRIN
+            jsr  c64.CHRIN
             cmp  #$0d           ; return (ascii 13) pressed?
             beq  +              ; yes, end.
             sta  (zpWord0),y    ; else store char in buffer
@@ -914,7 +914,7 @@ std .proc
             inx                 ;   numer char + 0
             beq  +              ;   if 255 then end            
         -        
-            jsr  sys.CHRIN
+            jsr  c64.CHRIN
             cmp  #$0d           ; return (ascii 13) pressed?
             beq  +              ; yes, end.
             sta  (zpWord0),y    ; else store char in buffer
@@ -937,7 +937,7 @@ std .proc
 
             tax
             lda #0
-            jsr sys.OUT_U16
+            jsr c64.OUT_U16
             
             rts
     .pend
@@ -954,7 +954,7 @@ std .proc
             lda zpy
             ldx zpa
             
-            jsr sys.OUT_U16
+            jsr c64.OUT_U16
             
             rts
     .pend
@@ -968,7 +968,7 @@ std .proc
             and #128
             beq +
             lda #'-'    ;   -127
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             pla
             and #%01111111
             sta zpa
@@ -979,7 +979,7 @@ std .proc
             pla
             tax
             lda #0
-            jsr sys.OUT_U16
+            jsr c64.OUT_U16
 
             rts
 
@@ -1005,7 +1005,7 @@ std .proc
             ; negativo 
             
             lda #'-'
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
 
             pla
             eor #255    ;   inverti
@@ -1020,14 +1020,14 @@ std .proc
 
             lda zpa
             ldx zpx
-            jsr sys.OUT_U16
+            jsr c64.OUT_U16
             
             rts
         + 
             ; positivo
             pla
             ldx zpx
-            jsr sys.OUT_U16
+            jsr c64.OUT_U16
 
             rts
 

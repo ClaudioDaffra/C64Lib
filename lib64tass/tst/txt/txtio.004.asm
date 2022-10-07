@@ -35,7 +35,7 @@ main	.proc
             lda #' '
             jsr txt.clear_screen_chars
             lda #char.home
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ; ---------------------------- print string
 
@@ -74,9 +74,9 @@ main	.proc
             ; ---------------------------- \n \n \n 
             
             lda #char.nl
-            jsr sys.CHROUT
-            jsr sys.CHROUT
-            jsr sys.CHROUT
+            jsr c64.CHROUT
+            jsr c64.CHROUT
+            jsr c64.CHROUT
 
             ; ---------------------------- get fore ground color 
             

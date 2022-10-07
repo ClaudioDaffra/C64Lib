@@ -48,7 +48,7 @@ main	.proc
  
             ;--------------------------------------------------------------- clear
  
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
 
             ;---------------------------------------------------------------
             
@@ -60,13 +60,13 @@ main	.proc
             ;-----------------------------------------------------   stack.idiv_uw
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #26
             jsr std.print_u16_dec
             
             lda #'/'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
                        
             load_imm_ay #3
             jsr std.print_u16_dec
@@ -78,7 +78,7 @@ main	.proc
             jsr stack.push_word
 
             lda #'='
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.idiv_uw
             ;                   A/Y        :   16 bit division result
@@ -91,13 +91,13 @@ main	.proc
             ;------------------------------------------------- idiv_w
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #-26
             jsr std.print_s16_dec
             
             lda #'/'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
                        
             load_imm_ay #3
             jsr std.print_s16_dec
@@ -109,7 +109,7 @@ main	.proc
             jsr stack.push_word
 
             lda #'='
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.idiv_w
             ;                   A/Y        :   16 bit division result
@@ -122,7 +122,7 @@ main	.proc
             ;-------------------------------------------------
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.debug  
             

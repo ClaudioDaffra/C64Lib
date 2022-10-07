@@ -436,7 +436,24 @@
 
         #   copy_charset    .proc
     
+
+    #######
+    #   irq
+    #######
     
+        ; .........................................    set_raster
+        ;
+        ;   ay          :   callback
+        ;   c           :   use kernal
+            
+        irq.set_raster
+
+        ; .........................................    restore
+        
+        irq.restore
+        
+        ;
+        
 ;;;
 ;;
 ;

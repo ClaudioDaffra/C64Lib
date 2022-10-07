@@ -44,7 +44,7 @@ main	.proc
             jsr std.print_u16_dec
  
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;-------------------------------------------- operation with stack
             ;   23/6=3    = 3*6+((5)) =23
@@ -57,7 +57,7 @@ main	.proc
             jsr std.print_u8_dec    ;   return a remainder
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
     .pend

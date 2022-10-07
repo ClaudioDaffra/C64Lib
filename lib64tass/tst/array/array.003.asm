@@ -67,14 +67,14 @@ loop
         jsr std.print_u16_dec
     
         lda #' '
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         ldy counter
         cpy #counter_max
         bne loop
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         rts
         
@@ -103,14 +103,14 @@ loop
         jsr std.print_s16_dec
     
         lda #' '
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         ldy counter
         cpy #counter_max
         bne loop
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         rts
         
@@ -136,7 +136,7 @@ loop
         ;   ----------------------------------------------------------- reverse_us16
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         load_address_zpWord0 arr2
         jsr print_array_s16

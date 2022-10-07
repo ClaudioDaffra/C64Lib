@@ -93,10 +93,10 @@ main	.proc
             ;   64tass -D screen_addr = 0
             ;
             
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
             
             lda #147
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;60 poke 32768,1 : rem scrive un carattere 'A'
             lda #1

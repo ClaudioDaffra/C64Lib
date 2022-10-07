@@ -48,7 +48,7 @@ main	.proc
  
             ;--------------------------------------------------------------- clear
  
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
 
             ;---------------------------------------------------------------
             
@@ -58,7 +58,7 @@ main	.proc
             jsr stack.debug
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;-----------------------------------------------------   stack.idiv_uw
  
@@ -73,7 +73,7 @@ main	.proc
             jsr std.print_u8_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;-------------------------------------------------
  
@@ -90,13 +90,13 @@ main	.proc
             ;-------------------------------------------------
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #-13
             jsr std.print_s8_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #-13
             jsr stack.push_byte
@@ -104,20 +104,20 @@ main	.proc
             jsr stack.abs_b       ;   ->  byte to word
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.pop_word
             jsr std.print_u16_dec
             
             ;-------------------------------------------------
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #-12
             jsr std.print_s16_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #-12
             jsr stack.push_word
@@ -125,7 +125,7 @@ main	.proc
             jsr stack.abs_w       ;   ->  word tou word
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.pop_word
             jsr std.print_u16_dec
@@ -133,7 +133,7 @@ main	.proc
             ;-------------------------------------------------
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.debug  
             

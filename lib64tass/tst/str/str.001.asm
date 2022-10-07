@@ -36,14 +36,14 @@ main	.proc
     
     debug_a .proc
             lda #'['
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda zpa
             pha
             jsr std.print_s8_dec
             
             lda #']'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             pla
             sta zpa
             

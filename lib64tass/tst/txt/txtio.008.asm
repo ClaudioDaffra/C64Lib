@@ -46,7 +46,7 @@ main	.proc
             jsr txt.print_string
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt.print_u8_hex
             
@@ -54,7 +54,7 @@ main	.proc
             jsr txt.print_u8_hex
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt.print_u8_dec
             
@@ -62,7 +62,7 @@ main	.proc
             jsr txt.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt.print_u8_hex
             
@@ -71,7 +71,7 @@ main	.proc
             jsr txt.print_u8_hex
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt.print_u8_bin
             
@@ -80,7 +80,7 @@ main	.proc
             jsr txt.print_u8_bin
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;   ...................................... txt.print_s8_dec
             
@@ -88,7 +88,7 @@ main	.proc
             jsr txt.print_s8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt.print_u16_bin
             
@@ -97,7 +97,7 @@ main	.proc
             jsr txt.print_u16_bin
             clc
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt. print_u16_hex
             
@@ -107,7 +107,7 @@ main	.proc
             jsr txt. print_u16_hex
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt. print_u16_dec0
             
@@ -117,7 +117,7 @@ main	.proc
             jsr txt. print_u16_dec0
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt. print_u16_dec
             
@@ -127,7 +127,7 @@ main	.proc
             jsr txt. print_u16_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;   ...................................... txt. print_s16_dec
             
@@ -137,7 +137,7 @@ main	.proc
             jsr txt. print_s16_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;   ...................................... txt.clear_color
             

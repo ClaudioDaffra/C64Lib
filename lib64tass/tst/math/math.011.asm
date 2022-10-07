@@ -35,12 +35,12 @@ main	.proc
             ;-------------------------------------------- sign
 
             lda #-15
-            jsr math.sign
+            jsr math.sign_b
  
             sta 1024        ;   255 petscii
             
             lda #15
-            jsr math.sign
+            jsr math.sign_ub
  
             sta 1025        ;    1 petscii
  

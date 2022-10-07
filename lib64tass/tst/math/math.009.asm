@@ -35,7 +35,7 @@ main	.proc
             ;-------------------------------------------- math
  
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;-------------------------------------------- compare signed
             ;   -128 no

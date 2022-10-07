@@ -39,20 +39,20 @@ main	.proc
             jsr std.print_u8_hex
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             sec ;   print %
             lda #123
             jsr std.print_u8_bin 
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             lda u8
             jsr std.print_u8_dec 
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ; .................................... print unsigned word
             
@@ -62,7 +62,7 @@ main	.proc
             jsr std.print_u16_hex
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ; 110000111000111
             load_imm_ay #25031
@@ -70,14 +70,14 @@ main	.proc
             jsr std.print_u16_bin
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;25031
             load_var_ay u16
             jsr std.print_u16_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
 

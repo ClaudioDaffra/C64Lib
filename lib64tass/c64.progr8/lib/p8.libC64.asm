@@ -1592,94 +1592,94 @@ c64    .proc
  
 ; 1234
 
-set_irq    .proc
+                    set_irq    .proc
 
-        sta  _modified+1
-        sty  _modified+2
-        lda  #0
-        adc  #0
-        sta  _use_kernal
-        sei
-        lda  #<_irq_handler
-        sta  c64.CINV
-        lda  #>_irq_handler
-        sta  c64.CINV+1
-        cli
-        rts
-_irq_handler    
-        jsr  _irq_handler_init
-_modified    
-        jsr  $ffff                  ; modified
-        jsr  _irq_handler_end
-        lda  _use_kernal
-        bne  +
-        lda  #$ff
-        sta  c64.VICIRQ             ; acknowledge raster irq
-        lda  c64.CIA1ICR            ; acknowledge CIA1 interrupt
-        ; end irq processing - don't use kernal's irq handling
-        pla
-        tay
-        pla
-        tax
-        pla
-        rti
-+        
-        jmp  c64.IRQDFRT        ; continue with normal kernal irq routine
+                            sta  _modified+1
+                            sty  _modified+2
+                            lda  #0
+                            adc  #0
+                            sta  _use_kernal
+                            sei
+                            lda  #<_irq_handler
+                            sta  c64.CINV
+                            lda  #>_irq_handler
+                            sta  c64.CINV+1
+                            cli
+                            rts
+                    _irq_handler    
+                            jsr  _irq_handler_init
+                    _modified    
+                            jsr  $ffff                  ; modified
+                            jsr  _irq_handler_end
+                            lda  _use_kernal
+                            bne  +
+                            lda  #$ff
+                            sta  c64.VICIRQ             ; acknowledge raster irq
+                            lda  c64.CIA1ICR            ; acknowledge CIA1 interrupt
+                            ; end irq processing - don't use kernal's irq handling
+                            pla
+                            tay
+                            pla
+                            tax
+                            pla
+                            rti
+                    +        
+                            jmp  c64.IRQDFRT        ; continue with normal kernal irq routine
 
-_use_kernal     .byte  0
+                    _use_kernal     .byte  0
 
-_irq_handler_init
-        ;   save all zp scratch registers and the X register as 
-        ;   these might be clobbered by the irq routine
-        stx  IRQ_X_REG
-        lda  zpy
-        sta  IRQ_SCRATCH_ZPB1
-        lda  zpx
-        sta  IRQ_SCRATCH_ZPREG
-        lda  zpWord0
-        sta  IRQ_SCRATCH_ZPWORD1
-        lda  zpWord0+1
-        sta  IRQ_SCRATCH_ZPWORD1+1
-        lda  zpWord1
-        sta  IRQ_SCRATCH_ZPWORD2
-        lda  zpWord1+1
-        sta  IRQ_SCRATCH_ZPWORD2+1
-        ; stack protector; make sure we don't clobber the top of the evaluation stack
-        dex
-        dex
-        dex
-        dex
-        dex
-        dex
-        cld
-        
-        rts
+                    _irq_handler_init
+                            ;   save all zp scratch registers and the X register as 
+                            ;   these might be clobbered by the irq routine
+                            stx  IRQ_X_REG
+                            lda  zpy
+                            sta  IRQ_SCRATCH_ZPB1
+                            lda  zpx
+                            sta  IRQ_SCRATCH_ZPREG
+                            lda  zpWord0
+                            sta  IRQ_SCRATCH_ZPWORD1
+                            lda  zpWord0+1
+                            sta  IRQ_SCRATCH_ZPWORD1+1
+                            lda  zpWord1
+                            sta  IRQ_SCRATCH_ZPWORD2
+                            lda  zpWord1+1
+                            sta  IRQ_SCRATCH_ZPWORD2+1
+                            ; stack protector; make sure we don't clobber the top of the evaluation stack
+                            dex
+                            dex
+                            dex
+                            dex
+                            dex
+                            dex
+                            cld
+                            
+                            rts
 
-_irq_handler_end
-        ; restore all zp scratch registers and the X register
-        lda  IRQ_SCRATCH_ZPB1
-        sta  zpy
-        lda  IRQ_SCRATCH_ZPREG
-        sta  zpx
-        lda  IRQ_SCRATCH_ZPWORD1
-        sta  zpWord0
-        lda  IRQ_SCRATCH_ZPWORD1+1
-        sta  zpWord0+1
-        lda  IRQ_SCRATCH_ZPWORD2
-        sta  zpWord1
-        lda  IRQ_SCRATCH_ZPWORD2+1
-        sta  zpWord1+1
-        ldx  IRQ_X_REG
-        
-        rts
+                    _irq_handler_end
+                            ; restore all zp scratch registers and the X register
+                            lda  IRQ_SCRATCH_ZPB1
+                            sta  zpy
+                            lda  IRQ_SCRATCH_ZPREG
+                            sta  zpx
+                            lda  IRQ_SCRATCH_ZPWORD1
+                            sta  zpWord0
+                            lda  IRQ_SCRATCH_ZPWORD1+1
+                            sta  zpWord0+1
+                            lda  IRQ_SCRATCH_ZPWORD2
+                            sta  zpWord1
+                            lda  IRQ_SCRATCH_ZPWORD2+1
+                            sta  zpWord1+1
+                            ldx  IRQ_X_REG
+                            
+                            rts
 
-        IRQ_X_REG           .byte  0
-        IRQ_SCRATCH_ZPB1    .byte  0
-        IRQ_SCRATCH_ZPREG   .byte  0
-        IRQ_SCRATCH_ZPWORD1 .word  0
-        IRQ_SCRATCH_ZPWORD2 .word  0
-    
-    .pend
+                            IRQ_X_REG           .byte  0
+                            IRQ_SCRATCH_ZPB1    .byte  0
+                            IRQ_SCRATCH_ZPREG   .byte  0
+                            IRQ_SCRATCH_ZPWORD1 .word  0
+                            IRQ_SCRATCH_ZPWORD2 .word  0
+                        
+                        .pend
 
 restore_irq    .proc
 
@@ -1699,67 +1699,67 @@ restore_irq    .proc
     .pend
 
 
-set_rasterirq    .proc
- 
-        sta  _modified+1
-        sty  _modified+2
-        lda  #0
-        adc  #0
-        sta  set_irq._use_kernal
-        lda  cx16.r0
-        ldy  cx16.r0+1
-        sei
-        jsr  _setup_raster_irq
-        lda  #<_raster_irq_handler
-        sta  c64.CINV
-        lda  #>_raster_irq_handler
-        sta  c64.CINV+1
-        cli
-        
-        rts
+                    set_rasterirq    .proc
+                     
+                            sta  _modified+1
+                            sty  _modified+2
+                            lda  #0
+                            adc  #0
+                            sta  set_irq._use_kernal
+                            lda  cx16.r0
+                            ldy  cx16.r0+1
+                            sei
+                            jsr  _setup_raster_irq
+                            lda  #<_raster_irq_handler
+                            sta  c64.CINV
+                            lda  #>_raster_irq_handler
+                            sta  c64.CINV+1
+                            cli
+                            
+                            rts
 
-_raster_irq_handler
-        jsr  set_irq._irq_handler_init
-_modified    
-        jsr  $ffff                 ; modified
-        jsr  set_irq._irq_handler_end
-        lda  #$ff
-        sta  c64.VICIRQ         ; acknowledge raster irq
-        lda  set_irq._use_kernal
-        bne  +
-        ; end irq processing - don't use kernal's irq handling
-        pla
-        tay
-        pla
-        tax
-        pla
-        rti
-+        
-        jmp  c64.IRQDFRT    ; continue with kernal irq routine
+                    _raster_irq_handler
+                            jsr  set_irq._irq_handler_init
+                    _modified    
+                            jsr  $ffff                 ; modified
+                            jsr  set_irq._irq_handler_end
+                            lda  #$ff
+                            sta  c64.VICIRQ         ; acknowledge raster irq
+                            lda  set_irq._use_kernal
+                            bne  +
+                            ; end irq processing - don't use kernal's irq handling
+                            pla
+                            tay
+                            pla
+                            tax
+                            pla
+                            rti
+                    +        
+                            jmp  c64.IRQDFRT    ; continue with kernal irq routine
 
-_setup_raster_irq
-        pha
-        lda  #%01111111
-        sta  c64.CIA1ICR    ; "switch off" interrupts signals from cia-1
-        sta  c64.CIA2ICR    ; "switch off" interrupts signals from cia-2
-        and  c64.SCROLY
-        sta  c64.SCROLY     ; clear most significant bit of raster position
-        lda  c64.CIA1ICR    ; ack previous irq
-        lda  c64.CIA2ICR    ; ack previous irq
-        pla
-        sta  c64.RASTER     ; set the raster line number where interrupt should occur
-        cpy  #0
-        beq  +
-        lda  c64.SCROLY
-        ora  #%10000000
-        sta  c64.SCROLY     ; set most significant bit of raster position
-+        
-        lda  #%00000001
-        sta  c64.IREQMASK   ;enable raster interrupt signals from vic
-        rts
-        
-    .pend
-    
+                    _setup_raster_irq
+                            pha
+                            lda  #%01111111
+                            sta  c64.CIA1ICR    ; "switch off" interrupts signals from cia-1
+                            sta  c64.CIA2ICR    ; "switch off" interrupts signals from cia-2
+                            and  c64.SCROLY
+                            sta  c64.SCROLY     ; clear most significant bit of raster position
+                            lda  c64.CIA1ICR    ; ack previous irq
+                            lda  c64.CIA2ICR    ; ack previous irq
+                            pla
+                            sta  c64.RASTER     ; set the raster line number where interrupt should occur
+                            cpy  #0
+                            beq  +
+                            lda  c64.SCROLY
+                            ora  #%10000000
+                            sta  c64.SCROLY     ; set most significant bit of raster position
+                    +        
+                            lda  #%00000001
+                            sta  c64.IREQMASK   ;enable raster interrupt signals from vic
+                            rts
+                            
+                        .pend
+                        
     
     
     

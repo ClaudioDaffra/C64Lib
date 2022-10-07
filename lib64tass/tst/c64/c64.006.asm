@@ -81,10 +81,10 @@ main	.proc
             
             ;
             
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
             
             lda #147
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;   scrive A
             

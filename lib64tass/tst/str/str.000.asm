@@ -36,14 +36,14 @@ main	.proc
     
     debug_a .proc
             lda #'['
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda zpa
            
             jsr std.print_u8_dec
             
             lda #']'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             rts
     .pend
     
@@ -59,7 +59,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ; ---------------------------- left
             
@@ -75,7 +75,7 @@ main	.proc
             ; ---------------------------- right
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_zpWord0    s1
             load_address_zpWord1    s2
@@ -89,7 +89,7 @@ main	.proc
             ; ---------------------------- mid
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_address_zpWord0    s1
             load_address_zpWord1    s2
@@ -104,7 +104,7 @@ main	.proc
             ; ---------------------------- find char
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_zpWord0    s1
             lda #'x'
@@ -116,9 +116,9 @@ main	.proc
             ; ---------------------------- string copy
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;   zpWord0 := zpWord1
             ;

@@ -44,7 +44,7 @@ main	.proc
             jsr txt.clear_screen_chars
             
             ;lda #char.clear_screen
-            ;jsr sys.CHROUT
+            ;jsr c64.CHROUT
             
             lda #3
             sta screen.row

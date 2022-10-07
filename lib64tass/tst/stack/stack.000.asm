@@ -41,14 +41,14 @@ main	.proc
     debug_stack .proc
     
             lda #'['
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             sec
             lda stack.pointer
             jsr std.print_u8_hex
             
             lda #']'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
     .pend
@@ -77,25 +77,25 @@ main	.proc
                 jsr debug_stack
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.pop_byte
             jsr std.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.pop_byte
             jsr std.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             jsr stack.pop_byte
             jsr std.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
                 jsr debug_stack
 

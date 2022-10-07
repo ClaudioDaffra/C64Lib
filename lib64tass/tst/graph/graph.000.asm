@@ -40,7 +40,7 @@ main	.proc
         jsr std.print_u8_bin
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         sec
         lda #%10101111
@@ -48,7 +48,7 @@ main	.proc
         jsr std.print_u8_bin
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         ; rom default
  
@@ -59,7 +59,7 @@ main	.proc
         jsr txt.print_u8_dec
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         ; rom disable  $a000 - $e000
 

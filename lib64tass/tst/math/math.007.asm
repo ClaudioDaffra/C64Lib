@@ -35,7 +35,7 @@ main	.proc
             ;-------------------------------------------- mul
  
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_3  (27/81)
             
@@ -44,7 +44,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_byte_5  (27/135)
             
@@ -53,7 +53,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_byte_6  (27/162)
             
@@ -62,7 +62,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_byte_7  (27/189)
             
@@ -71,7 +71,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_9  (2/18)
             
@@ -80,7 +80,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_byte_10  (2/20)
             
@@ -89,7 +89,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_byte_11  (2/22)
             
@@ -98,7 +98,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_byte_12  (2/24)
             
@@ -107,7 +107,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_byte_13  (2/26)
             
@@ -116,7 +116,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/28)
             
@@ -125,7 +125,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/30)
             
@@ -134,7 +134,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/40)
             
@@ -143,7 +143,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/50)
             
@@ -152,7 +152,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/80)
             
@@ -161,7 +161,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/100)
             
@@ -170,7 +170,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/160)
             
@@ -179,7 +179,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------   math.mul_byte_13  (2/200)
             
@@ -188,14 +188,14 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------
             ;--------------------------------------------
             ;-------------------------------------------- 
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------
             ;--------------------------------------------
@@ -208,7 +208,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_5  (123/615)
             
@@ -217,7 +217,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_6  (123/738)
             
@@ -226,7 +226,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_7  (123/861)
             
@@ -235,7 +235,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_9  (123/1107)
             
@@ -244,7 +244,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_10  (123/1230)
             
@@ -253,7 +253,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_12  (123/1476)
             
@@ -262,7 +262,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_15  (123/1845)
             
@@ -271,7 +271,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_25  (123/3075)
             
@@ -280,7 +280,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_40  (123/4920)
             
@@ -289,7 +289,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_50  (123/6150)
             
@@ -298,7 +298,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_320  (123/3840)
             
@@ -307,7 +307,7 @@ main	.proc
             jsr std.print_u16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.mul_word_640  (12/7680 )
             
@@ -316,7 +316,7 @@ main	.proc
             jsr std.print_u16_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;--------------------------------------------   math.lsr_byte_A  (16 (3)>>2 )
             

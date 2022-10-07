@@ -828,17 +828,27 @@ conv .proc
 
     .pend
 
-    ubyte_to_uword .proc   
-
-        sta zpWord0
+    ubyte_to_uword .proc
+    
+        sta zpWord0    
         lda #0
-        sta zpword0+1
+        sta zpWord0+1
+
         rts
 
     .pend
-    
+
 .pend
 
+conv_ubyte_to_uword .macro
+        lda \1
+        jsr conv.ubyte_to_uword
+        lda zpWord0
+        sta \2
+        lda zpWord0+1
+        sta \2+1
+.endmacro
+    
 ;;;
 ;;
 ;

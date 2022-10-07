@@ -38,7 +38,7 @@ main	.proc
             jsr std.print_s8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             lda #-15
             jsr math.abs_b
@@ -46,7 +46,7 @@ main	.proc
             jsr std.print_u16_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;-------------------------------------------- abs word
  
@@ -54,7 +54,7 @@ main	.proc
             jsr std.print_s16_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_imm_ay #-15
             jsr math.abs_w

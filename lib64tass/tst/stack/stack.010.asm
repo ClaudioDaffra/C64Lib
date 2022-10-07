@@ -48,7 +48,7 @@ main	.proc
  
             ;--------------------------------------------------------------- clear
  
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
 
             ;---------------------------------------------------------------
             
@@ -60,14 +60,14 @@ main	.proc
             jsr stack.debug
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             lda #13
             sec
             jsr std.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #13
             jsr stack.push_byte
@@ -79,12 +79,12 @@ main	.proc
             jsr stack.push_byte
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.debug
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.mul_b
 
@@ -92,7 +92,7 @@ main	.proc
             jsr std.print_u8_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.debug
             

@@ -49,7 +49,7 @@ main	.proc
             jsr std.print_string
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             
             ;   ...................................... copy string row below

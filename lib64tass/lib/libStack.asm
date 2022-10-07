@@ -908,14 +908,14 @@ stack .proc
 
     debug .proc
         lda #'['
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         sec
         lda stack.pointer
         jsr std.print_u8_hex
         
         lda #']'
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         rts
     .pend

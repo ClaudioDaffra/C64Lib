@@ -73,7 +73,7 @@ main	.proc
             ; .............................................. pokew
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             store_imm_zpWord0   #$0405
             jsr txt.print_u16_hex

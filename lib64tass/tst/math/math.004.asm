@@ -51,7 +51,7 @@ main	.proc
             ;--------------------------------------------   mul bytes into word
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;   40*24   =    960
             ;   40*25   =   1000
@@ -63,7 +63,7 @@ main	.proc
             ;--------------------------------------------   mul words in dwords
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_zpWord0    #1234
             load_imm_zpWord1    #5678

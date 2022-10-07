@@ -36,14 +36,14 @@ main	.proc
             jsr std.print_u8_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_imm_ay #1000
             jsr math.get_rand_num_word
             jsr std.print_u16_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
     .pend

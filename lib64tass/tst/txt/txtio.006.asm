@@ -35,7 +35,7 @@ main	.proc
             jsr txt.clear_screen_chars
             
             lda #char.home
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ; ---------------------------- set cur pos
             
@@ -46,7 +46,7 @@ main	.proc
             jsr txt.set_cursor_pos
             
             lda #'a'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ; ---------------------------- get cur pos
 
@@ -56,7 +56,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #'/'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda screen.col
             jsr std.print_u8_dec
@@ -64,7 +64,7 @@ main	.proc
             ; ---------------------------- get screen width / height
             
             lda #char.nl
-            jsr sys.CHROUT      
+            jsr c64.CHROUT      
 
             jsr txt.get_screen_dim
               
@@ -72,7 +72,7 @@ main	.proc
             jsr std.print_u8_dec
             
             lda #'/'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda screen.height
             jsr std.print_u8_dec

@@ -36,7 +36,7 @@ main	.proc
         jsr txt.print_u16_hex
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         lda #255    ;   -1
         sta i
@@ -46,7 +46,7 @@ main	.proc
             sty i
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ldy i
             lda (zpWord0),y
@@ -66,7 +66,7 @@ main	.proc
         ; debug tbl_vbase
         
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         lda #25
         sta maxi
@@ -75,7 +75,7 @@ main	.proc
         jsr debug_table
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         load_address_ay graph.tbl_vbaseHi
         jsr debug_table
@@ -86,13 +86,13 @@ main	.proc
         sta maxi
         
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         load_address_ay graph.tbl_8Lo
         jsr debug_table
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         load_address_ay graph.tbl_8Hi
         jsr debug_table

@@ -33,8 +33,8 @@ main	.proc
 
             ; ---------------------------- clear screen kernal
             
-            jsr sys.SCREEN_CLEAR
-            jsr sys.SCREEN_HOME
+            jsr c64.SCREEN_CLEAR
+            jsr c64.SCREEN_HOME
 
             ; ---------------------------- input string
             
@@ -47,31 +47,31 @@ main	.proc
             ; ---------------------------- input string max
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_ay temp
             ldx #5
             jsr std.input_string_max
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_ay temp
             jsr std.print_string
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #'['
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ; ---------------------------- print string kernal
 
             load_address_ay temp
-            jsr sys.STROUT
+            jsr c64.STROUT
 
             lda #']'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
 

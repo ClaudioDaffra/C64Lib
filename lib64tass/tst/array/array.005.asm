@@ -69,14 +69,14 @@ loop
         jsr std.print_u16_bin
     
         lda #' '
-        jsr sys.CHROUT
+        jsr c64.CHROUT
 
         ldy counter
         cpy #counter_max
         bne loop
 
         lda #char.nl
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         rts
         

@@ -51,13 +51,13 @@ main	.proc
             jsr stack.debug
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;-------------------------------------------- operation with stack
             ;   23/6=3    = 3*6+5 =23
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #23
             jsr stack.push_byte
@@ -74,7 +74,7 @@ main	.proc
             jsr stack.debug
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
     .pend

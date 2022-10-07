@@ -48,7 +48,7 @@ main	.proc
             jsr std.print_u16_bin
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_address_ay var1
             jsr mem.ror2_ub
@@ -58,7 +58,7 @@ main	.proc
             jsr std.print_u16_bin
  
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ; -------------------------------------  rol2_ub
  
@@ -67,7 +67,7 @@ main	.proc
             jsr std.print_u16_bin
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_address_ay var1
             jsr mem.rol2_ub
@@ -77,7 +77,7 @@ main	.proc
             jsr std.print_u16_bin
  
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ; -------------------------------------
              

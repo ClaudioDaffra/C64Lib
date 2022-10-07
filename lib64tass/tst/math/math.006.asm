@@ -31,7 +31,7 @@ main	.proc
             ;--------------------------------------------   div u16 / u16
  
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;--------------------------------------------       unsigned 16 division
             ;             21,64            
@@ -44,13 +44,13 @@ main	.proc
             ; zpWord0               ; risultato zpWord0 
             jsr std.print_u16_dec
             lda #'*'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             ; zpWord3               ; divisore  zpWord3
             load_var_ay zpWord3
             jsr std.print_u16_dec
             ; zpWord1               ;   resto   zpWord1
             lda #'+'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             load_var_ay zpWord1
             jsr std.print_u16_dec
             
@@ -59,7 +59,7 @@ main	.proc
             ;65534/0    ?,?     flag v(1)
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_zpWord0    #65534
             load_imm_ay         #2
@@ -70,7 +70,7 @@ main	.proc
             jsr std.print_u16_dec
 
             lda #'.'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             ; zpWord1 remaider
             load_var_ay zpWord1
             
@@ -79,7 +79,7 @@ main	.proc
             ;--------------------------------------------       signed 16 division 
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;  -25356/34    -745,26     (-745*32+26)
            
@@ -93,13 +93,13 @@ main	.proc
             jsr std.print_s16_dec   ;   ay ->   risultato divisione
 
             lda #'*'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             ; zpWord3               ; divisore  zpWord3
             load_var_ay zpWord3
             jsr std.print_s16_dec
             
             lda #'+'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             load_var_ay zpWord1
             jsr std.print_u16_dec   ;resto;
 

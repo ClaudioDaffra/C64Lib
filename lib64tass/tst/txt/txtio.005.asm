@@ -49,7 +49,7 @@ main	.proc
             ; ------------------------ clc scroll text
 
             lda  #char.nl
-            jsr  sys.CHROUT
+            jsr  c64.CHROUT
             
             rts
 

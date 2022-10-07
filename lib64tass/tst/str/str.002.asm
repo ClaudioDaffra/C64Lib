@@ -32,14 +32,14 @@ main	.proc
     
     debug_a .proc
         lda #'['
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         
         lda zpa
         pha
         jsr std.print_s8_dec
         
         lda #']'
-        jsr sys.CHROUT
+        jsr c64.CHROUT
         pla
         sta zpa
         
@@ -56,9 +56,9 @@ main	.proc
             jsr std.print_string
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_zpWord0    s1
             jsr string.upper
@@ -67,7 +67,7 @@ main	.proc
             jsr std.print_string
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_zpWord0    s1
             jsr string.lower
@@ -76,19 +76,19 @@ main	.proc
             jsr std.print_string
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ; ......................................... pattern matching
 
             load_address_zpWord0    s1
             jsr std.print_string
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_zpWord0    px
             jsr std.print_string
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_address_zpWord0   s1
             load_address_zpWord1   px

@@ -39,19 +39,19 @@ main	.proc
             jsr std.print_s8_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_var_ay s16
             jsr std.print_s16_dec
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_imm_ay #-32765
             jsr std.print_s16_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ; .................................... print signed +
 
@@ -59,7 +59,7 @@ main	.proc
             jsr std.print_s8_dec
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #25031
             jsr std.print_s16_dec
@@ -67,21 +67,21 @@ main	.proc
             ; .................................... print signed 8
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             sec
             lda #-123
             jsr std.print_s8_hex
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             sec
             lda #-123
             jsr std.print_s8_bin
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #-123
             jsr std.print_s8_dec
@@ -89,24 +89,24 @@ main	.proc
             ; .................................... print signed 16
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             sec ;       $61c7
             load_imm_ay #25031
             jsr std.print_s16_hex
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             sec         ; %0110000111000111
             load_imm_ay #25031
             jsr std.print_s16_bin
 
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             ;           +25031
             load_var_ay s16p
             jsr std.print_s16_dec

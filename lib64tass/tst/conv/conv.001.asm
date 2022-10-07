@@ -47,7 +47,7 @@ main	.proc
             jsr std.print_s8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             rts
     .pend
@@ -64,14 +64,14 @@ main	.proc
             jsr std.print_s8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             lda var_s8
             
             jsr conv.byte_to_word
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_var_ay zpWord0
             sec
@@ -80,21 +80,28 @@ main	.proc
             ;   ......................................... unsignedext
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda var_u8
             sec
             jsr std.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             lda var_u8
             
-            conv_byte_to_word var_u16
+            ;lda var_u8
+            ;jsr conv.ubyte_to_uword
+            ;lda zpWord0
+            ;sta var_u16
+            ;lda zpWord0+1
+            ;sta var_u16+1
+            
+            conv_ubyte_to_uword var_u8 , var_u16
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_var_ay var_u16
             sec

@@ -40,7 +40,7 @@ main	.proc
             jsr std.print_string
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
     .pend
@@ -142,7 +142,7 @@ main	.proc
             ; --------------------------------------- any2uword ($ % unsigned number)
              
             lda #char.nl
-            jsr sys.CHROUT  
+            jsr c64.CHROUT  
             ;                   "33"            ;    33
             load_address_ay c1
             jsr conv.any2uword
@@ -153,7 +153,7 @@ main	.proc
             ; --------------------------------------- any2uword ($ % unsigned number)
              
             lda #char.nl
-            jsr sys.CHROUT  
+            jsr c64.CHROUT  
             ;                   "$ff"           ;   255
             load_address_ay c2
             jsr conv.any2uword
@@ -164,7 +164,7 @@ main	.proc
             ; --------------------------------------- any2uword ($ % unsigned number)
              
             lda #char.nl
-            jsr sys.CHROUT  
+            jsr c64.CHROUT  
             
             ;                   "%01010101"     ;    85
             load_address_ay c3
@@ -176,7 +176,7 @@ main	.proc
             ; --------------------------------------- str2word ( .  .  signed number)
              
             lda #char.nl
-            jsr sys.CHROUT  
+            jsr c64.CHROUT  
             ;                   "-45"            ;   -45
             load_address_ay c4
             jsr conv.str2word

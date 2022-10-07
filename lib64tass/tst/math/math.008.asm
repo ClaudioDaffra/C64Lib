@@ -35,7 +35,7 @@ main	.proc
             ;-------------------------------------------- math
  
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             ;-------------------------------------------- square unsigned
 
@@ -50,7 +50,7 @@ main	.proc
             ;-------------------------------------------- square unsigned
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             ;   sqrt(81) = 9
             
@@ -63,7 +63,7 @@ main	.proc
             ;-------------------------------------------- stack sqrt
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_imm_ay #81
             jsr stack.push_word

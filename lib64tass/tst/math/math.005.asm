@@ -49,13 +49,13 @@ main	.proc
             pla
             jsr txt.print_u8_dec
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             pla
             jsr txt.print_u8_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
 
             ;--------------------------------------------  div s8 / s8
@@ -72,7 +72,7 @@ main	.proc
             jsr txt.print_u8_dec        ;   remainder always u8
             
             lda #' '
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             pla
             jsr txt.print_s8_dec        ;   result          s8

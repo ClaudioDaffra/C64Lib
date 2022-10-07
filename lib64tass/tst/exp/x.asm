@@ -26,8 +26,16 @@ program_entry_point
 
 ;--------------------------------------------------------------- sub
 
-
+    callback    .proc
     
+        lda 1024
+        clc
+        adc #1
+        sta 1024
+        rts
+        
+    .pend
+
 ;--------------------------------------------------------------- program
 
 program .proc
@@ -44,30 +52,17 @@ main	.proc
 
     start	.proc
 
-            ;   program
- 
-            lda #' '
-            ldy #color.green
-            jsr txt.fill_screen
-
-            ; .............................................. sys call
- 
-            jsr sys.istop
-            jsr std.print_u8_dec
-            
-            lda #char.nl
-            jsr c64.CHROUT
-            
-            jsr sys.RDTIM16
-            jsr std.print_u8_bin
-
-            jsr sys.wait_vsync
-            
-            jsr sys.reset_system
-            
-            rts
- 
-
+    load_zpWord0    #40
+    load_address_ay callback
+    clc
+    jsr irq.set_rasterirq
+    
+    jsr c64.CHRIN
+    
+    jsr irq.restore
+    
+    rts
+    
     .pend
 
 .pend

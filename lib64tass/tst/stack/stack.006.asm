@@ -43,14 +43,14 @@ main	.proc
     debug_stack .proc
     
             lda #'['
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             sec
             lda stack.pointer
             jsr std.print_u8_hex
             
             lda #']'
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             rts
     .pend
@@ -63,7 +63,7 @@ main	.proc
  
             ;--------------------------------------------------------------- clear
  
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
 
             ;---------------------------------------------------------------
             
@@ -73,14 +73,14 @@ main	.proc
             ;-----------------------------------------------------   byte
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             lda #13
             sec
             jsr std.print_u8_bin
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             lda #13
             jsr stack.push_byte
@@ -95,14 +95,14 @@ main	.proc
             ;----------------------------------------------------- word
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #123
             sec
             jsr std.print_u16_bin
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #123
             jsr stack.push_word
@@ -117,14 +117,14 @@ main	.proc
             ;----------------------------------------------------- word
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #123
             sec
             jsr std.print_u16_bin
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #123
             jsr stack.push_word

@@ -48,7 +48,7 @@ main	.proc
  
             ;--------------------------------------------------------------- clear
  
-            jsr sys.CLEARSCR
+            jsr c64.CLEARSCR
 
             ;---------------------------------------------------------------
             
@@ -60,14 +60,14 @@ main	.proc
             jsr stack.debug
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
 
             load_imm_ay #13
             sec
             jsr std.print_u16_dec
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             load_imm_ay #13
             jsr stack.push_word
@@ -79,12 +79,12 @@ main	.proc
             jsr stack.push_word
             
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.debug
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.add_w
 
@@ -92,7 +92,7 @@ main	.proc
             jsr std.print_u16_dec
 
             lda #char.nl
-            jsr sys.CHROUT
+            jsr c64.CHROUT
             
             jsr stack.debug
             
