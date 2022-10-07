@@ -60,7 +60,12 @@
         SCREEN_WH       = $ffed     ;   
         SCREEN_CLEAR    = $e544     ;
         SCREEN_HOME     = $e566     ;
-            
+        
+        ;   save/restore zp reg status
+        
+        sys.status.save
+        sys.status.restore
+        
     #######
     #   color
     #######
@@ -95,8 +100,6 @@
         wait_vsync      ;   wait raster vsync ( Screen control register #1. Bits: )   
     
         ;   -------------------------------------------------------
-                
-        ;
 
     #######
     #   char
@@ -258,7 +261,7 @@
         # rol2_ub
     
     #######
-    #   map
+    #   page
     #######
         
         ($0001) Processor port. Bits:
@@ -438,19 +441,51 @@
     
 
     #######
+    #   buffer
+    #######
+    
+;**********
+;           buffer
+;**********
+
+    buffer .proc 
+
+        status .proc 
+
+            sp           =   page.buffer2024_15+ 0
+            
+            zpa          =   page.buffer2024_15+ 1
+            zpx          =   page.buffer2024_15+ 2
+            zpy          =   page.buffer2024_15+ 3
+
+            zpWord0      =   page.buffer2024_15+ 4
+            zpWord1      =   page.buffer2024_15+ 6
+            zpWord2      =   page.buffer2024_15+ 8
+            zpWord3      =   page.buffer2024_15+10
+
+            reg_a        =   page.buffer2024_15+12
+            reg_x        =   page.buffer2024_15+13
+            reg_y        =   page.buffer2024_15+14
+            flag         =   page.buffer2024_15+15
+
+        .pend
+        
+    .pend
+    
+    #######
     #   irq
     #######
     
         ; .........................................    set_raster
         ;
         ;   ay          :   callback
-        ;   c           :   use kernal
+        ;
             
-        irq.set_raster
+        #    irq.set_raster
 
         ; .........................................    restore
         
-        irq.restore
+        #    irq.restore
         
         ;
         

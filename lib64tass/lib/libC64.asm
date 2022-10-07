@@ -69,10 +69,10 @@ zpa		= $02
 zpx		= $2a
 zpy		= $52
 
-zpByte0 = $fb   ;   zpWord  10
-zpByte1 = $fc   ;           11
-zpByte2 = $fd   ;           20
-zpByte3 = $fe   ;           21
+zpByte0     = $fb   ;   zpWord  10
+zpByte1     = $fc   ;           11
+zpByte2     = $fd   ;   zpWord  20
+zpByte3     = $fe   ;           21
 
 zpWord0     = $fb
 zpWord0hi   = $fb
@@ -101,53 +101,112 @@ zpDWord0    = $03           ;   32 bit
         zpWord3lo   = $05+1
 
 ;**********
-;           temp
+;           page
 ;**********
 
-temp  .proc
+page  .proc
 
     ;   zp
     
-    buffer0023.18   =   0023    ;   (18) byte   ;   *
+;   [   ]
+
+    buffer0023_18   =   0023    ;   (18) byte   ;   *
     ;       *
     ;       $0017-$0018 23-24	Pointer to previous expression in string stack.
     ;       $0019-$0021 25-33	String stack, temporary area for processing string expressions (9 bytes, 3 entries).
     ;       $0022-$0025 34-37	Temporary area for various operations (4 bytes).
     ;       $0026-$0029 38-41	Auxiliary arithmetical register for division and multiplication (4 bytes).
     
-    buffer0075.02   =   0073    ;   ( 2) byte   ;   Temporary area for saving original pointer to current BASIC 
+;   [   ]
+
+    buffer0075_02   =   0073    ;   ( 2) byte   ;   Temporary area for saving original pointer to current BASIC 
                                                 ;   instruction during GET, INPUT and READ.
-    buffer0104.01   =   0104    ;   ( 1) byte   ;   Temporary area for various operations.
-    buffer0146.01   =   0146    ;   ( 1) byte   ;   Unknown. (Timing constant during datasette input.)
+;   [   ]
+                                            
+    buffer0104_01   =   0104    ;   ( 1) byte   ;   Temporary area for various operations.
+    buffer0146_01   =   0146    ;   ( 1) byte   ;   Unknown. (Timing constant during datasette input.)
+    buffer0150_01   =   0150    ;   ( 1) byte   ;   Unknown. (End of tape indicator during datasette input/output.)
+    buffer0151_01   =   0151    ;   ( 1) byte   ;   Temporary area for saving original value of Y register during input from RS232.
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer0155_01   =   0155    ;   ( 1) byte   ;   Unknown. (Parity bit during datasette input/output.)
+    buffer0156_01   =   0156    ;   ( 1) byte   ;   Unknown. (Byte ready indicator during datasette input/output.)
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer0176_02   =   0176    ;   ( 2) byte   ;   Unknown.
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer0191_01   =   0191    ;   ( 1) byte   ;   Unknown.
+    buffer0645_01   =   0645    ;   ( 1) byte   ;   Unused  (Serial bus timeout.)
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer0679_89   =   0679    ;   (89) byte   ;   Unused  (89 bytes).              (64+15)
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer0787_01   =   0787    ;   ( 1) byte   ;   Unused
+    buffer0814_02   =   0814    ;   ( 2) byte   ;   Unused  Default: $FE66.              (2)
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer0820_08   =   0820    ;   (48) byte   ;   Unused (8 bytes).                    (8)
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer0828_192  =   0828    ;  (192) byte   ;   Datasette buffer (192 bytes).   (128+64)
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+      
+    buffer1020_04   =   1020    ;   ( 4) byte   ;   Unused (4 bytes).                    (4)
+                                                ;   instruction during GET, INPUT and READ.
+;   [ V ]
+      
+    buffer2024_15   =   2024    ;   (15) byte   ;   Unused (15 bytes).  **              (15)     TAKE
+    ;                   2040    ;   sprite 0 - 7
+    ;                   2047
 
-    buffer0150.01   =   0150    ;   ( 1) byte   ;   Unknown. (End of tape indicator during datasette input/output.)
-    buffer0151.01   =   0151    ;   ( 1) byte   ;   Temporary area for saving original value of Y register during input from RS232.
-  
-    buffer0155.01   =   0155    ;   ( 1) byte   ;   Unknown. (Parity bit during datasette input/output.)
-    buffer0156.01   =   0156    ;   ( 1) byte   ;   Unknown. (Byte ready indicator during datasette input/output.)
-
-    buffer0176.02   =   0176    ;   ( 2) byte   ;   Unknown.
-    buffer0191.01   =   0191    ;   ( 1) byte   ;   Unknown.
-
-    ;
-    
-    buffer0645.01   =   0645    ;   ( 1) byte   ;   Unused  (Serial bus timeout.)
-    buffer0679.89   =   0679    ;   (89) byte   ;   Unused  (89 bytes).              (64+15)
-    buffer0787.01   =   0787    ;   ( 1) byte   ;   Unused
-    buffer0814.02   =   0814    ;   ( 2) byte   ;   Unused  Default: $FE66.              (2)
-    buffer0820.08   =   0820    ;   (48) byte   ;   Unused (8 bytes).                    (8)
-    buffer0828.192  =   0828    ;  (192) byte   ;   Datasette buffer (192 bytes).   (128+64)
-    buffer1020.04   =   1020    ;   ( 4) byte   ;   Unused (4 bytes).                    (4)
-    buffer2024.15   =   2024    ;   (15) byte   ;   Unused (15 bytes).  **              (15) 
-    
     ;       **
     ;       screen  :    1024   -   2023
     ;                    $0400   -  $07E7
     ;       buffer  :    2024   -   2039    (15)   buffer
+    
     ;               :    2040   -   2047    (8)    sprite
     ;       program :    2049   -   ->
     
 .pend
+    
+;**********
+;           buffer
+;**********
+
+buffer .proc 
+
+    status .proc
+    
+        sp           =   page.buffer2024_15+ 0
+        
+        zpa          =   page.buffer2024_15+ 1
+        zpx          =   page.buffer2024_15+ 2
+        zpy          =   page.buffer2024_15+ 3
+
+        zpWord0      =   page.buffer2024_15+ 4
+        zpWord1      =   page.buffer2024_15+ 6
+        zpWord2      =   page.buffer2024_15+ 8
+        zpWord3      =   page.buffer2024_15+10
+
+        reg_a        =   page.buffer2024_15+12
+        reg_x        =   page.buffer2024_15+13
+        reg_y        =   page.buffer2024_15+14
+        flag         =   page.buffer2024_15+15
+        
+    .pend
+
+.pend
+    
 
 ;**********
 ;           sys
@@ -229,6 +288,107 @@ sys .proc
                 rts
     .pend
 
+    ;   ------------------------------------------------------- 
+    ;
+    ;   save/restore status zp,reg,flag
+    ;
+    ;   ------------------------------------------------------- 
+    
+    status  .proc
+    
+        save  .proc
+    
+            sta buffer.status.reg_a 
+            stx buffer.status.reg_x
+            sty buffer.status.reg_y
+            php
+            pla
+            sta buffer.status.flag
+
+            lda stack.pointer
+            sta buffer.status.sp
+            
+            lda zpa
+            sta buffer.status.zpa
+
+            lda zpx
+            sta buffer.status.zpx
+
+            lda zpy
+            sta buffer.status.zpy
+
+            lda zpWord0
+            sta buffer.status.zpWord0
+            lda zpWord0+1
+            sta buffer.status.zpWord0+1
+            
+            lda zpWord1
+            sta buffer.status.zpWord1
+            lda zpWord1+1
+            sta buffer.status.zpWord1+1
+
+            lda zpWord2
+            sta buffer.status.zpWord2
+            lda zpWord2+1
+            sta buffer.status.zpWord2+1
+ 
+            lda zpWord3
+            sta buffer.status.zpWord3
+            lda zpWord3+1
+            sta buffer.status.zpWord3+1
+    
+            rts
+           
+        .pend
+        
+        restore  .proc
+    
+            lda buffer.status.sp
+            sta stack.pointer
+
+            lda buffer.status.zpa
+            sta zpa
+
+            lda buffer.status.zpx
+            sta zpx
+
+            lda buffer.status.zpy
+            sta zpy
+
+            lda buffer.status.zpWord0
+            sta zpWord0
+            lda buffer.status.zpWord0+1
+            sta zpWord0+1
+
+            lda buffer.status.zpWord1
+            sta zpWord1
+            lda buffer.status.zpWord1+1
+            sta zpWord1+1
+
+            lda buffer.status.zpWord2
+            sta zpWord2
+            lda buffer.status.zpWord2+1
+            sta zpWord2+1 
+
+            lda buffer.status.zpWord3
+            sta zpWord3
+            lda buffer.status.zpWord3+1
+            sta zpWord3+1
+
+            lda buffer.status.reg_a 
+            ldx buffer.status.reg_x
+            ldy buffer.status.reg_y
+            lda buffer.status.flag
+            pha
+            plp 
+
+            rts
+            
+        .pend
+        
+    .pend
+    
+    
 .pend
 
 ;**********
@@ -237,27 +397,27 @@ sys .proc
 
 color .proc
 
-    black          =       0               ;       0000
-    white          =       1               ;       0001
-    red            =       2               ;       0010
-    cyan           =       3               ;       0011
-    violet         =       4               ;       0100
-    green          =       5               ;       0101
-    blue           =       6               ;       0110
-    yellow         =       7               ;       0111
+        black          =       0               ;       0000
+        white          =       1               ;       0001
+        red            =       2               ;       0010
+        cyan           =       3               ;       0011
+        violet         =       4               ;       0100
+        green          =       5               ;       0101
+        blue           =       6               ;       0110
+        yellow         =       7               ;       0111
 
-    orange         =       8               ;       1000
-    brown          =       9               ;       1001
-    light_red      =       10              ;       1010
-    dark_grey      =       11              ;       1011
-    grey           =       12              ;       1100
-    light_green    =       13              ;       1101
-    light_blue     =       14              ;       1110
-    light_grey     =       15              ;       1111
+        orange         =       8               ;       1000
+        brown          =       9               ;       1001
+        light_red      =       10              ;       1010
+        dark_grey      =       11              ;       1011
+        grey           =       12              ;       1100
+        light_green    =       13              ;       1101
+        light_blue     =       14              ;       1110
+        light_grey     =       15              ;       1111
 
-    default_border      =   254
-    default_background  =   246
-    default_foreground  =   254
+        default_border      =   254
+        default_background  =   246
+        default_foreground  =   254
     
 .pend
 
@@ -314,10 +474,10 @@ c64 .proc
         STROUT      = $ab1e
         CLEARSCR    = $e544
         HOMECRSR    = $e566
-        IRQDFRT     = $ea31
+        IRQDFRT     = $ea31     ;
         IRQDFEND    = $ea81
-        CINT        = $ff81
-        IOINIT      = $ff84
+        CINT        = $ff81     ;
+        IOINIT      = $ff84     ;
         RAMTAS      = $ff87
         RESTOR      = $ff8a
         VECTOR      = $ff8d
@@ -342,7 +502,7 @@ c64 .proc
         CHKIN       = $ffc6
         CHKOUT      = $ffc9
         CLRCHN      = $ffcc
-        CHRIN       = $ffcf
+        CHRIN       = $ffcf     ;
         CHROUT      = $ffd2     ;   a
         LOAD        = $ffd5
         SAVE        = $ffd8
@@ -363,7 +523,7 @@ c64 .proc
         STKEY       = $91
         SFDX        = $cb
         HIBASE      = $0288
-        CINV        = $0314
+        CINV        = $0314     ;
         CBINV       = $0316
         NMINV       = $0318
      
@@ -399,7 +559,7 @@ c64 .proc
         SPXYW       = $d000
         MSIGX       = $d010
         
-        SCROLY      = $d011
+        SCROLY      = $d011     ;
         
         RASTER      = $d012
         LPENX       = $d013
@@ -507,7 +667,7 @@ c64 .proc
             color_addr      =   $d800
         
         .weak
-            ;bitmap_addr     =   $e000
+           ;bitmap_addr     =   $e000
             bitmap_addr     =   $2000
             bitmap_size     =   320*200/8
         .endweak
@@ -1674,22 +1834,20 @@ mem .proc
 
     irq .proc
 
-        stack_pointer   .byte   0
-        
         begin   .proc
-        
-                lda stack.pointer
-                sta irq.stack_pointer
-                
-                rts
+
+            jsr sys.status.save
+
+            rts
+            
         .pend
         
         end   .proc
-        
-               lda irq.stack_pointer
-               sta stack.pointer
-               
-               rts
+
+            jsr sys.status.restore
+            
+            rts
+
         .pend
         
         ; .........................................    set_rasterirq
