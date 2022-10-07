@@ -236,19 +236,44 @@
     #   sqrt
     
     ;   ........................................................ remainder
+    ;
+    ;   input
+    ;   
+    ;       lda                 ; dividendo
+    ;       ldy                 ; divisore
+    ;
+    ;   output  :   a
+    ;
+    
+    #   mod_ub
 
-    mod_ub    .proc
-        jsr  math.div_u8
-        tya                 ;remainer
-        rts
-    .pend
+    ;   ........................................................ remainder
+    ;
+    ;   input
+    ;   
+    ;       load_imm_zpWord0    ; dividendo
+    ;       load_imm_ay         ; divisore
+    ;    
+    ;   output  :   ay
+    ;
+    
+    #   mod_uw 
 
-    mod_uw    .proc
-        jsr  math.div_u16
-        lda zpWord1
-        ldy zpWord1+1   ;   remainder
-        rts
-    .pend
+    ;  .................................. get_rand_num_byte
+    ;
+    ;  input   :   a   
+    ;  output  :   (0->a)
+    ;
+
+    #   get_rand_num_byte  .proc
+
+    ;  .................................. get_rand_num_word
+    ;
+    ;  input   :   ay   
+    ;  output  :   (0->ay)
+    ;
+
+    #   get_rand_num_word  
     
 ;;;
 ;;

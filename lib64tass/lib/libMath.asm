@@ -1487,7 +1487,49 @@ math    .proc
         ldy zpWord1+1   ;   remainder
         rts
     .pend
-    
+
+
+    ;  .................................. get_rand_num_byte
+    ;
+    ;  input   :   a   
+    ;  output  :   (0->a)
+    ;
+
+    get_rand_num_byte  .proc
+            sta mod+1 
+        loop
+            lda $d012   ;   get current raster line
+            eor $dc04   ;   Timer A. Read: Current timer value  lo
+            sbc $dc05   ;   Timer A. Read: Current timer value  hi
+         mod
+            cmp #71
+            bcs loop
+            rts
+    .pend
+
+    ;  .................................. get_rand_num_word
+    ;
+    ;  input   :   ay   
+    ;  output  :   (0->ay)
+    ;
+
+    get_rand_num_word  .proc
+            sta mod_lo+1
+            sty mod_hi+1
+         mod_lo
+            lda #<1000
+            jsr get_rand_num_byte
+            pha
+         mod_hi
+            lda #>1000
+            jsr get_rand_num_byte
+            tya
+            pla
+            
+            rts
+    .pend 
+ 
+ 
 .pend   
 
 
