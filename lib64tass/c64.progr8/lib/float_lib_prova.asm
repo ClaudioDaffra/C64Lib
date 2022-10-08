@@ -5,10 +5,10 @@
 
 .cpu  '6502'
 .enc  'none'
-zpy = 2
-zpa = 3
-zpWord0 = 251    ; word
-P8ZP_SCRATCH_W2 = 253    ; word
+zpa = 2
+zpx = 3
+zpWord1 = 251    ; word
+zpWord0 = 253    ; word
 .weak
 stack.lo = $ce00
 stack.hi = $cf00
@@ -48,8 +48,8 @@ start	.proc
 	;	src line: prova.p8:14
 	lda  #<prog8_float_const_0
 	ldy  #>prog8_float_const_0
-	sta  zpWord0
-	sty  zpWord0+1
+	sta  zpWord1
+	sty  zpWord1+1
 	lda  #<f
 	ldy  #>f
 	jsr  floats.copy_float
@@ -58,8 +58,8 @@ start	.proc
 	;	src line: prova.p8:16
 	lda  #<f
 	ldy  #>f
-	sta  zpWord0
-	sty  zpWord0+1
+	sta  zpWord1
+	sty  zpWord1+1
 	lda  #<floats.print_f.value
 	ldy  #>floats.print_f.value
 	jsr  floats.copy_float
@@ -135,7 +135,7 @@ clear_screencolors	.proc
 
 scroll_left	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:102
-		stx  zpa
+		stx  zpx
 		bcc _scroll_screen
 
 +               ; scroll the screen and the color memory
@@ -165,14 +165,14 @@ _scroll_screen  ; scroll only the screen memory
 		dey
 		bpl  -
 
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:138
 
 scroll_right	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:142
-		stx  zpa
+		stx  zpx
 		bcc  _scroll_screen
 
 +               ; scroll the screen and the color memory
@@ -198,14 +198,14 @@ _scroll_screen  ; scroll only the screen memory
 		dex
 		bpl  -
 
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:174
 
 scroll_up	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:178
-		stx  zpa
+		stx  zpx
 		bcc  _scroll_screen
 
 +               ; scroll the screen and the color memory
@@ -231,14 +231,14 @@ _scroll_screen  ; scroll only the screen memory
 		dex
 		bpl  -
 
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:210
 
 scroll_down	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:214
-		stx  zpa
+		stx  zpx
 		bcc  _scroll_screen
 
 +               ; scroll the screen and the color memory
@@ -264,7 +264,7 @@ _scroll_screen  ; scroll only the screen memory
 		dex
 		bpl  -
 
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:246
@@ -273,10 +273,10 @@ _scroll_screen  ; scroll only the screen memory
 
 print	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:253
-		sta  zpy
-		sty  zpa
+		sta  zpa
+		sty  zpx
 		ldy  #0
--		lda  (zpy),y
+-		lda  (zpa),y
 		beq  +
 		jsr  c64.CHROUT
 		iny
@@ -287,7 +287,7 @@ print	.proc
 
 print_ub0	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:268
-		stx  zpa
+		stx  zpx
 		jsr  conv.ubyte2decimal
 		pha
 		tya
@@ -296,14 +296,14 @@ print_ub0	.proc
 		jsr  c64.CHROUT
 		txa
 		jsr  c64.CHROUT
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:283
 
 print_ub	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:285
-		stx  zpa
+		stx  zpx
 		jsr  conv.ubyte2decimal
 _print_byte_digits
 		pha
@@ -320,14 +320,14 @@ _print_byte_digits
         jsr  c64.CHROUT
 _ones   txa
 		jsr  c64.CHROUT
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:308
 
 print_b	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:310
-		stx  zpa
+		stx  zpx
 		pha
 		cmp  #0
 		bpl  +
@@ -341,7 +341,7 @@ print_b	.proc
 
 print_ubhex	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:325
-		stx  zpa
+		stx  zpx
 		bcc  +
 		pha
 		lda  #'$'
@@ -351,27 +351,27 @@ print_ubhex	.proc
 		jsr  c64.CHROUT
 		tya
 		jsr  c64.CHROUT
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:341
 
 print_ubbin	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:343
-		stx  zpa
-		sta  zpy
+		stx  zpx
+		sta  zpa
 		bcc  +
 		lda  #'%'
 		jsr  c64.CHROUT
 +		ldy  #8
 -		lda  #'0'
-		asl  zpy
+		asl  zpa
 		bcc  +
 		lda  #'1'
 +		jsr  c64.CHROUT
 		dey
 		bne  -
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:362
@@ -400,7 +400,7 @@ print_uwhex	.proc
 
 print_uw0	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:389
-	    stx  zpa
+	    stx  zpx
 		jsr  conv.uword2decimal
 		ldy  #0
 -		lda  conv.uword2decimal.decTenThousands,y
@@ -408,16 +408,16 @@ print_uw0	.proc
 		jsr  c64.CHROUT
 		iny
 		bne  -
-+		ldx  zpa
++		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:403
 
 print_uw	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:405
-	    stx  zpa
+	    stx  zpx
 		jsr  conv.uword2decimal
-		ldx  zpa
+		ldx  zpx
 		ldy  #0
 -		lda  conv.uword2decimal.decTenThousands,y
 		beq  _allzero
@@ -460,17 +460,17 @@ print_w	.proc
 
 input_chars	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:454
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  #0				; char counter = 0
 -		jsr  c64.CHRIN
 		cmp  #$0d			; return (ascii 13) pressed?
 		beq  +				; yes, end.
-		sta  (zpWord0),y	; else store char in buffer
+		sta  (zpWord1),y	; else store char in buffer
 		iny
 		bne  -
 +		lda  #0
-		sta  (zpWord0),y	; finish string with 0 byte
+		sta  (zpWord1),y	; finish string with 0 byte
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:471
@@ -559,11 +559,11 @@ _mod		lda  $ffff		; modified
 
 plot	.proc
 	;	src line: library:/prog8lib/c64/textio.p8:585
-		stx  zpa
+		stx  zpx
 		tax
 		clc
 		jsr  c64.PLOT
-		ldx  zpa
+		ldx  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/textio.p8:595
@@ -778,234 +778,7 @@ c64	.proc
 	IOBASE = $fff3
 
 ; subroutines in this block
-	;	src line: library:/prog8lib/c64/syslib.p8:5
-	;	src line: library:/prog8lib/c64/syslib.p8:6
-	;	src line: library:/prog8lib/c64/syslib.p8:7
-	;	src line: library:/prog8lib/c64/syslib.p8:8
-	;	src line: library:/prog8lib/c64/syslib.p8:9
-	;	src line: library:/prog8lib/c64/syslib.p8:10
-	;	src line: library:/prog8lib/c64/syslib.p8:12
-	;	src line: library:/prog8lib/c64/syslib.p8:13
-	;	src line: library:/prog8lib/c64/syslib.p8:14
-	;	src line: library:/prog8lib/c64/syslib.p8:15
-	;	src line: library:/prog8lib/c64/syslib.p8:16
-	;	src line: library:/prog8lib/c64/syslib.p8:17
-	;	src line: library:/prog8lib/c64/syslib.p8:18
-	;	src line: library:/prog8lib/c64/syslib.p8:19
-	;	src line: library:/prog8lib/c64/syslib.p8:22
-	;	src line: library:/prog8lib/c64/syslib.p8:23
-	;	src line: library:/prog8lib/c64/syslib.p8:26
-	;	src line: library:/prog8lib/c64/syslib.p8:27
-	;	src line: library:/prog8lib/c64/syslib.p8:28
-	;	src line: library:/prog8lib/c64/syslib.p8:29
-	;	src line: library:/prog8lib/c64/syslib.p8:30
-	;	src line: library:/prog8lib/c64/syslib.p8:31
-	;	src line: library:/prog8lib/c64/syslib.p8:32
-	;	src line: library:/prog8lib/c64/syslib.p8:33
-	;	src line: library:/prog8lib/c64/syslib.p8:34
-	;	src line: library:/prog8lib/c64/syslib.p8:39
-	;	src line: library:/prog8lib/c64/syslib.p8:40
-	;	src line: library:/prog8lib/c64/syslib.p8:41
-	;	src line: library:/prog8lib/c64/syslib.p8:42
-	;	src line: library:/prog8lib/c64/syslib.p8:43
-	;	src line: library:/prog8lib/c64/syslib.p8:44
-	;	src line: library:/prog8lib/c64/syslib.p8:45
-	;	src line: library:/prog8lib/c64/syslib.p8:46
-	;	src line: library:/prog8lib/c64/syslib.p8:47
-	;	src line: library:/prog8lib/c64/syslib.p8:48
-	;	src line: library:/prog8lib/c64/syslib.p8:49
-	;	src line: library:/prog8lib/c64/syslib.p8:50
-	;	src line: library:/prog8lib/c64/syslib.p8:51
-	;	src line: library:/prog8lib/c64/syslib.p8:52
-	;	src line: library:/prog8lib/c64/syslib.p8:53
-	;	src line: library:/prog8lib/c64/syslib.p8:54
-	;	src line: library:/prog8lib/c64/syslib.p8:55
-	;	src line: library:/prog8lib/c64/syslib.p8:56
-	;	src line: library:/prog8lib/c64/syslib.p8:58
-	;	src line: library:/prog8lib/c64/syslib.p8:59
-	;	src line: library:/prog8lib/c64/syslib.p8:60
-	;	src line: library:/prog8lib/c64/syslib.p8:61
-	;	src line: library:/prog8lib/c64/syslib.p8:62
-	;	src line: library:/prog8lib/c64/syslib.p8:63
-	;	src line: library:/prog8lib/c64/syslib.p8:64
-	;	src line: library:/prog8lib/c64/syslib.p8:65
-	;	src line: library:/prog8lib/c64/syslib.p8:66
-	;	src line: library:/prog8lib/c64/syslib.p8:67
-	;	src line: library:/prog8lib/c64/syslib.p8:68
-	;	src line: library:/prog8lib/c64/syslib.p8:69
-	;	src line: library:/prog8lib/c64/syslib.p8:70
-	;	src line: library:/prog8lib/c64/syslib.p8:71
-	;	src line: library:/prog8lib/c64/syslib.p8:72
-	;	src line: library:/prog8lib/c64/syslib.p8:73
-	;	src line: library:/prog8lib/c64/syslib.p8:75
-	;	src line: library:/prog8lib/c64/syslib.p8:76
-	;	src line: library:/prog8lib/c64/syslib.p8:77
-	;	src line: library:/prog8lib/c64/syslib.p8:78
-	;	src line: library:/prog8lib/c64/syslib.p8:79
-	;	src line: library:/prog8lib/c64/syslib.p8:80
-	;	src line: library:/prog8lib/c64/syslib.p8:81
-	;	src line: library:/prog8lib/c64/syslib.p8:82
-	;	src line: library:/prog8lib/c64/syslib.p8:83
-	;	src line: library:/prog8lib/c64/syslib.p8:84
-	;	src line: library:/prog8lib/c64/syslib.p8:85
-	;	src line: library:/prog8lib/c64/syslib.p8:86
-	;	src line: library:/prog8lib/c64/syslib.p8:87
-	;	src line: library:/prog8lib/c64/syslib.p8:88
-	;	src line: library:/prog8lib/c64/syslib.p8:89
-	;	src line: library:/prog8lib/c64/syslib.p8:90
-	;	src line: library:/prog8lib/c64/syslib.p8:97
-	;	src line: library:/prog8lib/c64/syslib.p8:98
-	;	src line: library:/prog8lib/c64/syslib.p8:99
-	;	src line: library:/prog8lib/c64/syslib.p8:100
-	;	src line: library:/prog8lib/c64/syslib.p8:101
-	;	src line: library:/prog8lib/c64/syslib.p8:102
-	;	src line: library:/prog8lib/c64/syslib.p8:103
-	;	src line: library:/prog8lib/c64/syslib.p8:104
-	;	src line: library:/prog8lib/c64/syslib.p8:105
-	;	src line: library:/prog8lib/c64/syslib.p8:106
-	;	src line: library:/prog8lib/c64/syslib.p8:107
-	;	src line: library:/prog8lib/c64/syslib.p8:108
-	;	src line: library:/prog8lib/c64/syslib.p8:109
-	;	src line: library:/prog8lib/c64/syslib.p8:110
-	;	src line: library:/prog8lib/c64/syslib.p8:111
-	;	src line: library:/prog8lib/c64/syslib.p8:112
-	;	src line: library:/prog8lib/c64/syslib.p8:114
-	;	src line: library:/prog8lib/c64/syslib.p8:115
-	;	src line: library:/prog8lib/c64/syslib.p8:116
-	;	src line: library:/prog8lib/c64/syslib.p8:117
-	;	src line: library:/prog8lib/c64/syslib.p8:118
-	;	src line: library:/prog8lib/c64/syslib.p8:119
-	;	src line: library:/prog8lib/c64/syslib.p8:120
-	;	src line: library:/prog8lib/c64/syslib.p8:121
-	;	src line: library:/prog8lib/c64/syslib.p8:122
-	;	src line: library:/prog8lib/c64/syslib.p8:123
-	;	src line: library:/prog8lib/c64/syslib.p8:124
-	;	src line: library:/prog8lib/c64/syslib.p8:125
-	;	src line: library:/prog8lib/c64/syslib.p8:126
-	;	src line: library:/prog8lib/c64/syslib.p8:127
-	;	src line: library:/prog8lib/c64/syslib.p8:128
-	;	src line: library:/prog8lib/c64/syslib.p8:129
-	;	src line: library:/prog8lib/c64/syslib.p8:135
-	;	src line: library:/prog8lib/c64/syslib.p8:136
-	;	src line: library:/prog8lib/c64/syslib.p8:137
-	;	src line: library:/prog8lib/c64/syslib.p8:138
-	;	src line: library:/prog8lib/c64/syslib.p8:139
-	;	src line: library:/prog8lib/c64/syslib.p8:140
-	;	src line: library:/prog8lib/c64/syslib.p8:141
-	;	src line: library:/prog8lib/c64/syslib.p8:142
-	;	src line: library:/prog8lib/c64/syslib.p8:143
-	;	src line: library:/prog8lib/c64/syslib.p8:144
-	;	src line: library:/prog8lib/c64/syslib.p8:145
-	;	src line: library:/prog8lib/c64/syslib.p8:146
-	;	src line: library:/prog8lib/c64/syslib.p8:147
-	;	src line: library:/prog8lib/c64/syslib.p8:148
-	;	src line: library:/prog8lib/c64/syslib.p8:149
-	;	src line: library:/prog8lib/c64/syslib.p8:150
-	;	src line: library:/prog8lib/c64/syslib.p8:151
-	;	src line: library:/prog8lib/c64/syslib.p8:152
-	;	src line: library:/prog8lib/c64/syslib.p8:153
-	;	src line: library:/prog8lib/c64/syslib.p8:154
-	;	src line: library:/prog8lib/c64/syslib.p8:155
-	;	src line: library:/prog8lib/c64/syslib.p8:156
-	;	src line: library:/prog8lib/c64/syslib.p8:157
-	;	src line: library:/prog8lib/c64/syslib.p8:158
-	;	src line: library:/prog8lib/c64/syslib.p8:159
-	;	src line: library:/prog8lib/c64/syslib.p8:160
-	;	src line: library:/prog8lib/c64/syslib.p8:161
-	;	src line: library:/prog8lib/c64/syslib.p8:162
-	;	src line: library:/prog8lib/c64/syslib.p8:163
-	;	src line: library:/prog8lib/c64/syslib.p8:164
-	;	src line: library:/prog8lib/c64/syslib.p8:165
-	;	src line: library:/prog8lib/c64/syslib.p8:166
-	;	src line: library:/prog8lib/c64/syslib.p8:167
-	;	src line: library:/prog8lib/c64/syslib.p8:168
-	;	src line: library:/prog8lib/c64/syslib.p8:169
-	;	src line: library:/prog8lib/c64/syslib.p8:170
-	;	src line: library:/prog8lib/c64/syslib.p8:177
-
-	;	src line: library:/prog8lib/c64/syslib.p8:178
-
-	;	src line: library:/prog8lib/c64/syslib.p8:179
-
-	;	src line: library:/prog8lib/c64/syslib.p8:180
-
-	;	src line: library:/prog8lib/c64/syslib.p8:181
-
-	;	src line: library:/prog8lib/c64/syslib.p8:182
-
-	;	src line: library:/prog8lib/c64/syslib.p8:183
-
-	;	src line: library:/prog8lib/c64/syslib.p8:184
-
-	;	src line: library:/prog8lib/c64/syslib.p8:185
-
-	;	src line: library:/prog8lib/c64/syslib.p8:186
-
-	;	src line: library:/prog8lib/c64/syslib.p8:187
-
-	;	src line: library:/prog8lib/c64/syslib.p8:188
-
-	;	src line: library:/prog8lib/c64/syslib.p8:189
-
-	;	src line: library:/prog8lib/c64/syslib.p8:190
-
-	;	src line: library:/prog8lib/c64/syslib.p8:191
-
-	;	src line: library:/prog8lib/c64/syslib.p8:192
-
-	;	src line: library:/prog8lib/c64/syslib.p8:193
-
-	;	src line: library:/prog8lib/c64/syslib.p8:194
-
-	;	src line: library:/prog8lib/c64/syslib.p8:195
-
-	;	src line: library:/prog8lib/c64/syslib.p8:196
-
-	;	src line: library:/prog8lib/c64/syslib.p8:197
-
-	;	src line: library:/prog8lib/c64/syslib.p8:198
-
-	;	src line: library:/prog8lib/c64/syslib.p8:199
-
-	;	src line: library:/prog8lib/c64/syslib.p8:200
-
-	;	src line: library:/prog8lib/c64/syslib.p8:201
-
-	;	src line: library:/prog8lib/c64/syslib.p8:202
-
-	;	src line: library:/prog8lib/c64/syslib.p8:203
-
-	;	src line: library:/prog8lib/c64/syslib.p8:204
-
-	;	src line: library:/prog8lib/c64/syslib.p8:205
-
-	;	src line: library:/prog8lib/c64/syslib.p8:206
-
-	;	src line: library:/prog8lib/c64/syslib.p8:207
-
-	;	src line: library:/prog8lib/c64/syslib.p8:208
-
-	;	src line: library:/prog8lib/c64/syslib.p8:209
-
-	;	src line: library:/prog8lib/c64/syslib.p8:210
-
-	;	src line: library:/prog8lib/c64/syslib.p8:211
-
-	;	src line: library:/prog8lib/c64/syslib.p8:212
-
-	;	src line: library:/prog8lib/c64/syslib.p8:213
-
-	;	src line: library:/prog8lib/c64/syslib.p8:214
-
-	;	src line: library:/prog8lib/c64/syslib.p8:215
-
-	;	src line: library:/prog8lib/c64/syslib.p8:216
-
-	;	src line: library:/prog8lib/c64/syslib.p8:217
-
-	;	src line: library:/prog8lib/c64/syslib.p8:218
-
-	;	src line: library:/prog8lib/c64/syslib.p8:219
+ 
 
 	;	src line: library:/prog8lib/c64/syslib.p8:220
 
@@ -1030,13 +803,13 @@ STOP2	.proc
 
 RDTIM16	.proc
 	;	src line: library:/prog8lib/c64/syslib.p8:246
-        stx  zpa
+        stx  zpx
         jsr  c64.RDTIM
         pha
         txa
         tay
         pla
-        ldx  zpa
+        ldx  zpx
         rts
 	.pend
 	;	src line: library:/prog8lib/c64/syslib.p8:262
@@ -1134,17 +907,17 @@ _use_kernal     .byte  0
 _irq_handler_init
 		; save all zp scratch registers and the X register as these might be clobbered by the irq routine
 		stx  IRQ_X_REG
-		lda  zpy
-		sta  IRQ_SCRATCH_ZPB1
 		lda  zpa
+		sta  IRQ_SCRATCH_ZPB1
+		lda  zpx
 		sta  IRQ_SCRATCH_ZPREG
-		lda  zpWord0
+		lda  zpWord1
 		sta  IRQ_SCRATCH_ZPWORD1
-		lda  zpWord0+1
+		lda  zpWord1+1
 		sta  IRQ_SCRATCH_ZPWORD1+1
-		lda  P8ZP_SCRATCH_W2
+		lda  zpWord0
 		sta  IRQ_SCRATCH_ZPWORD2
-		lda  P8ZP_SCRATCH_W2+1
+		lda  zpWord0+1
 		sta  IRQ_SCRATCH_ZPWORD2+1
 		; stack protector; make sure we don't clobber the top of the evaluation stack
 		dex
@@ -1159,17 +932,17 @@ _irq_handler_init
 _irq_handler_end
 		; restore all zp scratch registers and the X register
 		lda  IRQ_SCRATCH_ZPB1
-		sta  zpy
-		lda  IRQ_SCRATCH_ZPREG
 		sta  zpa
+		lda  IRQ_SCRATCH_ZPREG
+		sta  zpx
 		lda  IRQ_SCRATCH_ZPWORD1
-		sta  zpWord0
+		sta  zpWord1
 		lda  IRQ_SCRATCH_ZPWORD1+1
-		sta  zpWord0+1
+		sta  zpWord1+1
 		lda  IRQ_SCRATCH_ZPWORD2
-		sta  P8ZP_SCRATCH_W2
+		sta  zpWord0
 		lda  IRQ_SCRATCH_ZPWORD2+1
-		sta  P8ZP_SCRATCH_W2+1
+		sta  zpWord0+1
 		ldx  IRQ_X_REG
 		rts
 
@@ -1287,8 +1060,8 @@ waitvsync	.proc
 
 internal_stringcopy	.proc
 	;	src line: library:/prog8lib/c64/syslib.p8:537
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		lda  cx16.r0
 		ldy  cx16.r0+1
 		jmp  prog8_lib.strcpy
@@ -1298,13 +1071,13 @@ internal_stringcopy	.proc
 memcopy	.proc
 	;	src line: library:/prog8lib/c64/syslib.p8:549
             ldx  cx16.r0
-            stx  zpWord0        ; source in ZP
+            stx  zpWord1        ; source in ZP
             ldx  cx16.r0+1
-            stx  zpWord0+1
+            stx  zpWord1+1
             ldx  cx16.r1
-            stx  P8ZP_SCRATCH_W2        ; target in ZP
+            stx  zpWord0        ; target in ZP
             ldx  cx16.r1+1
-            stx  P8ZP_SCRATCH_W2+1
+            stx  zpWord0+1
             cpy  #0
             bne  _longcopy
 
@@ -1315,35 +1088,35 @@ memcopy	.proc
 
 _copyshort
             ; decrease source and target pointers so we can simply index by Y
+            lda  zpWord1
+            bne  +
+            dec  zpWord1+1
++           dec  zpWord1
             lda  zpWord0
             bne  +
             dec  zpWord0+1
 +           dec  zpWord0
-            lda  P8ZP_SCRATCH_W2
-            bne  +
-            dec  P8ZP_SCRATCH_W2+1
-+           dec  P8ZP_SCRATCH_W2
 
--           lda  (zpWord0),y
-            sta  (P8ZP_SCRATCH_W2),y
+-           lda  (zpWord1),y
+            sta  (zpWord0),y
             dey
             bne  -
             rts
 
 _longcopy
-            sta  zpy        ; lsb(count) = remainder in last page
+            sta  zpa        ; lsb(count) = remainder in last page
             tya
             tax                         ; x = num pages (1+)
             ldy  #0
--           lda  (zpWord0),y
-            sta  (P8ZP_SCRATCH_W2),y
+-           lda  (zpWord1),y
+            sta  (zpWord0),y
             iny
             bne  -
+            inc  zpWord1+1
             inc  zpWord0+1
-            inc  P8ZP_SCRATCH_W2+1
             dex
             bne  -
-            ldy  zpy
+            ldy  zpa
             bne  _copyshort
             rts
 	.pend
@@ -1352,9 +1125,9 @@ _longcopy
 memset	.proc
 	;	src line: library:/prog8lib/c64/syslib.p8:603
             ldy  cx16.r0
-            sty  zpWord0
+            sty  zpWord1
             ldy  cx16.r0+1
-            sty  zpWord0+1
+            sty  zpWord1+1
             ldx  cx16.r1
             ldy  cx16.r1+1
             jmp  prog8_lib.memset
@@ -1364,13 +1137,13 @@ memset	.proc
 memsetw	.proc
 	;	src line: library:/prog8lib/c64/syslib.p8:615
             ldx  cx16.r0
-            stx  zpWord0
+            stx  zpWord1
             ldx  cx16.r0+1
-            stx  zpWord0+1
+            stx  zpWord1+1
             ldx  cx16.r1
-            stx  P8ZP_SCRATCH_W2
+            stx  zpWord0
             ldx  cx16.r1+1
-            stx  P8ZP_SCRATCH_W2+1
+            stx  zpWord0+1
             jmp  prog8_lib.memsetw
 	.pend
 	;	src line: library:/prog8lib/c64/syslib.p8:628
@@ -1598,23 +1371,23 @@ string_out	; PETSCII:"????????????????"
 
 str_ub0	.proc
 	;	src line: library:/prog8lib/conv.p8:11
-            stx  zpa
+            stx  zpx
             jsr  conv.ubyte2decimal
             sty  string_out
             sta  string_out+1
             stx  string_out+2
             lda  #0
             sta  string_out+3
-            ldx  zpa
+            ldx  zpx
             rts
 	.pend
 	;	src line: library:/prog8lib/conv.p8:24
 
 str_ub	.proc
 	;	src line: library:/prog8lib/conv.p8:26
-		stx  zpa
+		stx  zpx
 		ldy  #0
-		sty  zpy
+		sty  zpa
 		jsr  conv.ubyte2decimal
 _output_byte_digits
                 ; hundreds?
@@ -1622,12 +1395,12 @@ _output_byte_digits
 		beq  +
 		pha
 		tya
-		ldy  zpy
+		ldy  zpa
 		sta  string_out,y
 		pla
-		inc  zpy
+		inc  zpa
 		; tens?
-+		ldy  zpy
++		ldy  zpa
                 cmp  #'0'
 		beq  +
 		sta  string_out,y
@@ -1638,22 +1411,22 @@ _output_byte_digits
                 iny
                 lda  #0
                 sta  string_out,y
-                ldx  zpa
+                ldx  zpx
                 rts
 	.pend
 	;	src line: library:/prog8lib/conv.p8:58
 
 str_b	.proc
 	;	src line: library:/prog8lib/conv.p8:60
-            stx  zpa
+            stx  zpx
             ldy  #0
-            sty  zpy
+            sty  zpa
             cmp  #0
             bpl  +
             pha
             lda  #'-'
             sta  string_out
-            inc  zpy
+            inc  zpa
             pla
 +	    jsr  conv.byte2decimal
             bra  str_ub._output_byte_digits
@@ -1673,11 +1446,11 @@ str_ubhex	.proc
 
 str_ubbin	.proc
 	;	src line: library:/prog8lib/conv.p8:90
-	    sta  zpy
+	    sta  zpa
 	    ldy  #0
 	    sty  string_out+8
 	    ldy  #7
--	    lsr  zpy
+-	    lsr  zpa
             bcc  +
             lda  #'1'
             bne  _digit
@@ -1691,13 +1464,13 @@ _digit      sta  string_out,y
 
 str_uwbin	.proc
 	;	src line: library:/prog8lib/conv.p8:109
-	    sta  zpa
+	    sta  zpx
 	    tya
 	    jsr  str_ubbin
 	    ldy  #0
 	    sty  string_out+16
 	    ldy  #7
--	    lsr  zpa
+-	    lsr  zpx
             bcc  +
             lda  #'1'
             bne  _digit
@@ -1728,7 +1501,7 @@ str_uwhex	.proc
 
 str_uw0	.proc
 	;	src line: library:/prog8lib/conv.p8:148
-	    stx  zpa
+	    stx  zpx
 	    jsr  conv.uword2decimal
 	    ldy  #0
 -           lda  conv.uword2decimal.decTenThousands,y
@@ -1736,14 +1509,14 @@ str_uw0	.proc
             beq  +
             iny
             bne  -
-+           ldx  zpa
++           ldx  zpx
 	    rts
 	.pend
 	;	src line: library:/prog8lib/conv.p8:162
 
 str_uw	.proc
 	;	src line: library:/prog8lib/conv.p8:164
-	    stx  zpa
+	    stx  zpx
 	    jsr  conv.uword2decimal
 	    ldx  #0
 _output_digits
@@ -1761,7 +1534,7 @@ _gotdigit   sta  string_out,x
             bne  _gotdigit
 _end        lda  #0
             sta  string_out,x
-            ldx  zpa
+            ldx  zpx
             rts
 
 _allzero    lda  #'0'
@@ -1775,7 +1548,7 @@ str_w	.proc
 	;	src line: library:/prog8lib/conv.p8:195
 	    cpy  #0
 	    bpl  str_uw
-	    stx  zpa
+	    stx  zpx
 	    pha
 	    lda  #'-'
 	    sta  string_out
@@ -1799,11 +1572,11 @@ str_w	.proc
 any2uword	.proc
 	;	src line: library:/prog8lib/conv.p8:226
 	pha
-	sta  zpWord0
-	sty  zpWord0+1
+	sta  zpWord1
+	sty  zpWord1+1
 	ldy  #0
-	lda  (zpWord0),y
-	ldy  zpWord0+1
+	lda  (zpWord1),y
+	ldy  zpWord1+1
 	cmp  #'$'
 	beq  _hex
 	cmp  #'%'
@@ -1819,11 +1592,11 @@ _bin	pla
 _result
         pha
         lda  cx16.r15
-        sta  zpy        ; result value
+        sta  zpa        ; result value
         pla
         sta  cx16.r15
         sty  cx16.r15+1
-        lda  zpy
+        lda  zpa
         rts
 	.pend
 	;	src line: library:/prog8lib/conv.p8:257
@@ -1832,15 +1605,15 @@ _result
 
 str2uword	.proc
 	;	src line: library:/prog8lib/conv.p8:282
-_result = zpWord0
-        	sta  P8ZP_SCRATCH_W2
-        	sty  P8ZP_SCRATCH_W2+1
+_result = zpWord1
+        	sta  zpWord0
+        	sty  zpWord0+1
 		ldy  #0
 		sty  _result
 		sty  _result+1
 		sty  cx16.r15+1
 _loop
-		lda  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord0),y
 		sec
 		sbc  #48
 		bpl  _digit
@@ -1867,16 +1640,16 @@ _digit
 
 _result_times_10     ; (W*4 + W)*2
 		lda  _result+1
-		sta  zpa
+		sta  zpx
 		lda  _result
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  _result
 		sta  _result
-		lda  zpa
+		lda  zpx
 		adc  _result+1
 		asl  _result
 		rol  a
@@ -1887,15 +1660,15 @@ _result_times_10     ; (W*4 + W)*2
 
 str2word	.proc
 	;	src line: library:/prog8lib/conv.p8:341
-_result = zpWord0
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
+_result = zpWord1
+		sta  zpWord0
+		sty  zpWord0+1
 		ldy  #0
 		sty  _result
 		sty  _result+1
 		sty  _negative
 		sty  cx16.r15+1
-		lda  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord0),y
 		cmp  #'+'
 		bne  +
 		iny
@@ -1903,7 +1676,7 @@ _result = zpWord0
 		bne  _parse
 		inc  _negative
 		iny
-_parse		lda  (P8ZP_SCRATCH_W2),y
+_parse		lda  (zpWord0),y
 		sec
 		sbc  #48
 		bpl  _digit
@@ -1942,21 +1715,21 @@ _negative	.byte  0
 
 hex2uword	.proc
 	;	src line: library:/prog8lib/conv.p8:400
-	sta  P8ZP_SCRATCH_W2
-	sty  P8ZP_SCRATCH_W2+1
-	ldy  #0
-	sty  zpWord0
+	sta  zpWord0
 	sty  zpWord0+1
+	ldy  #0
+	sty  zpWord1
+	sty  zpWord1+1
 	sty  cx16.r15+1
-	lda  (P8ZP_SCRATCH_W2),y
+	lda  (zpWord0),y
 	beq  _stop
 	cmp  #'$'
 	bne  _loop
 	iny
 _loop
 	lda  #0
-	sta  zpy
-	lda  (P8ZP_SCRATCH_W2),y
+	sta  zpa
+	lda  (zpWord0),y
 	beq  _stop
 	cmp  #7                 ; screencode letters A-F are 1-6
 	bcc  _add_letter
@@ -1972,30 +1745,30 @@ _loop
 	cmp  #'9'+1
 	bcs  _stop
 _calc
-	asl  zpWord0
-	rol  zpWord0+1
-	asl  zpWord0
-	rol  zpWord0+1
-	asl  zpWord0
-	rol  zpWord0+1
-	asl  zpWord0
-	rol  zpWord0+1
+	asl  zpWord1
+	rol  zpWord1+1
+	asl  zpWord1
+	rol  zpWord1+1
+	asl  zpWord1
+	rol  zpWord1+1
+	asl  zpWord1
+	rol  zpWord1+1
 	and  #$0f
 	clc
-	adc  zpy
-	ora  zpWord0
-	sta  zpWord0
+	adc  zpa
+	ora  zpWord1
+	sta  zpWord1
 	iny
 	bne  _loop
 _stop
 	sty  cx16.r15
-	lda  zpWord0
-	ldy  zpWord0+1
+	lda  zpWord1
+	ldy  zpWord1+1
 	rts
 _add_letter
 	pha
 	lda  #9
-	sta  zpy
+	sta  zpa
 	pla
 	jmp  _calc
 _try_iso
@@ -2008,34 +1781,34 @@ _try_iso
 
 bin2uword	.proc
 	;	src line: library:/prog8lib/conv.p8:469
-	sta  P8ZP_SCRATCH_W2
-	sty  P8ZP_SCRATCH_W2+1
-	ldy  #0
-	sty  zpWord0
+	sta  zpWord0
 	sty  zpWord0+1
+	ldy  #0
+	sty  zpWord1
+	sty  zpWord1+1
 	sty  cx16.r15+1
-	lda  (P8ZP_SCRATCH_W2),y
+	lda  (zpWord0),y
 	beq  _stop
 	cmp  #'%'
 	bne  _loop
 	iny
 _loop
-	lda  (P8ZP_SCRATCH_W2),y
+	lda  (zpWord0),y
 	cmp  #'0'
 	bcc  _stop
 	cmp  #'2'
 	bcs  _stop
-_first  asl  zpWord0
-	rol  zpWord0+1
+_first  asl  zpWord1
+	rol  zpWord1+1
 	and  #1
-	ora  zpWord0
-	sta  zpWord0
+	ora  zpWord1
+	sta  zpWord1
 	iny
 	bne  _loop
 _stop
 	sty  cx16.r15
-	lda  zpWord0
-	ldy  zpWord0+1
+	lda  zpWord1
+	ldy  zpWord1+1
 	rts
 	.pend
 	;	src line: library:/prog8lib/conv.p8:505
@@ -2075,9 +1848,9 @@ uword2decimal	.proc
 
 
 ASCII_0_OFFSET 	= $30
-temp       	    = zpy	; byte in zeropage
-hexHigh      	= zpWord0	; byte in zeropage
-hexLow       	= zpWord0+1	; byte in zeropage
+temp       	    = zpa	; byte in zeropage
+hexHigh      	= zpWord1	; byte in zeropage
+hexLow       	= zpWord1+1	; byte in zeropage
 
 
 HexToDec65535; SUBROUTINE
@@ -2229,7 +2002,7 @@ byte2decimal	.proc
 
 ubyte2hex	.proc
 	;	src line: library:/prog8lib/conv.p8:704
-		stx  zpa
+		stx  zpx
 		pha
 		and  #$0f
 		tax
@@ -2241,7 +2014,7 @@ ubyte2hex	.proc
 		lsr  a
 		tax
 		lda  _hex_digits,x
-		ldx  zpa
+		ldx  zpx
 		rts
 
 _hex_digits	.text "0123456789abcdef"	; can probably be reused for other stuff as well
@@ -2250,12 +2023,12 @@ _hex_digits	.text "0123456789abcdef"	; can probably be reused for other stuff as
 
 uword2hex	.proc
 	;	src line: library:/prog8lib/conv.p8:726
-		sta  zpa
+		sta  zpx
 		tya
 		jsr  ubyte2hex
 		sta  output
 		sty  output+1
-		lda  zpa
+		lda  zpx
 		jsr  ubyte2hex
 		sta  output+2
 		sty  output+3
@@ -2275,10 +2048,10 @@ string	.proc
 
 length	.proc
 	;	src line: library:/prog8lib/string.p8:10
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  #0
--		lda  (zpWord0),y
+-		lda  (zpWord1),y
 		beq  +
 		iny
 		bne  -
@@ -2290,22 +2063,22 @@ left	.proc
 	;	src line: library:/prog8lib/string.p8:27
                 ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
 		ldy  cx16.r0
-		sty  zpWord0
+		sty  zpWord1
 		ldy  cx16.r0+1
-		sty  zpWord0+1
+		sty  zpWord1+1
 		ldy  cx16.r1
-		sty  P8ZP_SCRATCH_W2
+		sty  zpWord0
 		ldy  cx16.r1+1
-		sty  P8ZP_SCRATCH_W2+1
+		sty  zpWord0+1
 		tay
 		lda  #0
-		sta  (P8ZP_SCRATCH_W2),y
+		sta  (zpWord0),y
 		cpy  #0
 		bne  _loop
 		rts
 _loop		dey
-		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord1),y
+		sta  (zpWord0),y
 		cpy  #0
 		bne  _loop
 +		rts
@@ -2315,32 +2088,32 @@ _loop		dey
 right	.proc
 	;	src line: library:/prog8lib/string.p8:58
                 ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
-                sta  zpy
+                sta  zpa
                 lda  cx16.r0
                 ldy  cx16.r0+1
                 jsr  string.length
                 tya
                 sec
-                sbc  zpy
+                sbc  zpa
                 clc
                 adc  cx16.r0
-		sta  zpWord0
+		sta  zpWord1
 		lda  cx16.r0+1
 		adc  #0
-		sta  zpWord0+1
+		sta  zpWord1+1
 		ldy  cx16.r1
-		sty  P8ZP_SCRATCH_W2
+		sty  zpWord0
 		ldy  cx16.r1+1
-		sty  P8ZP_SCRATCH_W2+1
-		ldy  zpy
+		sty  zpWord0+1
+		ldy  zpa
 		lda  #0
-		sta  (P8ZP_SCRATCH_W2),y
+		sta  (zpWord0),y
 		cpy  #0
 		bne  _loop
 		rts
 _loop		dey
-		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord1),y
+		sta  (zpWord0),y
 		cpy  #0
 		bne  _loop
 +		rts
@@ -2351,28 +2124,28 @@ slice	.proc
 	;	src line: library:/prog8lib/string.p8:98
                 ; need to copy the the cx16 virtual registers to zeropage to be compatible with C64...
 		; substr(source, target, start, length)
-		sta  zpy
+		sta  zpa
 		lda  cx16.r0
-		sta  zpWord0
+		sta  zpWord1
 		lda  cx16.r0+1
-		sta  zpWord0+1
+		sta  zpWord1+1
 		lda  cx16.r1
-		sta  P8ZP_SCRATCH_W2
+		sta  zpWord0
 		lda  cx16.r1+1
-		sta  P8ZP_SCRATCH_W2+1
+		sta  zpWord0+1
 
 		; adjust src location
 		clc
-		lda  zpWord0
-		adc  zpy
-		sta  zpWord0
+		lda  zpWord1
+		adc  zpa
+		sta  zpWord1
 		bcc  +
-		inc  zpWord0+1
+		inc  zpWord1+1
 +		lda  #0
-		sta  (P8ZP_SCRATCH_W2),y
+		sta  (zpWord0),y
 		beq  _startloop
--		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
+-		lda  (zpWord1),y
+		sta  (zpWord0),y
 _startloop	dey
 		cpy  #$ff
 		bne  -
@@ -2383,15 +2156,15 @@ _startloop	dey
 find	.proc
 	;	src line: library:/prog8lib/string.p8:133
                 ; need to copy the the cx16 virtual registers to zeropage to make this run on C64...
-                sta  zpy
+                sta  zpa
 		lda  cx16.r0
 		ldy  cx16.r0+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  #0
--		lda  (zpWord0),y
+-		lda  (zpWord1),y
 		beq  _notfound
-		cmp  zpy
+		cmp  zpa
 		beq  _found
 		iny
 		bne  -
@@ -2406,8 +2179,8 @@ _found		tya
 
 copy	.proc
 	;	src line: library:/prog8lib/string.p8:161
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		lda  cx16.r0
 		ldy  cx16.r0+1
 		jmp  prog8_lib.strcpy
@@ -2416,8 +2189,8 @@ copy	.proc
 
 compare	.proc
 	;	src line: library:/prog8lib/string.p8:175
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
+		sta  zpWord0
+		sty  zpWord0+1
 		lda  cx16.r0
 		ldy  cx16.r0+1
 		jmp  prog8_lib.strcmp_mem
@@ -2426,10 +2199,10 @@ compare	.proc
 
 lower	.proc
 	;	src line: library:/prog8lib/string.p8:188
-            sta  zpWord0
-            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
             ldy  #0
--           lda  (zpWord0),y
+-           lda  (zpWord1),y
             beq  _done
             and  #$7f
             cmp  #97
@@ -2437,7 +2210,7 @@ lower	.proc
             cmp  #123
             bcs  +
             and  #%11011111
-+           sta  (zpWord0),y
++           sta  (zpWord1),y
             iny
             bne  -
 _done       rts
@@ -2446,17 +2219,17 @@ _done       rts
 
 upper	.proc
 	;	src line: library:/prog8lib/string.p8:209
-            sta  zpWord0
-            sty  zpWord0+1
+            sta  zpWord1
+            sty  zpWord1+1
             ldy  #0
--           lda  (zpWord0),y
+-           lda  (zpWord1),y
             beq  _done
             cmp  #65
             bcc  +
             cmp  #91
             bcs  +
             ora  #%00100000
-+           sta  (zpWord0),y
++           sta  (zpWord1),y
             iny
             bne  -
 _done       rts
@@ -2475,9 +2248,9 @@ pattern_match	.proc
 ;
 ; see http://6502.org/source/strings/patmatch.htm
 
-str = zpWord0
+str = zpWord1
 
-	stx  zpa
+	stx  zpx
 	sta  str
 	sty  str+1
 	lda  cx16.r0
@@ -2489,7 +2262,7 @@ str = zpWord0
 	jsr  _match
 	lda  #0
 	adc  #0
-	ldx  zpa
+	ldx  zpx
 	rts
 
 
@@ -2533,6 +2306,8 @@ fail    clc             ; yes, no match found, return with c=0
 	rts
 	.pend
 	.pend
+
+1234567
 
 ; ---- block: 'floats' ----
 floats	.proc
@@ -2592,10 +2367,7 @@ floats	.proc
                                     ATN = $e30e
 
 ; subroutines in this block
-	;	src line: library:/prog8lib/c64/floats.p8:9
-	;	src line: library:/prog8lib/c64/floats.p8:10
-	;	src line: library:/prog8lib/c64/floats.p8:172
-	;	src line: library:/prog8lib/c64/floats.p8:174
+
 ; --- low level floating point assembly routines for the C64
 
 FL_ONE_const	.byte  129     			; 1.0
@@ -2606,210 +2378,213 @@ FL_LOG2_const	.byte  $80, $31, $72, $17, $f8	; log(2)
 zpx	.byte  0		; temp storage
 
 
-ub2float	.proc
-		; -- convert ubyte in SCRATCH_ZPB1 to float at address A/Y
-		;    clobbers A, Y
-		stx  zpa
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		ldy  zpy
-		lda  #0
-		jsr  GIVAYF
-_fac_to_mem	ldx  P8ZP_SCRATCH_W2
-		ldy  P8ZP_SCRATCH_W2+1
-		jsr  MOVMF
-		ldx  zpa
-		rts
-		.pend
+1234567
 
-b2float		.proc
-		; -- convert byte in SCRATCH_ZPB1 to float at address A/Y
-		;    clobbers A, Y
-		stx  zpa
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		lda  zpy
-		jsr  FREADSA
-		jmp  ub2float._fac_to_mem
-		.pend
+    ub2float	.proc
+            ; -- convert ubyte in zpx to float at address A/Y
+            ;    clobbers A, Y
+            stx  zpx
+            sta  zpWord0
+            sty  zpWord0+1
+            ldy  zpa
+            lda  #0
+            jsr  GIVAYF
+    _fac_to_mem	
+            ldx  zpWord0
+            ldy  zpWord0+1
+            jsr  MOVMF
+            ldx  zpx
+            rts
+            .pend
 
-uw2float	.proc
-		; -- convert uword in SCRATCH_ZPWORD1 to float at address A/Y
-		stx  zpa
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		lda  zpWord0
-		ldy  zpWord0+1
-		jsr  GIVUAYFAY
-		jmp  ub2float._fac_to_mem
-		.pend
+            b2float		.proc
+                    ; -- convert byte in zpx to float at address A/Y
+                    ;    clobbers A, Y
+                    stx  zpx
+                    sta  zpWord0
+                    sty  zpWord0+1
+                    lda  zpa
+                    jsr  FREADSA
+                    jmp  ub2float._fac_to_mem
+                    .pend
 
-w2float		.proc
-		; -- convert word in SCRATCH_ZPWORD1 to float at address A/Y
-		stx  zpa
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		ldy  zpWord0
-		lda  zpWord0+1
-		jsr  GIVAYF
-		jmp  ub2float._fac_to_mem
-		.pend
+            uw2float	.proc
+                    ; -- convert uword in SCRATCH_ZPWORD1 to float at address A/Y
+                    stx  zpx
+                    ;sta  zpWord0
+                    ;sty  zpWord0+1
+                    lda  zpWord0
+                    ldy  zpWord0+1
+                    jsr  GIVUAYFAY
+                    jmp  ub2float._fac_to_mem
+                    .pend
 
-
-cast_from_uw	.proc
-		; -- uword in A/Y into float var at (P8ZP_SCRATCH_W2)
-		stx  zpa
-		jsr  GIVUAYFAY
-		jmp  ub2float._fac_to_mem
-		.pend
+            w2float		.proc
+                    ; -- convert word in SCRATCH_ZPWORD1 to float at address A/Y
+                    stx  zpx
+                    sta  zpWord0
+                    sty  zpWord0+1
+                    ldy  zpWord1
+                    lda  zpWord1+1
+                    jsr  GIVAYF
+                    jmp  ub2float._fac_to_mem
+                    .pend
 
 
-cast_from_w	.proc
-		; -- word in A/Y into float var at (P8ZP_SCRATCH_W2)
-		stx  zpa
-		jsr  GIVAYFAY
-		jmp  ub2float._fac_to_mem
-		.pend
+        cast_from_uw	.proc
+                ; -- uword in A/Y into float var at (zpWord0)
+                stx  zpx
+                jsr  GIVUAYFAY
+                jmp  ub2float._fac_to_mem
+                .pend
 
 
-cast_from_ub	.proc
-		; -- ubyte in Y into float var at (P8ZP_SCRATCH_W2)
-		stx  zpa
-		jsr  FREADUY
-		jmp  ub2float._fac_to_mem
-		.pend
+            cast_from_w	.proc
+                    ; -- word in A/Y into float var at (zpWord0)
+                    stx  zpx
+                    jsr  GIVAYFAY
+                    jmp  ub2float._fac_to_mem
+                    .pend
 
 
-cast_from_b	.proc
-		; -- byte in A into float var at (P8ZP_SCRATCH_W2)
-		stx  zpa
-		jsr  FREADSA
-		jmp  ub2float._fac_to_mem
-		.pend
-
-cast_as_uw_into_ya	.proc               ; also used for float 2 ub
-		; -- cast float at A/Y to uword into Y/A
-		jsr  MOVFM
-		jmp  cast_FAC1_as_uw_into_ya
-		.pend
-
-cast_as_w_into_ay	.proc               ; also used for float 2 b
-		; -- cast float at A/Y to word into A/Y
-		jsr  MOVFM
-		jmp  cast_FAC1_as_w_into_ay
-		.pend
-
-cast_FAC1_as_uw_into_ya	.proc               ; also used for float 2 ub
-		; -- cast fac1 to uword into Y/A
-		stx  zpa
-		jsr  GETADR     ; into Y/A
-		ldx  zpa
-		rts
-		.pend
-
-cast_FAC1_as_w_into_ay	.proc               ; also used for float 2 b
-		; -- cast fac1 to word into A/Y
-		stx  zpa
-		jsr  AYINT
-		ldy  floats.AYINT_facmo
-		lda  floats.AYINT_facmo+1
-		ldx  zpa
-		rts
-		.pend
+            cast_from_ub	.proc
+                    ; -- ubyte in Y into float var at (zpWord0)
+                    stx  zpx
+                    jsr  FREADUY
+                    jmp  ub2float._fac_to_mem
+                    .pend
 
 
-stack_b2float	.proc
-		; -- b2float operating on the stack
-		inx
-		lda  stack.lo,x
-		stx  zpa
-		jsr  FREADSA
-		jmp  push_fac1._internal
-		.pend
+            cast_from_b	.proc
+                    ; -- byte in A into float var at (zpWord0)
+                    stx  zpx
+                    jsr  FREADSA
+                    jmp  ub2float._fac_to_mem
+                    .pend
 
-stack_w2float	.proc
-		; -- w2float operating on the stack
-		inx
-		ldy  stack.lo,x
-		lda  stack.hi,x
-		stx  zpa
-		jsr  GIVAYF
-		jmp  push_fac1._internal
-		.pend
+            cast_as_uw_into_ya	.proc               ; also used for float 2 ub
+                    ; -- cast float at A/Y to uword into Y/A
+                    jsr  MOVFM
+                    jmp  cast_FAC1_as_uw_into_ya
+                    .pend
 
-stack_ub2float	.proc
-		; -- ub2float operating on the stack
-		inx
-		lda  stack.lo,x
-		stx  zpa
-		tay
-		lda  #0
-		jsr  GIVAYF
-		jmp  push_fac1._internal
-		.pend
+            cast_as_w_into_ay	.proc               ; also used for float 2 b
+                    ; -- cast float at A/Y to word into A/Y
+                    jsr  MOVFM
+                    jmp  cast_FAC1_as_w_into_ay
+                    .pend
 
-stack_uw2float	.proc
-		; -- uw2float operating on the stack
-		inx
-		lda  stack.lo,x
-		ldy  stack.hi,x
-		stx  zpa
-		jsr  GIVUAYFAY
-		jmp  push_fac1._internal
-		.pend
+            cast_FAC1_as_uw_into_ya	.proc               ; also used for float 2 ub
+                    ; -- cast fac1 to uword into Y/A
+                    stx  zpx
+                    jsr  GETADR     ; into Y/A
+                    ldx  zpx
+                    rts
+                    .pend
 
-stack_float2w	.proc               ; also used for float2b
-		jsr  pop_float_fac1
-		stx  zpa
-		jsr  AYINT
-		ldx  zpa
-		lda  floats.AYINT_facmo
-		sta  stack.hi,x
-		lda  floats.AYINT_facmo+1
-		sta  stack.lo,x
-		dex
-		rts
-		.pend
+            cast_FAC1_as_w_into_ay	.proc               ; also used for float 2 b
+                    ; -- cast fac1 to word into A/Y
+                    stx  zpx
+                    jsr  AYINT
+                    ldy  floats.AYINT_facmo
+                    lda  floats.AYINT_facmo+1
+                    ldx  zpx
+                    rts
+                    .pend
 
-stack_float2uw	.proc               ; also used for float2ub
-		jsr  pop_float_fac1
-		stx  zpa
-		jsr  GETADR
-		ldx  zpa
-		sta  stack.hi,x
-		tya
-		sta  stack.lo,x
-		dex
-		rts
-		.pend
+
+            stack_b2float	.proc
+                    ; -- b2float operating on the stack
+                    inx
+                    lda  stack.lo,x
+                    stx  zpx
+                    jsr  FREADSA
+                    jmp  push_fac1._internal
+                    .pend
+
+            stack_w2float	.proc
+                    ; -- w2float operating on the stack
+                    inx
+                    ldy  stack.lo,x
+                    lda  stack.hi,x
+                    stx  zpx
+                    jsr  GIVAYF
+                    jmp  push_fac1._internal
+                    .pend
+
+                stack_ub2float	.proc
+                        ; -- ub2float operating on the stack
+                        inx
+                        lda  stack.lo,x
+                        stx  zpx
+                        tay
+                        lda  #0
+                        jsr  GIVAYF
+                        jmp  push_fac1._internal
+                        .pend
+
+                        stack_uw2float	.proc
+                                ; -- uw2float operating on the stack
+                                inx
+                                lda  stack.lo,x
+                                ldy  stack.hi,x
+                                stx  zpx
+                                jsr  GIVUAYFAY
+                                jmp  push_fac1._internal
+                                .pend
+
+                            stack_float2w	.proc               ; also used for float2b
+                                    jsr  pop_float_fac1
+                                    stx  zpx
+                                    jsr  AYINT
+                                    ldx  zpx
+                                    lda  floats.AYINT_facmo
+                                    sta  stack.hi,x
+                                    lda  floats.AYINT_facmo+1
+                                    sta  stack.lo,x
+                                    dex
+                                    rts
+                                    .pend
+
+                        stack_float2uw	.proc               ; also used for float2ub
+                                jsr  pop_float_fac1
+                                stx  zpx
+                                jsr  GETADR
+                                ldx  zpx
+                                sta  stack.hi,x
+                                tya
+                                sta  stack.lo,x
+                                dex
+                                rts
+                                .pend
 
                         push_float	.proc
                                 ; ---- push mflpt5 in A/Y onto stack
                                 ; (taking 3 stack positions = 6 bytes of which 1 is padding)
-                                sta  zpWord0
-                                sty  zpWord0+1
+                                sta  zpWord1
+                                sty  zpWord1+1
                                 
                                 ldy  #0
-                                lda  (zpWord0),y
+                                lda  (zpWord1),y
                                 
                                 sta  stack.lo,x
                                 iny
                                 
-                                lda  (zpWord0),y
+                                lda  (zpWord1),y
                                 sta  stack.hi,x
                                 
                                 dex
                                 iny
-                                lda  (zpWord0),y
+                                lda  (zpWord1),y
                                 sta  stack.lo,x
                                 
                                 iny
-                                lda  (zpWord0),y
+                                lda  (zpWord1),y
                                 sta  stack.hi,x
                                 dex
                                 
                                 iny
-                                lda  (zpWord0),y
+                                lda  (zpWord1),y
                                 sta  stack.lo,x
                                 dex
                                 
@@ -2819,93 +2594,93 @@ stack_float2uw	.proc               ; also used for float2ub
                                 pop_float	.proc
                                         ; ---- pops mflpt5 from stack to memory A/Y
                                         ; (frees 3 stack positions = 6 bytes of which 1 is padding)
-                                        sta  zpWord0
-                                        sty  zpWord0+1
+                                        sta  zpWord1
+                                        sty  zpWord1+1
                                         ldy  #4
                                         inx
                                         lda  stack.lo,x
-                                        sta  (zpWord0),y
+                                        sta  (zpWord1),y
                                         dey
                                         inx
                                         lda  stack.hi,x
-                                        sta  (zpWord0),y
+                                        sta  (zpWord1),y
                                         dey
                                         lda  stack.lo,x
-                                        sta  (zpWord0),y
+                                        sta  (zpWord1),y
                                         dey
                                         inx
                                         lda  stack.hi,x
-                                        sta  (zpWord0),y
+                                        sta  (zpWord1),y
                                         dey
                                         lda  stack.lo,x
-                                        sta  (zpWord0),y
+                                        sta  (zpWord1),y
                                         rts
                                         .pend
 
-pop_float_fac1	.proc
-		; -- pops float from stack into FAC1
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  pop_float
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jmp  MOVFM
-		.pend
+                                    pop_float_fac1	.proc
+                                            ; -- pops float from stack into FAC1
+                                            lda  #<fmath_float1
+                                            ldy  #>fmath_float1
+                                            jsr  pop_float
+                                            lda  #<fmath_float1
+                                            ldy  #>fmath_float1
+                                            jmp  MOVFM
+                                            .pend
 
-copy_float	.proc
-		; -- copies the 5 bytes of the mflt value pointed to by zpWord0,
-		;    into the 5 bytes pointed to by A/Y.  Clobbers A,Y.
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		ldy  #0
-		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
-		iny
-		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
-		iny
-		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
-		iny
-		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
-		iny
-		lda  (zpWord0),y
-		sta  (P8ZP_SCRATCH_W2),y
-		rts
-		.pend
+                                    copy_float	.proc
+                                            ; -- copies the 5 bytes of the mflt value pointed to by zpWord1,
+                                            ;    into the 5 bytes pointed to by A/Y.  Clobbers A,Y.
+                                            sta  zpWord0
+                                            sty  zpWord0+1
+                                            ldy  #0
+                                            lda  (zpWord1),y
+                                            sta  (zpWord0),y
+                                            iny
+                                            lda  (zpWord1),y
+                                            sta  (zpWord0),y
+                                            iny
+                                            lda  (zpWord1),y
+                                            sta  (zpWord0),y
+                                            iny
+                                            lda  (zpWord1),y
+                                            sta  (zpWord0),y
+                                            iny
+                                            lda  (zpWord1),y
+                                            sta  (zpWord0),y
+                                            rts
+                                            .pend
 
 inc_var_f	.proc
 		; -- add 1 to float pointed to by A/Y
-		sta  zpWord0
-		sty  zpWord0+1
-		stx  zpa
+		sta  zpWord1
+		sty  zpWord1+1
+		stx  zpx
 		jsr  MOVFM
 		lda  #<FL_ONE_const
 		ldy  #>FL_ONE_const
 		jsr  FADD
-		ldx  zpWord0
-		ldy  zpWord0+1
+		ldx  zpWord1
+		ldy  zpWord1+1
 		jsr  MOVMF
-		ldx  zpa
+		ldx  zpx
 		rts
 		.pend
 
 dec_var_f	.proc
 		; -- subtract 1 from float pointed to by A/Y
-		sta  zpWord0
-		sty  zpWord0+1
-		stx  zpa
+		sta  zpWord1
+		sty  zpWord1+1
+		stx  zpx
 		lda  #<FL_ONE_const
 		ldy  #>FL_ONE_const
 		jsr  MOVFM
-		lda  zpWord0
-		ldy  zpWord0+1
+		lda  zpWord1
+		ldy  zpWord1+1
 		jsr  FSUB
-		ldx  zpWord0
-		ldy  zpWord0+1
+		ldx  zpWord1
+		ldy  zpWord1+1
 		jsr  MOVMF
-		ldx  zpa
+		ldx  zpx
 		rts
 		.pend
 
@@ -2930,20 +2705,20 @@ fmath_float2	.byte 0,0,0,0,0	; storage for a mflpt5 value
 
 push_fac1	.proc
 		; -- push the float in FAC1 onto the stack
-		stx  zpa
+		stx  zpx
 _internal	ldx  #<fmath_float1
 		ldy  #>fmath_float1
 		jsr  MOVMF
 		lda  #<fmath_float1
 		ldy  #>fmath_float1
-		ldx  zpa
+		ldx  zpx
 		jmp  push_float
 		.pend
 
 div_f		.proc
 		; -- push f1/f2 on stack
 		jsr  pop_2_floats_f2_in_fac1
-		stx  zpa
+		stx  zpx
 		lda  #<fmath_float1
 		ldy  #>fmath_float1
 		jsr  FDIV
@@ -2953,7 +2728,7 @@ div_f		.proc
 add_f		.proc
 		; -- push f1+f2 on stack
 		jsr  pop_2_floats_f2_in_fac1
-		stx  zpa
+		stx  zpx
 		lda  #<fmath_float1
 		ldy  #>fmath_float1
 		jsr  FADD
@@ -2963,7 +2738,7 @@ add_f		.proc
 sub_f		.proc
 		; -- push f1-f2 on stack
 		jsr  pop_2_floats_f2_in_fac1
-		stx  zpa
+		stx  zpx
 		lda  #<fmath_float1
 		ldy  #>fmath_float1
 		jsr  FSUB
@@ -2973,7 +2748,7 @@ sub_f		.proc
 mul_f		.proc
 		; -- push f1*f2 on stack
 		jsr  pop_2_floats_f2_in_fac1
-		stx  zpa
+		stx  zpx
 		lda  #<fmath_float1
 		ldy  #>fmath_float1
 		jsr  FMULT
@@ -2990,9 +2765,9 @@ neg_f		.proc
 
 var_fac1_less_f	.proc
 		; -- is the float in FAC1 < the variable AY?
-		stx  zpa
+		stx  zpx
 		jsr  FCOMP
-		ldx  zpa
+		ldx  zpx
 		cmp  #255
 		beq  +
 		lda  #0
@@ -3003,9 +2778,9 @@ var_fac1_less_f	.proc
 
 var_fac1_lesseq_f	.proc
 		; -- is the float in FAC1 <= the variable AY?
-		stx  zpa
+		stx  zpx
 		jsr  FCOMP
-		ldx  zpa
+		ldx  zpx
 		cmp  #0
 		beq  +
 		cmp  #255
@@ -3018,9 +2793,9 @@ var_fac1_lesseq_f	.proc
 
 var_fac1_greater_f	.proc
 		; -- is the float in FAC1 > the variable AY?
-		stx  zpa
+		stx  zpx
 		jsr  FCOMP
-		ldx  zpa
+		ldx  zpx
 		cmp  #1
 		beq  +
 		lda  #0
@@ -3031,9 +2806,9 @@ var_fac1_greater_f	.proc
 
 var_fac1_greatereq_f	.proc
 		; -- is the float in FAC1 >= the variable AY?
-		stx  zpa
+		stx  zpx
 		jsr  FCOMP
-		ldx  zpa
+		ldx  zpx
 		cmp  #0
 		beq  +
 		cmp  #1
@@ -3046,36 +2821,36 @@ var_fac1_greatereq_f	.proc
 
 var_fac1_notequal_f	.proc
 		; -- are the floats numbers in FAC1 and the variable AY *not* identical?
-		stx  zpa
+		stx  zpx
 		jsr  FCOMP
-		ldx  zpa
+		ldx  zpx
 		and  #1
 		rts
 		.pend
 
 vars_equal_f	.proc
-		; -- are the mflpt5 numbers in zpWord0 and AY identical?
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
+		; -- are the mflpt5 numbers in zpWord1 and AY identical?
+		sta  zpWord0
+		sty  zpWord0+1
 		ldy  #0
-		lda  (zpWord0),y
-		cmp  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord1),y
+		cmp  (zpWord0),y
 		bne  _false
 		iny
-		lda  (zpWord0),y
-		cmp  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord1),y
+		cmp  (zpWord0),y
 		bne  _false
 		iny
-		lda  (zpWord0),y
-		cmp  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord1),y
+		cmp  (zpWord0),y
 		bne  _false
 		iny
-		lda  (zpWord0),y
-		cmp  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord1),y
+		cmp  (zpWord0),y
 		bne  _false
 		iny
-		lda  (zpWord0),y
-		cmp  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord1),y
+		cmp  (zpWord0),y
 		bne  _false
 		lda  #1
 		rts
@@ -3121,13 +2896,13 @@ notequal_f	.proc
 		.pend
 
 vars_less_f	.proc
-		; -- is float in AY < float in P8ZP_SCRATCH_W2 ?
+		; -- is float in AY < float in zpWord0 ?
 		jsr  MOVFM
-		lda  P8ZP_SCRATCH_W2
-		ldy  P8ZP_SCRATCH_W2+1
-		stx  zpa
+		lda  zpWord0
+		ldy  zpWord0+1
+		stx  zpx
 		jsr  FCOMP
-		ldx  zpa
+		ldx  zpx
 		cmp  #255
 		bne  +
 		lda  #1
@@ -3137,13 +2912,13 @@ vars_less_f	.proc
 		.pend
 
 vars_lesseq_f	.proc
-		; -- is float in AY <= float in P8ZP_SCRATCH_W2 ?
+		; -- is float in AY <= float in zpWord0 ?
 		jsr  MOVFM
-		lda  P8ZP_SCRATCH_W2
-		ldy  P8ZP_SCRATCH_W2+1
-		stx  zpa
+		lda  zpWord0
+		ldy  zpWord0+1
+		stx  zpx
 		jsr  FCOMP
-		ldx  zpa
+		ldx  zpx
 		cmp  #255
 		bne  +
 -		lda  #1
@@ -3203,9 +2978,9 @@ compare_floats	.proc
 		jsr  MOVFM		; fac1 = flt1
 		lda  #<fmath_float2
 		ldy  #>fmath_float2
-		stx  zpa
+		stx  zpx
 		jsr  FCOMP		; A = flt1 compared with flt2 (0=equal, 1=flt1>flt2, 255=flt1<flt2)
-		ldx  zpa
+		ldx  zpx
 		rts
 _return_false	lda  #0
 _return_result  sta  stack.lo,x
@@ -3216,15 +2991,15 @@ _return_true	lda  #1
 		.pend
 
 set_array_float_from_fac1	.proc
-		; -- set the float in FAC1 in the array (index in A, array in zpWord0)
-		sta  zpy
+		; -- set the float in FAC1 in the array (index in A, array in zpWord1)
+		sta  zpa
 		asl  a
 		asl  a
 		clc
-		adc  zpy
-		ldy  zpWord0+1
+		adc  zpa
+		ldy  zpWord1+1
 		clc
-		adc  zpWord0
+		adc  zpWord1
 		bcc  +
 		iny
 +		stx  zpx
@@ -3236,36 +3011,36 @@ set_array_float_from_fac1	.proc
 
 
 set_0_array_float	.proc
-		; -- set a float in an array to zero (index in A, array in zpWord0)
-		sta  zpy
+		; -- set a float in an array to zero (index in A, array in zpWord1)
+		sta  zpa
 		asl  a
 		asl  a
 		clc
-		adc  zpy
+		adc  zpa
 		tay
 		lda  #0
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		iny
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		iny
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		iny
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		iny
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		rts
 		.pend
 
 
 set_array_float		.proc
-		; -- set a float in an array to a value (index in A, float in zpWord0, array in P8ZP_SCRATCH_W2)
-		sta  zpy
+		; -- set a float in an array to a value (index in A, float in zpWord1, array in zpWord0)
+		sta  zpa
 		asl  a
 		asl  a
 		clc
-		adc  zpy
-		adc  P8ZP_SCRATCH_W2
-		ldy  P8ZP_SCRATCH_W2+1
+		adc  zpa
+		adc  zpWord0
+		ldy  zpWord0+1
 		bcc  +
 		iny
 +		jmp  copy_float
@@ -3344,22 +3119,22 @@ func_sign_f_into_A	.proc
 func_swap_f	.proc
 		; -- swap floats pointed to by SCRATCH_ZPWORD1, SCRATCH_ZPWORD2
 		ldy  #4
--               lda  (zpWord0),y
+-               lda  (zpWord1),y
 		pha
-		lda  (P8ZP_SCRATCH_W2),y
-		sta  (zpWord0),y
+		lda  (zpWord0),y
+		sta  (zpWord1),y
 		pla
-		sta  (P8ZP_SCRATCH_W2),y
+		sta  (zpWord0),y
 		dey
 		bpl  -
 		rts
 		.pend
 
 func_reverse_f	.proc
-		; --- reverse an array of floats (array in zpWord0, num elements in A)
-_left_index = P8ZP_SCRATCH_W2
-_right_index = P8ZP_SCRATCH_W2+1
-_loop_count = zpa
+		; --- reverse an array of floats (array in zpWord1, num elements in A)
+_left_index = zpWord0
+_right_index = zpWord0+1
+_loop_count = zpx
 		pha
 		jsr  a_times_5
 		sec
@@ -3372,65 +3147,65 @@ _loop_count = zpa
 		sta  _loop_count
 _loop		; push the left indexed float on the stack
 		ldy  _left_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		; copy right index float to left index float
 		ldy  _right_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _left_index
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		inc  _left_index
 		inc  _right_index
 		ldy  _right_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _left_index
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		inc  _left_index
 		inc  _right_index
 		ldy  _right_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _left_index
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		inc  _left_index
 		inc  _right_index
 		ldy  _right_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _left_index
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		inc  _left_index
 		inc  _right_index
 		ldy  _right_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _left_index
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		; pop the float off the stack into the right index float
 		ldy  _right_index
 		pla
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
 		pla
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
 		pla
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
 		pla
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
 		pla
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		inc  _left_index
 		lda  _right_index
 		sec
@@ -3445,11 +3220,11 @@ _loop		; push the left indexed float on the stack
 
 
 a_times_5	.proc
-		sta  zpy
+		sta  zpa
 		asl  a
 		asl  a
 		clc
-		adc  zpy
+		adc  zpa
 		rts
 		.pend
 
@@ -3472,106 +3247,10 @@ func_all_f_stack	.proc
 		jsr  a_times_5
 		jmp  prog8_lib.func_all_b_stack
 		.pend
-	;	src line: library:/prog8lib/c64/floats.p8:22
-
-	;	src line: library:/prog8lib/c64/floats.p8:23
-
-	;	src line: library:/prog8lib/c64/floats.p8:24
-
-	;	src line: library:/prog8lib/c64/floats.p8:25
-
-	;	src line: library:/prog8lib/c64/floats.p8:26
-
-	;	src line: library:/prog8lib/c64/floats.p8:27
-
-	;	src line: library:/prog8lib/c64/floats.p8:28
-
-	;	src line: library:/prog8lib/c64/floats.p8:29
-
-	;	src line: library:/prog8lib/c64/floats.p8:33
-
-	;	src line: library:/prog8lib/c64/floats.p8:37
-
-	;	src line: library:/prog8lib/c64/floats.p8:39
-
-	;	src line: library:/prog8lib/c64/floats.p8:40
-
-	;	src line: library:/prog8lib/c64/floats.p8:48
-
-	;	src line: library:/prog8lib/c64/floats.p8:50
-
-	;	src line: library:/prog8lib/c64/floats.p8:51
-
-	;	src line: library:/prog8lib/c64/floats.p8:52
-
-	;	src line: library:/prog8lib/c64/floats.p8:53
-
-	;	src line: library:/prog8lib/c64/floats.p8:54
-
-	;	src line: library:/prog8lib/c64/floats.p8:56
-
-	;	src line: library:/prog8lib/c64/floats.p8:57
-
-	;	src line: library:/prog8lib/c64/floats.p8:58
-
-	;	src line: library:/prog8lib/c64/floats.p8:59
-
-	;	src line: library:/prog8lib/c64/floats.p8:61
-
-	;	src line: library:/prog8lib/c64/floats.p8:62
-
-	;	src line: library:/prog8lib/c64/floats.p8:63
-
-	;	src line: library:/prog8lib/c64/floats.p8:64
-
-	;	src line: library:/prog8lib/c64/floats.p8:65
-
-	;	src line: library:/prog8lib/c64/floats.p8:66
-
-	;	src line: library:/prog8lib/c64/floats.p8:67
-
-	;	src line: library:/prog8lib/c64/floats.p8:68
-
-	;	src line: library:/prog8lib/c64/floats.p8:69
-
-	;	src line: library:/prog8lib/c64/floats.p8:70
-
-	;	src line: library:/prog8lib/c64/floats.p8:71
-
-	;	src line: library:/prog8lib/c64/floats.p8:73
-
-	;	src line: library:/prog8lib/c64/floats.p8:74
-
-	;	src line: library:/prog8lib/c64/floats.p8:75
-
-	;	src line: library:/prog8lib/c64/floats.p8:76
-
-	;	src line: library:/prog8lib/c64/floats.p8:77
-
-	;	src line: library:/prog8lib/c64/floats.p8:78
-
-	;	src line: library:/prog8lib/c64/floats.p8:79
-
-	;	src line: library:/prog8lib/c64/floats.p8:80
-
-	;	src line: library:/prog8lib/c64/floats.p8:81
-
-	;	src line: library:/prog8lib/c64/floats.p8:82
-
-	;	src line: library:/prog8lib/c64/floats.p8:83
-
-	;	src line: library:/prog8lib/c64/floats.p8:84
-
-	;	src line: library:/prog8lib/c64/floats.p8:85
-
-	;	src line: library:/prog8lib/c64/floats.p8:86
-
-	;	src line: library:/prog8lib/c64/floats.p8:87
-
-	;	src line: library:/prog8lib/c64/floats.p8:90
+ 
 
 FREADS32	.proc
-	;	src line: library:/prog8lib/c64/floats.p8:92
+ 
 		lda  $62
 		eor  #$ff
 		asl  a
@@ -3579,19 +3258,19 @@ FREADS32	.proc
 		ldx  #$a0
 		jmp  $bc4f		; internal BASIC routine
 	.pend
-	;	src line: library:/prog8lib/c64/floats.p8:102
+ 
 
 FREADUS32	.proc
-	;	src line: library:/prog8lib/c64/floats.p8:104
+ 
 		sec
 		lda  #0
 		ldx  #$a0
 		jmp  $bc4f		; internal BASIC routine
 	.pend
-	;	src line: library:/prog8lib/c64/floats.p8:112
+ 
 
 FREADS24AXY	.proc
-	;	src line: library:/prog8lib/c64/floats.p8:115
+ 
 		sty  $62
 		stx  $63
 		sta  $64
@@ -3603,23 +3282,23 @@ FREADS24AXY	.proc
 		ldx  #$98
 		jmp  $bc4f		; internal BASIC routine
 	.pend
-	;	src line: library:/prog8lib/c64/floats.p8:129
+ 
 
-GIVUAYFAY	.proc
-	;	src line: library:/prog8lib/c64/floats.p8:131
-		sty  $62
-		sta  $63
-		ldx  #$90
-		sec
-		jmp  $bc49		; internal BASIC routine
-	.pend
-	;	src line: library:/prog8lib/c64/floats.p8:140
+                GIVUAYFAY	.proc
+                 
+                        sty  $62
+                        sta  $63
+                        ldx  #$90
+                        sec
+                        jmp  $bc49		; internal BASIC routine
+                    .pend
+ 
 
 GIVAYFAY	.proc
 	;	src line: library:/prog8lib/c64/floats.p8:142
-		sta  zpa
+		sta  zpx
 		tya
-		ldy  zpa
+		ldy  zpx
 		jmp  GIVAYF		; this uses the inverse order, Y/A
 	.pend
 	;	src line: library:/prog8lib/c64/floats.p8:150
@@ -3627,9 +3306,9 @@ GIVAYFAY	.proc
 FTOSWRDAY	.proc
 	;	src line: library:/prog8lib/c64/floats.p8:152
 		jsr  FTOSWORDYA	; note the inverse Y/A order
-		sta  zpa
+		sta  zpx
 		tya
-		ldy  zpa
+		ldy  zpx
 		rts
 	.pend
 	;	src line: library:/prog8lib/c64/floats.p8:161
@@ -3637,9 +3316,9 @@ FTOSWRDAY	.proc
 GETADRAY	.proc
 	;	src line: library:/prog8lib/c64/floats.p8:163
 		jsr  GETADR		; this uses the inverse order, Y/A
-		sta  zpy
+		sta  zpa
 		tya
-		ldy  zpy
+		ldy  zpa
 		rts
 	.pend
 	;	src line: library:/prog8lib/floats_functions.p8:5
@@ -3653,10 +3332,10 @@ GETADRAY	.proc
                                     ldy  #>value
                                     jsr  MOVFM		; load float into fac1
                                     jsr  FOUT		; fac1 to string in A/Y
-                                    sta  zpWord0
-                                    sty  zpWord0+1
+                                    sta  zpWord1
+                                    sty  zpWord1+1
                                     ldy  #0
-                            -		lda  (zpWord0),y
+                            -		lda  (zpWord1),y
                                     beq  +
                                     jsr  c64.CHROUT
                                     iny
@@ -3665,41 +3344,39 @@ GETADRAY	.proc
                                     rts
                             ; variables
 
-; non-zeropage variables
-value	.byte  0,0,0,0,0  ; float
-	.pend
-	;	src line: library:/prog8lib/floats_functions.p8:54
+                            ; non-zeropage variables
+                            value	.byte  0,0,0,0,0  ; float
+                                .pend
+ 
 
 sin	.proc
 ; statements
-	;	src line: library:/prog8lib/floats_functions.p8:54
-	;	src line: library:/prog8lib/floats_functions.p8:55
+
         lda  #<angle
         ldy  #>angle
         jsr  MOVFM
-        stx  zpa
+        stx  zpx
         jsr  SIN
-        ldx  zpa
+        ldx  zpx
         rts
 ; variables
 
 ; non-zeropage variables
 angle	.byte  0,0,0,0,0  ; float
 	.pend
-	;	src line: library:/prog8lib/floats_functions.p8:143
+
 
 rad	.proc
 ; statements
-	;	src line: library:/prog8lib/floats_functions.p8:143
-	;	src line: library:/prog8lib/floats_functions.p8:145
+
         lda  #<angle
         ldy  #>angle
         jsr  MOVFM
-        stx  zpa
+        stx  zpx
         lda  #<_pi_div_180
         ldy  #>_pi_div_180
         jsr  FMULT
-        ldx  zpa
+        ldx  zpx
         rts
 _pi_div_180	.byte 123, 14, 250, 53, 18		; pi / 180
 ; variables
@@ -3708,6 +3385,34 @@ _pi_div_180	.byte 123, 14, 250, 53, 18		; pi / 180
 angle	.byte  0,0,0,0,0  ; float
 	.pend
 	.pend
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; ---- block: 'math' ----
 math	.proc
@@ -3731,14 +3436,14 @@ math_store_reg	.byte  0		; temporary storage
 
 multiply_bytes	.proc
 	; -- multiply 2 bytes A and Y, result as byte in A  (signed or unsigned)
-		sta  zpy         ; num1
-		sty  zpa        ; num2
+		sta  zpa         ; num1
+		sty  zpx        ; num2
 		lda  #0
 		beq  _enterloop
 _doAdd		clc
-		adc  zpy
-_loop		asl  zpy
-_enterloop	lsr  zpa
+		adc  zpa
+_loop		asl  zpa
+_enterloop	lsr  zpx
 		bcs  _doAdd
 		bne  _loop
 		rts
@@ -3747,21 +3452,21 @@ _enterloop	lsr  zpa
 
 multiply_bytes_into_word	.proc
 	; -- multiply 2 bytes A and Y, result as word in A/Y (unsigned)
-		sta  zpy
-		sty  zpa
+		sta  zpa
+		sty  zpx
 		stx  math_store_reg
 		lda  #0
 		ldx  #8
-		lsr  zpy
+		lsr  zpa
 -		bcc  +
 		clc
-		adc  zpa
+		adc  zpx
 +		ror  a
-		ror  zpy
+		ror  zpa
 		dex
 		bne  -
 		tay
-		lda  zpy
+		lda  zpa
 		ldx  math_store_reg
 		rts
 		.pend
@@ -3769,27 +3474,27 @@ multiply_bytes_into_word	.proc
 
 multiply_words	.proc
 	; -- multiply two 16-bit words into a 32-bit result  (signed and unsigned)
-	;      input: A/Y = first 16-bit number, zpWord0 in ZP = second 16-bit number
+	;      input: A/Y = first 16-bit number, zpWord1 in ZP = second 16-bit number
 	;      output: multiply_words.result  4-bytes/32-bits product, LSB order (low-to-high)
 	;      clobbers: A
 
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		stx  zpa
+		sta  zpWord0
+		sty  zpWord0+1
+		stx  zpx
 
 mult16		lda  #0
 		sta  result+2	; clear upper bits of product
 		sta  result+3
 		ldx  #16			; for all 16 bits...
--	 	lsr  zpWord0+1	; divide multiplier by 2
-		ror  zpWord0
+-	 	lsr  zpWord1+1	; divide multiplier by 2
+		ror  zpWord1
 		bcc  +
 		lda  result+2	; get upper half of product and add multiplicand
 		clc
-		adc  P8ZP_SCRATCH_W2
+		adc  zpWord0
 		sta  result+2
 		lda  result+3
-		adc  P8ZP_SCRATCH_W2+1
+		adc  zpWord0+1
 + 		ror  a				; rotate partial product
 		sta  result+3
 		ror  result+2
@@ -3797,7 +3502,7 @@ mult16		lda  #0
 		ror  result
 		dex
 		bne  -
-		ldx  zpa
+		ldx  zpx
 		rts
 
 result		.byte  0,0,0,0
@@ -3806,11 +3511,11 @@ result		.byte  0,0,0,0
 
 divmod_b_asm	.proc
 	; signed byte division: make everything positive and fix sign afterwards
-		sta  zpy
+		sta  zpa
 		tya
-		eor  zpy
+		eor  zpa
 		php			; save sign
-		lda  zpy
+		lda  zpa
 		bpl  +
 		eor  #$ff
 		sec
@@ -3840,33 +3545,42 @@ _remainder	.byte  0
 divmod_ub_asm	.proc
 	; -- divide A by Y, result quotient in Y, remainder in A   (unsigned)
 	;    division by zero will result in quotient = 255 and remainder = original number
-		sty  zpa
-		sta  zpy
+		sty  zpx
+		sta  zpa
 		stx  math_store_reg
 
 		lda  #0
 		ldx  #8
-		asl  zpy
+		asl  zpa
 -		rol  a
-		cmp  zpa
+		cmp  zpx
 		bcc  +
-		sbc  zpa
-+		rol  zpy
+		sbc  zpx
++		rol  zpa
 		dex
 		bne  -
-		ldy  zpy
+		ldy  zpa
 		ldx  math_store_reg
 		rts
 		.pend
 
 divmod_w_asm	.proc
 	; signed word division: make everything positive and fix sign afterwards
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
-		lda  zpWord0+1
-		eor  P8ZP_SCRATCH_W2+1
+		sta  zpWord0
+		sty  zpWord0+1
+		lda  zpWord1+1
+		eor  zpWord0+1
 		php			; save sign
-		lda  zpWord0+1
+		lda  zpWord1+1
+		bpl  +
+		lda  #0
+		sec
+		sbc  zpWord1
+		sta  zpWord1
+		lda  #0
+		sbc  zpWord1+1
+		sta  zpWord1+1
++		lda  zpWord0+1
 		bpl  +
 		lda  #0
 		sec
@@ -3875,28 +3589,19 @@ divmod_w_asm	.proc
 		lda  #0
 		sbc  zpWord0+1
 		sta  zpWord0+1
-+		lda  P8ZP_SCRATCH_W2+1
-		bpl  +
-		lda  #0
-		sec
-		sbc  P8ZP_SCRATCH_W2
-		sta  P8ZP_SCRATCH_W2
-		lda  #0
-		sbc  P8ZP_SCRATCH_W2+1
-		sta  P8ZP_SCRATCH_W2+1
 +		tay
-		lda  P8ZP_SCRATCH_W2
+		lda  zpWord0
 		jsr  divmod_uw_asm
 		plp			; restore sign
 		bpl  +
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
+		sta  zpWord0
+		sty  zpWord0+1
 		lda  #0
 		sec
-		sbc  P8ZP_SCRATCH_W2
+		sbc  zpWord0
 		pha
 		lda  #0
-		sbc  P8ZP_SCRATCH_W2+1
+		sbc  zpWord0+1
 		tay
 		pla
 +		rts
@@ -3904,18 +3609,18 @@ divmod_w_asm	.proc
 
 divmod_uw_asm	.proc
 	; -- divide two unsigned words (16 bit each) into 16 bit results
-	;    input:  zpWord0 in ZP: 16 bit number, A/Y: 16 bit divisor
-	;    output: P8ZP_SCRATCH_W2 in ZP: 16 bit remainder, A/Y: 16 bit division result
+	;    input:  zpWord1 in ZP: 16 bit number, A/Y: 16 bit divisor
+	;    output: zpWord0 in ZP: 16 bit remainder, A/Y: 16 bit division result
 	;    division by zero will result in quotient = 65535 and remainder = divident
 
 
-dividend = zpWord0
-remainder = P8ZP_SCRATCH_W2
+dividend = zpWord1
+remainder = zpWord0
 result = dividend ;save memory by reusing divident to store the result
 
 		sta  _divisor
 		sty  _divisor+1
-		stx  zpa
+		stx  zpx
 		lda  #0	        	;preset remainder to 0
 		sta  remainder
 		sta  remainder+1
@@ -3942,7 +3647,7 @@ result = dividend ;save memory by reusing divident to store the result
 
 		lda  result
 		ldy  result+1
-		ldx  zpa
+		ldx  zpx
 		rts
 _divisor	.word 0
 		.pend
@@ -4017,14 +3722,14 @@ stack_mul_byte_3	.proc
 stack_mul_word_3	.proc
 		; W*2 + W
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		sta  stack.hi+1,x
 		rts
@@ -4045,16 +3750,16 @@ stack_mul_byte_5	.proc
 stack_mul_word_5	.proc
 		; W*4 + W
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		sta  stack.hi+1,x
 		rts
@@ -4075,14 +3780,14 @@ stack_mul_byte_6	.proc
 stack_mul_word_6	.proc
 		; (W*2 + W)*2
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		asl  stack.lo+1,x
                 rol  a
@@ -4105,18 +3810,18 @@ stack_mul_byte_7	.proc
 stack_mul_word_7	.proc
 		; W*8 - W
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		sec
 		sbc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		sbc  stack.hi+1,x
 		sta  stack.hi+1,x
 		rts
@@ -4137,18 +3842,18 @@ stack_mul_byte_9	.proc
 stack_mul_word_9	.proc
 		; W*8 + W
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		sta  stack.hi+1,x
 		rts
@@ -4169,16 +3874,16 @@ stack_mul_byte_10	.proc
 stack_mul_word_10	.proc
 		; (W*4 + W)*2
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		asl  stack.lo+1,x
                 rol  a
@@ -4217,14 +3922,14 @@ stack_mul_byte_12	.proc
 stack_mul_word_12	.proc
 		; (W*2 + W)*4
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		asl  stack.lo+1,x
                 rol  a
@@ -4281,20 +3986,20 @@ stack_mul_byte_15	.proc
 stack_mul_word_15	.proc
 		; W*16 - W
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		sec
 		sbc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		sbc  stack.hi+1,x
 		sta  stack.hi+1,x
 		rts
@@ -4316,16 +4021,16 @@ stack_mul_byte_20	.proc
 stack_mul_word_20	.proc
 		; (W*4 + W)*4
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		asl  stack.lo+1,x
                 rol  a
@@ -4353,27 +4058,27 @@ stack_mul_byte_25	.proc
 stack_mul_word_25	.proc
 		; W = (W*2 + W) *8 + W
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
 		adc  stack.lo+1,x
-		sta  zpWord0
-		lda  zpWord0+1
+		sta  zpWord1
+		lda  zpWord1+1
 		adc  stack.hi+1,x
-		sta  zpWord0+1
-		lda  zpWord0
+		sta  zpWord1+1
+		lda  zpWord1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpWord0+1
+		lda  zpWord1+1
 		adc  stack.hi+1,x
 		sta  stack.hi+1,x
 		rts
@@ -4391,16 +4096,16 @@ stack_mul_byte_40	.proc
 stack_mul_word_40	.proc
 		; (W*4 + W)*8
 		lda  stack.hi+1,x
-		sta  zpa
+		sta  zpx
 		lda  stack.lo+1,x
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		clc
 		adc  stack.lo+1,x
 		sta  stack.lo+1,x
-		lda  zpa
+		lda  zpx
 		adc  stack.hi+1,x
 		asl  stack.lo+1,x
                 rol  a
@@ -4501,206 +4206,206 @@ stack_mul_word_640	.proc
 ; ----------- optimized multiplications (in-place A (byte) and ?? (word)) : ---------
 mul_byte_3	.proc
 		; A = A + A*2
-		sta  zpa
+		sta  zpx
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		rts
 		.pend
 
 mul_word_3	.proc
 		; AY = AY*2 + AY
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
 		tay
-		lda  zpWord0
+		lda  zpWord1
 		rts
 		.pend
 
 
 mul_byte_5	.proc
 		; A = A*4 + A
-		sta  zpa
+		sta  zpx
 		asl  a
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		rts
 		.pend
 
 mul_word_5	.proc
 		; AY = AY*4 + AY
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
 		tay
-		lda  zpWord0
+		lda  zpWord1
 		rts
 		.pend
 
 
 mul_byte_6	.proc
 		; A = (A*2 + A)*2
-		sta  zpa
+		sta  zpx
 		asl  a
                 clc
-                adc  zpa
+                adc  zpx
 		asl  a
 		rts
 		.pend
 
 mul_word_6	.proc
 		; AY = (AY*2 + AY)*2
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
+		adc  zpWord0
+		sta  zpWord1
 		tay
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
-		sta  zpWord0+1
+		lda  zpWord1+1
+		adc  zpWord0+1
+		sta  zpWord1+1
 		tya
 		asl  a
-		rol  zpWord0+1
-		ldy  zpWord0+1
+		rol  zpWord1+1
+		ldy  zpWord1+1
 		rts
 		.pend
 
 mul_byte_7	.proc
 		; A = A*8 - A
-		sta  zpa
+		sta  zpx
 		asl  a
 		asl  a
 		asl  a
 		sec
-		sbc  zpa
+		sbc  zpx
 		rts
 		.pend
 
 mul_word_7	.proc
 		; AY = AY*8 - AY
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		sec
-		sbc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		sbc  P8ZP_SCRATCH_W2+1
+		sbc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		sbc  zpWord0+1
 		tay
-		lda  zpWord0
+		lda  zpWord1
 		rts
 		.pend
 
 mul_byte_9	.proc
 		; A = A*8 + A
-		sta  zpa
+		sta  zpx
 		asl  a
 		asl  a
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		rts
 		.pend
 
 mul_word_9	.proc
 		; AY = AY*8 + AY
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
 		tay
-		lda  zpWord0
+		lda  zpWord1
 		rts
 		rts
 		.pend
 
 mul_byte_10	.proc
 		; A=(A*4 + A)*2
-		sta  zpa
+		sta  zpx
 		asl  a
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		asl  a
 		rts
 		.pend
 
 mul_word_10	.proc
 		; AY=(AY*4 + AY)*2
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
-		sta  zpWord0+1
-		lda  zpWord0
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
+		sta  zpWord1+1
+		lda  zpWord1
 		asl  a
-		rol  zpWord0+1
-		ldy  zpWord0+1
+		rol  zpWord1+1
+		ldy  zpWord1+1
 		rts
 		.pend
 
 mul_byte_11	.proc
 		; A=(A*2 + A)*4 - A
-		sta  zpa
+		sta  zpx
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		asl  a
 		asl  a
 		sec
-		sbc  zpa
+		sbc  zpx
 		rts
 		.pend
 
@@ -4708,10 +4413,10 @@ mul_byte_11	.proc
 
 mul_byte_12	.proc
 		; A=(A*2 + A)*4
-		sta  zpa
+		sta  zpx
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		asl  a
 		asl  a
 		rts
@@ -4719,37 +4424,37 @@ mul_byte_12	.proc
 
 mul_word_12	.proc
 		; AY=(AY*2 + AY)*4
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
-		sta  zpWord0+1
-		lda  zpWord0
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
+		sta  zpWord1+1
+		lda  zpWord1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
-		ldy  zpWord0+1
+		rol  zpWord1+1
+		ldy  zpWord1+1
 		rts
 		.pend
 
 mul_byte_13	.proc
 		; A=(A*2 + A)*4 + A
-		sta  zpa
+		sta  zpx
 		asl  a
                 clc
-		adc  zpa
+		adc  zpx
 		asl  a
 		asl  a
                 clc
-		adc  zpa
+		adc  zpx
 		rts
 		.pend
 
@@ -4757,12 +4462,12 @@ mul_byte_13	.proc
 
 mul_byte_14	.proc
 		; A=(A*8 - A)*2
-		sta  zpa
+		sta  zpx
 		asl  a
 		asl  a
 		asl  a
                 sec
-		sbc  zpa
+		sbc  zpx
                 asl  a
 		rts
 		.pend
@@ -4771,47 +4476,47 @@ mul_byte_14	.proc
 
 mul_byte_15	.proc
 		; A=A*16 - A
-		sta  zpa
+		sta  zpx
 		asl  a
 		asl  a
 		asl  a
 		asl  a
 		sec
-		sbc  zpa
+		sbc  zpx
 		rts
 		.pend
 
 mul_word_15	.proc
 		; AY = AY * 16 - AY
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		sec
-		sbc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		sbc  P8ZP_SCRATCH_W2+1
+		sbc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		sbc  zpWord0+1
 		tay
-		lda  zpWord0
+		lda  zpWord1
 		rts
 		.pend
 
 mul_byte_20	.proc
 		; A=(A*4 + A)*4
-		sta  zpa
+		sta  zpx
 		asl  a
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		asl  a
 		asl  a
 		rts
@@ -4820,55 +4525,55 @@ mul_byte_20	.proc
 mul_word_20	.proc
 		; AY = AY * 10 * 2
 		jsr  mul_word_10
-		sty  zpa
+		sty  zpx
 		asl  a
-		rol  zpa
-		ldy  zpa
+		rol  zpx
+		ldy  zpx
 		rts
 		.pend
 
 mul_byte_25	.proc
 		; A=(A*2 + A)*8 + A
-		sta  zpa
+		sta  zpx
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		asl  a
 		asl  a
 		asl  a
 		clc
-		adc  zpa
+		adc  zpx
 		rts
 		.pend
 
 mul_word_25	.proc
 		; AY = (AY*2 + AY) *8 + AY
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
-		sta  zpWord0+1
-		lda  zpWord0
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
+		sta  zpWord1+1
+		lda  zpWord1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
 		tay
-		lda  zpWord0
+		lda  zpWord1
 		rts
 		.pend
 
@@ -4882,27 +4587,27 @@ _forties	.byte  0*40, 1*40, 2*40, 3*40, 4*40, 5*40, 6*40, 7*40 & 255
 
 mul_word_40	.proc
 		; AY = (AY*4 + AY)*8
+		sta  zpWord1
+		sty  zpWord1+1
 		sta  zpWord0
 		sty  zpWord0+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		asl  a
-		rol  zpWord0+1
+		rol  zpWord1+1
 		clc
-		adc  P8ZP_SCRATCH_W2
-		sta  zpWord0
-		lda  zpWord0+1
-		adc  P8ZP_SCRATCH_W2+1
-		asl  zpWord0
+		adc  zpWord0
+		sta  zpWord1
+		lda  zpWord1+1
+		adc  zpWord0+1
+		asl  zpWord1
 		rol  a
-		asl  zpWord0
+		asl  zpWord1
 		rol  a
-		asl  zpWord0
+		asl  zpWord1
 		rol  a
 		tay
-		lda  zpWord0
+		lda  zpWord1
 		rts
 		.pend
 
@@ -4917,10 +4622,10 @@ _fifties	.byte  0*50, 1*50, 2*50, 3*50, 4*50, 5*50, 6*50 & 255, 7*50 & 255
 mul_word_50	.proc
 		; AY = AY * 25 * 2
 		jsr  mul_word_25
-		sty  zpa
+		sty  zpx
 		asl  a
-		rol  zpa
-		ldy  zpa
+		rol  zpx
+		ldy  zpx
 		rts
 		.pend
 
@@ -4935,10 +4640,10 @@ _eighties	.byte  0*80, 1*80, 2*80, 3*80
 mul_word_80	.proc
 		; AY = AY * 40 * 2
 		jsr  mul_word_40
-		sty  zpa
+		sty  zpx
 		asl  a
-		rol  zpa
-		ldy  zpa
+		rol  zpx
+		ldy  zpx
 		rts
 		.pend
 
@@ -4953,36 +4658,36 @@ _hundreds	.byte  0*100, 1*100, 2*100, 3*100 & 255
 mul_word_100	.proc
 		; AY = AY * 25 * 4
 		jsr  mul_word_25
-		sty  zpa
+		sty  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
-		ldy  zpa
+		rol  zpx
+		ldy  zpx
 		rts
 		.pend
 
 mul_word_320	.proc
 		; AY = A * 256 + A * 64	 (msb in Y doesn't matter)
-		sta  zpy
+		sta  zpa
 		ldy  #0
-		sty  zpa
+		sty  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		asl  a
-		rol  zpa
+		rol  zpx
 		pha
 		clc
-		lda  zpy
-		adc  zpa
+		lda  zpa
+		adc  zpx
 		tay
 		pla
 		rts
@@ -5003,54 +4708,54 @@ mul_word_640	.proc
 
 shift_left_w_7	.proc
 		lda  stack.hi+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.lo+1,x
 
 		asl  a
-		rol  zpy
+		rol  zpa
 _shift6		asl  a
-		rol  zpy
+		rol  zpa
 _shift5		asl  a
-		rol  zpy
+		rol  zpa
 _shift4		asl  a
-		rol  zpy
+		rol  zpa
 _shift3		asl  a
-		rol  zpy
+		rol  zpa
 		asl  a
-		rol  zpy
+		rol  zpa
 		asl  a
-		rol  zpy
+		rol  zpa
 
 		sta  stack.lo+1,x
-		lda  zpy
+		lda  zpa
 		sta  stack.hi+1,x
 		rts
 		.pend
 
 shift_left_w_6	.proc
 		lda  stack.hi+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.lo+1,x
 		jmp  shift_left_w_7._shift6
 		.pend
 
 shift_left_w_5	.proc
 		lda  stack.hi+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.lo+1,x
 		jmp  shift_left_w_7._shift5
 		.pend
 
 shift_left_w_4	.proc
 		lda  stack.hi+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.lo+1,x
 		jmp  shift_left_w_7._shift4
 		.pend
 
 shift_left_w_3	.proc
 		lda  stack.hi+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.lo+1,x
 		jmp  shift_left_w_7._shift3
 		.pend
@@ -5084,54 +4789,54 @@ _shift		lsr  stack.hi+1,x
 
 shift_right_uw_7	.proc
 		lda  stack.lo+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.hi+1,x
 
 		lsr  a
-		ror  zpy
+		ror  zpa
 _shift6		lsr  a
-		ror  zpy
+		ror  zpa
 _shift5		lsr  a
-		ror  zpy
+		ror  zpa
 _shift4		lsr  a
-		ror  zpy
+		ror  zpa
 _shift3		lsr  a
-		ror  zpy
+		ror  zpa
 		lsr  a
-		ror  zpy
+		ror  zpa
 		lsr  a
-		ror  zpy
+		ror  zpa
 
 		sta  stack.hi+1,x
-		lda  zpy
+		lda  zpa
 		sta  stack.lo+1,x
 		rts
 		.pend
 
 shift_right_uw_6	.proc
 		lda  stack.lo+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.hi+1,x
 		jmp  shift_right_uw_7._shift6
 		.pend
 
 shift_right_uw_5	.proc
 		lda  stack.lo+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.hi+1,x
 		jmp  shift_right_uw_7._shift5
 		.pend
 
 shift_right_uw_4	.proc
 		lda  stack.lo+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.hi+1,x
 		jmp  shift_right_uw_7._shift4
 		.pend
 
 shift_right_uw_3	.proc
 		lda  stack.lo+1,x
-		sta  zpy
+		sta  zpa
 		lda  stack.hi+1,x
 		jmp  shift_right_uw_7._shift3
 		.pend
@@ -5139,75 +4844,75 @@ shift_right_uw_3	.proc
 
 shift_right_w_7		.proc
 		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 
 		asl  a
-		ror  zpWord0+1
-		ror  zpWord0
+		ror  zpWord1+1
+		ror  zpWord1
 
-		lda  zpWord0+1
+		lda  zpWord1+1
 _shift6		asl  a
-		ror  zpWord0+1
-		ror  zpWord0
-		lda  zpWord0+1
+		ror  zpWord1+1
+		ror  zpWord1
+		lda  zpWord1+1
 _shift5		asl  a
-		ror  zpWord0+1
-		ror  zpWord0
-		lda  zpWord0+1
+		ror  zpWord1+1
+		ror  zpWord1
+		lda  zpWord1+1
 _shift4		asl  a
-		ror  zpWord0+1
-		ror  zpWord0
-		lda  zpWord0+1
+		ror  zpWord1+1
+		ror  zpWord1
+		lda  zpWord1+1
 _shift3		asl  a
-		ror  zpWord0+1
-		ror  zpWord0
-		lda  zpWord0+1
+		ror  zpWord1+1
+		ror  zpWord1
+		lda  zpWord1+1
 		asl  a
-		ror  zpWord0+1
-		ror  zpWord0
-		lda  zpWord0+1
+		ror  zpWord1+1
+		ror  zpWord1
+		lda  zpWord1+1
 		asl  a
-		ror  zpWord0+1
-		ror  zpWord0
+		ror  zpWord1+1
+		ror  zpWord1
 
-		lda  zpWord0
+		lda  zpWord1
 		sta  stack.lo+1,x
-		lda  zpWord0+1
+		lda  zpWord1+1
 		sta  stack.hi+1,x
 		rts
 		.pend
 
 shift_right_w_6	.proc
 		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		jmp  shift_right_w_7._shift6
 		.pend
 
 shift_right_w_5	.proc
 		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		jmp  shift_right_w_7._shift5
 		.pend
 
 shift_right_w_4	.proc
 		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		jmp  shift_right_w_7._shift4
 		.pend
 
 shift_right_w_3	.proc
 		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		jmp  shift_right_w_7._shift3
 		.pend
 
@@ -5263,15 +4968,15 @@ square          .proc
 ; x^2+y^2=r^2 where x and y are the co-ordinates of any point on the circle and
 ; r is the circle radius
 
-numberl = zpWord0       ; number to square low byte
-numberh = zpWord0+1     ; number to square high byte
-squarel = P8ZP_SCRATCH_W2       ; square low byte
-squareh = P8ZP_SCRATCH_W2+1     ; square high byte
-tempsq = zpy        ; temp byte for intermediate result
+numberl = zpWord1       ; number to square low byte
+numberh = zpWord1+1     ; number to square high byte
+squarel = zpWord0       ; square low byte
+squareh = zpWord0+1     ; square high byte
+tempsq = zpa        ; temp byte for intermediate result
 
 	sta  numberl
 	sty  numberh
-	stx  zpa
+	stx  zpx
 
         lda     #$00        ; clear a
         sta     squarel     ; clear square low byte
@@ -5309,7 +5014,7 @@ _nosqadd:
 
 	lda  squarel
 	ldy  squareh
-	ldx  zpa
+	ldx  zpx
 	rts
 
 		.pend
@@ -5401,10 +5106,10 @@ read_byte_from_address_on_stack	.proc
 	; -- read the byte from the memory address on the top of the stack, return in A (stack remains unchanged)
 		lda  stack.lo+1,x
 		ldy  stack.hi+1,x
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
+		sta  zpWord0
+		sty  zpWord0+1
 		ldy  #0
-		lda  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord0),y
 		rts
 		.pend
 
@@ -5412,11 +5117,11 @@ read_byte_from_address_on_stack	.proc
 write_byte_to_address_on_stack	.proc
 	; -- write the byte in A to the memory address on the top of the stack (stack remains unchanged)
 		ldy  stack.lo+1,x
-		sty  P8ZP_SCRATCH_W2
+		sty  zpWord0
 		ldy  stack.hi+1,x
-		sty  P8ZP_SCRATCH_W2+1
+		sty  zpWord0+1
 		ldy  #0
-		sta  (P8ZP_SCRATCH_W2),y
+		sta  (zpWord0),y
 		rts
 		.pend
 
@@ -5554,9 +5259,9 @@ mul_byte	.proc
 mul_word	.proc
 		inx
 		lda  stack.lo,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		lda  stack.lo+1,x
 		ldy  stack.hi+1,x
 		jsr  math.multiply_words
@@ -5622,9 +5327,9 @@ idiv_w		.proc
 		bpl  +
 		jsr  neg_w			; make value positive
 +		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		lda  stack.lo,x
 		ldy  stack.hi,x
 		jsr  math.divmod_uw_asm
@@ -5640,9 +5345,9 @@ idiv_w		.proc
 idiv_uw		.proc
 		inx
 		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		lda  stack.lo,x
 		ldy  stack.hi,x
 		jsr  math.divmod_uw_asm
@@ -5664,15 +5369,15 @@ remainder_ub	.proc
 remainder_uw	.proc
 		inx
 		lda  stack.lo+1,x
-		sta  zpWord0
+		sta  zpWord1
 		lda  stack.hi+1,x
-		sta  zpWord0+1
+		sta  zpWord1+1
 		lda  stack.lo,x
 		ldy  stack.hi,x
 		jsr  math.divmod_uw_asm
-		lda  P8ZP_SCRATCH_W2
+		lda  zpWord0
 		sta  stack.lo+1,x
-		lda  P8ZP_SCRATCH_W2+1
+		lda  zpWord0+1
 		sta  stack.hi+1,x
 		rts
 		.pend
@@ -5723,11 +5428,11 @@ less_b		.proc
 		.pend
 
 reg_less_uw	.proc
-		;  AY < P8ZP_SCRATCH_W2?
-		cpy  P8ZP_SCRATCH_W2+1
+		;  AY < zpWord0?
+		cpy  zpWord0+1
 		bcc  _true
 		bne  _false
-		cmp  P8ZP_SCRATCH_W2
+		cmp  zpWord0
 		bcc  _true
 _false		lda  #0
 		rts
@@ -5747,10 +5452,10 @@ less_uw		.proc
 		.pend
 
 reg_less_w	.proc
-		; -- AY < P8ZP_SCRATCH_W2?
-		cmp  P8ZP_SCRATCH_W2
+		; -- AY < zpWord0?
+		cmp  zpWord0
 		tya
-		sbc  P8ZP_SCRATCH_W2+1
+		sbc  zpWord0+1
 		bvc  +
 		eor  #$80
 +		bmi  _true
@@ -5803,13 +5508,13 @@ lesseq_b	.proc
 		.pend
 
 reg_lesseq_uw	.proc
-		; AY <= P8ZP_SCRATCH_W2?
-		cpy  P8ZP_SCRATCH_W2+1
+		; AY <= zpWord0?
+		cpy  zpWord0+1
 		beq  +
 		bcc  _true
 		lda  #0
 		rts
-+		cmp  P8ZP_SCRATCH_W2
++		cmp  zpWord0
 		bcc  _true
 		beq  _true
 		lda  #0
@@ -5830,10 +5535,10 @@ lesseq_uw	.proc
 		.pend
 
 reg_lesseq_w	.proc
-		; -- P8ZP_SCRATCH_W2 <= AY ?   (note: order different from other routines)
-		cmp  P8ZP_SCRATCH_W2
+		; -- zpWord0 <= AY ?   (note: order different from other routines)
+		cmp  zpWord0
 		tya
-		sbc  P8ZP_SCRATCH_W2+1
+		sbc  zpWord0+1
 		bvc  +
 		eor  #$80
 +		bpl  +
@@ -6063,11 +5768,11 @@ greaterequalzero_sw	.proc
 		.pend
 
 memcopy16_up	.proc
-	; -- copy memory UP from (zpWord0) to (P8ZP_SCRATCH_W2) of length X/Y (16-bit, X=lo, Y=hi)
+	; -- copy memory UP from (zpWord1) to (zpWord0) of length X/Y (16-bit, X=lo, Y=hi)
 	;    clobbers register A,X,Y
-		source = zpWord0
-		dest = P8ZP_SCRATCH_W2
-		length = zpy   ; (and SCRATCH_ZPREG)
+		source = zpWord1
+		dest = zpWord0
+		length = zpa   ; (and SCRATCH_ZPREG)
 
 		stx  length
 		sty  length+1
@@ -6091,25 +5796,25 @@ memcopy16_up	.proc
 
 
 memset          .proc
-	; -- fill memory from (zpWord0), length XY, with value in A.
+	; -- fill memory from (zpWord1), length XY, with value in A.
 	;    clobbers X, Y
-		stx  zpy
+		stx  zpa
 		sty  _save_reg
 		ldy  #0
 		ldx  _save_reg
 		beq  _lastpage
 
-_fullpage	sta  (zpWord0),y
+_fullpage	sta  (zpWord1),y
 		iny
 		bne  _fullpage
-		inc  zpWord0+1          ; next page
+		inc  zpWord1+1          ; next page
 		dex
 		bne  _fullpage
 
-_lastpage	ldy  zpy
+_lastpage	ldy  zpa
 		beq  +
 -         	dey
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		bne  -
 
 +           	rts
@@ -6118,54 +5823,54 @@ _save_reg	.byte  0
 
 
 memsetw		.proc
-	; -- fill memory from (zpWord0) number of words in P8ZP_SCRATCH_W2, with word value in AY.
+	; -- fill memory from (zpWord1) number of words in zpWord0, with word value in AY.
 	;    clobbers A, X, Y
 		sta  _mod1+1                    ; self-modify
 		sty  _mod1b+1                   ; self-modify
 		sta  _mod2+1                    ; self-modify
 		sty  _mod2b+1                   ; self-modify
-		ldx  zpWord0
-		stx  zpy
-		ldx  zpWord0+1
+		ldx  zpWord1
+		stx  zpa
+		ldx  zpWord1+1
 		inx
-		stx  zpa                ; second page
+		stx  zpx                ; second page
 
 		ldy  #0
-		ldx  P8ZP_SCRATCH_W2+1
+		ldx  zpWord0+1
 		beq  _lastpage
 
 _fullpage
 _mod1           lda  #0                         ; self-modified
-		sta  (zpWord0),y        ; first page
-		sta  (zpy),y            ; second page
+		sta  (zpWord1),y        ; first page
+		sta  (zpa),y            ; second page
 		iny
 _mod1b		lda  #0                         ; self-modified
-		sta  (zpWord0),y        ; first page
-		sta  (zpy),y            ; second page
+		sta  (zpWord1),y        ; first page
+		sta  (zpa),y            ; second page
 		iny
 		bne  _fullpage
-		inc  zpWord0+1          ; next page pair
-		inc  zpWord0+1          ; next page pair
-		inc  zpy+1              ; next page pair
-		inc  zpy+1              ; next page pair
+		inc  zpWord1+1          ; next page pair
+		inc  zpWord1+1          ; next page pair
+		inc  zpa+1              ; next page pair
+		inc  zpa+1              ; next page pair
 		dex
 		bne  _fullpage
 
-_lastpage	ldx  P8ZP_SCRATCH_W2
+_lastpage	ldx  zpWord0
 		beq  _done
 
 		ldy  #0
 -
 _mod2           lda  #0                         ; self-modified
-                sta  (zpWord0), y
-		inc  zpWord0
+                sta  (zpWord1), y
+		inc  zpWord1
 		bne  _mod2b
-		inc  zpWord0+1
+		inc  zpWord1+1
 _mod2b          lda  #0                         ; self-modified
-		sta  (zpWord0), y
-		inc  zpWord0
+		sta  (zpWord1), y
+		inc  zpWord1
 		bne  +
-		inc  zpWord0+1
+		inc  zpWord1+1
 +               dex
 		bne  -
 _done		rts
@@ -6175,26 +5880,26 @@ _done		rts
 
 ror2_mem_ub	.proc
 		; -- in-place 8-bit ror of byte at memory location in AY
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  #0
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		lsr  a
 		bcc  +
 		ora  #$80
-+		sta  (zpWord0),y
++		sta  (zpWord1),y
 		rts
 		.pend
 
 rol2_mem_ub	.proc
 		; -- in-place 8-bit rol of byte at memory location in AY
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  #0
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		cmp  #$80
 		rol  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		rts
 		.pend
 
@@ -6202,12 +5907,12 @@ rol_array_ub	.proc
 		; -- rol a ubyte in an array
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  _arg_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		rol  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		rts
 _arg_target	.word	0
 _arg_index	.byte   0
@@ -6218,12 +5923,12 @@ ror_array_ub	.proc
 		; -- ror a ubyte in an array
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  _arg_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ror  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		rts
 _arg_target	.word	0
 _arg_index	.byte   0
@@ -6233,14 +5938,14 @@ ror2_array_ub	.proc
 		; -- ror2 (8-bit ror) a ubyte in an array
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  _arg_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		lsr  a
 		bcc  +
 		ora  #$80
-+		sta  (zpWord0),y
++		sta  (zpWord1),y
 		rts
 _arg_target	.word	0
 _arg_index	.byte   0
@@ -6250,13 +5955,13 @@ rol2_array_ub	.proc
 		; -- rol2 (8-bit rol) a ubyte in an array
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  _arg_index
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		cmp  #$80
 		rol  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		rts
 _arg_target	.word	0
 _arg_index	.byte   0
@@ -6267,20 +5972,20 @@ ror_array_uw	.proc
 		php
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		lda  _arg_index
 		asl  a
 		tay
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		plp
 		ror  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ror  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		rts
 _arg_target	.word  0
 _arg_index	.byte  0
@@ -6291,19 +5996,19 @@ rol_array_uw	.proc
 		php
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		lda  _arg_index
 		asl  a
 		tay
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		plp
 		rol  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		rol  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		rts
 _arg_target	.word  0
 _arg_index	.byte  0
@@ -6313,23 +6018,23 @@ rol2_array_uw	.proc
 		; -- rol2 (16-bit rol) a uword in an array
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		lda  _arg_index
 		asl  a
 		tay
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		asl  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		rol  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		bcc  +
 		dey
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		adc  #0
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 +		rts
 _arg_target	.word  0
 _arg_index	.byte  0
@@ -6339,24 +6044,24 @@ ror2_array_uw	.proc
 		; -- ror2 (16-bit ror) a uword in an array
 		lda  _arg_target
 		ldy  _arg_target+1
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		lda  _arg_index
 		asl  a
 		tay
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		lsr  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ror  a
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		bcc  +
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ora  #$80
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 +		rts
 _arg_target	.word  0
 _arg_index	.byte  0
@@ -6364,15 +6069,15 @@ _arg_index	.byte  0
 
 
 strcpy		.proc
-		; copy a string (must be 0-terminated) from A/Y to (zpWord0)
+		; copy a string (must be 0-terminated) from A/Y to (zpWord1)
 		; it is assumed the target string is large enough.
 		; returns the length of the string that was copied in Y.
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
+		sta  zpWord0
+		sty  zpWord0+1
 		ldy  #$ff
 -		iny
-		lda  (P8ZP_SCRATCH_W2),y
-		sta  (zpWord0),y
+		lda  (zpWord0),y
+		sta  (zpWord1),y
 		bne  -
 		rts
 		.pend
@@ -6381,8 +6086,8 @@ strcmp_expression	.proc
 		; -- compare strings, result in A
 		lda  _arg_s2
 		ldy  _arg_s2+1
-		sta  P8ZP_SCRATCH_W2
-		sty  P8ZP_SCRATCH_W2+1
+		sta  zpWord0
+		sty  zpWord0+1
 		lda  _arg_s1
 		ldy  _arg_s1+1
 		jmp  strcmp_mem
@@ -6392,25 +6097,25 @@ _arg_s2		.word  0
 
 
 strcmp_mem	.proc
-		; --   compares strings in s1 (AY) and s2 (P8ZP_SCRATCH_W2).
+		; --   compares strings in s1 (AY) and s2 (zpWord0).
 		;      Returns -1,0,1 in A, depeding on the ordering. Clobbers Y.
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  #0
-_loop		lda  (zpWord0),y
+_loop		lda  (zpWord1),y
 		bne  +
-		lda  (P8ZP_SCRATCH_W2),y
+		lda  (zpWord0),y
 		bne  _return_minusone
 		beq  _return
-+		cmp  (P8ZP_SCRATCH_W2),y
++		cmp  (zpWord0),y
 		bcc  _return_minusone
 		bne  _return_one
-		inc  zpWord0
+		inc  zpWord1
 		bne  +
-		inc  zpWord0+1
-+		inc  P8ZP_SCRATCH_W2
+		inc  zpWord1+1
++		inc  zpWord0
 		bne  _loop
-		inc  P8ZP_SCRATCH_W2+1
+		inc  zpWord0+1
 		bne  _loop
 _return_one
 		lda  #1
@@ -6433,10 +6138,10 @@ sign_extend_stack_byte	.proc
 
 strlen          .proc
         ; -- returns the number of bytes in the string in AY, in Y.
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		ldy  #0
--		lda  (zpWord0),y
+-		lda  (zpWord1),y
 		beq  +
 		iny
 		bne  -
@@ -6446,10 +6151,10 @@ strlen          .proc
 
 containment_bytearray	.proc
 	; -- check if a value exists in a byte array.
-	;    parameters: zpWord0: address of the byte array, A = byte to check, Y = length of array (>=1).
+	;    parameters: zpWord1: address of the byte array, A = byte to check, Y = length of array (>=1).
 	;    returns boolean 0/1 in A.
 		dey
--		cmp  (zpWord0),y
+-		cmp  (zpWord1),y
 		beq  +
 		dey
 		cpy  #255
@@ -6462,18 +6167,18 @@ containment_bytearray	.proc
 
 containment_wordarray	.proc
 	; -- check if a value exists in a word array.
-	;    parameters: zpWord0: value to check, P8ZP_SCRATCH_W2: address of the word array, Y = length of array (>=1).
+	;    parameters: zpWord1: value to check, zpWord0: address of the word array, Y = length of array (>=1).
 	;    returns boolean 0/1 in A.
 		dey
 		tya
 		asl  a
 		tay
--		lda  zpWord0
-		cmp  (P8ZP_SCRATCH_W2),y
+-		lda  zpWord1
+		cmp  (zpWord0),y
 		bne  +
-		lda  zpWord0+1
+		lda  zpWord1+1
 		iny
-		cmp  (P8ZP_SCRATCH_W2),y
+		cmp  (zpWord0),y
 		beq  _found
 +		dey
 		dey
@@ -6503,10 +6208,10 @@ func_all_b_stack	.proc
 		.pend
 
 func_any_b_into_A	.proc
-		; -- any(array),  array in zpWord0, num bytes in A
+		; -- any(array),  array in zpWord1, num bytes in A
 		sta  _cmp_mod+1		; self-modifying code
 		ldy  #0
--		lda  (zpWord0),y
+-		lda  (zpWord1),y
 		bne  _got_any
 		iny
 _cmp_mod	cpy  #255		; modified
@@ -6519,10 +6224,10 @@ _got_any	lda  #1
 
 
 func_all_b_into_A	.proc
-		; -- all(array),  array in zpWord0, num bytes in A
+		; -- all(array),  array in zpWord1, num bytes in A
 		sta  _cmp_mod+1		; self-modifying code
 		ldy  #0
--		lda  (zpWord0),y
+-		lda  (zpWord1),y
 		beq  _got_not_all
 		iny
 _cmp_mod	cpy  #255		; modified
@@ -6545,14 +6250,14 @@ func_any_w_stack	.proc
 		.pend
 
 func_all_w_into_A	.proc
-		; -- all(warray),  array in zpWord0, num bytes in A
+		; -- all(warray),  array in zpWord1, num bytes in A
 		asl  a			; times 2 because of word
 		sta  _cmp_mod+1		; self-modifying code
 		ldy  #0
--		lda  (zpWord0),y
+-		lda  (zpWord1),y
 		bne  +
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		bne  ++
 		lda  #0
 		rts
@@ -6699,35 +6404,35 @@ func_sqrt16_stack	.proc
 
 func_sqrt16_into_A	.proc
 		; integer square root from  http://6502org.wikidot.com/software-math-sqrt
-		sta  zpWord0
-		sty  zpWord0+1
+		sta  zpWord1
+		sty  zpWord1+1
 		txa
 		pha
 		lda  #0
-		sta  zpy
 		sta  zpa
+		sta  zpx
 		ldx  #8
 -		sec
-		lda  zpWord0+1
+		lda  zpWord1+1
 		sbc  #$40
 		tay
-		lda  zpa
-		sbc  zpy
+		lda  zpx
+		sbc  zpa
 		bcc  +
-		sty  zpWord0+1
-		sta  zpa
-+		rol  zpy
-		asl  zpWord0
-		rol  zpWord0+1
-		rol  zpa
-		asl  zpWord0
-		rol  zpWord0+1
-		rol  zpa
+		sty  zpWord1+1
+		sta  zpx
++		rol  zpa
+		asl  zpWord1
+		rol  zpWord1+1
+		rol  zpx
+		asl  zpWord1
+		rol  zpWord1+1
+		rol  zpx
 		dex
 		bne  -
 		pla
 		tax
-		lda  zpy
+		lda  zpa
 		rts
 		.pend
 
@@ -6753,32 +6458,32 @@ func_rndw_stack	.proc
 func_sort_ub	.proc
 		; 8bit unsigned sort
 		; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-		; input:  address of array to sort in zpWord0, length in S
+		; input:  address of array to sort in zpWord1, length in S
 		; first, put pointer BEFORE array
-		sta  zpy
-		lda  zpWord0
+		sta  zpa
+		lda  zpWord1
 		bne  +
-		dec  zpWord0+1
-+		dec  zpWord0
-_sortloop	ldy  zpy		;start of subroutine sort
-		lda  (zpWord0),y	;last value in (what is left of) sequence to be sorted
-		sta  zpa		;save value. will be over-written by largest number
+		dec  zpWord1+1
++		dec  zpWord1
+_sortloop	ldy  zpa		;start of subroutine sort
+		lda  (zpWord1),y	;last value in (what is left of) sequence to be sorted
+		sta  zpx		;save value. will be over-written by largest number
 		jmp  _l2
 _l1		dey
 		beq  _l3
-		lda  (zpWord0),y
-		cmp  P8ZP_SCRATCH_W2+1
+		lda  (zpWord1),y
+		cmp  zpWord0+1
 		bcc  _l1
-_l2		sty  P8ZP_SCRATCH_W2	;index of potentially largest value
-		sta  P8ZP_SCRATCH_W2+1	;potentially largest value
+_l2		sty  zpWord0	;index of potentially largest value
+		sta  zpWord0+1	;potentially largest value
 		jmp  _l1
-_l3		ldy  zpy		;where the largest value shall be put
-		lda  P8ZP_SCRATCH_W2+1	;the largest value
-		sta  (zpWord0),y	;put largest value in place
-		ldy  P8ZP_SCRATCH_W2	;index of free space
-		lda  zpa		;the over-written value
-		sta  (zpWord0),y	;put the over-written value in the free space
-		dec  zpy		;end of the shorter sequence still left
+_l3		ldy  zpa		;where the largest value shall be put
+		lda  zpWord0+1	;the largest value
+		sta  (zpWord1),y	;put largest value in place
+		ldy  zpWord0	;index of free space
+		lda  zpx		;the over-written value
+		sta  (zpWord1),y	;put the over-written value in the free space
+		dec  zpa		;end of the shorter sequence still left
 		bne  _sortloop			;start working with the shorter sequence
 		rts
 		.pend
@@ -6787,32 +6492,32 @@ _l3		ldy  zpy		;where the largest value shall be put
 func_sort_b	.proc
 		; 8bit signed sort
 		; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-		; input:  address of array to sort in zpWord0, length in A
+		; input:  address of array to sort in zpWord1, length in A
 		; first, put pointer BEFORE array
-		sta  zpy
-		lda  zpWord0
+		sta  zpa
+		lda  zpWord1
 		bne  +
-		dec  zpWord0+1
-+		dec  zpWord0
-_sortloop	ldy  zpy		;start of subroutine sort
-		lda  (zpWord0),y	;last value in (what is left of) sequence to be sorted
-		sta  zpa		;save value. will be over-written by largest number
+		dec  zpWord1+1
++		dec  zpWord1
+_sortloop	ldy  zpa		;start of subroutine sort
+		lda  (zpWord1),y	;last value in (what is left of) sequence to be sorted
+		sta  zpx		;save value. will be over-written by largest number
 		jmp  _l2
 _l1		dey
 		beq  _l3
-		lda  (zpWord0),y
-		cmp  P8ZP_SCRATCH_W2+1
+		lda  (zpWord1),y
+		cmp  zpWord0+1
 		bmi  _l1
-_l2		sty  P8ZP_SCRATCH_W2	;index of potentially largest value
-		sta  P8ZP_SCRATCH_W2+1	;potentially largest value
+_l2		sty  zpWord0	;index of potentially largest value
+		sta  zpWord0+1	;potentially largest value
 		jmp  _l1
-_l3		ldy  zpy		;where the largest value shall be put
-		lda  P8ZP_SCRATCH_W2+1	;the largest value
-		sta  (zpWord0),y	;put largest value in place
-		ldy  P8ZP_SCRATCH_W2	;index of free space
-		lda  zpa		;the over-written value
-		sta  (zpWord0),y	;put the over-written value in the free space
-		dec  zpy		;end of the shorter sequence still left
+_l3		ldy  zpa		;where the largest value shall be put
+		lda  zpWord0+1	;the largest value
+		sta  (zpWord1),y	;put largest value in place
+		ldy  zpWord0	;index of free space
+		lda  zpx		;the over-written value
+		sta  (zpWord1),y	;put the over-written value in the free space
+		dec  zpa		;end of the shorter sequence still left
 		bne  _sortloop			;start working with the shorter sequence
 		rts
 		.pend
@@ -6821,21 +6526,21 @@ _l3		ldy  zpy		;where the largest value shall be put
 func_sort_uw	.proc
 		; 16bit unsigned sort
 		; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-		; input:  address of array to sort in zpWord0, length in A
+		; input:  address of array to sort in zpWord1, length in A
 		; first: subtract 2 of the pointer
 		asl  a
-		sta  zpy
-		lda  zpWord0
+		sta  zpa
+		lda  zpWord1
 		sec
 		sbc  #2
-		sta  zpWord0
+		sta  zpWord1
 		bcs  _sort_loop
-		dec  zpWord0+1
-_sort_loop	ldy  zpy    	;start of subroutine sort
-		lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
+		dec  zpWord1+1
+_sort_loop	ldy  zpa    	;start of subroutine sort
+		lda  (zpWord1),y    ;last value in (what is left of) sequence to be sorted
 		sta  _work3          		;save value. will be over-written by largest number
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		sta  _work3+1
 		dey
 		jmp  _l2
@@ -6843,36 +6548,36 @@ _l1		dey
 		dey
 		beq  _l3
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		dey
-		cmp  P8ZP_SCRATCH_W2+1
+		cmp  zpWord0+1
 		bne  +
-		lda  (zpWord0),y
-		cmp  P8ZP_SCRATCH_W2
+		lda  (zpWord1),y
+		cmp  zpWord0
 +		bcc  _l1
 _l2		sty  _work1          		;index of potentially largest value
-		lda  (zpWord0),y
-		sta  P8ZP_SCRATCH_W2          ;potentially largest value
+		lda  (zpWord1),y
+		sta  zpWord0          ;potentially largest value
 		iny
-		lda  (zpWord0),y
-		sta  P8ZP_SCRATCH_W2+1
+		lda  (zpWord1),y
+		sta  zpWord0+1
 		dey
 		jmp  _l1
-_l3		ldy  zpy           ;where the largest value shall be put
-		lda  P8ZP_SCRATCH_W2          ;the largest value
-		sta  (zpWord0),y      ;put largest value in place
+_l3		ldy  zpa           ;where the largest value shall be put
+		lda  zpWord0          ;the largest value
+		sta  (zpWord1),y      ;put largest value in place
 		iny
-		lda  P8ZP_SCRATCH_W2+1
-		sta  (zpWord0),y
+		lda  zpWord0+1
+		sta  (zpWord1),y
 		ldy  _work1         		 ;index of free space
 		lda  _work3          		;the over-written value
-		sta  (zpWord0),y      ;put the over-written value in the free space
+		sta  (zpWord1),y      ;put the over-written value in the free space
 		iny
 		lda  _work3+1
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
-		dec  zpy           ;end of the shorter sequence still left
-		dec  zpy
+		dec  zpa           ;end of the shorter sequence still left
+		dec  zpa
 		bne  _sort_loop           ;start working with the shorter sequence
 		rts
 _work1	.byte  0
@@ -6883,59 +6588,59 @@ _work3	.word  0
 func_sort_w	.proc
 		; 16bit signed sort
 		; sorting subroutine coded by mats rosengren (mats.rosengren@esa.int)
-		; input:  address of array to sort in zpWord0, length in A
+		; input:  address of array to sort in zpWord1, length in A
 		; first: subtract 2 of the pointer
 		asl  a
-		sta  zpy
-		lda  zpWord0
+		sta  zpa
+		lda  zpWord1
 		sec
 		sbc  #2
-		sta  zpWord0
+		sta  zpWord1
 		bcs  _sort_loop
-		dec  zpWord0+1
-_sort_loop	ldy  zpy    	;start of subroutine sort
-		lda  (zpWord0),y    ;last value in (what is left of) sequence to be sorted
+		dec  zpWord1+1
+_sort_loop	ldy  zpa    	;start of subroutine sort
+		lda  (zpWord1),y    ;last value in (what is left of) sequence to be sorted
 		sta  _work3          		;save value. will be over-written by largest number
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		sta  _work3+1
 		dey
 		jmp  _l2
 _l1		dey
 		dey
 		beq  _l3
-		lda  (zpWord0),y
-		cmp  P8ZP_SCRATCH_W2
+		lda  (zpWord1),y
+		cmp  zpWord0
 		iny
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		dey
-		sbc  P8ZP_SCRATCH_W2+1
+		sbc  zpWord0+1
 		bvc  +
 		eor  #$80
 +		bmi  _l1
 _l2		sty  _work1          		;index of potentially largest value
-		lda  (zpWord0),y
-		sta  P8ZP_SCRATCH_W2          ;potentially largest value
+		lda  (zpWord1),y
+		sta  zpWord0          ;potentially largest value
 		iny
-		lda  (zpWord0),y
-		sta  P8ZP_SCRATCH_W2+1
+		lda  (zpWord1),y
+		sta  zpWord0+1
 		dey
 		jmp  _l1
-_l3		ldy  zpy           ;where the largest value shall be put
-		lda  P8ZP_SCRATCH_W2          ;the largest value
-		sta  (zpWord0),y      ;put largest value in place
+_l3		ldy  zpa           ;where the largest value shall be put
+		lda  zpWord0          ;the largest value
+		sta  (zpWord1),y      ;put largest value in place
 		iny
-		lda  P8ZP_SCRATCH_W2+1
-		sta  (zpWord0),y
+		lda  zpWord0+1
+		sta  (zpWord1),y
 		ldy  _work1         		 ;index of free space
 		lda  _work3          		;the over-written value
-		sta  (zpWord0),y      ;put the over-written value in the free space
+		sta  (zpWord1),y      ;put the over-written value in the free space
 		iny
 		lda  _work3+1
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dey
-		dec  zpy           ;end of the shorter sequence still left
-		dec  zpy
+		dec  zpa           ;end of the shorter sequence still left
+		dec  zpa
 		bne  _sort_loop           ;start working with the shorter sequence
 		rts
 _work1	.byte  0
@@ -6945,10 +6650,10 @@ _work3	.word  0
 
 func_reverse_b	.proc
 		; --- reverse an array of bytes (in-place)
-		; inputs:  pointer to array in zpWord0, length in A
-_index_right = P8ZP_SCRATCH_W2
-_index_left = P8ZP_SCRATCH_W2+1
-_loop_count = zpa
+		; inputs:  pointer to array in zpWord1, length in A
+_index_right = zpWord0
+_index_left = zpWord0+1
+_loop_count = zpx
 		sta  _loop_count
 		lsr  _loop_count
 		sec
@@ -6957,15 +6662,15 @@ _loop_count = zpa
 		lda  #0
 		sta  _index_left
 _loop		ldy  _index_right
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		ldy  _index_left
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _index_right
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		pla
 		ldy  _index_left
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		inc  _index_left
 		dec  _index_right
 		dec  _loop_count
@@ -6976,10 +6681,10 @@ _loop		ldy  _index_right
 
 func_reverse_w	.proc
 		; --- reverse an array of words (in-place)
-		; inputs:  pointer to array in zpWord0, length in A
-_index_first = P8ZP_SCRATCH_W2
-_index_second = P8ZP_SCRATCH_W2+1
-_loop_count = zpa
+		; inputs:  pointer to array in zpWord1, length in A
+_index_first = zpWord0
+_index_second = zpWord0+1
+_loop_count = zpx
 		pha
 		asl  a     ; *2 because words
 		sec
@@ -6993,15 +6698,15 @@ _loop_count = zpa
 		sta  _loop_count
 		; first reverse the lsbs
 _loop_lo	ldy  _index_first
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		ldy  _index_second
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _index_first
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		pla
 		ldy  _index_second
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		inc  _index_second
 		inc  _index_second
 		dec  _index_first
@@ -7016,15 +6721,15 @@ _loop_lo	ldy  _index_first
 		pla
 		sta  _loop_count
 _loop_hi	ldy  _index_first
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		pha
 		ldy  _index_second
-		lda  (zpWord0),y
+		lda  (zpWord1),y
 		ldy  _index_first
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		pla
 		ldy  _index_second
-		sta  (zpWord0),y
+		sta  (zpWord1),y
 		dec  _index_second
 		dec  _index_second
 		inc  _index_first
@@ -7038,13 +6743,13 @@ _loop_hi	ldy  _index_first
 
 func_peekw   .proc
 	; -- read the word value on the address in AY
-	sta  zpWord0
-	sty  zpWord0+1
+	sta  zpWord1
+	sty  zpWord1+1
 	ldy  #0
-	lda  (zpWord0),y
+	lda  (zpWord1),y
 	pha
 	iny
-	lda  (zpWord0),y
+	lda  (zpWord1),y
 	tay
 	pla
 	rts
@@ -7052,13 +6757,13 @@ func_peekw   .proc
 
 
 func_pokew   .proc
-	; -- store the word value in AY in the address in zpWord0
-	sty  zpa
+	; -- store the word value in AY in the address in zpWord1
+	sty  zpx
 	ldy  #0
-	sta  (zpWord0),y
+	sta  (zpWord1),y
 	iny
-	lda  zpa
-	sta  (zpWord0),y
+	lda  zpx
+	sta  (zpWord1),y
 	rts
 	.pend
 	.pend

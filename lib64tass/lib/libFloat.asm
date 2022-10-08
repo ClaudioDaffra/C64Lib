@@ -311,6 +311,125 @@ float .proc
         rts
         
     .pend
+
+    ;   .......................................................... conv
+    ;
+    ;   convert ubyte in A          to float at address A/Y   
+    ;   convert  byte in A          to float at address A/Y   
+    ;   convert uword in zpWord0    to float at address A/Y
+    ;   convert sword in zpWord0    to float at address A/Y
+    ;
+    ;   output  :   fac1
+    ;
+    
+    conv_u8_to_fac1    .proc
+        sta zpa
+        
+        stx zpx
+        sta zpWord0
+        sty zpWord0+1
+        
+        ldy zpa
+        lda #0
+        jsr GIVAYF ; to fac1
+
+        ldx zpx
+        rts
+    .pend
+        
+    conv_s8_to_fac1     .proc
+        sta zpa
+        
+        stx zpx
+        sta zpWord0
+        sty zpWord0+1
+        
+        lda zpa
+        
+        jsr FREADSA
+
+        ldx zpx
+        rts
+    .pend
+
+    GIVUAYFAY   .proc
+     
+        sty  $62
+        sta  $63
+        ldx  #$90
+        sec
+        jmp  $bc49      ; internal BASIC routine
+        
+    .pend
+    
+    conv_u16_to_fac1    .proc
+        stx zpx
+        
+        jsr  GIVUAYFAY
+        
+        ldx zpx
+        rts
+    .pend
+
+    conv_s16_to_fac1    .proc
+        stx zpx
+
+        sta zpa
+        sty zpy
+        lda zpy
+        ldy zpa
+        jsr GIVAYF
+        
+        ldx zpx
+        rts
+    .pend
+    
+    ;   .......................................................... cast
+    ;
+    ;   input   :   fac1
+    ;
+    ;   output  :   
+    ;               (a)     u8 s8 
+    ;               (ay)    u16 s16
+    ;
+    
+    cast_fac1_to_u16    .proc
+
+        stx  zpx
+        jsr  GETADR     ; into Y/A
+        ldx  zpx
+        sta zpa
+        sty zpy
+        lda zpy
+        ldy zpa
+        
+        rts
+    .pend
+
+    cast_fac1_to_u8    .proc
+
+        jsr cast_fac1_to_u16
+        ldy #0
+        
+        rts
+    .pend
+    
+    cast_fac1_to_s16    .proc
+
+        stx  zpx
+        jsr  AYINT
+        ldy  float.AYINT_facmo
+        lda  float.AYINT_facmo+1
+        ldx  zpx
+        rts
+    .pend
+
+    cast_fac1_to_s8    .proc
+
+        jsr cast_fac1_to_s16
+        ldy #0
+        rts
+    .pend
     
 .pend
 

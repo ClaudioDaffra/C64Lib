@@ -54,25 +54,74 @@ main	.proc
     fvar1 = float_123_456
     
     str     .null   "1234.456"
-    fvar2   .byte   0,0,0,0,0,0
+    fvar2    .byte   0,0,0,0,0,0
 
+    ubyte   .byte         123
+    sbyte   .char        -123
+    uword   .word       53632
+    sword   .sint      -24534
+    
     ;
     
     start	.proc
 
-        load_address_ay str
-        jsr float.copy_from_string  ;   load string in fac1
- 
-        jsr float.push_fac1
+        ;
         
-        jsr float.pop_fac1
+        ;   ........................................    ubyte   123
+
+        lda #char.nl
+        jsr c64.CHROUT
         
+        lda ubyte
+        jsr float.conv_u8_to_fac1
+    
         load_address_ay fvar2
         jsr float.copy_fac1_to_mem
-        
+
         load_address_ay fvar2
         jsr float.print
+
+        ;   ........................................    sbyte -123
+
+        lda #char.nl
+        jsr c64.CHROUT
         
+        lda sbyte
+        jsr float.conv_s8_to_fac1
+    
+        load_address_ay fvar2
+        jsr float.copy_fac1_to_mem
+
+        load_address_ay fvar2
+        jsr float.print
+
+        ;   ........................................    uword 53632
+        
+        lda #char.nl
+        jsr c64.CHROUT
+        
+        load_var_ay     uword 
+        jsr float.conv_u16_to_fac1
+    
+        load_address_ay fvar2
+        jsr float.copy_fac1_to_mem
+
+        load_address_ay fvar2
+        jsr float.print
+
+        ;   ........................................    word -24534
+        
+        lda #char.nl
+        jsr c64.CHROUT
+        
+        load_var_ay     sword 
+        jsr float.conv_s16_to_fac1
+    
+        load_address_ay fvar2
+        jsr float.copy_fac1_to_mem
+
+        load_address_ay fvar2
+        jsr float.print
         ;
         
         rts

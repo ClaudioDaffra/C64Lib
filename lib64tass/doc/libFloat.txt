@@ -135,7 +135,38 @@
     push_fac2 
     pop_fac1 
     pop_fac2 
+
+    ;   .......................................................... conv
+    ;
+    ;   convert ubyte in A          to float at address A/Y   
+    ;   convert  byte in A          to float at address A/Y   
+    ;   convert uword in zpWord0    to float at address A/Y
+    ;   convert sword in zpWord0    to float at address A/Y
+    ;
+    ;   output  :   fac1
+    ;
     
+    conv_u8_to_fac1
+    conv_s8_to_fac1
+    conv_u16_to_fac1
+    conv_s16_to_fac1
+    
+    ;   .......................................................... cast
+    ;
+    ;   input   :   fac1
+    ;
+    ;   output  :   
+    ;               (a)     u8 s8 
+    ;               (ay)    u16 s16
+    ;
+    
+    cast_fac1_to_u16
+    cast_fac1_to_u8
+    cast_fac1_to_s16
+    cast_fac1_to_s8
+ 
+    ;
+    ;
     ;
     
 *******************
