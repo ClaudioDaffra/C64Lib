@@ -1,36 +1,239 @@
 
-;********
-;   lib float
-;********
+;*************
+;   FLOAT
+;*************
 
-        GET FLOAT FROM STRING
+;   ....................................................... constant
 
-                jsr basic.txtptr.push
-            ...
-            
-            load_address_ay str
-            jsr basic.txtptr.set
-            
-            jsr basic.get_char
-            
-            jsr basic.get_float_from_string
+    AYINT_facmo         = $64
+    PI                  = 3.141592653589793
+    TWOPI               = 6.283185307179586
+
+;   ....................................................... basic rom
+
+    MOVFM       = $bba2
+    FREADMEM    = $bba6
+    CONUPK      = $ba8c
+    FAREADMEM   = $ba90
+    MOVFA       = $bbfc
+    MOVAF       = $bc0c
+    MOVEF       = $bc0f
+    MOVMF       = $bbd4
+    FTOSWORDYA  = $b1aa
+    GETADR      = $b7f7
+    QINT        = $bc9b
+    AYINT       = $b1bf
+    GIVAYF      = $b391
+    FREADUY     = $b3a2
+    FREADSA     = $bc3c
+    FREADSTR    = $b7b5
+    FPRINTLN    = $aabc
+    FOUT        = $bddd
+    FADDH       = $b849
+    MUL10       = $bae2
+    DIV10       = $bafe
+    FCOMP       = $bc5b
+    FADDT       = $b86a
+    FADD        = $b867
+    FSUBT       = $b853
+    FSUB        = $b850
+    FMULTT      = $ba2b
+    FMULT       = $ba28
+    FDIVT       = $bb12
+    FDIV        = $bb0f
+    FPWRT       = $bf7b
+    FPWR        = $bf78
+    FINLOG      = $bd7e
+    NOTOP       = $aed4
+    INT         = $bccc
+    LOG         = $b9ea
+    SGN         = $bc39
+    SIGN        = $bc2b
+    ABS         = $bc58
+    SQR         = $bf71
+    SQRA        = $bf74
+    EXP         = $bfed
+    NEGOP       = $bfb4
+    RND         = $e097
+    COS         = $e264
+    SIN         = $e26b
+    TAN         = $e2b4
+    ATN         = $e30e
+
+;   ....................................................... function
+
+    ;
+
+    ;   .................................................... print
+    ;
+    ;   input   :   ay  address (float)
+    ;
+    
+    print   .proc
+
+    ;   ......................................... load_from_string
+    ;   
+    ;   input   :   ay  address string
+    ;   output  :   FAC1
+    ;
+    
+    copy_from_string    .proc
+
+    ;   ......................................... copy_fac1_to_mem
+    ;   
+    ;   input   :   ay  address mem (original xy)
+    ;   output  :   FAC1
+    ;
+
+    copy_fac1_to_mem    .proc
+
+    ;   ......................................... load
+    ;
+    ;   input       :   ay
+    ;   output      :   fac1 | fac2
+    
+    copy_fac1_from_mem    .proc
+
+    copy_fac2_from_mem    .proc
+
+    ;   ......................................... round_fac1_to_mem
+    ;   
+    ;   input   :   ay  address mem (original xy)
+    ;   output  :   FAC1
+    ;
+
+    round_fac1_to_mem    .proc
+
+    ;   ......................................... copy_
+    ;
+    ;   input       :   fac1 | fac2
+    ;   output      :   fac1 | fac2
+    
+    copy_fac1_to_fac2    .proc
+
+    copy_fac2_to_fac1    .proc
+
         
-            ...
-            
-                jsr basic.txtptr.pop
-                        
-        ROUND FAC TO MEM    (XY)
+
+.pend
+
+
+
+
+*******************
+Floating Point Math
+*******************
+
+https://codebase64.org/doku.php?id=base:kernal_floating_point_mathematics
+
+Floating point numbers are handled by the C64's BASIC and Kernal ROMs. 
+Called directly from machine language programs, they execute faster than when 
+burdened by the BASIC interpreter. 
+The difficulty lies in the variety of ways you must prepare the registers and zero-page 
+before calling certain routines. Macros are recommended when dealing with FP in assembly.
+Floating point numbers are stored with 5 bytes. The first byte is the exponent, 
+stored in excess $80 format (E = E - $80).
+Second byte holds the sign of the mantissa in its uppermost bit. 
+The normalized mantissa (0 =< M < 1) is assumed to have a leading 1, 
+and the following bits hold the fraction. 
+If the exponent is 0, the number is interpreted as 0 regardless of the contents of the mantissa.
+
+81 00 00 00 00 = 1 = 21 x %1.000…
+82 00 00 00 00 = 2 = 22 x %1.000…
+82 80 00 00 00 = -2 =-(22 x %1.000…)
+81 40 00 00 00 = 1.5 = 21 x %1.100…
+82 40 00 00 00 = 3 = 22 x %1.100…
+
+As you can see, multiplying or dividing a FP number by 2 is as easy 
+as increasing or decreasing the exponent. 
+When these numbers are brought to the ZP for use in the FP routines, 
+the sign is extracted and replaced with the previously assumed 1, 
+and the sign is stored in a separate byte.
+
+Zero Page Locations
+
+The FP routines make extensive use of the zero-page, 
+so it is important to avoid using these areas to prevent errors. 
+The first of the two most used locations is called the Floating Point Accumulator. 
+The second is called the Floating Point Argument. Depending on the source, 
+they are called either “FAC1” and “FAC2”, or “FAC” and “ARG.” After an operation, 
+FAC1 will hold the result.
+
+FAC1:
+
+$61     holds the exponent
+$62-$65 holds the mantissa
+$66     holds the sign in bit 7
+
+FAC2:
+
+$69     holds the exponent
+$6a-$6d holds the mantissa
+$6e     holds the sign in bit 7
+
+The locations around the accumulators are used extensively too.
+
+$56 is used in addition and subtraction, and also the EXP function.
+
+$67 is used during series evaluations. BASIC uses series evaluations to calculate 
+    all the trigonometric functions, the exponent functions, and the log functions.
+    
+$67 is also used during PETSCII to FP conversions.
+
+$68 is used during normalisation, and also when converting a FP number to an integer 
+    (two similar operations).
+
+$6f holds the sign result of arithmetic operations. This byte is set when FAC2 is loaded, 
+    not when FAC1 is loaded. FAC2 should be loaded after FAC1 before addition, 
+    or multiplication. Subtraction negates FAC1 and then compares, setting this byte. 
+    Unless called at FDIVT ($bb12), division does its own compare, 
+    so copying FAC1 into FAC2 and then loading FAC1 does not produce erroneous signs. 
+    When FDIVT is used, value of this byte may contain incorrect sign, 
+    leading to errors in later operations. 
+    Please note that this address is used also by other routines – 
+    as string pointer for example – and therefore should be treated as volatile, 
+    even if no FP routines are invoked after its value is established.
+
+$70 is the low order rounding byte for FAC1, essentially an extension of the mantissa. 
+    It is cleared whenever a variable is loaded into FAC1. 
+    Storing 0 here after obtaining a result can speed execution 
+    (at the cost of accuracy) by avoiding the rounding routines.
+
+Four temporary accumulators exist as well:
+
+$26-$2a is used to hold the result of multiplication or division. 
+        After the operation is concluded, this number is moved into FAC1. 
+        Safe to use if only using addition and subtraction.
+
+$4e-$52 is used for BASIC's FN and $STR. Use freely.
+
+$57-$5b is used when BASIC creates FP variables and arrays. 
+        Because you will be manipulating variables yourself, this area is free to use.
+
+$5c-$60 is used by the PETSCII conversion routines, and like 
+$57-$5b , for variables and arrays.
+
+Several other locations are important depending on which routines you need:
+
+$12     is used by the tangent function, but is also set (in preparation for TAN) 
+        by the sine and cosine routines.
+
+$22/23 is a temporary vector often used by BASIC. For the FP routines, 
+        it is used to move variables into the accumulators, and back into memory. 
+        While you can use your own movement routines and free up this area a little, 
+        many of the more advanced routines make use of the standard Kernal moves. 
+        This vector is also used when evaluating RND.
+
+$24/$25 is a temporary vector used during FP comparisons 
+        that points to the variable to compare to the accumulator. 
+        It is also used when converting PETSCII into FP.
+
+$71/$72 is a temporary vector used during series evaluations, 
+        and when converting PETSCII into FP.
+
+$73-$8a is the CHRGET subroutine. Copied to the ZP from RAM on startup, 
+        it contains a self-modifying vector that points to the next byte in a text line. 
+        It is used when converting a PETSCII string into FP. 
+        It is also used if you hook into BASIC's INPUT instruction to obtain an PETSCII string.
         
-            load_address_xy fvar3
-            jsr basic.round_fac1_to_mem 
-        
-        COPY FAC1 TO MEM    (XY)
-        
-            load_address_xy fvar2
-            jsr basic.copy_fac1_to_mem
-        
-        COPY MEM TO FAC1
-        
-            load_address_ay fvar2
-            jsr basic.copy_mem_to_fac1
         

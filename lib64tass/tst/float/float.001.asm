@@ -56,37 +56,46 @@ main	.proc
     str     .null   "1234.456"
     fvar2   .byte   0,0,0,0,0,0
     fvar3   .byte   0,0,0,0,0
+
+    fvar4   .byte   0,0,0,0,0,0
     
     start	.proc
 
-        jsr basic.txtptr.push           ;   basic_txtptr_push
-        
-        ;
-        
+
         load_address_ay str
-        jsr basic.txtptr.set
-        
-        jsr basic.get_char
-        
-        jsr basic.get_float_from_string
-
-        load_address_xy fvar3           ;   xy
-        jsr basic.round_fac1_to_mem     ;   round_fac1_to_mem
-
-        load_address_xy fvar2           ;   xy
-        jsr basic.copy_fac1_to_mem      ;   copy_fac1_to_mem
-
-        ;
+        jsr float.copy_from_string  ;   load string in fac1
         
         load_address_ay fvar2
-        jsr float.print
+        jsr float.copy_fac1_to_mem  ;   copy_fac1_to_mem
 
-        load_address_ay fvar3
+        load_address_ay fvar2       ;   print string
         jsr float.print
 
         ;
+
+        load_address_ay fvar2       ;   load var in fac1
+        jsr float.copy_fac1_from_mem
+
+        load_address_ay fvar3       ;   round from fac1 to mem
+        jsr float.round_fac1_to_mem 
+
+        load_address_ay fvar3       ;   print string
+        jsr float.print
         
-        jsr basic.txtptr.pop        ;   basic_txtptr_pop
+        ;
+
+        load_address_ay fvar2       ;   load var in fac1
+        jsr float.copy_fac1_from_mem
+        
+        jsr float.copy_fac1_to_fac2
+        
+        jsr float.copy_fac2_to_fac1
+        
+        load_address_ay fvar4
+        jsr float.copy_fac1_to_mem  ;   copy_fac1_to_mem
+        
+        load_address_ay fvar4       ;   print string
+        jsr float.print
         
         ;
 

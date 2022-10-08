@@ -17,8 +17,12 @@ basic   .proc
     get_float_from_string   =   $BCF3   ;
 
     copy_fac1_to_mem        =   $BBD4   ;   input   -> xy
-
+    
+    copy_fac1_to_fac2       =   $BC0F   ;   input   -> fac2=fac1
+    copy_fac2_to_fac1       =   $BBFC   ;   input   -> fac1=fac2
+    
     copy_mem_to_fac1        =   $BBA2   ;   input   -> ay
+    copy_mem_to_fac2        =   $BB8C   ;   input   -> ay
     
     round_fac1_to_mem       =   $bbd4   ;   input   -> xy
     

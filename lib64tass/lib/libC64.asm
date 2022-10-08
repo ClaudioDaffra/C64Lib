@@ -16,6 +16,7 @@
 .include "libArray.asm"
 .include "libGraph.asm"
 .include "libBasic.asm"
+.include "libFloat.asm"
 
 ;--------------------------------------------------------------- 
 
