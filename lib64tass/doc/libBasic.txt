@@ -4,26 +4,44 @@
 ; basic
 ;*********
 
-GETCHAR         =   $0073   ;   output  ->  a
+    get_char_inc_ptr        =   $0073
+    get_char                =   $0079   ;   output  ->  a
+    TXTPTR                  =   $007A
 
-TXTPTR          =   $007A   ;   pointer to basic
+    GETBYTE                 =   $b79E   ;   output  ->  x
+    NEWSTATEMENT            =   $a7ae
 
-GETBYTE         =   $b79E   ;   output  ->  x
+    get_float_from_string   =   $BCF3   ;
 
-NEWSTATEMENT    =   $a7ae
+    copy_fac1_to_mem        =   $BBD4   ;   input   -> xy
 
-;
+    copy_mem_to_fac1        =   $BBA2   ;   input   -> ay
+    
+    round_fac1_to_mem       =   $bbd4   ;   input   -> xy
+    
 
-subroutine
+    ;
 
-    basic.txtptr.push   ;   push txtptr to stack
+    subroutine
 
-    basic.txtptr.pop    ;   pop txtptr from stack
+        basic.txtptr.push           ;   push txtptr to stack
 
-    basic.txtptr.set    ;   input   ay ( address )  :   set new txtptr to basic
+        basic.txtptr.pop            ;   pop txtptr from stack
 
-    basic.get_char      ;   get char -> a           :   char read
+        basic.txtptr.set            ;   input   ay ( address )          :   set new txtptr to basic
+        
+        ;
 
+        basic.get_char_inc_ptr      ;   ++txtptr ;   get char -> a      :   output a
+        
+        basic.get_char              ;   get char -> a                   :   output a
+
+        basic.get_float_from_string ;   input  ay ( address )           :   output  FAC1(6)
+        
+        basic.copy_fac1_to_mem      ;  input   xy ( address ) var       :   output  mem
+        
+        ;
+        
 ;;;
 ;;
 ;

@@ -15,6 +15,7 @@
 .include "libString.asm"
 .include "libArray.asm"
 .include "libGraph.asm"
+.include "libBasic.asm"
 
 ;--------------------------------------------------------------- 
 
@@ -1359,6 +1360,15 @@ load_imm_xy .macro
 load_var_xy .macro
     ldx \1 
     ldy \1+1
+.endm
+
+load_address_xy	.macro
+    ldx #<\1
+    ldy #>\1
+.endm
+load_address_fac	.macro
+    ldx #<\1
+    ldy #>\1
 .endm
 
 ; ---------------------------------------------------------------

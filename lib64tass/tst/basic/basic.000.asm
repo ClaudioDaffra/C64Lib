@@ -40,46 +40,6 @@ program .proc
        
 .pend
 
-;*********
-; basic
-;*********
-
-GETCHAR         =   $0073
-TXTPTR          =   $007A
-
-GETBYTE         =   $b79E   ;   output  ->  x
-NEWSTATEMENT    =   $a7ae
-
-
-basic   .proc
-
-    get_char    = GETCHAR
-    
-    txtptr  .proc
-
-        push  .proc
-            lda TXTPTR
-            ldy TXTPTR+1
-            jsr stack.push_word
-            rts
-        .pend
-        
-        pop  .proc
-            jsr stack.pop_word
-            sta TXTPTR
-            sty TXTPTR+1
-            rts
-        .pend
-
-        set  .proc
-            sta $7A     ; set
-            sty $7B
-            rts
-        .pend
-        
-    .pend
-    
-.pend
 
 ;*********
 ; GLOBAL

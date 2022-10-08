@@ -1,0 +1,36 @@
+
+;********
+;   lib float
+;********
+
+        GET FLOAT FROM STRING
+
+                jsr basic.txtptr.push
+            ...
+            
+            load_address_ay str
+            jsr basic.txtptr.set
+            
+            jsr basic.get_char
+            
+            jsr basic.get_float_from_string
+        
+            ...
+            
+                jsr basic.txtptr.pop
+                        
+        ROUND FAC TO MEM    (XY)
+        
+            load_address_xy fvar3
+            jsr basic.round_fac1_to_mem 
+        
+        COPY FAC1 TO MEM    (XY)
+        
+            load_address_xy fvar2
+            jsr basic.copy_fac1_to_mem
+        
+        COPY MEM TO FAC1
+        
+            load_address_ay fvar2
+            jsr basic.copy_mem_to_fac1
+        
