@@ -114,12 +114,30 @@
     copy_fac2_to_fac1    .proc
 
         
+    ;   .................................................... to_string
+    ;
+    ;   input
+    ;           :   zpWord0 dest address
+    ;           :   ay      address (float)
+    ;   output
+    ;           :   a       lenght string
+    ;
+    
+    to_string
+    
+    ;
+    ;
+    ;
 
-.pend
+    ;   ......................................... push/pop fac1,fac2
 
-
-
-
+    push_fac1 
+    push_fac2 
+    pop_fac1 
+    pop_fac2 
+    
+    ;
+    
 *******************
 Floating Point Math
 *******************

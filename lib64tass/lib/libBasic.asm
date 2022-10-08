@@ -19,6 +19,7 @@ basic   .proc
     copy_fac1_to_mem        =   $BBD4   ;   input   -> xy
     
     copy_fac1_to_fac2       =   $BC0F   ;   input   -> fac2=fac1
+    copy_fac1_to_fac2_round =   $BC0C   ;   input   -> fac2=fac1    
     copy_fac2_to_fac1       =   $BBFC   ;   input   -> fac1=fac2
     
     copy_mem_to_fac1        =   $BBA2   ;   input   -> ay

@@ -5,11 +5,14 @@
 
 float .proc
 
+    ;   constant
+    
     AYINT_facmo         = $64
     PI                  = 3.141592653589793
     TWOPI               = 6.283185307179586
 
-
+    ;   basic rom
+    
     MOVFM       = $bba2
     FREADMEM    = $bba6
     CONUPK      = $ba8c
@@ -76,7 +79,9 @@ float .proc
         -
             lda  (zpWord0),y
             beq  +
+            
             jsr  c64.CHROUT
+            
             iny
             bne  -
         +
@@ -85,7 +90,46 @@ float .proc
             rts
         
     .pend
+    
+    ;   .................................................... to_string
+    ;
+    ;   input
+    ;           :   zpWord0 dest address
+    ;           :   ay      address (float)
+    ;   output
+    ;           :   a       lenght string
+    ;
+    
+    to_string   .proc
 
+            stx  zpx
+
+            jsr  float.MOVFM        ; load float into fac1
+            jsr  float.FOUT         ; fac1 to string in A/Y
+            sta  zpWord1
+            sty  zpWord1+1
+            ldy  #0
+        -
+            lda  (zpWord1),y
+            beq  +
+
+            sta  (zpWord0),y
+            
+            iny
+            bne  -
+        +
+
+            lda  #0
+            sta  (zpWord0),y
+            
+            tya
+            
+            ldx  zpx
+            
+            rts
+        
+    .pend
+    
     ;   ......................................... load_from_string
     ;   
     ;   input   :   ay  address string
@@ -164,7 +208,7 @@ float .proc
         
     .pend
 
-    ;   ......................................... copy_
+    ;   ......................................... copy_fac1_to_fac 1,2
     ;
     ;   input       :   fac1 | fac2
     ;   output      :   fac1 | fac2
@@ -179,8 +223,95 @@ float .proc
         rts
     .pend
 
+    ;   ......................................... push/pop fac1,fac2
+    ;
+    ;   FAC1,FAC2 :
+    ;
+    
+    ;   $61     holds the exponent
+    ;   $62-$65 holds the mantissa
+    ;   $66     holds the sign in bit 7
+    ;
+    
+    push_fac1    .proc
         
+        lda $61
+        jsr stack.push_byte
+        lda $62
+        jsr stack.push_byte
+        lda $63
+        jsr stack.push_byte
+        lda $64
+        jsr stack.push_byte
+        lda $65
+        jsr stack.push_byte
+        lda $66
+        jsr stack.push_byte
+        
+        rts
+    .pend
 
+    pop_fac1    .proc
+        
+        jsr stack.pop_byte
+        sta $66
+        jsr stack.pop_byte
+        sta $65
+        jsr stack.pop_byte
+        sta $64
+        jsr stack.pop_byte
+        sta $63
+        jsr stack.pop_byte
+        sta $62
+        jsr stack.pop_byte
+        sta $61
+        
+        rts
+    .pend
+    
+    ;   FAC2:
+    ;   
+    ;   $69     holds the exponent
+    ;   $6a-$6d holds the mantissa
+    ;   $6e     holds the sign in bit 7
+
+    push_fac2    .proc
+        
+        lda $69
+        jsr stack.push_byte
+        lda $6a
+        jsr stack.push_byte
+        lda $6b
+        jsr stack.push_byte
+        lda $6c
+        jsr stack.push_byte
+        lda $6d
+        jsr stack.push_byte
+        lda $6e
+        jsr stack.push_byte
+        
+        rts
+    .pend
+
+    pop_fac2    .proc
+        
+        jsr stack.pop_byte
+        sta $6e
+        jsr stack.pop_byte
+        sta $6d
+        jsr stack.pop_byte
+        sta $6c
+        jsr stack.pop_byte
+        sta $6b
+        jsr stack.pop_byte
+        sta $6a
+        jsr stack.pop_byte
+        sta $69
+        
+        rts
+        
+    .pend
+    
 .pend
 
 
