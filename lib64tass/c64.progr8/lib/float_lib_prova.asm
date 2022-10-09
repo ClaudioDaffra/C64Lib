@@ -3055,53 +3055,55 @@ equal_zero	.proc
 		jsr  floats.SIGN
 		beq  _true
 		bne  _false
-_true		lda  #1
+_true		
+        lda  #1
 		sta  stack.lo,x
 		dex
 		rts
-_false		lda  #0
+_false		
+        lda  #0
 		sta  stack.lo,x
 		dex
 		rts
 		.pend
 
-notequal_zero	.proc
-		jsr  floats.pop_float_fac1
-		jsr  floats.SIGN
-		bne  equal_zero._true
-		beq  equal_zero._false
-		.pend
+                        notequal_zero	.proc
+                                jsr  floats.pop_float_fac1
+                                jsr  floats.SIGN
+                                bne  equal_zero._true
+                                beq  equal_zero._false
+                                .pend
 
-greater_zero	.proc
-		jsr  floats.pop_float_fac1
-		jsr  floats.SIGN
-		beq  equal_zero._false
-		bpl  equal_zero._true
-		jmp  equal_zero._false
-		.pend
+                        greater_zero	.proc
+                                jsr  floats.pop_float_fac1
+                                jsr  floats.SIGN
+                                beq  equal_zero._false
+                                bpl  equal_zero._true
+                                jmp  equal_zero._false
+                                .pend
 
-less_zero	.proc
-		jsr  floats.pop_float_fac1
-		jsr  floats.SIGN
-		bmi  equal_zero._true
-		jmp  equal_zero._false
-		.pend
+                        less_zero	.proc
+                                jsr  floats.pop_float_fac1
+                                jsr  floats.SIGN
+                                bmi  equal_zero._true
+                                jmp  equal_zero._false
+                                .pend
 
-greaterequal_zero	.proc
-		jsr  floats.pop_float_fac1
-		jsr  floats.SIGN
-		bpl  equal_zero._true
-		jmp  equal_zero._false
-		.pend
+                        greaterequal_zero	.proc
+                                jsr  floats.pop_float_fac1
+                                jsr  floats.SIGN
+                                bpl  equal_zero._true
+                                jmp  equal_zero._false
+                                .pend
 
-lessequal_zero	.proc
-		jsr  floats.pop_float_fac1
-		jsr  floats.SIGN
-		beq  equal_zero._true
-		bmi  equal_zero._true
-		jmp  equal_zero._false
-		.pend
-	;	src line: library:/prog8lib/c64/floats.p8:175
+                        lessequal_zero	.proc
+                                jsr  floats.pop_float_fac1
+                                jsr  floats.SIGN
+                                beq  equal_zero._true
+                                bmi  equal_zero._true
+                                jmp  equal_zero._false
+                                .pend
+
 ; --- floating point builtin functions
 
 
@@ -3120,7 +3122,8 @@ func_sign_f_into_A	.proc
 func_swap_f	.proc
 		; -- swap floats pointed to by SCRATCH_ZPWORD1, SCRATCH_ZPWORD2
 		ldy  #4
--               lda  (zpWord1),y
+-               
+        lda  (zpWord1),y
 		pha
 		lda  (zpWord0),y
 		sta  (zpWord1),y
@@ -3130,6 +3133,8 @@ func_swap_f	.proc
 		bpl  -
 		rts
 		.pend
+
+12345678
 
 func_reverse_f	.proc
 		; --- reverse an array of floats (array in zpWord1, num elements in A)
@@ -3220,34 +3225,34 @@ _loop		; push the left indexed float on the stack
 
 
 
-a_times_5	.proc
-		sta  zpa
-		asl  a
-		asl  a
-		clc
-		adc  zpa
-		rts
-		.pend
+                                a_times_5	.proc
+                                        sta  zpa
+                                        asl  a
+                                        asl  a
+                                        clc
+                                        adc  zpa
+                                        rts
+                                        .pend
 
-func_any_f_into_A	.proc
-		jsr  a_times_5
-		jmp  prog8_lib.func_any_b_into_A
-		.pend
+                                func_any_f_into_A	.proc
+                                        jsr  a_times_5
+                                        jmp  prog8_lib.func_any_b_into_A
+                                        .pend
 
-func_all_f_into_A	.proc
-		jsr  a_times_5
-		jmp  prog8_lib.func_all_b_into_A
-		.pend
+                                func_all_f_into_A	.proc
+                                        jsr  a_times_5
+                                        jmp  prog8_lib.func_all_b_into_A
+                                        .pend
 
-func_any_f_stack	.proc
-		jsr  a_times_5
-		jmp  prog8_lib.func_any_b_stack
-		.pend
+                                func_any_f_stack	.proc
+                                        jsr  a_times_5
+                                        jmp  prog8_lib.func_any_b_stack
+                                        .pend
 
-func_all_f_stack	.proc
-		jsr  a_times_5
-		jmp  prog8_lib.func_all_b_stack
-		.pend
+                                func_all_f_stack	.proc
+                                        jsr  a_times_5
+                                        jmp  prog8_lib.func_all_b_stack
+                                        .pend
  
 
 FREADS32	.proc
@@ -3296,33 +3301,31 @@ FREADS24AXY	.proc
  
 
 GIVAYFAY	.proc
-	;	src line: library:/prog8lib/c64/floats.p8:142
+ 
 		sta  zpx
 		tya
 		ldy  zpx
 		jmp  GIVAYF		; this uses the inverse order, Y/A
 	.pend
-	;	src line: library:/prog8lib/c64/floats.p8:150
-
+ 
 FTOSWRDAY	.proc
-	;	src line: library:/prog8lib/c64/floats.p8:152
+ 
 		jsr  FTOSWORDYA	; note the inverse Y/A order
 		sta  zpx
 		tya
 		ldy  zpx
 		rts
 	.pend
-	;	src line: library:/prog8lib/c64/floats.p8:161
+ 
 
 GETADRAY	.proc
-	;	src line: library:/prog8lib/c64/floats.p8:163
+ 
 		jsr  GETADR		; this uses the inverse order, Y/A
 		sta  zpa
 		tya
 		ldy  zpa
 		rts
 	.pend
-	;	src line: library:/prog8lib/floats_functions.p8:5
 
                             print_f	.proc
                             ; statements
@@ -3351,7 +3354,7 @@ GETADRAY	.proc
  
 
 sin	.proc
-; statements
+
 
         lda  #<angle
         ldy  #>angle
@@ -3360,15 +3363,12 @@ sin	.proc
         jsr  SIN
         ldx  zpx
         rts
-; variables
 
-; non-zeropage variables
 angle	.byte  0,0,0,0,0  ; float
 	.pend
 
 
 rad	.proc
-; statements
 
         lda  #<angle
         ldy  #>angle
@@ -3380,11 +3380,12 @@ rad	.proc
         ldx  zpx
         rts
 _pi_div_180	.byte 123, 14, 250, 53, 18		; pi / 180
-; variables
 
-; non-zeropage variables
 angle	.byte  0,0,0,0,0  ; float
 	.pend
+    
+    
+    
 	.pend
 
 

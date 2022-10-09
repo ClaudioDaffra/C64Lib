@@ -575,7 +575,7 @@ float .proc
         jsr basic.float.compare
         rts
     .pend
-    
+
     ;   ------------------------------------ boolean
     
     ;     $00 if FAC1 = 
@@ -649,6 +649,23 @@ float .proc
         rts
     false
         clc
+        rts
+    .pend
+
+    ;   ------------------------------------ sign abs int
+    
+    sign     .proc       
+        jsr basic.float.sign
+        rts
+    .pend
+
+    abs     .proc       
+        jsr basic.float.abs
+        rts
+    .pend
+
+    int     .proc       
+        jsr basic.float.int
         rts
     .pend
     

@@ -196,9 +196,10 @@
     ;
     
     compare
-            ;     $00 if FAC1 =     if_fac1_eq_fac2 jmp
-            ;     $01 if FAC1 >     if_fac1_gt_fac2 jmp
-            ;     $ff if FAC1 <     if_fac1_lt_fac2 jmp
+    
+            :     $00 if FAC1 =     if_fac1_eq_fac2 jmp
+            :     $01 if FAC1 >     if_fac1_gt_fac2 jmp
+            :     $ff if FAC1 <     if_fac1_lt_fac2 jmp
 
     compare_ne
     compare_eq
@@ -207,9 +208,15 @@
     compare_gt
     compare_ge
 
-            ;     (C=0)         if_false    jmp
-            ;     (C=1)         if_true     jmp
-            
+            :     (C=0)         if_false    jmp
+            :     (C=1)         if_true     jmp
+
+    
+    sign    
+            :   -1  ,   0   ,   +1
+    abs
+    int
+ 
     ;
     
 *******************

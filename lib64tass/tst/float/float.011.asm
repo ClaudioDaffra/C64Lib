@@ -40,10 +40,8 @@ program .proc
         
 main	.proc
 
-    fvar1 = float_123_456
-    
-    str1     .null   "1234.456"
-    str2     .null   "-789.123"
+    str1     .null   "-1234.456"
+ 
 
     f1  .byte   0,0,0,0,0
     f2  .byte   0,0,0,0,0
@@ -54,64 +52,52 @@ main	.proc
     start	.proc
 
         load_address_ay str1
-        jsr float.copy_from_string  ;  
+        jsr float.copy_from_string
 
         load_address_ay f1
         jsr float.copy_fac1_to_mem
-
-        load_address_ay str2
-        jsr float.copy_from_string  ;  
-
-        load_address_ay f2
-        jsr float.copy_fac1_to_mem
-        
-        ;
-        
+ 
         load_address_ay f1
         jsr float.print
         
         lda #char.nl
         jsr c64.CHROUT
 
-        load_address_ay f2
-        jsr float.print
-        
-        lda #char.nl
-        jsr c64.CHROUT
-
         ;
-
+        
         load_address_ay f1
         jsr float.copy_mem_to_fac1
+
         
-        load_address_ay f2
-        jsr float.copy_mem_to_fac2
+        ;   ..........................
         
-        ;.................
-        jsr  float.compare
-        ;.................
+        ;jsr float.sign
         
-        if_fac1_eq_fac2 label_eq
-        if_fac1_lt_fac2 label_lt
-        if_fac1_gt_fac2 label_gt
+        ;   a   0       =
+        ;   a   1       +
+        ;   a   255     -
         
+        ;jsr float.abs
+        jsr float.int
+        
+        ;   ..........................
+        
+        load_address_ay f1
+        jsr float.copy_fac1_to_mem
+
+        ;
+        
+        load_address_ay f1
+        jsr float.print
+        
+        lda #char.nl
+        jsr c64.CHROUT
+ 
+
+        ;
+
         rts
 
-label_eq
-        lda #'='
-        sta 1024
-        rts
-        
-label_gt
-        lda #'>'
-        sta 1024
-        rts
-        
-label_lt
-        lda #'<'
-        sta 1024
-        rts
-        
     .pend
 
 .pend

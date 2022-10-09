@@ -4,7 +4,6 @@
 ; basic
 ;*********
 
-
 basic   .proc
 
     getchar_inc_ptr         =   $0073
@@ -91,13 +90,34 @@ basic   .proc
 
         compare =   $bc5b 
 
-        ;
+        ;     $bc2b = Evaulate sign of FAC1 (returned in A) $bc39 = Evaulate sign of FAC1 (returned in FAC1)
+        ;     
+        ;     These routines return 
+        ;     $01 for positive numbers, 
+        ;     $ff for negative numbers,
+        ;     $00 for zeros. If you know a number is non-zero, 
+        ;     it is quicker just to use BIT $66, or LDA $66, etc.
 
-        ;
+        sign = $bc2b
+
+        ;   ABS   $bc58 = Returns absolute value of FAC1
+        ;     
+        ;   Simply LSR's the sign byte of FAC1 ($66) to put a zero in the MSB. 
+        ;   This is easily done without the need for a JSR.
+
+        abs = $bc58
+
+        ;   INT   $bccc = Round FAC1 to Integer
+        ;     
+        ;   Takes FAC1 and rounds away the decimal to make it an integer. 
+        ;   It is still, however, expressed as a FP number.
+
+        int = $bccc
+
 
     .pend
     
-    ;
+    ;   .......................................................... txtptr
 
     txtptr  .proc
 
@@ -120,8 +140,10 @@ basic   .proc
             sty $7B
             rts
         .pend
-        
+
     .pend
+    
+    ;
     
 .pend
 
