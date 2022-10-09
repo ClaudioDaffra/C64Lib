@@ -35,7 +35,7 @@ float .proc
     MUL10       = $bae2
     DIV10       = $bafe
     FCOMP       = $bc5b
-    FADDT       = $b86a
+    FADDT       = $b86a ;   fac1    ,   fac2
     FADD        = $b867
     FSUBT       = $b853
     FSUB        = $b850
@@ -90,6 +90,17 @@ float .proc
             rts
         
     .pend
+
+    print_fac1   .proc
+            lda #<zpWord2
+            ldy #>zpWord2
+            jsr copy_fac1_to_mem
+            lda #<zpWord2
+            ldy #>zpWord2
+            jsr print
+            rts
+    .pend
+
     
     ;   .................................................... to_string
     ;
@@ -135,7 +146,7 @@ float .proc
     ;   input   :   ay  address string
     ;   output  :   FAC1
     ;
-    
+
     copy_from_string    .proc
 
         pha
@@ -189,6 +200,15 @@ float .proc
     .pend
     
     copy_fac2_from_mem    .proc
+        jsr basic.copy_mem_to_fac2
+        rts
+    .pend
+    copy_mem_to_fac1    .proc
+        jsr basic.copy_mem_to_fac1
+        rts
+    .pend
+    
+    copy_mem_to_fac2    .proc
         jsr basic.copy_mem_to_fac2
         rts
     .pend
@@ -365,8 +385,6 @@ float .proc
 
     .pend
  
-
-   
     ;   .......................................................... conv
     ;
     ;   convert ubyte in A          to float at address A/Y   
@@ -485,7 +503,40 @@ float .proc
         ldy #0
         rts
     .pend
+
+    ;   .......................................................... operation
+    ;
     
+    add     .proc
+        lda $61
+        jsr basic.float.add
+        rts
+    .pend
+
+    sub     .proc
+        jsr  basic.float.sub
+        rts
+    .pend
+    
+    mul     .proc
+        lda $61
+        jsr basic.float.mul
+        rts
+    .pend
+
+    div     .proc       
+        jsr float.push_fac1
+        jsr float.push_fac2
+        jsr float.pop_fac1
+        jsr float.pop_fac2
+    fac2_fac1
+        lda $61
+        jsr basic.float.div
+        rts
+    .pend
+    
+    ;
+        
 .pend
 
 

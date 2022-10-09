@@ -2706,7 +2706,8 @@ fmath_float2	.byte 0,0,0,0,0	; storage for a mflpt5 value
 push_fac1	.proc
 		; -- push the float in FAC1 onto the stack
 		stx  zpx
-_internal	ldx  #<fmath_float1
+_internal	
+        ldx  #<fmath_float1
 		ldy  #>fmath_float1
 		jsr  MOVMF
 		lda  #<fmath_float1
@@ -2725,15 +2726,15 @@ div_f		.proc
 		jmp  push_fac1._internal
 		.pend
 
-add_f		.proc
-		; -- push f1+f2 on stack
-		jsr  pop_2_floats_f2_in_fac1
-		stx  zpx
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  FADD
-		jmp  push_fac1._internal
-		.pend
+                        add_f		.proc
+                                ; -- push f1+f2 on stack
+                                jsr  pop_2_floats_f2_in_fac1
+                                stx  zpx
+                                lda  #<fmath_float1
+                                ldy  #>fmath_float1
+                                jsr  FADD
+                                jmp  push_fac1._internal
+                                .pend
 
 sub_f		.proc
 		; -- push f1-f2 on stack

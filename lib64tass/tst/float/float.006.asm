@@ -48,20 +48,75 @@ float_789_123   .byte  $8a, $45, $47, $df, $3b  ; float_789.123
 ; float 4
 
 ;--------------------------------------------------------------- main
-
+        
 main	.proc
 
-    str1     .null   "123.456"
-    str2     .null   "-456.321"
-    str3     .null   "456.789"
-    str4     .null   "-23.456"
+    fvar1 = float_123_456
+    
+    str1     .null   "1234.456"
+    str2     .null   "-789.123"
+
+    f1  .byte   0,0,0,0,0
+    f2  .byte   0,0,0,0,0
+    r   .byte   0,0,0,0,0
     
     ;
-
+    
     start	.proc
 
+        load_address_ay str1
+        jsr float.copy_from_string  ;  
+
+        load_address_ay f1
+        jsr float.copy_fac1_to_mem
+
+        load_address_ay str2
+        jsr float.copy_from_string  ;  
+
+        load_address_ay f2
+        jsr float.copy_fac1_to_mem
+        
         ;
- 
+        
+        load_address_ay f1
+        jsr float.print
+        
+        lda #char.nl
+        jsr c64.CHROUT
+
+        load_address_ay f2
+        jsr float.print
+        
+        lda #char.nl
+        jsr c64.CHROUT
+
+        ;
+
+        load_address_ay f1
+        jsr basic.copy_mem_to_fac1
+
+        load_address_ay f2
+        jsr basic.copy_mem_to_fac2
+
+        ;
+        
+        ;jsr  float.add      ;   445.333
+        jsr  float.sub      ;   2023.579    -- = +
+        ;jsr  float.mul      ;   -974137.622
+        ;jsr  float.div      ;   -974137.622
+
+        ;
+        
+        load_address_ay r
+        jsr float.copy_fac1_to_mem
+        
+        lda #char.nl
+        jsr c64.CHROUT
+        
+        load_address_ay r
+        jsr float.print
+
+        ;
 
         rts
     
@@ -72,4 +127,5 @@ main	.proc
 ;;;
 ;;
 ;
+
 
