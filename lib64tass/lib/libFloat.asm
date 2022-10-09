@@ -114,7 +114,7 @@ float .proc
     ;           :   zpWord0 dest address
     ;           :   ay      address (float)
     ;   output
-    ;           :   a       lenght string
+    ;           :   a       length string
     ;
     
     to_string   .proc

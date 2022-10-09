@@ -69,17 +69,9 @@ main	.proc
         jsr float.copy_mem_to_fac1
 
         
-        ;   .......................... sign abs int
+        ;   .......................... 
         
-        ;jsr float.sign
-        
-        ;   a   0       =
-        ;   a   1       +
-        ;   a   255     -
-        
-        ;jsr float.abs
-        jsr float.int
-        
+
         ;   ..........................
         
         load_address_ay f1

@@ -612,6 +612,7 @@ math    .proc
      
      saveA  .byte   0
      saveY  .byte   0
+     
     .pend
 
     ;.......................................................................    div_u16
@@ -1203,8 +1204,6 @@ math    .proc
             jmp  mul_word_320
     .pend
 
- 
- 
     ;...........................................................square
     ;
     ; -- calculate square root of signed word in AY, result in AY
@@ -1553,7 +1552,7 @@ math    .proc
     ;  input   :   ay   
     ;  output  :   (0->ay)
     ;
-;TODO
+
     get_rand_num_word  .proc
             sta lo
             sty hi
@@ -1583,7 +1582,63 @@ math    .proc
        lo   .byte   0
        hi   .byte   0
     .pend 
- 
+
+    ;   ....................................................... sin cos byte
+    
+    sin8u   .proc
+            tay
+            lda  _sinecos8u,y
+            rts
+        _sinecos8u  .byte  trunc(128.0 + 127.5 * sin(range(256+64) * rad(360.0/256.0)))
+    .pend
+
+
+    cos8u   .proc
+        tay
+        lda  sin8u._sinecos8u+64,y
+        rts
+    .pend
+
+
+    sin8    .proc
+        tay
+        lda  _sinecos8,y
+        rts
+        _sinecos8   .char  trunc(127.0 * sin(range(256+64) * rad(360.0/256.0)))
+    .pend
+
+    cos8    .proc
+        tay
+        lda  sin8._sinecos8+64,y
+        rts
+    .pend
+
+    sinr8u  .proc
+        tay
+        lda  _sinecosR8u,y
+        rts
+    _sinecosR8u .byte  trunc(128.0 + 127.5 * sin(range(180+45) * rad(360.0/180.0)))
+    .pend
+
+    cosr8u  .proc
+        tay
+        lda  sinr8u._sinecosR8u+45,y
+        rts
+    .pend
+
+    sinr8   .proc
+        tay
+        lda  _sinecosR8,y
+        rts
+        _sinecosR8  .char  trunc(127.0 * sin(range(180+45) * rad(360.0/180.0)))
+    .pend
+
+    cosr8   .proc
+        tay
+        lda  sinr8._sinecosR8+45,y
+        rts
+    .pend
+
  
 .pend   
 

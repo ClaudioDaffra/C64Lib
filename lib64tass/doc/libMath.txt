@@ -274,7 +274,27 @@
     ;
 
     #   get_rand_num_word  
+
+    ;   ...................................................... sin cos byte ubyte
     
+    sin8u   .proc
+  
+    cos8u   .proc
+ 
+    sin8    .proc
+ 
+    cos8    .proc
+ 
+    sinr8u  .proc
+ 
+    cosr8u  .proc
+ 
+    sinr8   .proc
+ 
+    cosr8   .proc
+ 
+
+
 ;;;
 ;;
 ;

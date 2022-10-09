@@ -3050,22 +3050,22 @@ set_array_float		.proc
 		.pend
 
 
-equal_zero	.proc
-		jsr  floats.pop_float_fac1
-		jsr  floats.SIGN
-		beq  _true
-		bne  _false
-_true		
-        lda  #1
-		sta  stack.lo,x
-		dex
-		rts
-_false		
-        lda  #0
-		sta  stack.lo,x
-		dex
-		rts
-		.pend
+                    equal_zero	.proc
+                            jsr  floats.pop_float_fac1
+                            jsr  floats.SIGN
+                            beq  _true
+                            bne  _false
+                    _true		
+                            lda  #1
+                            sta  stack.lo,x
+                            dex
+                            rts
+                    _false		
+                            lda  #0
+                            sta  stack.lo,x
+                            dex
+                            rts
+                            .pend
 
                         notequal_zero	.proc
                                 jsr  floats.pop_float_fac1
@@ -3104,35 +3104,35 @@ _false
                                 jmp  equal_zero._false
                                 .pend
 
-; --- floating point builtin functions
+                                ; --- floating point builtin functions
 
 
-func_sign_f_stack	.proc
-		jsr  func_sign_f_into_A
-		sta  stack.lo,x
-		dex
-		rts
-		.pend
+                                func_sign_f_stack	.proc
+                                        jsr  func_sign_f_into_A
+                                        sta  stack.lo,x
+                                        dex
+                                        rts
+                                        .pend
 
-func_sign_f_into_A	.proc
-		jsr  MOVFM
-		jmp  SIGN
-		.pend
+                                func_sign_f_into_A	.proc
+                                        jsr  MOVFM
+                                        jmp  SIGN
+                                        .pend
 
-func_swap_f	.proc
-		; -- swap floats pointed to by SCRATCH_ZPWORD1, SCRATCH_ZPWORD2
-		ldy  #4
--               
-        lda  (zpWord1),y
-		pha
-		lda  (zpWord0),y
-		sta  (zpWord1),y
-		pla
-		sta  (zpWord0),y
-		dey
-		bpl  -
-		rts
-		.pend
+                                    func_swap_f	.proc
+                                            ; -- swap floats pointed to by SCRATCH_ZPWORD1, SCRATCH_ZPWORD2
+                                            ldy  #4
+                                    -               
+                                            lda  (zpWord1),y
+                                            pha
+                                            lda  (zpWord0),y
+                                            sta  (zpWord1),y
+                                            pla
+                                            sta  (zpWord0),y
+                                            dey
+                                            bpl  -
+                                            rts
+                                            .pend
 
 12345678
 
@@ -5020,75 +5020,74 @@ _nosqadd:
 	rts
 
 		.pend
-	;	src line: library:/prog8lib/math.p8:6
+                                 
+                                sin8u	.proc
+                                 
+                                        tay
+                                        lda  _sinecos8u,y
+                                        rts
+                                _sinecos8u	.byte  trunc(128.0 + 127.5 * sin(range(256+64) * rad(360.0/256.0)))
+                                    .pend
+                                 
 
-sin8u	.proc
-	;	src line: library:/prog8lib/math.p8:7
-		tay
-		lda  _sinecos8u,y
-		rts
-_sinecos8u	.byte  trunc(128.0 + 127.5 * sin(range(256+64) * rad(360.0/256.0)))
-	.pend
-	;	src line: library:/prog8lib/math.p8:15
+                                cos8u	.proc
+                                 
+                                        tay
+                                        lda  sin8u._sinecos8u+64,y
+                                        rts
+                                    .pend
+                                 
 
-cos8u	.proc
-	;	src line: library:/prog8lib/math.p8:16
-		tay
-		lda  sin8u._sinecos8u+64,y
-		rts
-	.pend
-	;	src line: library:/prog8lib/math.p8:23
+                                sin8	.proc
+                                 
+                                        tay
+                                        lda  _sinecos8,y
+                                        rts
+                                _sinecos8	.char  trunc(127.0 * sin(range(256+64) * rad(360.0/256.0)))
+                                    .pend
+                                 
 
-sin8	.proc
-	;	src line: library:/prog8lib/math.p8:24
-		tay
-		lda  _sinecos8,y
-		rts
-_sinecos8	.char  trunc(127.0 * sin(range(256+64) * rad(360.0/256.0)))
-	.pend
-	;	src line: library:/prog8lib/math.p8:32
+                                cos8	.proc
+                                 
+                                        tay
+                                        lda  sin8._sinecos8+64,y
+                                        rts
+                                    .pend
+                                 
 
-cos8	.proc
-	;	src line: library:/prog8lib/math.p8:33
-		tay
-		lda  sin8._sinecos8+64,y
-		rts
-	.pend
-	;	src line: library:/prog8lib/math.p8:40
+                                sinr8u	.proc
+                                    ;	src line: library:/prog8lib/math.p8:41
+                                        tay
+                                        lda  _sinecosR8u,y
+                                        rts
+                                _sinecosR8u	.byte  trunc(128.0 + 127.5 * sin(range(180+45) * rad(360.0/180.0)))
+                                    .pend
+                                    ;	src line: library:/prog8lib/math.p8:49
 
-sinr8u	.proc
-	;	src line: library:/prog8lib/math.p8:41
-		tay
-		lda  _sinecosR8u,y
-		rts
-_sinecosR8u	.byte  trunc(128.0 + 127.5 * sin(range(180+45) * rad(360.0/180.0)))
-	.pend
-	;	src line: library:/prog8lib/math.p8:49
+                                cosr8u	.proc
+                                    ;	src line: library:/prog8lib/math.p8:50
+                                        tay
+                                        lda  sinr8u._sinecosR8u+45,y
+                                        rts
+                                    .pend
+                                    ;	src line: library:/prog8lib/math.p8:57
 
-cosr8u	.proc
-	;	src line: library:/prog8lib/math.p8:50
-		tay
-		lda  sinr8u._sinecosR8u+45,y
-		rts
-	.pend
-	;	src line: library:/prog8lib/math.p8:57
+                                sinr8	.proc
+                                    ;	src line: library:/prog8lib/math.p8:58
+                                        tay
+                                        lda  _sinecosR8,y
+                                        rts
+                                _sinecosR8	.char  trunc(127.0 * sin(range(180+45) * rad(360.0/180.0)))
+                                    .pend
+                                    ;	src line: library:/prog8lib/math.p8:66
 
-sinr8	.proc
-	;	src line: library:/prog8lib/math.p8:58
-		tay
-		lda  _sinecosR8,y
-		rts
-_sinecosR8	.char  trunc(127.0 * sin(range(180+45) * rad(360.0/180.0)))
-	.pend
-	;	src line: library:/prog8lib/math.p8:66
-
-cosr8	.proc
-	;	src line: library:/prog8lib/math.p8:67
-		tay
-		lda  sinr8._sinecosR8+45,y
-		rts
-	.pend
-	.pend
+                                cosr8	.proc
+                                    ;	src line: library:/prog8lib/math.p8:67
+                                        tay
+                                        lda  sinr8._sinecosR8+45,y
+                                        rts
+                                    .pend
+                                    .pend
 
 ; ---- block: 'prog8_lib' ----
 prog8_lib	.proc
