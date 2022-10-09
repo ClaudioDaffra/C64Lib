@@ -55,59 +55,13 @@ main	.proc
     str2     .null   "-456.321"
     str3     .null   "456.789"
     str4     .null   "-23.456"
+    
     ;
 
     start	.proc
 
         ;
-        
-        ;   ........................................ float.cast_fac1_to_u16
-        ;   123
-        lda #char.nl
-        jsr c64.CHROUT
-        
-        load_address_ay str1
-        jsr float.copy_from_string
-
-        jsr float.cast_fac1_to_u16
-        
-        jsr std.print_u16_dec
-        
-        ;   ........................................ float.cast_fac1_to_s16
-        ;   456
-        lda #char.nl
-        jsr c64.CHROUT
-        
-        load_address_ay str2
-        jsr float.copy_from_string
-
-        jsr float.cast_fac1_to_s16
-        
-        jsr std.print_s16_dec
-
-        ;   ........................................ float.cast_fac1_to_u8
-        ;   456 1c8 (byte)  c8  (200)
-        lda #char.nl
-        jsr c64.CHROUT
-        
-        load_address_ay str3
-        jsr float.copy_from_string
-
-        jsr float.cast_fac1_to_u8
-        
-        jsr std.print_u8_dec
-        
-        ;   ........................................ float.cast_fac1_to_s8
-        ;   "-23.456"
-        lda #char.nl
-        jsr c64.CHROUT
-        
-        load_address_ay str4
-        jsr float.copy_from_string
-
-        jsr float.cast_fac1_to_s8
-
-        jsr std.print_s8_dec
+ 
 
         rts
     

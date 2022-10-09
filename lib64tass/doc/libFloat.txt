@@ -164,11 +164,21 @@
     cast_fac1_to_u8
     cast_fac1_to_s16
     cast_fac1_to_s8
+
+    ;   ......................................... push/pop mem
+    ;
+    ;   input   :   ay  address 
+    ;   output  : 
+    ;               -> from mem to stack 
+    ;               -> from stack to mem
+
+    push_mem 
+    pop_mem
  
     ;
     ;
     ;
-    
+
 *******************
 Floating Point Math
 *******************

@@ -312,6 +312,61 @@ float .proc
         
     .pend
 
+    ;   ......................................... push/pop mem
+    ;
+    ;   input   :   ay  address 
+    ;   output  : 
+    ;               -> from mem to stack 
+    ;               -> from stack to mem
+
+    push_mem    .proc
+        sta zpWord0
+        sty zpWord0+1
+
+        ldy #0
+    loop
+        tya
+        pha
+
+        lda (zpWord0),y         ;   0,1,2,3,4
+        jsr stack.push_byte
+
+        pla
+        tay
+
+        iny
+        cpy #5
+        bne loop
+
+        rts
+
+    .pend
+ 
+    pop_mem    .proc
+        sta zpWord0
+        sty zpWord0+1
+
+        ldy #4
+    loop
+        tya
+        pha
+        
+        jsr stack.pop_byte
+        sta (zpWord0),y         ;   4,3,2,1,0
+
+        pla
+        tay
+        
+        dey
+        cpy #$ff
+        bne loop
+
+        rts
+
+    .pend
+ 
+
+   
     ;   .......................................................... conv
     ;
     ;   convert ubyte in A          to float at address A/Y   

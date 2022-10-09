@@ -60,6 +60,8 @@ main	.proc
     sbyte   .char        -123
     uword   .word       53632
     sword   .sint      -24534
+
+    fvar_pop    .byte   0,0,0,0,0,0
     
     ;
     
@@ -122,8 +124,23 @@ main	.proc
 
         load_address_ay fvar2
         jsr float.print
-        ;
+
+        ;   ........................................    push pop mem
         
+        lda #char.nl
+        jsr c64.CHROUT
+        
+        load_address_ay fvar2
+        jsr float.push_mem
+
+        load_address_ay fvar_pop
+        jsr float.pop_mem
+        
+        load_address_ay fvar_pop
+        jsr float.print
+        
+        ;
+
         rts
     
     .pend
