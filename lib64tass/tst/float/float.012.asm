@@ -80,7 +80,9 @@ main	.proc
         ;jsr float.exp
         ;jsr float.pow ;   :=(FAC2^FAC1)
         
-        jsr float.sqr
+        ;jsr float.sqr
+        
+        jsr float.rnd   ;   output fac1
         
         ;   ..........................
         

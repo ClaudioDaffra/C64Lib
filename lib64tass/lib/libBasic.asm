@@ -135,7 +135,7 @@ basic   .proc
         atan    =   $e30e ; = Arc-Tangent(FAC1)
 
 
-        ;   5.1 Natural Log $b9ea = Returns the natural log of FAC1
+        ;   Natural Log $b9ea = Returns the natural log of FAC1
 
         log =  $b9ea 
     
@@ -144,15 +144,15 @@ basic   .proc
         ;   will respond with an ?ILLEGAL QUANTITY error. 
         ;   Calculated using a series.
 
-        ;   5.2 EXP / e^x $bfed = Returns e raised to the power of FAC1.
+        ;   EXP / e^x $bfed = Returns e raised to the power of FAC1.
 
         exp =  $bfed 
     
         ;   The opposite of log, i.e. log(exp(5)) = exp(log(5)) = 5, 
         ;   though the routine lacks the accuracy for this to always be true. 
         ;   Calculated using a series.
-        ;   
-        ;   5.3 Exponentiation / y^x
+
+        ;   Exponentiation / y^x
         ;   $bf7b = FAC2 raised to the power of FAC1 (FAC2^FAC1)
 
         pow =  $bf7b 
@@ -163,7 +163,8 @@ basic   .proc
         ;   For whole number powers, it is often quicker 
         ;   and more accurate to use a series of multiplies.
 
-        ;   5.4 Square Root
+        ;   Square Root
+        ;
         ;   $bf71 = Square root of FAC1
         ;   $bf74 = Square root of FAC2
 
@@ -176,6 +177,12 @@ basic   .proc
         ;   The second address skips the move and uses the value in FAC2. 
         ;   A quicker square root routine is described below.
 
+        ;   rnd
+        ;
+        ;   perform random numner 0.?
+        
+        rnd = $e097 ;   output  ->  fac1
+        
         ;
         
     .pend

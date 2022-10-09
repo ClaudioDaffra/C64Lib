@@ -232,11 +232,10 @@
     pow         ;   :=(FAC2^FAC1)
 
     sqr
-
     sqr_fac1
-
     sqr_fac2
 
+    rnd         ;   output  -> fac1
     
     ;
     

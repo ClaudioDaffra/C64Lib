@@ -720,7 +720,12 @@ float .proc
         jsr basic.float.sqr_fac2
         rts
     .pend 
- 
+
+    rnd    .proc       
+        jsr basic.float.rnd
+        rts
+    .pend 
+    
     ;
     
         
