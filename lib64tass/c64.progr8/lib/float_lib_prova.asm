@@ -2370,9 +2370,9 @@ floats	.proc
 
 ; --- low level floating point assembly routines for the C64
 
-FL_ONE_const	.byte  129     			; 1.0
-FL_ZERO_const	.byte  0,0,0,0,0		; 0.0
-FL_LOG2_const	.byte  $80, $31, $72, $17, $f8	; log(2)
+                    FL_ONE_const	.byte  129     			; 1.0
+                    FL_ZERO_const	.byte  0,0,0,0,0		; 0.0
+                    FL_LOG2_const	.byte  $80, $31, $72, $17, $f8	; log(2)
 
 
 zpx	.byte  0		; temp storage
@@ -2380,22 +2380,22 @@ zpx	.byte  0		; temp storage
 
 1234567
 
-    ub2float	.proc
-            ; -- convert ubyte in zpx to float at address A/Y
-            ;    clobbers A, Y
-            stx  zpx
-            sta  zpWord0
-            sty  zpWord0+1
-            ldy  zpa
-            lda  #0
-            jsr  GIVAYF
-    _fac_to_mem	
-            ldx  zpWord0
-            ldy  zpWord0+1
-            jsr  MOVMF
-            ldx  zpx
-            rts
-            .pend
+            ub2float	.proc
+                    ; -- convert ubyte in zpx to float at address A/Y
+                    ;    clobbers A, Y
+                    stx  zpx
+                    sta  zpWord0
+                    sty  zpWord0+1
+                    ldy  zpa
+                    lda  #0
+                    jsr  GIVAYF
+            _fac_to_mem	
+                    ldx  zpWord0
+                    ldy  zpWord0+1
+                    jsr  MOVMF
+                    ldx  zpx
+                    rts
+                    .pend
 
             b2float		.proc
                     ; -- convert byte in zpx to float at address A/Y
@@ -2431,12 +2431,12 @@ zpx	.byte  0		; temp storage
                     .pend
 
 
-        cast_from_uw	.proc
-                ; -- uword in A/Y into float var at (zpWord0)
-                stx  zpx
-                jsr  GIVUAYFAY
-                jmp  ub2float._fac_to_mem
-                .pend
+            cast_from_uw	.proc
+                    ; -- uword in A/Y into float var at (zpWord0)
+                    stx  zpx
+                    jsr  GIVUAYFAY
+                    jmp  ub2float._fac_to_mem
+                    .pend
 
 
             cast_from_w	.proc
@@ -2650,110 +2650,110 @@ zpx	.byte  0		; temp storage
                                             rts
                                             .pend
 
-inc_var_f	.proc
-		; -- add 1 to float pointed to by A/Y
-		sta  zpWord1
-		sty  zpWord1+1
-		stx  zpx
-		jsr  MOVFM
-		lda  #<FL_ONE_const
-		ldy  #>FL_ONE_const
-		jsr  FADD
-		ldx  zpWord1
-		ldy  zpWord1+1
-		jsr  MOVMF
-		ldx  zpx
-		rts
-		.pend
+                                        inc_var_f	.proc
+                                        ; -- add 1 to float pointed to by A/Y
+                                        sta  zpWord1
+                                        sty  zpWord1+1
+                                        stx  zpx
+                                        jsr  MOVFM
+                                        lda  #<FL_ONE_const
+                                        ldy  #>FL_ONE_const
+                                        jsr  FADD
+                                        ldx  zpWord1
+                                        ldy  zpWord1+1
+                                        jsr  MOVMF
+                                        ldx  zpx
+                                        rts
+                                        .pend
 
-dec_var_f	.proc
-		; -- subtract 1 from float pointed to by A/Y
-		sta  zpWord1
-		sty  zpWord1+1
-		stx  zpx
-		lda  #<FL_ONE_const
-		ldy  #>FL_ONE_const
-		jsr  MOVFM
-		lda  zpWord1
-		ldy  zpWord1+1
-		jsr  FSUB
-		ldx  zpWord1
-		ldy  zpWord1+1
-		jsr  MOVMF
-		ldx  zpx
-		rts
-		.pend
-
-
-pop_2_floats_f2_in_fac1	.proc
-		; -- pop 2 floats from stack, load the second one in FAC1 as well
-		lda  #<fmath_float2
-		ldy  #>fmath_float2
-		jsr  pop_float
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  pop_float
-		lda  #<fmath_float2
-		ldy  #>fmath_float2
-		jmp  MOVFM
-		.pend
+                                        dec_var_f	.proc
+                                        ; -- subtract 1 from float pointed to by A/Y
+                                        sta  zpWord1
+                                        sty  zpWord1+1
+                                        stx  zpx
+                                        lda  #<FL_ONE_const
+                                        ldy  #>FL_ONE_const
+                                        jsr  MOVFM
+                                        lda  zpWord1
+                                        ldy  zpWord1+1
+                                        jsr  FSUB
+                                        ldx  zpWord1
+                                        ldy  zpWord1+1
+                                        jsr  MOVMF
+                                        ldx  zpx
+                                        rts
+                                        .pend
 
 
-fmath_float1	.byte 0,0,0,0,0	; storage for a mflpt5 value
-fmath_float2	.byte 0,0,0,0,0	; storage for a mflpt5 value
+                                    pop_2_floats_f2_in_fac1	.proc
+                                            ; -- pop 2 floats from stack, load the second one in FAC1 as well
+                                            lda  #<fmath_float2
+                                            ldy  #>fmath_float2
+                                            jsr  pop_float
+                                            lda  #<fmath_float1
+                                            ldy  #>fmath_float1
+                                            jsr  pop_float
+                                            lda  #<fmath_float2
+                                            ldy  #>fmath_float2
+                                            jmp  MOVFM
+                                            .pend
 
 
-push_fac1	.proc
-		; -- push the float in FAC1 onto the stack
-		stx  zpx
-_internal	
-        ldx  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  MOVMF
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		ldx  zpx
-		jmp  push_float
-		.pend
+                                    fmath_float1	.byte 0,0,0,0,0	; storage for a mflpt5 value
+                                    fmath_float2	.byte 0,0,0,0,0	; storage for a mflpt5 value
 
-div_f		.proc
-		; -- push f1/f2 on stack
-		jsr  pop_2_floats_f2_in_fac1
-		stx  zpx
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  FDIV
-		jmp  push_fac1._internal
-		.pend
 
-                        add_f		.proc
-                                ; -- push f1+f2 on stack
-                                jsr  pop_2_floats_f2_in_fac1
-                                stx  zpx
-                                lda  #<fmath_float1
-                                ldy  #>fmath_float1
-                                jsr  FADD
-                                jmp  push_fac1._internal
-                                .pend
+                                        push_fac1	.proc
+                                                ; -- push the float in FAC1 onto the stack
+                                                stx  zpx
+                                        _internal	
+                                                ldx  #<fmath_float1
+                                                ldy  #>fmath_float1
+                                                jsr  MOVMF
+                                                lda  #<fmath_float1
+                                                ldy  #>fmath_float1
+                                                ldx  zpx
+                                                jmp  push_float
+                                                .pend
 
-sub_f		.proc
-		; -- push f1-f2 on stack
-		jsr  pop_2_floats_f2_in_fac1
-		stx  zpx
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  FSUB
-		jmp  push_fac1._internal
-		.pend
+                                div_f		.proc
+                                        ; -- push f1/f2 on stack
+                                        jsr  pop_2_floats_f2_in_fac1
+                                        stx  zpx
+                                        lda  #<fmath_float1
+                                        ldy  #>fmath_float1
+                                        jsr  FDIV
+                                        jmp  push_fac1._internal
+                                        .pend
 
-mul_f		.proc
-		; -- push f1*f2 on stack
-		jsr  pop_2_floats_f2_in_fac1
-		stx  zpx
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  FMULT
-		jmp  push_fac1._internal
+                                        add_f		.proc
+                                                ; -- push f1+f2 on stack
+                                                jsr  pop_2_floats_f2_in_fac1
+                                                stx  zpx
+                                                lda  #<fmath_float1
+                                                ldy  #>fmath_float1
+                                                jsr  FADD
+                                                jmp  push_fac1._internal
+                                                .pend
+
+                                            sub_f		.proc
+                                                    ; -- push f1-f2 on stack
+                                                    jsr  pop_2_floats_f2_in_fac1
+                                                    stx  zpx
+                                                    lda  #<fmath_float1
+                                                    ldy  #>fmath_float1
+                                                    jsr  FSUB
+                                                    jmp  push_fac1._internal
+                                                    .pend
+
+                                            mul_f		.proc
+                                                    ; -- push f1*f2 on stack
+                                                    jsr  pop_2_floats_f2_in_fac1
+                                                    stx  zpx
+                                                    lda  #<fmath_float1
+                                                    ldy  #>fmath_float1
+                                                    jsr  FMULT
+                                                    jmp  push_fac1._internal
 		.pend
 
 neg_f		.proc
@@ -2764,61 +2764,61 @@ neg_f		.proc
 		rts
 		.pend
 
-var_fac1_less_f	.proc
-		; -- is the float in FAC1 < the variable AY?
-		stx  zpx
-		jsr  FCOMP
-		ldx  zpx
-		cmp  #255
-		beq  +
-		lda  #0
-		rts
-+		lda  #1
-		rts
-		.pend
+                    var_fac1_less_f	.proc
+                            ; -- is the float in FAC1 < the variable AY?
+                            stx  zpx
+                            jsr  FCOMP
+                            ldx  zpx
+                            cmp  #255
+                            beq  +
+                            lda  #0
+                            rts
+                    +		lda  #1
+                            rts
+                            .pend
 
-var_fac1_lesseq_f	.proc
-		; -- is the float in FAC1 <= the variable AY?
-		stx  zpx
-		jsr  FCOMP
-		ldx  zpx
-		cmp  #0
-		beq  +
-		cmp  #255
-		beq  +
-		lda  #0
-		rts
-+		lda  #1
-		rts
-		.pend
+                        var_fac1_lesseq_f	.proc
+                                ; -- is the float in FAC1 <= the variable AY?
+                                stx  zpx
+                                jsr  FCOMP
+                                ldx  zpx
+                                cmp  #0
+                                beq  +
+                                cmp  #255
+                                beq  +
+                                lda  #0
+                                rts
+                        +		lda  #1
+                                rts
+                                .pend
 
-var_fac1_greater_f	.proc
-		; -- is the float in FAC1 > the variable AY?
-		stx  zpx
-		jsr  FCOMP
-		ldx  zpx
-		cmp  #1
-		beq  +
-		lda  #0
-		rts
-+		lda  #1
-		rts
-		.pend
+                            var_fac1_greater_f	.proc
+                                    ; -- is the float in FAC1 > the variable AY?
+                                    stx  zpx
+                                    jsr  FCOMP
+                                    ldx  zpx
+                                    cmp  #1
+                                    beq  +
+                                    lda  #0
+                                    rts
+                            +		lda  #1
+                                    rts
+                                    .pend
 
-var_fac1_greatereq_f	.proc
-		; -- is the float in FAC1 >= the variable AY?
-		stx  zpx
-		jsr  FCOMP
-		ldx  zpx
-		cmp  #0
-		beq  +
-		cmp  #1
-		beq  +
-		lda  #0
-		rts
-+		lda  #1
-		rts
-		.pend
+                            var_fac1_greatereq_f	.proc
+                                    ; -- is the float in FAC1 >= the variable AY?
+                                    stx  zpx
+                                    jsr  FCOMP
+                                    ldx  zpx
+                                    cmp  #0
+                                    beq  +
+                                    cmp  #1
+                                    beq  +
+                                    lda  #0
+                                    rts
+                            +		lda  #1
+                                    rts
+                                    .pend
 
 var_fac1_notequal_f	.proc
 		; -- are the floats numbers in FAC1 and the variable AY *not* identical?
@@ -2829,167 +2829,167 @@ var_fac1_notequal_f	.proc
 		rts
 		.pend
 
-vars_equal_f	.proc
-		; -- are the mflpt5 numbers in zpWord1 and AY identical?
-		sta  zpWord0
-		sty  zpWord0+1
-		ldy  #0
-		lda  (zpWord1),y
-		cmp  (zpWord0),y
-		bne  _false
-		iny
-		lda  (zpWord1),y
-		cmp  (zpWord0),y
-		bne  _false
-		iny
-		lda  (zpWord1),y
-		cmp  (zpWord0),y
-		bne  _false
-		iny
-		lda  (zpWord1),y
-		cmp  (zpWord0),y
-		bne  _false
-		iny
-		lda  (zpWord1),y
-		cmp  (zpWord0),y
-		bne  _false
-		lda  #1
-		rts
-_false		lda  #0
-		rts
-		.pend
+                        vars_equal_f	.proc
+                                ; -- are the mflpt5 numbers in zpWord1 and AY identical?
+                                sta  zpWord0
+                                sty  zpWord0+1
+                                ldy  #0
+                                lda  (zpWord1),y
+                                cmp  (zpWord0),y
+                                bne  _false
+                                iny
+                                lda  (zpWord1),y
+                                cmp  (zpWord0),y
+                                bne  _false
+                                iny
+                                lda  (zpWord1),y
+                                cmp  (zpWord0),y
+                                bne  _false
+                                iny
+                                lda  (zpWord1),y
+                                cmp  (zpWord0),y
+                                bne  _false
+                                iny
+                                lda  (zpWord1),y
+                                cmp  (zpWord0),y
+                                bne  _false
+                                lda  #1
+                                rts
+                        _false		lda  #0
+                                rts
+                                .pend
 
-equal_f		.proc
-		; -- are the two mflpt5 numbers on the stack identical?
-		inx
-		inx
-		inx
-		inx
-		lda  stack.lo-3,x
-		cmp  stack.lo,x
-		bne  _equals_false
-		lda  stack.lo-2,x
-		cmp  stack.lo+1,x
-		bne  _equals_false
-		lda  stack.lo-1,x
-		cmp  stack.lo+2,x
-		bne  _equals_false
-		lda  stack.hi-2,x
-		cmp  stack.hi+1,x
-		bne  _equals_false
-		lda  stack.hi-1,x
-		cmp  stack.hi+2,x
-		bne  _equals_false
-_equals_true	lda  #1
-_equals_store	inx
-		sta  stack.lo+1,x
-		rts
-_equals_false	lda  #0
-		beq  _equals_store
-		.pend
+                                equal_f		.proc
+                                        ; -- are the two mflpt5 numbers on the stack identical?
+                                        inx
+                                        inx
+                                        inx
+                                        inx
+                                        lda  stack.lo-3,x
+                                        cmp  stack.lo,x
+                                        bne  _equals_false
+                                        lda  stack.lo-2,x
+                                        cmp  stack.lo+1,x
+                                        bne  _equals_false
+                                        lda  stack.lo-1,x
+                                        cmp  stack.lo+2,x
+                                        bne  _equals_false
+                                        lda  stack.hi-2,x
+                                        cmp  stack.hi+1,x
+                                        bne  _equals_false
+                                        lda  stack.hi-1,x
+                                        cmp  stack.hi+2,x
+                                        bne  _equals_false
+                                _equals_true	lda  #1
+                                _equals_store	inx
+                                        sta  stack.lo+1,x
+                                        rts
+                                _equals_false	lda  #0
+                                        beq  _equals_store
+                                        .pend
 
-notequal_f	.proc
-		; -- are the two mflpt5 numbers on the stack different?
-		jsr  equal_f
-		eor  #1		; invert the result
-		sta  stack.lo+1,x
-		rts
-		.pend
+                                notequal_f	.proc
+                                        ; -- are the two mflpt5 numbers on the stack different?
+                                        jsr  equal_f
+                                        eor  #1		; invert the result
+                                        sta  stack.lo+1,x
+                                        rts
+                                        .pend
 
-vars_less_f	.proc
-		; -- is float in AY < float in zpWord0 ?
-		jsr  MOVFM
-		lda  zpWord0
-		ldy  zpWord0+1
-		stx  zpx
-		jsr  FCOMP
-		ldx  zpx
-		cmp  #255
-		bne  +
-		lda  #1
-		rts
-+		lda  #0
-		rts
-		.pend
+                                    vars_less_f	.proc
+                                            ; -- is float in AY < float in zpWord0 ?
+                                            jsr  MOVFM
+                                            lda  zpWord0
+                                            ldy  zpWord0+1
+                                            stx  zpx
+                                            jsr  FCOMP
+                                            ldx  zpx
+                                            cmp  #255
+                                            bne  +
+                                            lda  #1
+                                            rts
+                                    +		lda  #0
+                                            rts
+                                            .pend
 
-vars_lesseq_f	.proc
-		; -- is float in AY <= float in zpWord0 ?
-		jsr  MOVFM
-		lda  zpWord0
-		ldy  zpWord0+1
-		stx  zpx
-		jsr  FCOMP
-		ldx  zpx
-		cmp  #255
-		bne  +
--		lda  #1
-		rts
-+		cmp  #0
-		beq  -
-		lda  #0
-		rts
-		.pend
+                                    vars_lesseq_f	.proc
+                                            ; -- is float in AY <= float in zpWord0 ?
+                                            jsr  MOVFM
+                                            lda  zpWord0
+                                            ldy  zpWord0+1
+                                            stx  zpx
+                                            jsr  FCOMP
+                                            ldx  zpx
+                                            cmp  #255
+                                            bne  +
+                                    -		lda  #1
+                                            rts
+                                    +		cmp  #0
+                                            beq  -
+                                            lda  #0
+                                            rts
+                                            .pend
 
-less_f		.proc
-		; -- is f1 < f2?
-		jsr  compare_floats
-		cmp  #255
-		beq  compare_floats._return_true
-		bne  compare_floats._return_false
-		.pend
+                                    less_f		.proc
+                                            ; -- is f1 < f2?
+                                            jsr  compare_floats
+                                            cmp  #255
+                                            beq  compare_floats._return_true
+                                            bne  compare_floats._return_false
+                                            .pend
 
 
-lesseq_f	.proc
-		; -- is f1 <= f2?
-		jsr  compare_floats
-		cmp  #255
-		beq  compare_floats._return_true
-		cmp  #0
-		beq  compare_floats._return_true
-		bne  compare_floats._return_false
-		.pend
+                                    lesseq_f	.proc
+                                            ; -- is f1 <= f2?
+                                            jsr  compare_floats
+                                            cmp  #255
+                                            beq  compare_floats._return_true
+                                            cmp  #0
+                                            beq  compare_floats._return_true
+                                            bne  compare_floats._return_false
+                                            .pend
 
-greater_f	.proc
-		; -- is f1 > f2?
-		jsr  compare_floats
-		cmp  #1
-		beq  compare_floats._return_true
-		bne  compare_floats._return_false
-		.pend
+                                    greater_f	.proc
+                                            ; -- is f1 > f2?
+                                            jsr  compare_floats
+                                            cmp  #1
+                                            beq  compare_floats._return_true
+                                            bne  compare_floats._return_false
+                                            .pend
 
-greatereq_f	.proc
-		; -- is f1 >= f2?
-		jsr  compare_floats
-		cmp  #1
-		beq  compare_floats._return_true
-		cmp  #0
-		beq  compare_floats._return_true
-		bne  compare_floats._return_false
-		.pend
+                                    greatereq_f	.proc
+                                            ; -- is f1 >= f2?
+                                            jsr  compare_floats
+                                            cmp  #1
+                                            beq  compare_floats._return_true
+                                            cmp  #0
+                                            beq  compare_floats._return_true
+                                            bne  compare_floats._return_false
+                                            .pend
 
-compare_floats	.proc
-		lda  #<fmath_float2
-		ldy  #>fmath_float2
-		jsr  pop_float
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  pop_float
-		lda  #<fmath_float1
-		ldy  #>fmath_float1
-		jsr  MOVFM		; fac1 = flt1
-		lda  #<fmath_float2
-		ldy  #>fmath_float2
-		stx  zpx
-		jsr  FCOMP		; A = flt1 compared with flt2 (0=equal, 1=flt1>flt2, 255=flt1<flt2)
-		ldx  zpx
-		rts
-_return_false	lda  #0
-_return_result  sta  stack.lo,x
-		dex
-		rts
-_return_true	lda  #1
-		bne  _return_result
-		.pend
+                                            compare_floats	.proc
+                                                    lda  #<fmath_float2
+                                                    ldy  #>fmath_float2
+                                                    jsr  pop_float
+                                                    lda  #<fmath_float1
+                                                    ldy  #>fmath_float1
+                                                    jsr  pop_float
+                                                    lda  #<fmath_float1
+                                                    ldy  #>fmath_float1
+                                                    jsr  MOVFM		; fac1 = flt1
+                                                    lda  #<fmath_float2
+                                                    ldy  #>fmath_float2
+                                                    stx  zpx
+                                                    jsr  FCOMP		; A = flt1 compared with flt2 (0=equal, 1=flt1>flt2, 255=flt1<flt2)
+                                                    ldx  zpx
+                                                    rts
+                                            _return_false	lda  #0
+                                            _return_result  sta  stack.lo,x
+                                                    dex
+                                                    rts
+                                            _return_true	lda  #1
+                                                    bne  _return_result
+                                                    .pend
 
 set_array_float_from_fac1	.proc
 		; -- set the float in FAC1 in the array (index in A, array in zpWord1)

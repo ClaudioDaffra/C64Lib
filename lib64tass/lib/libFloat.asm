@@ -5,6 +5,12 @@
 
 float .proc
 
+    ;   predefined
+    
+    FL_ONE_const    .byte  129                      ; 1.0
+    FL_ZERO_const   .byte  0,0,0,0,0                ; 0.0
+    FL_LOG2_const   .byte  $80, $31, $72, $17, $f8  ; log(2)
+    
     ;   constant
     
     AYINT_facmo         = $64
@@ -535,7 +541,119 @@ float .proc
         rts
     .pend
     
+    inc_1   .proc
+
+        lda <#FL_ONE_const
+        ldy >#FL_ONE_const
+        jsr basic.copy_mem_to_fac2
+        jsr float.add
+        
+        rts
+    .pend
+
+    dec_1   .proc
+
+        lda <#FL_ONE_const
+        ldy >#FL_ONE_const
+        jsr basic.copy_mem_to_fac2
+        jsr float.sub
+        
+        rts
+    .pend
+
+    mul_10     .proc
+        jsr basic.float.mul_10
+        rts
+    .pend
+
+    div_10     .proc       
+        jsr basic.float.div_10
+        rts
+    .pend
+
+    compare     .proc       
+        jsr basic.float.compare
+        rts
+    .pend
+    
+    ;   ------------------------------------ boolean
+    
+    ;     $00 if FAC1 = 
+    ;     $01 if FAC1 >
+    ;     $ff if FAC1 <
+
+    compare_ne     .proc       
+        jsr basic.float.compare
+        cmp #$00
+        bne true
+        clc
+        rts
+    true
+        sec
+        rts
+    .pend
+    
+    compare_eq     .proc       
+        jsr basic.float.compare
+        cmp #$00
+        bne false
+        sec
+        rts
+    false
+        clc
+        rts
+    .pend
+    
+    compare_lt     .proc       
+        jsr basic.float.compare
+        cmp #$ff
+        bne false
+        sec
+        rts
+    false
+        clc
+        rts
+    .pend
+
+    compare_le     .proc       
+        jsr basic.float.compare
+        cmp #$ff
+        bne false
+        cmp #$00
+        bne false
+        sec
+        rts
+    false
+        clc
+        rts
+    .pend
+    
+    compare_gt     .proc       
+        jsr basic.float.compare
+        cmp #$01
+        bne false
+        sec
+        rts
+    false
+        clc
+        rts
+    .pend
+    
+    compare_ge     .proc       
+        jsr basic.float.compare
+        cmp #$01
+        bne false
+        cmp #$00
+        bne false
+        sec
+        rts
+    false
+        clc
+        rts
+    .pend
+    
     ;
+    
         
 .pend
 

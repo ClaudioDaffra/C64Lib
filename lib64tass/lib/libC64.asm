@@ -1521,6 +1521,21 @@ if_string_gt .macro
     beq \1
 .endm
 
+if_fac1_lt_fac2 .macro
+    cmp #$ff
+    beq \1
+.endm
+
+if_fac1_eq_fac2 .macro
+    cmp #$00
+    beq \1
+.endm
+
+if_fac1_gt_fac2 .macro
+    cmp #$01
+    beq \1
+.endm
+
 ;--------------------------------------------------------------- macro graph
 
 graph_imm_x  .macro

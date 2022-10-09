@@ -187,6 +187,29 @@
     mul
     div
     
+    inc_1
+    dec_1
+    
+    mul_10
+    div_10
+    
+    ;
+    
+    compare
+            ;     $00 if FAC1 =     if_fac1_eq_fac2 jmp
+            ;     $01 if FAC1 >     if_fac1_gt_fac2 jmp
+            ;     $ff if FAC1 <     if_fac1_lt_fac2 jmp
+
+    compare_ne
+    compare_eq
+    compare_lt
+    compare_le
+    compare_gt
+    compare_ge
+
+            ;     (C=0)         if_false    jmp
+            ;     (C=1)         if_true     jmp
+            
     ;
     
 *******************
