@@ -146,8 +146,16 @@ page  .proc
                                                 ;   instruction during GET, INPUT and READ.
 ;   [   ]
       
-    buffer0679_89   =   0679    ;   (89) byte   ;   Unused  (89 bytes).              (64+15)
+   ;buffer0679_89   =   0679    ;   (89) byte   ;   Unused  (89 bytes).              (64+15)
                                                 ;   instruction during GET, INPUT and READ.
+;   [ V ]
+                                              
+    buffer0679_15   =   0679    ;   (15) byte   ;   Unused  (15 bytes).              (64+15)
+                                                ;   instruction during GET, INPUT and READ.
+;   [   ]
+   
+    buffer0694_74   =   0694    ;   (74) byte   ;   Unused  (89 bytes).              (64+15)
+    
 ;   [   ]
       
     buffer0787_01   =   0787    ;   ( 1) byte   ;   Unused
@@ -204,6 +212,8 @@ buffer .proc
         reg_x        =   page.buffer2024_15+13
         reg_y        =   page.buffer2024_15+14
         flag         =   page.buffer2024_15+15
+        
+        fac1_fac2    =   page.buffer0679_15+ 0
         
     .pend
 
@@ -387,10 +397,33 @@ sys .proc
             rts
             
         .pend
+
+        save_fac1_fac2    .proc
+            ldy #0
+        loop
+            lda $0061,y
+            sta buffer.status.fac1_fac2,y ;  sta $02A7,y
+            iny
+            cpy #15
+            bne loop
+            rts
+        .pend
+        
+        restore_fac1_fac2    .proc
+            lda #<$0061
+            sta zpWord0
+            ldy #0
+        loop
+            lda buffer.status.fac1_fac2,y ;  lda $02A7,y
+            sta $0061,y
+            iny
+            cpy #15
+            bne loop
+            rts
+        .pend
         
     .pend
-    
-    
+
 .pend
 
 ;**********

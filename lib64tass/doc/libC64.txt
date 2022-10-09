@@ -29,9 +29,9 @@
     #   zero page
     #######
    
-        zpa		= $02
-        zpx		= $2a
-        zpy		= $52
+        zpa     = $02
+        zpx     = $2a
+        zpy     = $52
 
         zpByte0 = $fb
         zpByte1 = $fc
@@ -452,7 +452,7 @@
 
         status .proc 
 
-            sp           =   page.buffer2024_15+ 0
+            sp           =   page.buffer2024_15+ 0      (15)
             
             zpa          =   page.buffer2024_15+ 1
             zpx          =   page.buffer2024_15+ 2
@@ -467,7 +467,9 @@
             reg_x        =   page.buffer2024_15+13
             reg_y        =   page.buffer2024_15+14
             flag         =   page.buffer2024_15+15
-
+        
+            fac1_fac2    =   page.buffer0679_15+ 0      (15)
+        
         .pend
         
     .pend
@@ -487,8 +489,14 @@
         
         #    irq.restore
         
-        ;
+        ; .........................................    save/restore fac1/fac2
         
+        #    save_fac1_fac2
+        
+        #    restorer_fac1_fac2
+        
+        ;
+
 ;;;
 ;;
 ;

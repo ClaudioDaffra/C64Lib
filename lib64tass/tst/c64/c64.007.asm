@@ -27,11 +27,15 @@ program_entry_point
 ;--------------------------------------------------------------- sub
 
     callback    .proc
-    
+
+        ;   jsr sys.status.save_fac1_fac2
+        
         lda 1024
         clc
         adc #1
         sta 1024
+
+        ;   jsr sys.status.restore_fac1_fac2
         
         rts
         
