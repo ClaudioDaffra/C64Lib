@@ -114,7 +114,70 @@ basic   .proc
 
         int = $bccc
 
+        ;   Trigonometry
+        ;
+        ;   $e26b = Sine(FAC1)
+        ;   $e264 = Cosine(FAC1)
+        ;   $e2b4 = Tangent(FAC1)
+        ;   $e30e = Arc-Tangent(FAC1)
+        ;   
+        ;   All the trig routines, even though they only require FAC1 for input, trash FAC2. 
+        ;   Enter all but ATAN with FAC1 expressed in radians. 
+        ;   The sine routine uses the series evaluation routine to converge on a value. 
+        ;   For cosine, the routine adds pi/2 (90 degrees) to FAC1, 
+        ;   then falls through to the sine routine, because cos(x) = sin(x+(pi/2)). 
+        ;   The tangent routine uses the fact that tan(x) = sin(x)/cos(x). 
+        ;   ATAN uses its own series evaluation.
 
+        sin     =   $e26b ; = Sine(FAC1)
+        cos     =   $e264 ; = Cosine(FAC1)
+        tan     =   $e2b4 ; = Tangent(FAC1)
+        atan    =   $e30e ; = Arc-Tangent(FAC1)
+
+
+        ;   5.1 Natural Log $b9ea = Returns the natural log of FAC1
+
+        log =  $b9ea 
+    
+        ;   This returns the natural log of FAC1 in FAC1. 
+        ;   The FAC1 can not be negative or zero, or else BASIC 
+        ;   will respond with an ?ILLEGAL QUANTITY error. 
+        ;   Calculated using a series.
+
+        ;   5.2 EXP / e^x $bfed = Returns e raised to the power of FAC1.
+
+        exp =  $bfed 
+    
+        ;   The opposite of log, i.e. log(exp(5)) = exp(log(5)) = 5, 
+        ;   though the routine lacks the accuracy for this to always be true. 
+        ;   Calculated using a series.
+        ;   
+        ;   5.3 Exponentiation / y^x
+        ;   $bf7b = FAC2 raised to the power of FAC1 (FAC2^FAC1)
+
+        pow =  $bf7b 
+       
+        ;   This routine uses the formula exp(x*log(y)) to calculate yx, 
+        ;   so it calculates two series (log and exp). 
+        ;   *** It is slow and not entirely accurate. 
+        ;   For whole number powers, it is often quicker 
+        ;   and more accurate to use a series of multiplies.
+
+        ;   5.4 Square Root
+        ;   $bf71 = Square root of FAC1
+        ;   $bf74 = Square root of FAC2
+
+        sqr      =  $bf71
+        sqr_fac1 =  $bf71 
+        sqr_fac2 =  $bf74 
+        
+        ;   The first address copies FAC1 into FAC2, before loading .5 
+        ;   into FAC1 and falling through to the exponentiation routine. 
+        ;   The second address skips the move and uses the value in FAC2. 
+        ;   A quicker square root routine is described below.
+
+        ;
+        
     .pend
     
     ;   .......................................................... txtptr

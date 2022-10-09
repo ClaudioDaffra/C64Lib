@@ -40,7 +40,7 @@ program .proc
         
 main	.proc
 
-    str1     .null   "-1234.456"
+    str1     .null   " 1234.456"
  
 
     f1  .byte   0,0,0,0,0
@@ -49,7 +49,7 @@ main	.proc
     
     ;
     
-    start	.proc
+    start   .proc
 
         load_address_ay str1
         jsr float.copy_from_string
@@ -68,10 +68,20 @@ main	.proc
         load_address_ay f1
         jsr float.copy_mem_to_fac1
 
-        
         ;   .......................... 
         
+        ;jsr float.cos
+        
+        ;jsr float.sin
+        ;jsr float.tan
+        ;jsr float.atan
 
+        ;jsr float.log
+        ;jsr float.exp
+        ;jsr float.pow ;   :=(FAC2^FAC1)
+        
+        jsr float.sqr
+        
         ;   ..........................
         
         load_address_ay f1

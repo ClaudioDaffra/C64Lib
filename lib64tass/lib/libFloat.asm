@@ -668,7 +668,59 @@ float .proc
         jsr basic.float.int
         rts
     .pend
+
+    ;   ------------------------------------ cos sin tan atan
+
+    sin     .proc       
+        jsr basic.float.sin
+        rts
+    .pend
     
+    cos     .proc       
+        jsr basic.float.cos
+        rts
+    .pend
+    
+    tan     .proc       
+        jsr basic.float.tan
+        rts
+    .pend
+    
+    atan     .proc       
+        jsr basic.float.atan
+        rts
+    .pend
+
+    log     .proc       
+        jsr basic.float.log
+        rts
+    .pend
+
+    exp     .proc       
+        jsr basic.float.exp
+        rts
+    .pend
+
+    pow     .proc       
+        jsr basic.float.pow ;   :=(FAC2^FAC1)
+        rts
+    .pend 
+    
+    sqr    .proc       
+        jsr basic.float.sqr
+        rts
+    .pend 
+    
+    sqr_fac1    .proc       
+        jsr basic.float.sqr_fac1
+        rts
+    .pend 
+    
+    sqr_fac2    .proc       
+        jsr basic.float.sqr_fac2
+        rts
+    .pend 
+ 
     ;
     
         

@@ -211,12 +211,33 @@
             :     (C=0)         if_false    jmp
             :     (C=1)         if_true     jmp
 
-    
     sign    
             :   -1  ,   0   ,   +1
     abs
+    
     int
  
+    sin 
+
+    cos 
+
+    tan 
+
+    atan 
+
+    log 
+
+    exp 
+
+    pow         ;   :=(FAC2^FAC1)
+
+    sqr
+
+    sqr_fac1
+
+    sqr_fac2
+
+    
     ;
     
 *******************
