@@ -41,7 +41,7 @@ program .proc
 main	.proc
 
     str1     .null   " 1234.456"
-    str2     .null   " 12.3" 
+    str2     .null   " 789.321" 
 
     f1  .byte   0,0,0,0,0
     f2  .byte   0,0,0,0,0
@@ -75,29 +75,19 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
 
-        ;
+        ;   .......................... fac2 , fac1 !
         
         load_address_ay f1
         jsr float.copy_mem_to_fac1
         
         load_address_ay f2
-        jsr float.copy_mem_to_fac2
-        
-        ;   .......................... 
-        
-        ;jsr float.cos
-        
-        ;jsr float.sin
-        ;jsr float.tan
-        ;jsr float.atan
 
-        ;jsr float.log
-        ;jsr float.exp
-        jsr float.pow ;   :=(FAC1^FAC2)
-        
-        ;jsr float.sqr
-        
-        ;jsr float.rnd   ;   output fac1
+        ;   .......................... 
+
+        ;   jsr float.ay.add        ;   fac2+fac1
+        ;   jsr float.ay.sub        ;   fac2-fac1
+        ;   jsr float.ay.mul        ;   fac2*fac1
+            jsr float.ay.div        ;   fac1/fac2
         
         ;   ..........................
         

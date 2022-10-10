@@ -237,7 +237,14 @@
 
     rnd         ;   output  -> fac1
     
-    ;
+    ay {
+    
+        add     ;   fac2    +   fac1
+        sub     ;   fac2    -   fac1 
+        mul     ;   fac2    *   fac1
+        div     ;   fac1    /   fac2
+    }
+        
     
 *******************
 Floating Point Math

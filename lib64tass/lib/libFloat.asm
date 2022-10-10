@@ -530,34 +530,35 @@ float .proc
         rts
     .pend
 
-    div     .proc       
+    swap     .proc
         jsr float.push_fac1
         jsr float.push_fac2
         jsr float.pop_fac1
         jsr float.pop_fac2
-    fac2_fac1
+        rts
+    .pend
+
+    div     .proc               ;   fac1/fac2
+        jsr swap
+    fac2_fac1                   ;   fac2/fac1
         lda $61
         jsr basic.float.div
         rts
     .pend
     
     inc_1   .proc
-
         lda <#FL_ONE_const
         ldy >#FL_ONE_const
         jsr basic.copy_mem_to_fac2
         jsr float.add
-        
         rts
     .pend
 
     dec_1   .proc
-
         lda <#FL_ONE_const
         ldy >#FL_ONE_const
         jsr basic.copy_mem_to_fac2
         jsr float.sub
-        
         rts
     .pend
 
@@ -696,13 +697,15 @@ float .proc
         rts
     .pend
 
-    exp     .proc       
+    exp     .proc
         jsr basic.float.exp
         rts
     .pend
 
-    pow     .proc       
-        jsr basic.float.pow ;   :=(FAC2^FAC1)
+    pow     .proc               ;   :=  (FAC1^FAC2)
+        jsr swap
+    fac2_fac1                   ;   :=  (FAC2^FAC1)
+        jsr basic.float.pow     
         rts
     .pend 
     
@@ -727,8 +730,31 @@ float .proc
     .pend 
     
     ;
+
+    ay  .proc
     
+        add .proc
+            jsr $b867                  ;   fac2 + fac1
+            rts
+        .pend
+
+        sub .proc
+            jsr $b850                  ;   fac2 - fac1
+            rts
+        .pend
+
+        mul .proc
+            jsr $ba28                  ;   fac2 * fac1 
+            rts
+        .pend
+
+        div .proc
+            jsr $bb0f                  ;   fac1 / fac2
+            rts
+        .pend
         
+    .pend
+    
 .pend
 
 
