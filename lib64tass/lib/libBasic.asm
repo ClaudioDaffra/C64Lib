@@ -6,7 +6,7 @@
 
 basic   .proc
 
-    getchar_inc_ptr         =   $0073
+    get_char_inc_ptr        =   $0073
     get_char                =   $0079   ;   output  ->  a
     TXTPTR                  =   $007A
 
@@ -212,7 +212,7 @@ basic   .proc
         .pend
 
     .pend
-    
+
     ;
     
 .pend

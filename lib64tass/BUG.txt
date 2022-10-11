@@ -1,0 +1,9 @@
+
+array.007.asm
+
+    calc_index  ->  works
+
+but
+
+    same sub    ->  in float lib    does not works
+    

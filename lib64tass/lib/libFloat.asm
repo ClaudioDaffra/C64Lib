@@ -37,36 +37,37 @@ float .proc
     FREADSTR    = $b7b5
     FPRINTLN    = $aabc
     FOUT        = $bddd
+    
     FADDH       = $b849
-    MUL10       = $bae2
-    DIV10       = $bafe
-    FCOMP       = $bc5b
-    FADDT       = $b86a ;   fac1    ,   fac2
-    FADD        = $b867
-    FSUBT       = $b853
-    FSUB        = $b850
-    FMULTT      = $ba2b
-    FMULT       = $ba28
-    FDIVT       = $bb12
-    FDIV        = $bb0f
-    FPWRT       = $bf7b
+    MUL10       = $bae2 ;
+    DIV10       = $bafe ;
+    FCOMP       = $bc5b ;
+    FADDT       = $b86a ;
+    FADD        = $b867 ;
+    FSUBT       = $b853 ;
+    FSUB        = $b850 ;
+    FMULTT      = $ba2b ;
+    FMULT       = $ba28 ;
+    FDIVT       = $bb12 ;
+    FDIV        = $bb0f ;
+    FPWRT       = $bf7b ;
     FPWR        = $bf78
     FINLOG      = $bd7e
     NOTOP       = $aed4
-    INT         = $bccc
-    LOG         = $b9ea
-    SGN         = $bc39
-    SIGN        = $bc2b
-    ABS         = $bc58
-    SQR         = $bf71
-    SQRA        = $bf74
-    EXP         = $bfed
-    NEGOP       = $bfb4
-    RND         = $e097
-    COS         = $e264
-    SIN         = $e26b
-    TAN         = $e2b4
-    ATN         = $e30e
+    INT         = $bccc ;
+    LOG         = $b9ea ;
+    SGN         = $bc39 ;
+    SIGN        = $bc2b ;
+    ABS         = $bc58 ;
+    SQR         = $bf71 ;
+    SQRA        = $bf74 ;
+    EXP         = $bfed ;
+    NEGOP       = $bfb4 ;
+    RND         = $e097 ;
+    COS         = $e264 ;
+    SIN         = $e26b ;
+    TAN         = $e2b4 ;
+    ATN         = $e30e ;
     
     ;   .................................................... print
     ;
@@ -754,6 +755,7 @@ float .proc
         .pend
         
     .pend
+
     
 .pend
 
