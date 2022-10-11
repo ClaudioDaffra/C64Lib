@@ -1133,18 +1133,14 @@ c64 .proc
             clc
     
             jsr  c64.init_system
-            jsr  c64.init_system_phase2 ;   no phase 2 in C64
-            
+
             ;--------------
             
             jsr  main.start
             
             ;--------------
 
-            lda  #31
-            sta  $01
-            
-            jmp  c64.cleanup_at_exit
+            jsr  c64.deinit_system 
             
             lda stack.old
             tax
@@ -1158,12 +1154,7 @@ c64 .proc
 
             sei
             cld
-            
-            lda  #%00101111
-            sta  $00
-            lda  #%00100111
-            sta  $01
-            
+
             jsr  c64.IOINIT
             jsr  c64.RESTOR
             jsr  c64.CINT
@@ -1179,51 +1170,42 @@ c64 .proc
             lda  #color.black
             sta  c64.BGCOL0
             sta  screen.background_color
-            
-            jsr  disable_runstop_and_charsetswitch
-            
+
             clc
             clv
             cli
             
             rts
                 
-    .pend
+        .pend
 
-    init_system_phase2    .proc
+        deinit_system    .proc
 
-        rts     ; no phase 2 steps on the C64
+                rts
+        .pend
+
+        enable_runstop_and_charsetswitch    .proc
+
+            lda  #0
+            sta  657    ; enable charset switching
+            
+            lda  #237
+            sta  808    ; enable run/stop key
+            
+            rts
+            
+        .pend
         
-    .pend
+        disable_runstop_and_charsetswitch    .proc
 
-    disable_runstop_and_charsetswitch    .proc
-
-        lda  #$80
-        sta  657    ; disable charset switching
-        lda  #239
-        sta  808    ; disable run/stop key
-        
-        rts
-        
-    .pend
-
-    cleanup_at_exit    .proc
- 
-            jmp  c64.enable_runstop_and_charsetswitch
-    .pend
- 
-    enable_runstop_and_charsetswitch    .proc
-
-        lda  #0
-        sta  657    ; enable charset switching
-        
-        lda  #237
-        sta  808    ; enable run/stop key
-        
-        rts
-        
-    .pend
-
+            lda  #$80
+            sta  657    ; disable charset switching
+            lda  #239
+            sta  808    ; disable run/stop key
+            
+            rts
+        .pend
+    
         ; ........................................... peek_word
         ;
         ;   input   :   ay  ->  y   =   peek ( a0:a1,y+0 ) , y

@@ -7,3 +7,6 @@ but
 
     same sub    ->  in float lib    does not works
     
+    
+bug in c64.start found
+    
