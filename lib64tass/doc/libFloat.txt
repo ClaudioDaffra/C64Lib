@@ -218,7 +218,10 @@
     int
  
     sin 
+    sinA
 
+    radA
+    
     cos 
 
     tan 
@@ -244,7 +247,86 @@
         mul     ;   fac2    *   fac1
         div     ;   fac1    /   fac2
     }
-        
+
+    ;   ................................... utility
+    
+    a_mul_5     -> a*5  sizeof(float)
+    
+    ;   ................................... calc index
+    ;
+    ;   input   :
+    ;               ay  array   address
+    ;                x  length
+    ;
+    ;   output  :
+    ;
+    ;               zpWord  address+(x*sizeof(float))
+    ;               fac1
+    
+    calc_index
+
+    ;   ................................... array_reverse
+    ;
+    ;   input   :
+    ;               zpWord      array   address
+    ;               a           num elements
+    ;
+    ;   output  :
+    ;               array reverrse
+
+    array_reverse
+    
+    ;
+
+    ;   ............................................................ copy
+    ;
+    ;   input   :   
+    ;               zpWord0     (dest)
+    ;               zpWord1     (source)
+    ;
+    ;               zpWord1[y]   :=  zpWord0[y]
+    ;
+    
+    copy
+
+    ;   ............................................................ set_array
+    ;
+    ; -- set a float in an array to a value
+    ;
+    ;   input   :
+    ;               zpWord0     ->  array address
+    ;               zpWord1     ->  value    
+    ;               x           ->  index
+
+    set_array
+
+    ;   ............................................................ set_array
+    ;
+    ; -- set a float in an array to a 0
+    ;
+    ;   input   :
+    ;               zpWord0     ->  array
+    ;               x           ->  index
+    ;       
+    ;               zpWord[x]   :=  0
+    ;
+    
+    set0_array
+
+    ;   ............................................................ set_array_from_fac1
+    ;
+    ;   set a float in an array from a fac
+    ;
+    ;   input   :
+    ;               zpWord0     ->  array
+    ;               x           ->  index
+    ;       
+    ;               zpWord[x]   :=  fac
+    ;
+
+    set_array_from_fac1
+    
+    ;
     
 *******************
 Floating Point Math

@@ -52,7 +52,7 @@ program .proc
 
     varf    .byte   0,0,0,0,0,0,0,0
     
-;--------------------------------------------------------------- sub
+;--------------------------------------------------------------- main
 
 ;--------------------------------------------------------------- main
 
@@ -61,29 +61,18 @@ main	.proc
     start	.proc
 
         ;   program
- 
-        load_address_ay         arrayFloat
-        ldx #3                              ;   ( 4Th element  -7.8)
-        jsr float.calc_index
 
-        load_address_ay         varf
-        jsr float.copy_fac1_to_mem
-
-        load_address_ay         varf
-        jsr float.print
-
-        lda #char.nl
-        jsr c64.CHROUT
+        load_address_zpWord0    arrayFloat
+        lda #10                             ;   0-9 (10 elements)
         
+        jsr float.array_reverse
+
         ;
- 
+        
         load_address_ay         arrayFloat
         ldx #10                              ;   0-9 (10 elements)
         jsr float.print_array
         
-        ;
-        
-
         rts
         
     .pend

@@ -768,6 +768,7 @@ float .proc
     ;               fac1
     
     calc_index  .proc
+    
             sta zpa
             sty zpy
             sta zpWord0
@@ -798,6 +799,324 @@ float .proc
             rts
     .pend
     
+    ;   ................................... print_array
+    ;
+    ;   input   :
+    ;               ay  array   address
+    ;                x  max length
+    ;
+    ;   output  :
+    ;               print array
+    
+    print_array .proc
+    
+        dex             ;   (0-9)   10 elements
+        
+        sta address
+        sty address+1
+        stx mod_max+1
+        ldx #$ff
+        stx index
+    loop
+        lda #char.space
+        jsr c64.CHROUT
+        
+        inx 
+        stx index
+        
+        lda address
+        ldy address+1
+        jsr float.calc_index
+        
+        lda #<tempFac
+        ldy #>tempFac
+        jsr float.copy_fac1_to_mem
+
+        lda #<tempFac
+        ldy #>tempFac
+        jsr float.print
+        
+        ldx index
+    mod_max
+        cpx #$00        ;   modified
+        
+        bne loop
+
+        rts
+        
+        tempFac .byte   0,0,0,0,0
+        address .word   0
+        index   .byte   0
+        ;max     .byte   0
+    
+    .pend
+
+    ;   ................................... array_reverse
+    ;
+    ;   input   :
+    ;               zpWord      array   address
+    ;               a           num elements
+    ;
+    ;   output  :
+    ;               array reverrse
+    
+    a_mul_5   .proc
+        sta  zpa
+        asl  a
+        asl  a
+        clc
+        adc  zpa
+        rts
+    .pend
+    
+    array_reverse   .proc
+        
+        _left_index     = zpWord1
+        _right_index    = zpWord1+1
+        _loop_count     = zpx
+
+        pha
+        jsr  a_mul_5
+        sec
+        sbc  #5
+        sta  _right_index
+        lda  #0
+        sta  _left_index
+        pla
+        lsr  a
+        sta  _loop_count
+        _loop               ; push the left indexed float on the stack
+        ldy  _left_index
+        lda  (zpWord0),y
+        pha
+        iny
+        lda  (zpWord0),y
+        pha
+        iny
+        lda  (zpWord0),y
+        pha
+        iny
+        lda  (zpWord0),y
+        pha
+        iny
+        lda  (zpWord0),y
+        pha
+        ; copy right index float to left index float
+        ldy  _right_index
+        lda  (zpWord0),y
+        ldy  _left_index
+        sta  (zpWord0),y
+        inc  _left_index
+        inc  _right_index
+        ldy  _right_index
+        lda  (zpWord0),y
+        ldy  _left_index
+        sta  (zpWord0),y
+        inc  _left_index
+        inc  _right_index
+        ldy  _right_index
+        lda  (zpWord0),y
+        ldy  _left_index
+        sta  (zpWord0),y
+        inc  _left_index
+        inc  _right_index
+        ldy  _right_index
+        lda  (zpWord0),y
+        ldy  _left_index
+        sta  (zpWord0),y
+        inc  _left_index
+        inc  _right_index
+        ldy  _right_index
+        lda  (zpWord0),y
+        ldy  _left_index
+        sta  (zpWord0),y
+        ; pop the float off the stack into the right index float
+        ldy  _right_index
+        pla
+        sta  (zpWord0),y
+        dey
+        pla
+        sta  (zpWord0),y
+        dey
+        pla
+        sta  (zpWord0),y
+        dey
+        pla
+        sta  (zpWord0),y
+        dey
+        pla
+        sta  (zpWord0),y
+        inc  _left_index
+        lda  _right_index
+        sec
+        sbc  #9
+        sta  _right_index
+        dec  _loop_count
+        bne  _loop
+        rts
+
+    .pend
+
+    ;   ......................................................... rad a
+
+    radA    .proc
+
+        lda  #<angle
+        ldy  #>angle
+        jsr  MOVFM
+        stx  zpx
+        lda  #<_pi_div_180
+        ldy  #>_pi_div_180
+        jsr  FMULT
+        ldx  zpx
+        
+        rts
+        _pi_div_180 .byte 123, 14, 250, 53, 18  ; pi / 180
+        angle       .byte  0,0,0,0,0            ; float
+    .pend
+
+    ;   ......................................................... sin a
+    
+    sinA    .proc
+
+        lda  #<angle
+        ldy  #>angle
+        jsr  MOVFM
+        stx  zpx
+        jsr  SIN
+        ldx  zpx
+        
+        rts
+        angle   .byte  0,0,0,0,0  ; float
+    .pend
+    
+    ;   ............................................................ copy
+    ;
+    ;   input   :   
+    ;               zpWord0     (dest)
+    ;               zpWord1     (source)
+    ;
+    ;               zpWord1[y]   :=  zpWord0[y]
+    ;
+    
+    copy    .proc
+
+        ldy  #0
+        lda  (zpWord1),y
+        sta  (zpWord0),y
+        iny
+        lda  (zpWord1),y
+        sta  (zpWord0),y
+        iny
+        lda  (zpWord1),y
+        sta  (zpWord0),y
+        iny
+        lda  (zpWord1),y
+        sta  (zpWord0),y
+        iny
+        lda  (zpWord1),y
+        sta  (zpWord0),y
+        
+        rts
+        
+    .pend
+    
+    ;   ............................................................ set_array
+    ;
+    ; -- set a float in an array to a value
+    ;
+    ;   input   :
+    ;               zpWord0     ->  array address
+    ;               zpWord1     ->  value    
+    ;               x           ->  index
+
+    set_array   .proc
+
+        txa
+        jsr float.a_mul_5
+        sta zpa
+        
+        clc
+        lda zpWord0
+        adc zpa
+        sta zpWord0
+        lda zpWord0+1
+        adc #$00
+        sta zpWord0+1
+        
+        jsr float.copy
+        
+        rts
+        
+    .pend
+
+    ;   ............................................................ set_array
+    ;
+    ; -- set a float in an array to a 0
+    ;
+    ;   input   :
+    ;               zpWord0     ->  array
+    ;               x           ->  index
+    ;       
+    ;               zpWord[x]   :=  0
+    ;
+    
+    set0_array  .proc
+
+        txa
+        sta  zpa
+        asl  a
+        asl  a
+        clc
+        adc  zpa
+        tay
+        lda  #0
+        sta  (zpWord0),y
+        iny
+        sta  (zpWord0),y
+        iny
+        sta  (zpWord0),y
+        iny
+        sta  (zpWord0),y
+        iny
+        sta  (zpWord0),y
+        rts
+        
+    .pend
+
+    ;   ............................................................ set_array_from_fac1
+    ;
+    ;   set a float in an array from a fac
+    ;
+    ;   input   :
+    ;               zpWord0     ->  array
+    ;               x           ->  index
+    ;       
+    ;               zpWord[x]   :=  fac
+    ;
+
+    set_array_from_fac1 .proc
+
+        txa
+        sta  zpa
+        asl  a
+        asl  a
+        clc
+        adc  zpa
+        ldy  zpWord0+1
+        clc
+        adc  zpWord0
+        bcc  +
+        iny
+    +
+        stx  zpx
+        tax
+        jsr  float.MOVMF
+        ldx  zpx
+        
+        rts
+        
+    .pend
     
 .pend
  

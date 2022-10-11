@@ -50,10 +50,15 @@ program .proc
     .byte  $85, $84, $cc, $cc, $cc  ; float prog8.code.StArrayElement@51bd8b5c
     .byte  $85, $17, $33, $33, $33  ; float prog8.code.StArrayElement@7b50df34
 
-    varf    .byte   0,0,0,0,0,0,0,0
+    varf    
     
-;--------------------------------------------------------------- sub
+    .byte   $85, $17, $33, $33, $33 ;   18.9
+    
+    ;--------------------------------------------------------------- main
 
+
+
+    
 ;--------------------------------------------------------------- main
 
 main	.proc
@@ -61,29 +66,23 @@ main	.proc
     start	.proc
 
         ;   program
- 
-        load_address_ay         arrayFloat
-        ldx #3                              ;   ( 4Th element  -7.8)
-        jsr float.calc_index
 
-        load_address_ay         varf
-        jsr float.copy_fac1_to_mem
-
-        load_address_ay         varf
-        jsr float.print
-
-        lda #char.nl
-        jsr c64.CHROUT
+        ;                                   arraFloat[1] := varf
+        load_address_zpWord0    arrayFloat
+        load_address_zpWord1    varf
+        ldx #1
         
         ;
- 
+        
+        jsr float.set_array
+        
+        ;
+        
+        
         load_address_ay         arrayFloat
         ldx #10                              ;   0-9 (10 elements)
         jsr float.print_array
         
-        ;
-        
-
         rts
         
     .pend
