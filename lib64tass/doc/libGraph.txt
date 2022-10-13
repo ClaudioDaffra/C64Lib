@@ -103,6 +103,23 @@
                 
 
                 rts
+
+        ;............................................................ horizontal_line
+        ;
+        ;       zpWord0 x
+        ;       ay      length
+        ;       zpy     y
+        
+        horizontal_line    .proc
+        
+        ;............................................................ vertical_line
+        ;
+        ;   input   :
+        ;               a       height
+        ;               zpWord0 X
+        ;               zpy     Y
+      
+        vertical_line    .proc
         
 ;;;
 ;;

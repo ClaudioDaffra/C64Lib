@@ -22,98 +22,6 @@ program_entry_point	; assembly code starts here
 
 .include "../../lib/libC64.asm"
 
-        ;--------------------------------------------------------------- horizontal_line
-        ;
-        ;       zpWord0 x
-        ;       ay      length
-        ;       zpy     y
-        
-        horizontal_line    .proc
-        
-            ;   maxLength
-            sta lengthMax       ;   lunghezza massima
-            sty lengthMax+1
-            
-            ; coordX
-            lda zpWord0
-            sta coordX
-            lda zpWord0+1
-            sta coordX+1
-
-            lda #0
-            sta length
-            lda #0
-            sta length+1
-            
-            ;   coordy
-            ldy zpy
-            sty coordY
-
-        loop
-        
-            u16_add_1   coordX
-            copy_u16    zpWord0,coordX
-
-            ldy coordY
-            sty zpy
-
-            jsr graph.pixel ;   (zpy ,zpWord0)
-
-            u16_add_1   length
-
-            lda length+1
-            cmp lengthMax+1
-            bne +
-            lda length+0
-            cmp lengthMax+0
-        + 
-            bcc loop  ;   lower
-            bne loop  ;   higher
-            ;beq end   ;   same
-
-            rts
-            
-        length      .word   0
-        lengthMax   .word   0
-        coordY      .byte   0
-        coordX      .word   0
-        
-        .pend
-
-    ;............................................................ vertical_line
-    ;
-    ;   input   :
-    ;               a       height
-    ;               zpWord0 X
-    ;               zpy     Y
-  
-    vertical_line    .proc
-
-        sta coordY
-        
-        copy_u16 coordX,zpWord0
-
-        lda coordY
-        
-        beq  +
-    -
-        copy_u16 zpWord0,coordX
-        
-        ldy coordY
-        sty zpy
-        
-        jsr  graph.pixel
-
-        dec  coordY
-        
-        bne  -
-    +
-        rts
-    coordY   .byte   0
-    coordX   .word   0
-    .pend
-
-        
 ;--------------------------------------------------------------- main
 
 
@@ -147,7 +55,7 @@ main	.proc
         ;  ay   ->  ay 
         load_imm_ay #20 ;   length
 
-        jsr horizontal_line
+        jsr graph.horizontal_line
 
 
         ;   ay ->   zpWord0
@@ -158,7 +66,7 @@ main	.proc
         load_imm_ay   #20
         ;lda #20 ;   length
         
-        jsr vertical_line
+        jsr graph.vertical_line
 
 rts
         jsr graph.high.off
