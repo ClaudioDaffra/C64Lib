@@ -96,6 +96,7 @@ main	.proc
 rts
 
         jsr graph.low.off
+        
         lda #color.white
         sta 53281
         lda #char.a

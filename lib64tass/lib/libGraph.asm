@@ -135,6 +135,7 @@ graph .proc
                 N   =   graph.color_number   ;  color number
                 Y   =   zpy                  ;  coord y
                 X   =   zpWord0              ;  coord x
+                
                 P   =   zpWord1              ;  graph P address
 
                 lda c64.screen_control_register_2   ;   check multi color
@@ -300,7 +301,10 @@ graph .proc
                     rts
 
         .pend
-
+ 
+        ;
+        ;
+        ;
         
 ;**********
 ;           Tabelle
@@ -428,7 +432,7 @@ table_begin
     .byte %00000011
 
 
-table_end
+    table_end
 
 .pend
 

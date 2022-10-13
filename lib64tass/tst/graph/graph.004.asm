@@ -79,7 +79,7 @@ program_entry_point	; assembly code starts here
         coordX      .word   0
         
         .pend
-
+ 
     ;............................................................ vertical_line
     ;
     ;   input   :
@@ -112,31 +112,38 @@ program_entry_point	; assembly code starts here
     coordY   .byte   0
     coordX   .word   0
     .pend
-
-        
 ;--------------------------------------------------------------- main
 
 
 main	.proc
 
     start	.proc
+        jsr graph.low.on
 
-        jsr graph.high.on       ;   320x200
- 
-        jsr graph.clear         ;   clear
-
-        lda #color.white       ;   graph high color    (0,1)
-        sta graph.foreground_color
+        lda #color.red
+        sta screen.border_color
+        jsr txt.set_border_color
         
-        lda #color.black
-        sta graph.background_color
+        lda #color.white
+        sta graph.color0
+        
+        lda #color.red
+        sta graph.color1
+        
+        lda #color.green
+        sta graph.color2
+        
+        lda #color.blue
+        sta graph.color3
+        
+        jsr graph.low.set_color
 
-        jsr graph.high.set_color
+        jsr graph.clear
 
         ;............................................................   graph.color_number  
     
         lda #1
-        sta graph.color_number  ;   color number 0,1
+        sta graph.color_number  ;   color number 0,1,2,3
 
         ;............................................................   horizontal_line 
 
@@ -149,20 +156,22 @@ main	.proc
 
         jsr horizontal_line
 
-
+        lda #2
+        sta graph.color_number  ;   color number 0,1,2,3
+        
         ;   ay ->   zpWord0
         graph_imm_x #1
         ;   y  ->    zpy
         graph_imm_y #1
         ;  ay   ->  ay 
-        load_imm_ay   #20
-        ;lda #20 ;   length
+        load_imm_ay #20 ;   length
         
         jsr vertical_line
 
 rts
-        jsr graph.high.off
- 
+        
+        jsr graph.low.off
+
 
         rts
         

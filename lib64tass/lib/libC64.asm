@@ -1515,18 +1515,25 @@ if_fac1_gt_fac2 .macro
 
 ;--------------------------------------------------------------- macro graph
 
+copy_u16    .macro
+    lda \2
+    sta \1
+    lda \2+1
+    sta \1+1
+.endm
+
 graph_imm_x  .macro
     lda <\1
     sta zpWord0
-    lda >\1
-    sta zpWord0+1
+    ldy >\1
+    sty zpWord0+1
 .endm
 
 graph_var_x  .macro
     lda \1
     sta zpWord0
-    lda \1+1
-    sta zpWord0+1
+    ldy \1+1
+    sty zpWord0+1
 .endm
 
 graph_imm_y  .macro
