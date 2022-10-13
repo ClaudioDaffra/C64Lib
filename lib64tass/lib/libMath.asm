@@ -355,7 +355,7 @@ math    .proc
         
     ;..........................................................................
     ;
-    ;   multiply two 16-bit words into a 32-bit zpDWord0  (signed and unsigned)
+    ;   multiply two 16-bit words into a 32-bit zpDWord1  (signed and unsigned)
     ;
     ;      input    :
     ;   
@@ -364,39 +364,39 @@ math    .proc
     ;
     ;      output   :
     ;        
-    ;           zpDWord0  4-bytes/32-bits product, LSB order (low-to-high)
+    ;           zpDWord1  4-bytes/32-bits product, LSB order (low-to-high)
     ;
-    ;     result    :     zpDWord0  :=  zpWord0 * zpWord1
+    ;     result    :     zpDWord1  :=  zpWord0 * zpWord1
     ;
 
     multiply_words    .proc
 
-    result = zpDWord0
+    result = zpDWord1
     
             sta  zpWord1
             sty  zpWord1+1
             stx  zpx
     mult16        
             lda  #0
-            sta  zpDWord0+2     ; clear upper bits of product
-            sta  zpDWord0+3
+            sta  zpDWord1+2     ; clear upper bits of product
+            sta  zpDWord1+3
             ldx  #16            ; for all 16 bits...
     -         
             lsr  zpWord0+1      ; divide multiplier by 2
             ror  zpWord0
             bcc  +
-            lda  zpDWord0+2     ; get upper half of product and add multiplicand
+            lda  zpDWord1+2     ; get upper half of product and add multiplicand
             clc
             adc  zpWord1
-            sta  zpDWord0+2
-            lda  zpDWord0+3
+            sta  zpDWord1+2
+            lda  zpDWord1+3
             adc  zpWord1+1
     +         
             ror  a              ; rotate partial product
-            sta  zpDWord0+3
-            ror  zpDWord0+2
-            ror  zpDWord0+1
-            ror  zpDWord0
+            sta  zpDWord1+3
+            ror  zpDWord1+2
+            ror  zpDWord1+1
+            ror  zpDWord1
             dex
             bne  -
             ldx  zpx

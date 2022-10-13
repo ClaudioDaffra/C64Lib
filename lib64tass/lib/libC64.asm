@@ -67,37 +67,32 @@ bit_and_7    =  %01111111
 
 ;   -------------------------------------------- safe
 
-zpa		= $02
-zpx		= $2a
-zpy		= $52
+zpa     = $02
+zpx     = $2a
+zpy     = $52
 
-zpByte0     = $fb   ;   zpWord  10
-zpByte1     = $fc   ;           11
-zpByte2     = $fd   ;   zpWord  20
-zpByte3     = $fe   ;           21
+zpByte0     = $fb   ;   zpDWord0    zpWord0     zpByte0
+zpByte1     = $fc   ;                           zpByte1
+zpByte2     = $fd   ;               zpWord1     zpByte2
+zpByte3     = $fe   ;                           zpByte3
 
-zpWord0     = $fb
-zpWord0hi   = $fb
-zpWord0lo   = $fb+1
+zpByte4     = $03   ;   zpDWord1    zpWord2     zpByte4
+zpByte5     = $04   ;                           zpByte5
+zpByte6     = $05   ;               zpWord3     zpByte6
+zpByte7     = $06   ;                           zpByte7
 
-zpWord1     = $fd
-zpWord1hi   = $fd
-zpWord1lo   = $fd+1
+zpDWord0        = $fb
+    zpWord0     = $fb
+        zpWord0hi   = $fb
+        zpWord0lo   = $fb+1
+    zpWord1     = $fd
+        zpWord1hi   = $fd
+        zpWord1lo   = $fd+1
 
-;   -------------------------------------------- safe?
-
-zpByte24    = $03           ;   zpWord  20
-zpByte25    = $04           ;           21
-
-zpByte36    = $05           ;           30
-zpByte37    = $06           ;           31
-
-zpDWord0    = $03           ;   32 bit
-
+zpDWord1    = $03
     zpWord2     = $03       ;   $B1AA, execution address of routine converting floating point to integer.
         zpWord2hi   = $03
         zpWord2lo   = $03+1
-
     zpWord3     = $05       ;   $B391, execution address of routine converting integer to floating point.
         zpWord3hi   = $05
         zpWord3lo   = $05+1
@@ -144,14 +139,14 @@ page  .proc
     buffer0191_01   =   0191    ;   ( 1) byte   ;   Unknown.
     buffer0645_01   =   0645    ;   ( 1) byte   ;   Unused  (Serial bus timeout.)
                                                 ;   instruction during GET, INPUT and READ.
-;   [   ]
-      
-   ;buffer0679_89   =   0679    ;   (89) byte   ;   Unused  (89 bytes).              (64+15)
+                                                
+;   buffer0679_89   =   0679    ;   (89) byte   ;   Unused  (89 bytes).              (64+15)
                                                 ;   instruction during GET, INPUT and READ.
 ;   [ V ]
                                               
     buffer0679_15   =   0679    ;   (15) byte   ;   Unused  (15 bytes).              (64+15)
                                                 ;   instruction during GET, INPUT and READ.
+                                                ;   (T) fac1-fac2 save/restore raster
 ;   [   ]
    
     buffer0694_74   =   0694    ;   (74) byte   ;   Unused  (89 bytes).              (64+15)

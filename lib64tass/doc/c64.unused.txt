@@ -3,17 +3,19 @@ UNUSED
 
 ;   ------------------------------------ zero page
 
-    $0002           stz
+    $0002   sta
 
-    $0003          zpW0rd2  hi
-    $0004                   lo
-    $0005          zpW0rd1  hi
-    $0006                   lo
+    $0003   zpDWord1
+    $0003           zpW0rd2 zpByte4 
+    $0004                   zpByte5
+    $0005           zpW0rd3 zpByte6 
+    $0006                   zpByte7
 
-    $002a           stx
+    $002a   stx
 
-    $0052           sty
+    $0052   sty
 
+    $00FB   zpDWord0
     $00FB           zpW0rd0 zpByte0 
     $00FC                   zpByte1
     $00FD           zpW0rd1 zpByte2 
@@ -67,24 +69,23 @@ TEMP
                         at memory address $DC0E, during datasette input/output.
 
     ;   basic char get not used here TODO
-    ;
-    ;   zpByte4  = $73
-    ;   zpByte5  = $74
-    ;       zpWord2  = $73
+    
 
-    ;   zpByte6  = $75
-    ;   zpByte7  = $76
-    ;       zpWord3  = $75
+    ; ############################## KERNAL SAFE
 
-    ;   zpByte8  = $77
-    ;   zpByte9  = $78
-    ;       zpWord4  = $77
+    $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f,
+    $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, 
+    $1e, $1f, $20, $21, $22, $23, $24, $25
 
-    ;   zpByte10     = $79
-    ;   zpByte11     = $7A
-    ;       zpWord5  = $79
+    $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44, $45, $46,
+    $47, $48, $4b, $4c, $4d, $4e, $4f, $51, $52, $53,
 
-    ;   zpByte12     = $7B
+    $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, 
+    $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $6e, $6f, $70, $71, $72,
+    $73, $74, $75, $76, $77, $78, $79, $7a, $7b, $7c, $7d, $7e, $7f, $80, 
+    $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, 
+    $8f, 
 
+    $ff
 
 
