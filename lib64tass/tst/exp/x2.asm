@@ -25,8 +25,11 @@ program_entry_point
 .include "../../lib/libC64.asm"
 
 ;--------------------------------------------------------------- sub
-
- 
+    varf
+    ;.byte  $85, $17, $33, $33, $33
+    
+    .byte $85, $cf ,$4 ,$cc ,$cd
+    ; float prog8.code.StArrayElement@7b50df34
 
 ;--------------------------------------------------------------- program
 
@@ -45,7 +48,8 @@ program .proc
 main	.proc
 
     start	.proc
-
+    load_address_ay         varf
+    jsr float.print
     rts
     
     .pend
