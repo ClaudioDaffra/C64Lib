@@ -104,14 +104,14 @@ loop
     
         ;   -----------------------------------------------------------  reverse_us8
 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u8
  
-                load_address_zpWord0 arr1
+                .load_address_zpWord0 arr1
                 lda #counter_max
                 jsr array.reverse_us8
 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u8
  
         ;   ----------------------------------------------------------- reverse_us8
@@ -119,14 +119,14 @@ loop
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_zpWord0 arr2
+        .load_address_zpWord0 arr2
         jsr print_array_s8
 
-                load_address_zpWord0 arr2
+                .load_address_zpWord0 arr2
                 lda #counter_max
                 jsr array.reverse_us8
 
-        load_address_zpWord0 arr2
+        .load_address_zpWord0 arr2
         jsr print_array_s8
 
 

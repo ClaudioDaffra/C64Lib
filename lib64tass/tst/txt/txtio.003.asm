@@ -41,13 +41,13 @@ main	.proc
             lda #' '
             jsr c64.CHROUT
 
-            load_var_ay s16
+            .load_var_ay s16
             jsr std.print_s16_dec
             
             lda #' '
             jsr c64.CHROUT
 
-            load_imm_ay #-32765
+            .load_imm_ay #-32765
             jsr std.print_s16_dec
             
             lda #char.nl
@@ -61,7 +61,7 @@ main	.proc
             lda #' '
             jsr c64.CHROUT
             
-            load_imm_ay #25031
+            .load_imm_ay #25031
             jsr std.print_s16_dec
 
             ; .................................... print signed 8
@@ -95,20 +95,20 @@ main	.proc
             jsr c64.CHROUT
             
             sec ;       $61c7
-            load_imm_ay #25031
+            .load_imm_ay #25031
             jsr std.print_s16_hex
 
             lda #' '
             jsr c64.CHROUT
 
             sec         ; %0110000111000111
-            load_imm_ay #25031
+            .load_imm_ay #25031
             jsr std.print_s16_bin
 
             lda #' '
             jsr c64.CHROUT
             ;           +25031
-            load_var_ay s16p
+            .load_var_ay s16p
             jsr std.print_s16_dec
             
             rts

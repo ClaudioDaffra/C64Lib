@@ -62,7 +62,7 @@ main	.proc
 
         ;   program
 
-        load_address_zpWord0    arrayFloat
+        .load_address_zpWord0    arrayFloat
         lda #10                             ;   0-9 (10 elements)
         
         jsr float.array_reverse

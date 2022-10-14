@@ -89,17 +89,17 @@ loop
     
         ;   ----------------------------------------------------------- rol/ror uw
 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u16
  
-                load_address_zpWord0 arr1
+                .load_address_zpWord0 arr1
                 ldy #1
                 jsr array.ror_uw
                 ;jsr array.ror_uw
                 ;jsr array.ror2_uw
                 ;jsr array.ror2_uw
                 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u16 
 
  

@@ -38,10 +38,10 @@ main	.proc
 
             ; ---------------------------- input string
             
-            load_address_ay temp
+            .load_address_ay temp
             jsr std.input_string
             
-            load_address_ay temp
+            .load_address_ay temp
             jsr std.print_string
 
             ; ---------------------------- input string max
@@ -49,14 +49,14 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_address_ay temp
+            .load_address_ay temp
             ldx #5
             jsr std.input_string_max
 
             lda #' '
             jsr c64.CHROUT
             
-            load_address_ay temp
+            .load_address_ay temp
             jsr std.print_string
 
             lda #' '
@@ -67,7 +67,7 @@ main	.proc
             
             ; ---------------------------- print string kernal
 
-            load_address_ay temp
+            .load_address_ay temp
             jsr c64.STROUT
 
             lda #']'

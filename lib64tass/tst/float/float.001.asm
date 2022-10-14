@@ -59,42 +59,42 @@ main	.proc
 
     fvar4   .byte   0,0,0,0,0,0
     
-    start	.proc
+    start   .proc
 
 
-        load_address_ay str
+        .load_address_ay str
         jsr float.copy_from_string  ;   load string in fac1
         
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.copy_fac1_to_mem  ;   copy_fac1_to_mem
 
-        load_address_ay fvar2       ;   print string
+        .load_address_ay fvar2       ;   print string
         jsr float.print
 
         ;
 
-        load_address_ay fvar2       ;   load var in fac1
+        .load_address_ay fvar2       ;   load var in fac1
         jsr float.copy_fac1_from_mem
 
-        load_address_ay fvar3       ;   round from fac1 to mem
+        .load_address_ay fvar3       ;   round from fac1 to mem
         jsr float.round_fac1_to_mem 
 
-        load_address_ay fvar3       ;   print string
+        .load_address_ay fvar3       ;   print string
         jsr float.print
         
         ;
 
-        load_address_ay fvar2       ;   load var in fac1
+        .load_address_ay fvar2       ;   load var in fac1
         jsr float.copy_fac1_from_mem
         
         jsr float.copy_fac1_to_fac2
         
         jsr float.copy_fac2_to_fac1
         
-        load_address_ay fvar4
+        .load_address_ay fvar4
         jsr float.copy_fac1_to_mem  ;   copy_fac1_to_mem
         
-        load_address_ay fvar4       ;   print string
+        .load_address_ay fvar4       ;   print string
         jsr float.print
         
         ;

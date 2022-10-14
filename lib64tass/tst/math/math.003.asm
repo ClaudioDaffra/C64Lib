@@ -47,27 +47,27 @@ main	.proc
             ;  0111
             ;  0111
 
-            load_zpWord0    au16
-            load_zpWord1    bu16
+            .load_zpWord0    au16
+            .load_zpWord1    bu16
             ; 1 >= 2
             jsr math.u16_cmp_ge
             jsr debug_carry
             sta 1024
-            load_zpWord0    au16
-            load_zpWord1    au16
+            .load_zpWord0    au16
+            .load_zpWord1    au16
             ; 1 >= 1
             jsr math.u16_cmp_ge
             jsr debug_carry
             sta 1025
 
-            load_zpWord0    au16
-            load_zpWord1    bu16
+            .load_zpWord0    au16
+            .load_zpWord1    bu16
             ; 1 <= 2
             jsr math.u16_cmp_le
             jsr debug_carry
             sta 1026
-            load_zpWord0    au16
-            load_zpWord1    au16
+            .load_zpWord0    au16
+            .load_zpWord1    au16
             ; 1 <= 1
             jsr math.u16_cmp_le
             jsr debug_carry
@@ -75,27 +75,27 @@ main	.proc
             
             ;  .................................... compare s16
 
-            load_zpWord0    as16
-            load_zpWord1    bs16
+            .load_zpWord0    as16
+            .load_zpWord1    bs16
             ;  -1 >= 2
             jsr math.s16_cmp_ge
             jsr debug_carry
             sta 1024+40
-            load_zpWord0    as16
-            load_zpWord1    as16
+            .load_zpWord0    as16
+            .load_zpWord1    as16
             ;  -1 >= -1
             jsr math.s16_cmp_ge
             jsr debug_carry
             sta 1025+40
 
-            load_zpWord0    as16
-            load_zpWord1    bs16
+            .load_zpWord0    as16
+            .load_zpWord1    bs16
             ; -1 <= 2
             jsr math.s16_cmp_le
             jsr debug_carry
             sta 1026+40
-            load_zpWord0    as16
-            load_zpWord1    as16
+            .load_zpWord0    as16
+            .load_zpWord1    as16
             ;  -1 <= -1
             jsr math.s16_cmp_le
             jsr debug_carry

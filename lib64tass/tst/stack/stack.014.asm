@@ -77,9 +77,9 @@ main	.proc
             
             ;-------------------------------------------------
  
-            load_imm_ay #13
+            .load_imm_ay #13
             jsr stack.push_word
-            load_imm_ay #14
+            .load_imm_ay #14
             jsr stack.push_word
             
             jsr stack.equal_w
@@ -107,9 +107,9 @@ main	.proc
             
             ;-------------------------------------------------
  
-            load_imm_ay #-13
+            .load_imm_ay #-13
             jsr stack.push_word
-            load_imm_ay #14
+            .load_imm_ay #14
             jsr stack.push_word
             
             jsr stack.less_w
@@ -122,7 +122,7 @@ main	.proc
             
             ;-------------------------------------------------
  
-            load_imm_ay #0
+            .load_imm_ay #0
             jsr stack.push_word
             
             jsr stack.equalzero_w

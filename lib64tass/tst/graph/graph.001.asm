@@ -48,35 +48,35 @@ main	.proc
         lda #1
         sta graph.color_number  ;   color number 0,1
 
-        graph_imm_x #0
-        graph_imm_y #0
+        .graph_imm_x #0
+        .graph_imm_y #0
         jsr graph.pixel
         
-        graph_imm_x #1
-        graph_imm_y #1
+        .graph_imm_x #1
+        .graph_imm_y #1
         jsr graph.pixel
 
-        graph_imm_x #3
-        graph_imm_y #3
+        .graph_imm_x #3
+        .graph_imm_y #3
         jsr graph.pixel
         
-        graph_imm_x #5
-        graph_imm_y #5
+        .graph_imm_x #5
+        .graph_imm_y #5
         jsr graph.pixel
 
-        graph_imm_x #7
-        graph_imm_y #7
+        .graph_imm_x #7
+        .graph_imm_y #7
         jsr graph.pixel
 
-        graph_var_y coordy
-        graph_var_x coordx
+        .graph_var_y coordy
+        .graph_var_x coordx
         jsr graph.pixel
 
         lda #0
         sta graph.color_number  ;   erase 5,5
 
-        graph_imm_x #5
-        graph_imm_y #5
+        .graph_imm_x #5
+        .graph_imm_y #5
         jsr graph.pixel
         
 rts

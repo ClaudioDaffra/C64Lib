@@ -73,7 +73,7 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_var_ay zpWord0
+            .load_var_ay zpWord0
             sec
             jsr std.print_s16_dec
 
@@ -98,12 +98,12 @@ main	.proc
             ;lda zpWord0+1
             ;sta var_u16+1
             
-            conv_ubyte_to_uword var_u8 , var_u16
+            .conv_ubyte_to_uword var_u8 , var_u16
             
             lda #char.nl
             jsr c64.CHROUT
             
-            load_var_ay var_u16
+            .load_var_ay var_u16
             sec
             jsr std.print_u16_dec
             

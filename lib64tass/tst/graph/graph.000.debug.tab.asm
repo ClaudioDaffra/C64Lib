@@ -71,13 +71,13 @@ main	.proc
         lda #25
         sta maxi
         
-        load_address_ay graph.tbl_vbaseLo
+        .load_address_ay graph.tbl_vbaseLo
         jsr debug_table
 
         lda #char.nl
         jsr c64.CHROUT
 
-        load_address_ay graph.tbl_vbaseHi
+        .load_address_ay graph.tbl_vbaseHi
         jsr debug_table
 
         ; debug tbl_8
@@ -88,13 +88,13 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
 
-        load_address_ay graph.tbl_8Lo
+        .load_address_ay graph.tbl_8Lo
         jsr debug_table
 
         lda #char.nl
         jsr c64.CHROUT
 
-        load_address_ay graph.tbl_8Hi
+        .load_address_ay graph.tbl_8Hi
         jsr debug_table
         
         

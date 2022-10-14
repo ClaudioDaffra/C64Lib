@@ -80,10 +80,10 @@ loop
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u8
 
-                load_address_zpWord0 arr1
+                .load_address_zpWord0 arr1
                 
                 ldy #2
                 
@@ -92,7 +92,7 @@ loop
                 ;jsr array.rol2_ub
                 ;jsr array.ror2_ub
                 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u8 
 
 

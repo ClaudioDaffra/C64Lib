@@ -278,7 +278,6 @@ txt .proc
             bne  -
 
             rts
-
     .pend
 
     clear_screen .proc

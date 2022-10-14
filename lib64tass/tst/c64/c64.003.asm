@@ -48,19 +48,19 @@ main	.proc
 
             ; .............................................. store
             
-            load_imm_ay #$3031
+            .load_imm_ay #$3031
             lda #'0'
             sta 1024
             ldy #'1'
             sty 1025
-            store_imm_zpWord0   #$0400
+            .store_imm_zpWord0   #$0400
 
             ; .............................................. peekw
             
-            load_imm_ay #1024
+            .load_imm_ay #1024
             jsr c64.peekw
             ;   (a,y) := (word)*(zpWord0)
-            switch_ay
+            .switch_ay
 
             pha
             tya
@@ -75,11 +75,11 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            store_imm_zpWord0   #$0405
+            .store_imm_zpWord0   #$0405
             jsr txt.print_u16_hex
             
-            load_imm_ay #$3031
-            switch_ay
+            .load_imm_ay #$3031
+            .switch_ay
             ;  *(zpWord0) := *(ay)
             jsr c64.pokew
 

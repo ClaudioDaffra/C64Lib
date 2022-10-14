@@ -203,7 +203,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_3  (123/369)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_3
             jsr std.print_u16_dec
             
@@ -212,7 +212,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_5  (123/615)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_5
             jsr std.print_u16_dec
             
@@ -221,7 +221,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_6  (123/738)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_6
             jsr std.print_u16_dec
             
@@ -230,7 +230,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_7  (123/861)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_7
             jsr std.print_u16_dec
             
@@ -239,7 +239,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_9  (123/1107)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_9
             jsr std.print_u16_dec
             
@@ -248,7 +248,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_10  (123/1230)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_10
             jsr std.print_u16_dec
             
@@ -257,7 +257,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_12  (123/1476)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_12
             jsr std.print_u16_dec
             
@@ -266,7 +266,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_15  (123/1845)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_15
             jsr std.print_u16_dec
             
@@ -275,7 +275,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_25  (123/3075)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_25
             jsr std.print_u16_dec
             
@@ -284,7 +284,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_40  (123/4920)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_40
             jsr std.print_u16_dec
             
@@ -293,7 +293,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_50  (123/6150)
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr math.mul_word_50
             jsr std.print_u16_dec
             
@@ -302,7 +302,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_320  (123/3840)
             
-            load_imm_ay #12
+            .load_imm_ay #12
             jsr math.mul_word_320
             jsr std.print_u16_dec
             
@@ -311,7 +311,7 @@ main	.proc
             
             ;--------------------------------------------   math.mul_word_640  (12/7680 )
             
-            load_imm_ay #12
+            .load_imm_ay #12
             jsr math.mul_word_640
             jsr std.print_u16_dec
 

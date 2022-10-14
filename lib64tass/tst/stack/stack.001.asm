@@ -79,7 +79,7 @@ main	.proc
 
             jsr debug_stack
 
-            load_imm_ay #$1234
+            .load_imm_ay #$1234
             jsr stack.push_word
             
             jsr debug_stack

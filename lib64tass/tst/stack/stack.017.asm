@@ -36,10 +36,10 @@ main	.proc
             ;-------------------------------------------- operation with stack
             ; 401/27=14     -   14*27+23=401
             
-            load_imm_ay #401
+            .load_imm_ay #401
             jsr stack.push_word
 
-            load_imm_ay #27
+            .load_imm_ay #27
             jsr stack.push_word
 
             jsr stack.mod_uw
@@ -62,7 +62,7 @@ main	.proc
             lda #23
             jsr stack.push_byte
 
-            load_imm_ay #6
+            .load_imm_ay #6
             jsr stack.push_byte
 
             jsr stack.mod_ub

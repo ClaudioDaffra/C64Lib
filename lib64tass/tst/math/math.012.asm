@@ -36,8 +36,8 @@ main	.proc
 
             ; 401/27=14     -   14*27+((23))=401
             
-            load_imm_zpWord0 #401
-            load_imm_ay  #27
+            .load_imm_zpWord0 #401
+            .load_imm_ay  #27
 
             jsr math.mod_uw ;   return ay remainder
 

@@ -46,8 +46,8 @@ main	.proc
             ;  001
             ;  001
             
-            load_zpWord0    au16
-            load_zpWord1    bu16
+            .load_zpWord0    au16
+            .load_zpWord1    bu16
 
             jsr math.u16_cmp_eq
             jsr debug_carry
@@ -61,8 +61,8 @@ main	.proc
             jsr debug_carry
             sta 1026
 
-            load_zpWord0    as16
-            load_zpWord1    bs16
+            .load_zpWord0    as16
+            .load_zpWord1    bs16
 
             jsr math.s16_cmp_eq
             jsr debug_carry

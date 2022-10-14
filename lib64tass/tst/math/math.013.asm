@@ -38,7 +38,7 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
 
-            load_imm_ay #1000
+            .load_imm_ay #1000
             jsr math.get_rand_num_word
             jsr std.print_u16_dec
             

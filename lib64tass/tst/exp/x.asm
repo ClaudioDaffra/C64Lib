@@ -52,8 +52,8 @@ main	.proc
 
     start	.proc
 
-    load_zpWord0    #40
-    load_address_ay callback
+    .load_zpWord0    #40
+    .load_address_ay callback
     clc
     jsr irq.set_rasterirq
     

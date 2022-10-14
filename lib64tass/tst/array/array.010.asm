@@ -68,7 +68,7 @@ main	.proc
         ;   program
 
         ;                                   arraFloat[1] := 0
-        load_address_zpWord0    arrayFloat
+        .load_address_zpWord0    arrayFloat
         ldx #1
         
         ;
@@ -78,7 +78,7 @@ main	.proc
         ;
         
         
-        load_address_ay         arrayFloat
+        .load_address_ay         arrayFloat
         ldx #10                              ;   0-9 (10 elements)
         jsr float.print_array
         

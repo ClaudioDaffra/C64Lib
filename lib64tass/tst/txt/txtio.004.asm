@@ -39,7 +39,7 @@ main	.proc
             
             ; ---------------------------- print string
 
-            load_address_ay stringa
+            .load_address_ay stringa
             jsr std.print_string
 
             ; ---------------------------- print char ( swap h with b )

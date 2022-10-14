@@ -46,14 +46,14 @@ main	.proc
  
         ;..................................................... containment_byte
         
-        load_address_zpWord0    arr1 
+        .load_address_zpWord0    arr1 
         lda #4
         ldy #10
         jsr array.containment_byte
         
         sta 1024    ;   or carry    a=1=true
 
-        load_address_zpWord0    arr1
+        .load_address_zpWord0    arr1
         lda #15
         ldy #10
         jsr array.containment_byte
@@ -62,15 +62,15 @@ main	.proc
 
         ;..................................................... containment_word
         
-        load_address_zpWord0    arr2
-        load_imm_zpWord1        #03
+        .load_address_zpWord0    arr2
+        .load_imm_zpWord1        #03
         ldy #10
         jsr array.containment_word
         
         sta 1026    ;   or carry    a=1=true
 
-        load_address_zpWord0    arr2
-        load_imm_zpWord1        #15
+        .load_address_zpWord0    arr2
+        .load_imm_zpWord1        #15
         ldy #10
         jsr array.containment_word
         

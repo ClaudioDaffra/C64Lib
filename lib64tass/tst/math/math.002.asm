@@ -52,29 +52,29 @@ main	.proc
 
             ;  ---------------------------------------------- ge
             ;   1 >= 2
-            load_zpByte0    au8
-            load_zpByte1    bu8
+            .load_zpByte0    au8
+            .load_zpByte1    bu8
             jsr math.u8_cmp_ge
             jsr debug_carry
             sta 1024
  
             ;   1 >= 1
-            load_zpByte0    au8
-            load_zpByte1    cu8
+            .load_zpByte0    au8
+            .load_zpByte1    cu8
             jsr math.u8_cmp_ge
             jsr debug_carry
             sta 1025
             
             ;   -1 >= 2
-            load_zpByte0    as8
-            load_zpByte1    bs8
+            .load_zpByte0    as8
+            .load_zpByte1    bs8
             jsr math.s8_cmp_ge
             jsr debug_carry
             sta 1026
 
             ;   -1 >= -1
-            load_zpByte0    as8
-            load_zpByte1    cs8
+            .load_zpByte0    as8
+            .load_zpByte1    cs8
             jsr math.s8_cmp_ge
             jsr debug_carry
             sta 1027
@@ -82,29 +82,29 @@ main	.proc
             ;
 
             ;   1 <= 2
-            load_zpByte0    au8
-            load_zpByte1    bu8
+            .load_zpByte0    au8
+            .load_zpByte1    bu8
             jsr math.u8_cmp_le
             jsr debug_carry
             sta 1024+40
             
             ;   -1 <= 2
-            load_zpByte0    as8
-            load_zpByte1    bs8
+            .load_zpByte0    as8
+            .load_zpByte1    bs8
             jsr math.s8_cmp_le
             jsr debug_carry
             sta 1025+40
 
             ;   1 <= 1
-            load_zpByte0    au8
-            load_zpByte1    cu8
+            .load_zpByte0    au8
+            .load_zpByte1    cu8
             jsr math.u8_cmp_le
             jsr debug_carry
             sta 1026+40
             
             ;   -1 <= -1
-            load_zpByte0    as8
-            load_zpByte1    cs8
+            .load_zpByte0    as8
+            .load_zpByte1    cs8
             jsr math.s8_cmp_le
             jsr debug_carry
             sta 1027+40

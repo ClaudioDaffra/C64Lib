@@ -49,32 +49,32 @@ main	.proc
             ; 0001
             ; 1100
             
-            load_zpByte0    au8
-            load_zpByte1    bu8
+            .load_zpByte0    au8
+            .load_zpByte1    bu8
             jsr math.u8_cmp_eq
 
             jsr debug_carry
             sta 1024
 
             ;  .................................... compare s8  ?= 0
-            load_zpByte0    as8
-            load_zpByte1    bs8
+            .load_zpByte0    as8
+            .load_zpByte1    bs8
             jsr math.s8_cmp_eq
 
             jsr debug_carry
             sta 1025
 
             ;  .................................... compare u8  ?= 1
-            load_zpByte0    au8
-            load_zpByte1    cu8
+            .load_zpByte0    au8
+            .load_zpByte1    cu8
             jsr math.u8_cmp_eq
 
             jsr debug_carry
             sta 1026
 
             ;  .................................... compare s8  ?= 0
-            load_zpByte0    as8
-            load_zpByte1    cs8
+            .load_zpByte0    as8
+            .load_zpByte1    cs8
             jsr math.s8_cmp_eq
 
             jsr debug_carry
@@ -83,32 +83,32 @@ main	.proc
             ;
 
             ;  .................................... compare u8  > 0
-            load_zpByte0    au8
-            load_zpByte1    bu8
+            .load_zpByte0    au8
+            .load_zpByte1    bu8
             jsr math.u8_cmp_gt
 
             jsr debug_carry
             sta 1024+40
 
             ;  .................................... compare s8  > 0
-            load_zpByte0    as8
-            load_zpByte1    bs8
+            .load_zpByte0    as8
+            .load_zpByte1    bs8
             jsr math.s8_cmp_gt
 
             jsr debug_carry
             sta 1025+40
 
             ;  .................................... compare u8  > 0
-            load_zpByte0    au8
-            load_zpByte1    cu8
+            .load_zpByte0    au8
+            .load_zpByte1    cu8
             jsr math.u8_cmp_gt
 
             jsr debug_carry
             sta 1026+40
 
             ;  .................................... compare s8  > 1
-            load_zpByte0    as8
-            load_zpByte1    cs8
+            .load_zpByte0    as8
+            .load_zpByte1    cs8
             jsr math.s8_cmp_gt
 
             jsr debug_carry
@@ -117,32 +117,32 @@ main	.proc
             ;
 
             ;  .................................... compare u8  < 1
-            load_zpByte0    au8
-            load_zpByte1    bu8
+            .load_zpByte0    au8
+            .load_zpByte1    bu8
             jsr math.u8_cmp_lt
 
             jsr debug_carry
             sta 1024+80
 
             ;  .................................... compare s8  < 1
-            load_zpByte0    as8
-            load_zpByte1    bs8
+            .load_zpByte0    as8
+            .load_zpByte1    bs8
             jsr math.s8_cmp_lt
 
             jsr debug_carry
             sta 1025+80
 
             ;  .................................... compare u8  < 0
-            load_zpByte0    au8
-            load_zpByte1    cu8
+            .load_zpByte0    au8
+            .load_zpByte1    cu8
             jsr math.u8_cmp_lt
 
             jsr debug_carry
             sta 1026+80
 
             ;  .................................... compare s8  < 0
-            load_zpByte0    as8
-            load_zpByte1    cs8
+            .load_zpByte0    as8
+            .load_zpByte1    cs8
             jsr math.s8_cmp_lt
 
             jsr debug_carry

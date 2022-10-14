@@ -45,7 +45,7 @@ main	.proc
             sta screen.col
             jsr txt.set_cursor_pos_xy
             
-            load_address_ay s1
+            .load_address_ay s1
             jsr std.print_string
 
             lda #char.nl
@@ -56,8 +56,8 @@ main	.proc
             
             ;   copia 8 caratteri
             
-            load_address_zpWord0 1024
-            load_address_zpWord1 1064
+            .load_address_zpWord0 1024
+            .load_address_zpWord1 1064
             load_imm_ay #08
             jsr mem.copy
             

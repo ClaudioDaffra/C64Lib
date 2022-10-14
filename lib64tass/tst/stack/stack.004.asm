@@ -101,11 +101,11 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #1234
+            .load_imm_ay #1234
             
             jsr stack.push_word
             
-            jsr stack.mul_word_3  ;
+            jsr stack.mul_word_3    ;   1234*3=3072
             
             jsr stack.pop_word
             
@@ -119,7 +119,7 @@ main	.proc
             lda #2
             jsr stack.push_byte
             
-            jsr stack.mul_byte_40  ; 
+            jsr stack.mul_byte_40  ;    2*40=80
             
             jsr stack.pop_byte
             
@@ -133,7 +133,7 @@ main	.proc
             lda #2
             jsr stack.push_byte
             
-            jsr stack.mul_byte_50  ; 
+            jsr stack.mul_byte_50  ;    2*50=100 
             
             jsr stack.pop_byte
             
@@ -147,7 +147,7 @@ main	.proc
             lda #3
             jsr stack.push_byte
             
-            jsr stack.mul_byte_80  ; 
+            jsr stack.mul_byte_80  ;    3*80=240
             
             jsr stack.pop_byte
             
@@ -161,7 +161,7 @@ main	.proc
             lda #2
             jsr stack.push_byte
             
-            jsr stack.mul_byte_100  ; 
+            jsr stack.mul_byte_100  ;   2*100=200 
             
             jsr stack.pop_byte
             
@@ -172,11 +172,11 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #12
+            .load_imm_ay #12
             
             jsr stack.push_word
             
-            jsr stack.mul_word_640  ;
+            jsr stack.mul_word_640  ;   12*640=7680
             
             jsr stack.pop_word
             

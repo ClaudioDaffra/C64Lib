@@ -60,30 +60,30 @@ main	.proc
             ;   claudio claudio s1 s1   ->   0
             ;   daffra  claudio s2 s1   ->   1
             
-            load_address_zpWord0    s1
-            load_address_zpWord1    s2
+            .load_address_zpWord0    s1
+            .load_address_zpWord1    s2
             
             jsr string.compare
 
             sta zpa
             jsr debug_a 
 
-            if_string_eq    label_eq
-            if_string_gt    label_gt
-            if_string_lt    label_lt
+            .if_string_eq    label_eq
+            .if_string_gt    label_gt
+            .if_string_lt    label_lt
             
             jmp fine
 
 label_eq
-            load_address_zpWord0    eq
+            .load_address_zpWord0    eq
             jsr std.print_string
             jmp fine
 label_gt
-            load_address_zpWord0    gt
+            .load_address_zpWord0    gt
             jsr std.print_string
             jmp fine
 label_lt
-            load_address_zpWord0    lt
+            .load_address_zpWord0    lt
             jsr std.print_string
             jmp fine
             

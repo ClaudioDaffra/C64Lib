@@ -42,23 +42,23 @@ main	.proc
 
             ;   ......................................
             
-            load_imm_zpWord0    #1024
-            load_imm_xy         #256
+            .load_imm_zpWord0    #1024
+            .load_imm_xy         #256
             lda #char.a
             jsr mem.set_byte
 
             ;   ......................................
             
-            load_imm_zpWord0    #(1024+256)
-            load_imm_zpWord1    #0012
-            load_imm_ay         #0102
+            .load_imm_zpWord0    #(1024+256)
+            .load_imm_zpWord1    #0012
+            .load_imm_ay         #0102
             jsr mem.set_word
 
             ;   ......................................
             
-            load_imm_zpWord0    #(1024)
-            load_imm_zpWord1    #(1024+512)
-            load_imm_xy         #1
+            .load_imm_zpWord0    #(1024)
+            .load_imm_zpWord1    #(1024+512)
+            .load_imm_xy         #1
             jsr mem.copy_npage_from_to
             
             ;   ......................................

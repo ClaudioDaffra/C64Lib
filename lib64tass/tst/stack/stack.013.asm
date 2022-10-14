@@ -62,19 +62,19 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #26
+            .load_imm_ay #26
             jsr std.print_u16_dec
             
             lda #'/'
             jsr c64.CHROUT
                        
-            load_imm_ay #3
+            .load_imm_ay #3
             jsr std.print_u16_dec
             
-            load_imm_ay #3
+            .load_imm_ay #3
             jsr stack.push_word
 
-            load_imm_ay #26
+            .load_imm_ay #26
             jsr stack.push_word
 
             lda #'='
@@ -93,19 +93,19 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #-26
+            .load_imm_ay #-26
             jsr std.print_s16_dec
             
             lda #'/'
             jsr c64.CHROUT
                        
-            load_imm_ay #3
+            .load_imm_ay #3
             jsr std.print_s16_dec
             
-            load_imm_ay #3
+            .load_imm_ay #3
             jsr stack.push_word
 
-            load_imm_ay #-26
+            .load_imm_ay #-26
             jsr stack.push_word
 
             lda #'='

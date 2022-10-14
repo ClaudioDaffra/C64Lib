@@ -42,7 +42,7 @@ main	.proc
             
             ;   ...................................... txt.print_string
             
-            load_address_zpWord0 temp
+            .load_address_zpWord0 temp
             jsr txt.print_string
             
             lda #char.nl
@@ -93,7 +93,7 @@ main	.proc
             ;   ...................................... txt.print_u16_bin
             
             ;   11000000:00000000
-            load_imm_ay #49152
+            .load_imm_ay #49152
             jsr txt.print_u16_bin
             clc
             lda #char.nl
@@ -102,7 +102,7 @@ main	.proc
             ;   ...................................... txt. print_u16_hex
             
             ;   $c000
-            load_imm_ay #49152
+            .load_imm_ay #49152
             sec
             jsr txt. print_u16_hex
             
@@ -112,7 +112,7 @@ main	.proc
             ;   ...................................... txt. print_u16_dec0
             
             ;   08192
-            load_imm_ay #8192
+            .load_imm_ay #8192
             sec
             jsr txt. print_u16_dec0
             
@@ -122,7 +122,7 @@ main	.proc
             ;   ...................................... txt. print_u16_dec
             
             ;   8192
-            load_imm_ay #8192
+            .load_imm_ay #8192
             sec
             jsr txt. print_u16_dec
             
@@ -132,7 +132,7 @@ main	.proc
             ;   ...................................... txt. print_s16_dec
             
             ;   -8192
-            load_imm_ay #-8192
+            .load_imm_ay #-8192
             sec
             jsr txt. print_s16_dec
             

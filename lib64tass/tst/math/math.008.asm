@@ -41,7 +41,7 @@ main	.proc
 
             ;   square(27) = 729
             
-            load_imm_ay #27
+            .load_imm_ay #27
             
             jsr math.square
             
@@ -54,7 +54,7 @@ main	.proc
             
             ;   sqrt(81) = 9
             
-            load_imm_zpWord0 #81
+            .load_imm_zpWord0 #81
             
             jsr math.sqrt
             
@@ -65,7 +65,7 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
 
-            load_imm_ay #81
+            .load_imm_ay #81
             jsr stack.push_word
             
             jsr stack.sqrt

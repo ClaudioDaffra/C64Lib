@@ -50,13 +50,13 @@ main	.proc
             
             ;-------------------------------------------- abs word
  
-            load_imm_ay #-15
+            .load_imm_ay #-15
             jsr std.print_s16_dec
             
             lda #char.nl
             jsr c64.CHROUT
 
-            load_imm_ay #-15
+            .load_imm_ay #-15
             jsr math.abs_w
  
             jsr std.print_u16_dec

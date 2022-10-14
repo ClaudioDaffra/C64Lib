@@ -65,8 +65,8 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_zpWord0    #1234
-            load_imm_zpWord1    #5678
+            .load_imm_zpWord0    #1234
+            .load_imm_zpWord1    #5678
             jsr math.multiply_words
             
             ;   $BCE96A00

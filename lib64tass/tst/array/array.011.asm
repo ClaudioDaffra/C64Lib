@@ -67,11 +67,11 @@ main	.proc
 
         ;   program
 
-        load_address_ay             varf
+        .load_address_ay             varf
         jsr float.copy_mem_to_fac1
         
         ;                                   arraFloat[1] := fac
-        load_address_zpWord0    arrayFloat
+        .load_address_zpWord0    arrayFloat
         ldx #1
         
         ;
@@ -81,7 +81,7 @@ main	.proc
         ;
         
         
-        load_address_ay         arrayFloat
+        .load_address_ay         arrayFloat
         ldx #10                              ;   0-9 (10 elements)
         jsr float.print_array
         

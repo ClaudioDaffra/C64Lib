@@ -43,11 +43,11 @@ main	.proc
             lda #-128
             cmp #0
 
-            s8_cmp_le   le
-            s8_cmp_ge   ge
-            s8_cmp_lt   lt
-            s8_cmp_gt   gt
-            s8_cmp_eq   eq
+            .s8_cmp_le   le
+            .s8_cmp_ge   ge
+            .s8_cmp_lt   lt
+            .s8_cmp_gt   gt
+            .s8_cmp_eq   eq
             
             rts
 

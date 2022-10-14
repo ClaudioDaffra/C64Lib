@@ -62,11 +62,11 @@ main	.proc
         ;
         
         ;   ........................................ float.cast_fac1_to_u16
-        ;   123
+        ;   "123.456"   ->  123
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_ay str1
+        .load_address_ay str1
         jsr float.copy_from_string
 
         jsr float.cast_fac1_to_u16
@@ -74,11 +74,11 @@ main	.proc
         jsr std.print_u16_dec
         
         ;   ........................................ float.cast_fac1_to_s16
-        ;   456
+        ;   "-456.321"  -457
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_ay str2
+        .load_address_ay str2
         jsr float.copy_from_string
 
         jsr float.cast_fac1_to_s16
@@ -90,7 +90,7 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_ay str3
+        .load_address_ay str3
         jsr float.copy_from_string
 
         jsr float.cast_fac1_to_u8
@@ -98,11 +98,11 @@ main	.proc
         jsr std.print_u8_dec
         
         ;   ........................................ float.cast_fac1_to_s8
-        ;   "-23.456"
+        ;   "-23.456"   24
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_ay str4
+        .load_address_ay str4
         jsr float.copy_from_string
 
         jsr float.cast_fac1_to_s8

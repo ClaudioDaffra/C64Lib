@@ -99,7 +99,7 @@ program_entry_point
 
             stop    .proc
             
-                    load_address_ay timer.stop
+                    .load_address_ay timer.stop
                     sta timer.start.CB+1
                     sty timer.start.CB+2
                     
@@ -158,7 +158,7 @@ main	.proc
     
     print_timer .proc
     
-            load_imm_ay #$DD04
+            .load_imm_ay #$DD04
             jsr c64.peekw 
             jsr std.print_u16_dec
             
@@ -185,7 +185,7 @@ main	.proc
             jsr print_timer
             
             ;   callback
-            load_address_ay print_num
+            .load_address_ay print_num
             jsr timer.start
 
             jsr timer.stop

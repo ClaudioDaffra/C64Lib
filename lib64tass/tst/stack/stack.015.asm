@@ -77,9 +77,9 @@ main	.proc
             
             ;-------------------------------------------------
  
-            load_imm_ay #13
+            .load_imm_ay #13
             jsr stack.push_word
-            load_imm_ay #14
+            .load_imm_ay #14
             jsr stack.push_word
             
             jsr stack.equal_w
@@ -113,13 +113,13 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #-12
+            .load_imm_ay #-12
             jsr std.print_s16_dec
 
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #-12
+            .load_imm_ay #-12
             jsr stack.push_word
  
             jsr stack.abs_w       ;   ->  word tou word

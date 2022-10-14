@@ -59,38 +59,38 @@ main	.proc
 
         lda #1
         sta graph.color_number  ;   color number 1
-        graph_imm_x #0
-        graph_imm_y #0
+        .graph_imm_x #0
+        .graph_imm_y #0
         jsr graph.pixel
         
         lda #2
         sta graph.color_number  ;   color number 1
-        graph_imm_x #1
-        graph_imm_y #1
+        .graph_imm_x #1
+        .graph_imm_y #1
         jsr graph.pixel
 
         lda #3
         sta graph.color_number  ;   color number 2
-        graph_imm_x #3
-        graph_imm_y #3
+        .graph_imm_x #3
+        .graph_imm_y #3
         jsr graph.pixel
         
         lda #1
         sta graph.color_number  ;   color number 0
-        graph_imm_x #5
-        graph_imm_y #5
+        .graph_imm_x #5
+        .graph_imm_y #5
         jsr graph.pixel
 
         lda #1
         sta graph.color_number  ;   color number 3
-        graph_imm_x #7
-        graph_imm_y #7
+        .graph_imm_x #7
+        .graph_imm_y #7
         jsr graph.pixel
 
         lda #2
         sta graph.color_number  ;   color number 1
-        graph_imm_x #159
-        graph_imm_y #199
+        .graph_imm_x #159
+        .graph_imm_y #199
         jsr graph.pixel
         
 rts

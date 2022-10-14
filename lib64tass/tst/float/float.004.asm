@@ -77,10 +77,10 @@ main	.proc
         lda ubyte
         jsr float.conv_u8_to_fac1
     
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.copy_fac1_to_mem
 
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.print
 
         ;   ........................................    sbyte -123
@@ -91,10 +91,10 @@ main	.proc
         lda sbyte
         jsr float.conv_s8_to_fac1
     
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.copy_fac1_to_mem
 
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.print
 
         ;   ........................................    uword 53632
@@ -102,13 +102,13 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
         
-        load_var_ay     uword 
+        .load_var_ay     uword 
         jsr float.conv_u16_to_fac1
     
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.copy_fac1_to_mem
 
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.print
 
         ;   ........................................    word -24534
@@ -116,13 +116,13 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
         
-        load_var_ay     sword 
+        .load_var_ay     sword 
         jsr float.conv_s16_to_fac1
     
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.copy_fac1_to_mem
 
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.print
 
         ;   ........................................    push pop mem
@@ -130,13 +130,13 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.push_mem
 
-        load_address_ay fvar_pop
+        .load_address_ay fvar_pop
         jsr float.pop_mem
         
-        load_address_ay fvar_pop
+        .load_address_ay fvar_pop
         jsr float.print
         
         ;

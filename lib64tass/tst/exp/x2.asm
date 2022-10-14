@@ -48,9 +48,12 @@ program .proc
 main	.proc
 
     start	.proc
-    load_address_ay         varf
-    jsr float.print
-    rts
+    
+        .load_address_ay         varf
+        
+        jsr float.print
+        
+        rts
     
     .pend
 

@@ -62,14 +62,14 @@ main	.proc
 
         ;   program
  
-        load_address_ay         arrayFloat
+        .load_address_ay         arrayFloat
         ldx #3                              ;   ( 4Th element  -7.8)
         jsr float.calc_index
 
-        load_address_ay         varf
+        .load_address_ay         varf
         jsr float.copy_fac1_to_mem
 
-        load_address_ay         varf
+        .load_address_ay         varf
         jsr float.print
 
         lda #char.nl
@@ -77,7 +77,7 @@ main	.proc
         
         ;
  
-        load_address_ay         arrayFloat
+        .load_address_ay         arrayFloat
         ldx #10                              ;   0-9 (10 elements)
         jsr float.print_array
         

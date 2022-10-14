@@ -57,7 +57,7 @@ main	.proc
 
     start	.proc
 
-        load_address_ay callback
+        .load_address_ay callback
         clc
         jsr irq.set_raster
         

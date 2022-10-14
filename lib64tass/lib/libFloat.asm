@@ -520,7 +520,16 @@ float .proc
         rts
     .pend
 
+    swap     .proc
+        jsr float.push_fac1
+        jsr float.push_fac2
+        jsr float.pop_fac1
+        jsr float.pop_fac2
+        rts
+    .pend
+
     sub     .proc
+        jsr  swap
         jsr  basic.float.sub
         rts
     .pend
@@ -528,14 +537,6 @@ float .proc
     mul     .proc
         lda $61
         jsr basic.float.mul
-        rts
-    .pend
-
-    swap     .proc
-        jsr float.push_fac1
-        jsr float.push_fac2
-        jsr float.pop_fac1
-        jsr float.pop_fac2
         rts
     .pend
 

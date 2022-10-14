@@ -37,8 +37,8 @@ main	.proc
             ;             21,64            
             ; 1234 / 57 = 21,37
             
-            load_imm_zpWord0    #1234
-            load_imm_ay         #57
+            .load_imm_zpWord0    #1234
+            .load_imm_ay         #57
             jsr math.div_u16
             
             ; zpWord0               ; risultato zpWord0 
@@ -46,12 +46,12 @@ main	.proc
             lda #'*'
             jsr c64.CHROUT
             ; zpWord3               ; divisore  zpWord3
-            load_var_ay zpWord3
+            .load_var_ay zpWord3
             jsr std.print_u16_dec
             ; zpWord1               ;   resto   zpWord1
             lda #'+'
             jsr c64.CHROUT
-            load_var_ay zpWord1
+            .load_var_ay zpWord1
             jsr std.print_u16_dec
             
             ;--------------------------------------------       unsigned 16 division / 0   
@@ -61,8 +61,8 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_zpWord0    #65534
-            load_imm_ay         #2
+            .load_imm_zpWord0    #65534
+            .load_imm_ay         #2
             
             jsr math.div_u16
             bvs divisionByZero
@@ -72,7 +72,7 @@ main	.proc
             lda #'.'
             jsr c64.CHROUT
             ; zpWord1 remaider
-            load_var_ay zpWord1
+            .load_var_ay zpWord1
             
             jsr std.print_u16_dec
 
@@ -83,24 +83,24 @@ main	.proc
 
             ;  -25356/34    -745,26     (-745*32+26)
            
-            load_imm_zpWord0    #-25356
-            load_imm_ay         #34
+            .load_imm_zpWord0    #-25356
+            .load_imm_ay         #34
             ; ay result
             jsr math.div_s16
             bvs divisionByZero
 
-            load_var_ay zpWord0
+            .load_var_ay zpWord0
             jsr std.print_s16_dec   ;   ay ->   risultato divisione
 
             lda #'*'
             jsr c64.CHROUT
             ; zpWord3               ; divisore  zpWord3
-            load_var_ay zpWord3
+            .load_var_ay zpWord3
             jsr std.print_s16_dec
             
             lda #'+'
             jsr c64.CHROUT
-            load_var_ay zpWord1
+            .load_var_ay zpWord1
             jsr std.print_u16_dec   ;resto;
 
             

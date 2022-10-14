@@ -121,14 +121,14 @@ loop
     
         ;   ----------------------------------------------------------- sort_u16 OK
 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u16
 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         lda #12
         jsr array.sort_u16
 
-        load_address_zpWord0 arr1
+        .load_address_zpWord0 arr1
         jsr print_array_u16 
 
         ;   ----------------------------------------------------------- sort_s16 OK
@@ -136,14 +136,14 @@ loop
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_zpWord0 arr2
+        .load_address_zpWord0 arr2
         jsr print_array_s16
 
-        load_address_zpWord0 arr2
+        .load_address_zpWord0 arr2
         lda #12
         jsr array.sort_s16
 
-        load_address_zpWord0 arr2
+        .load_address_zpWord0 arr2
         jsr print_array_s16
         
         rts

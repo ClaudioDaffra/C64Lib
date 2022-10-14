@@ -60,11 +60,11 @@ main	.proc
         ;............................................................   horizontal_line 
 
         ;   ay ->   zpWord0
-        graph_imm_x #1
+        .graph_imm_x #1
         ;   y  ->    zpy
-        graph_imm_y #1
+        .graph_imm_y #1
         ;  ay   ->  ay 
-        load_imm_ay #20 ;   length
+        .load_imm_ay #20 ;   length
 
         jsr graph.horizontal_line
 
@@ -72,11 +72,11 @@ main	.proc
         sta graph.color_number  ;   color number 0,1,2,3
         
         ;   ay ->   zpWord0
-        graph_imm_x #1
+        .graph_imm_x #1
         ;   y  ->    zpy
-        graph_imm_y #1
+        .graph_imm_y #1
         ;  ay   ->  ay 
-        load_imm_ay #20 ;   length
+        .load_imm_ay #20 ;   length
         
         jsr graph.vertical_line
 

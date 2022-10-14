@@ -81,7 +81,7 @@ main	.proc
 
             ;--------------------------------------------------------------- 
  
-            load_imm_ay #$0400
+            .load_imm_ay #$0400
             jsr stack.push_word
             
             lda #char.a

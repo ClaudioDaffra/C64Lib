@@ -61,22 +61,22 @@ main	.proc
     
     start	.proc
 
-        load_address_ay str
+        .load_address_ay str
         jsr float.copy_from_string  ;   load string in fac1
         
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.copy_fac1_to_mem  ;   copy_fac1_to_mem
 
-        load_address_ay fvar2       ;   print string
+        .load_address_ay fvar2       ;   print string
         jsr float.print
 
 
-        load_address_zpWord0 stringa        ;   var out
-        load_address_ay      fvar2          ;   var in
+        .load_address_zpWord0 stringa        ;   var out
+        .load_address_ay      fvar2          ;   var in
 
         jsr float.to_string
 
-        load_address_ay stringa
+        .load_address_ay stringa
         jsr std.print_string
         
         ;
@@ -84,7 +84,7 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_ay stringa
+        .load_address_ay stringa
         jsr string.length
         
         jsr std.print_u8_dec

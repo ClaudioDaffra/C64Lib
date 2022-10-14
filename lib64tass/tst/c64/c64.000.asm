@@ -31,10 +31,10 @@ program_entry_point	; assembly code starts here
 
 main	.proc
 
-    u8_type    a,1
-    s8_type    b,2
-    u16_type   a,1
-    s16_type   b,2
+    .u8_type    a,1
+    .s8_type    b,2
+    .u16_type   a,1
+    .s16_type   b,2
     
     var1    .word %1010101010101010
     
@@ -43,17 +43,17 @@ main	.proc
             ;   program
 
             ; -------------------------------------  ror2_ub
-            load_var_ay var1
+            .load_var_ay var1
             sec
             jsr std.print_u16_bin
             
             lda #char.nl
             jsr c64.CHROUT
 
-            load_address_ay var1
+            .load_address_ay var1
             jsr mem.ror2_ub
             
-            load_var_ay var1
+            .load_var_ay var1
             sec
             jsr std.print_u16_bin
  
@@ -62,17 +62,17 @@ main	.proc
             
             ; -------------------------------------  rol2_ub
  
-            load_var_ay var1
+            .load_var_ay var1
             sec
             jsr std.print_u16_bin
             
             lda #char.nl
             jsr c64.CHROUT
 
-            load_address_ay var1
+            .load_address_ay var1
             jsr mem.rol2_ub
             
-            load_var_ay var1
+            .load_var_ay var1
             sec
             jsr std.print_u16_bin
  

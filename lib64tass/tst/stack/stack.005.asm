@@ -75,7 +75,7 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #123
+            .load_imm_ay #123
             
             jsr stack.push_word
             
@@ -90,7 +90,7 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #984
+            .load_imm_ay #984
             
             jsr stack.push_word
             
@@ -105,7 +105,7 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
 
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr stack.push_word
 
             lda #3
@@ -122,10 +122,10 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
 
-            load_imm_ay #984
+            .load_imm_ay #984
             jsr stack.push_word
 
-            load_imm_ay #3
+            .load_imm_ay #3
             jsr stack.push_word
             
             jsr stack.shift_right_num_u16 ;   984 >> 3(u16) = 123

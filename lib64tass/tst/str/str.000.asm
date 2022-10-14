@@ -53,7 +53,7 @@ main	.proc
 
             ; ---------------------------- length
 
-            load_address_ay s1
+            .load_address_ay s1
             jsr string.length
 
             jsr std.print_u8_dec
@@ -63,13 +63,13 @@ main	.proc
             
             ; ---------------------------- left
             
-            load_address_zpWord0    s1
-            load_address_zpWord1    s2
+            .load_address_zpWord0    s1
+            .load_address_zpWord1    s2
             
             lda #5
             jsr string.left
             
-            load_address_ay s2
+            .load_address_ay s2
             jsr std.print_string
 
             ; ---------------------------- right
@@ -77,13 +77,13 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_address_zpWord0    s1
-            load_address_zpWord1    s2
+            .load_address_zpWord0    s1
+            .load_address_zpWord1    s2
             
             lda #3
             jsr string.right
             
-            load_address_ay s2
+            .load_address_ay s2
             jsr std.print_string
 
             ; ---------------------------- mid
@@ -91,14 +91,14 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
 
-            load_address_zpWord0    s1
-            load_address_zpWord1    s2
+            .load_address_zpWord0    s1
+            .load_address_zpWord1    s2
 
             lda #2      ;   partenza
             ldy #3      ;   lunghezza
             jsr string.mid
 
-            load_address_ay s2
+            .load_address_ay s2
             jsr std.print_string
             
             ; ---------------------------- find char
@@ -106,7 +106,7 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_address_zpWord0    s1
+            .load_address_zpWord0    s1
             lda #'x'
             jsr string.find_char
             
@@ -122,14 +122,14 @@ main	.proc
             
             ;   zpWord0 := zpWord1
             ;
-            load_address_zpWord0    s2
-            load_address_zpWord1    s1
+            .load_address_zpWord0    s2
+            .load_address_zpWord1    s1
             jsr string.copy
             
             sta zpa
             jsr debug_a
             
-            load_address_zpWord0    s2
+            .load_address_zpWord0    s2
             jsr std.print_string
             
 

@@ -36,7 +36,7 @@ basic   .proc
     
     ;
     
-    xfloat   .proc
+    float   .proc
 
         ;   $b86a = Entry if FAC2 already loaded. 
         ;   The accumulator must load FAC1 exponent ($61) 

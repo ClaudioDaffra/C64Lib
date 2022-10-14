@@ -64,27 +64,27 @@ main	.proc
     
     start	.proc
 
-        load_address_ay str1
+        .load_address_ay str1
         jsr float.copy_from_string  ;  
 
-        load_address_ay f1
+        .load_address_ay f1
         jsr float.copy_fac1_to_mem
 
-        load_address_ay str2
+        .load_address_ay str2
         jsr float.copy_from_string  ;  
 
-        load_address_ay f2
+        .load_address_ay f2
         jsr float.copy_fac1_to_mem
         
         ;
         
-        load_address_ay f1
+        .load_address_ay f1
         jsr float.print
         
         lda #char.nl
         jsr c64.CHROUT
 
-        load_address_ay f2
+        .load_address_ay f2
         jsr float.print
         
         lda #char.nl
@@ -92,7 +92,7 @@ main	.proc
 
         ;
 
-        load_address_ay f1
+        .load_address_ay f1
         jsr basic.copy_mem_to_fac1
 
         ;
@@ -103,13 +103,13 @@ main	.proc
         
         ;
         
-        load_address_ay r
+        .load_address_ay r
         jsr float.copy_fac1_to_mem
         
         lda #char.nl
         jsr c64.CHROUT
         
-        load_address_ay r
+        .load_address_ay r
         jsr float.print
 
         ;

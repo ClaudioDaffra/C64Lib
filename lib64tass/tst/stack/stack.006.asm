@@ -97,14 +97,14 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #123
+            .load_imm_ay #123
             sec
             jsr std.print_u16_bin
 
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr stack.push_word
             
             jsr stack.neg_w
@@ -119,14 +119,14 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #123
+            .load_imm_ay #123
             sec
             jsr std.print_u16_bin
 
             lda #char.nl
             jsr c64.CHROUT
             
-            load_imm_ay #123
+            .load_imm_ay #123
             jsr stack.push_word
             
             jsr stack.inv_w

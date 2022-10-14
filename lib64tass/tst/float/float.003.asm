@@ -60,17 +60,17 @@ main	.proc
     
     start	.proc
 
-        load_address_ay str
+        .load_address_ay str
         jsr float.copy_from_string  ;   load string in fac1
  
         jsr float.push_fac1
         
         jsr float.pop_fac1
         
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.copy_fac1_to_mem
         
-        load_address_ay fvar2
+        .load_address_ay fvar2
         jsr float.print
         
         ;

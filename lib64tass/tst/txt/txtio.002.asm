@@ -57,7 +57,7 @@ main	.proc
             ; .................................... print unsigned word
             
             ; $61c7
-            load_imm_ay #25031
+            .load_imm_ay #25031
             sec
             jsr std.print_u16_hex
 
@@ -65,7 +65,7 @@ main	.proc
             jsr c64.CHROUT
             
             ; 110000111000111
-            load_imm_ay #25031
+            .load_imm_ay #25031
             sec
             jsr std.print_u16_bin
 
@@ -73,7 +73,7 @@ main	.proc
             jsr c64.CHROUT
             
             ;25031
-            load_var_ay u16
+            .load_var_ay u16
             jsr std.print_u16_dec
 
             lda #char.nl

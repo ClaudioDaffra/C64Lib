@@ -52,7 +52,7 @@ main	.proc
 
             ; ......................................... upper lower
             
-            load_address_zpWord0    s1
+            .load_address_zpWord0    s1
             jsr std.print_string
             
             lda #char.nl
@@ -60,19 +60,19 @@ main	.proc
             lda #char.nl
             jsr c64.CHROUT
             
-            load_address_zpWord0    s1
+            .load_address_zpWord0    s1
             jsr string.upper
             
-            load_address_zpWord0    s1
+            .load_address_zpWord0    s1
             jsr std.print_string
             
             lda #char.nl
             jsr c64.CHROUT
             
-            load_address_zpWord0    s1
+            .load_address_zpWord0    s1
             jsr string.lower
             
-            load_address_zpWord0    s1
+            .load_address_zpWord0    s1
             jsr std.print_string
             
             lda #char.nl
@@ -80,24 +80,24 @@ main	.proc
 
             ; ......................................... pattern matching
 
-            load_address_zpWord0    s1
+            .load_address_zpWord0    s1
             jsr std.print_string
             lda #char.nl
             jsr c64.CHROUT
             
-            load_address_zpWord0    px
+            .load_address_zpWord0    px
             jsr std.print_string
             lda #char.nl
             jsr c64.CHROUT
             
-            load_address_zpWord0   s1
-            load_address_zpWord1   px
+            .load_address_zpWord0   s1
+            .load_address_zpWord1   px
             jsr string.pattern_match
             
             sta zpa
             
-            if_true   write1
-            if_false  write0
+            .if_true   write1
+            .if_false  write0
 end
 
             jsr debug_a

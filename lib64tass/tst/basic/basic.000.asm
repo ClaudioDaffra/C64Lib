@@ -60,7 +60,7 @@ main    .proc
 
         ;   begin
         
-        load_address_ay cmd
+        .load_address_ay cmd
         jsr basic.txtptr.set
 
         jsr basic.get_char      ;   jsr GETCHAR   ;   get char

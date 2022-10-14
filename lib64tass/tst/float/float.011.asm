@@ -51,13 +51,13 @@ main	.proc
     
     start	.proc
 
-        load_address_ay str1
+        .load_address_ay str1
         jsr float.copy_from_string
 
-        load_address_ay f1
+        .load_address_ay f1
         jsr float.copy_fac1_to_mem
  
-        load_address_ay f1
+        .load_address_ay f1
         jsr float.print
         
         lda #char.nl
@@ -65,7 +65,7 @@ main	.proc
 
         ;
         
-        load_address_ay f1
+        .load_address_ay f1
         jsr float.copy_mem_to_fac1
 
         
@@ -82,12 +82,12 @@ main	.proc
         
         ;   ..........................
         
-        load_address_ay f1
+        .load_address_ay f1
         jsr float.copy_fac1_to_mem
 
         ;
         
-        load_address_ay f1
+        .load_address_ay f1
         jsr float.print
         
         lda #char.nl
