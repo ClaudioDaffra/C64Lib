@@ -1,8 +1,18 @@
 
-;   compile with :
+; #################################################
 ;
-;   64tass.exe -D c64.bitmap_addr=$E000 -D c64.screen_addr=$0001 -C -a -B -i %1 -o %1.prg
+;   compile with 
 ;
+;   64tass.exe -D c64.bitmap_addr=$bank3 -D c64.screen_addr=$C000 -C -a -B -i %1 -o %1.prg
+;
+;
+;   64tass.exe 
+;               -D c64.bitmap_addr=$bank3 
+;               -D c64.screen_addr=$C000 
+;               -C -a -B -i %1 
+;               -o %1.prg
+;
+; #################################################
 
 .cpu  '6502'
 .enc  'none'
@@ -27,65 +37,65 @@ program_entry_point	; assembly code starts here
 .include "../../lib/libC64.asm"
 
 ;--------------------------------------------------------------- main
-
-
+ 
 main	.proc
 
     start	.proc
 
-        lda #2
-        sta 2024
+                ;**********
+                ;   320x200
+                ;**********
+                
+                jsr graph.bank3.hires_bitmap_E000_screen_CC00_ON
 
-        rts
-;
-;
-;
+                lda #color.yellow           ;   graph high color    (0,1)
+                sta graph.foreground_color
+                
+                lda #color.red
+                sta graph.background_color
 
-        jsr graph.high.on       ;   320x200
+                jsr graph.high.set_color    
+
+                jsr graph.bank3.bitmap_clear
+                
+                lda #1
+                sta graph.color_number      ;   color number 0,1
+        
+                jsr draw
+
+                ;jsr graph.bank3.bitmap_E000_screen_CC00_OFF
  
-        jsr graph.clear         ;   clear
+                rts
 
-        lda #color.white       ;   graph high color    (0,1)
-        sta graph.foreground_color
-        
-        lda #color.black
-        sta graph.background_color
+                ; ################################# sub draw
 
-        jsr graph.high.set_color
+                        draw    .proc
+                        
+                            ;   ay ->   zpWord0
+                            .graph_imm_x #1
+                            ;   y  ->    zpy
+                            .graph_imm_y #1
+                            ;  ay   ->  ay 
+                            .load_imm_ay #20 ;   length
 
-        ;............................................................   graph.color_number  
-    
-        lda #1
-        sta graph.color_number  ;   color number 0,1
+                            jsr graph.horizontal_line
 
-        ;............................................................   horizontal_line 
+                            ;   ay ->   zpWord0
+                            .graph_imm_x #1
+                            ;   y  ->    zpy
+                            .graph_imm_y #1
+                            ;  ay   ->  ay 
+                            .load_imm_ay   #20
+                            ;lda #20 ;   length
+                            
+                            jsr graph.vertical_line
 
-        ;   ay ->   zpWord0
-        .graph_imm_x #1
-        ;   y  ->    zpy
-        .graph_imm_y #1
-        ;  ay   ->  ay 
-        .load_imm_ay #20 ;   length
-
-        jsr graph.horizontal_line
-
-
-        ;   ay ->   zpWord0
-        .graph_imm_x #1
-        ;   y  ->    zpy
-        .graph_imm_y #1
-        ;  ay   ->  ay 
-        .load_imm_ay   #20
-        ;lda #20 ;   length
-        
-        jsr graph.vertical_line
-
-rts
-        jsr graph.high.off
- 
-
-        rts
-        
+                            rts
+                        
+                        .pend
+                
+                ; #################################
+                
     .pend
 
 .pend

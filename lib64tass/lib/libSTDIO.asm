@@ -117,7 +117,7 @@ txt .proc
             ; ext mode
             
                 jsr c64.check_text_mode_extended
-                if_false end
+                .if_false end
                 
                 jsr set_char_with_color_number
 
@@ -152,7 +152,7 @@ txt .proc
             inc  ptr+2
     +
     ptr
-            lda  $0400		; modified
+            lda  $0400      ; modified
             rts
     .pend
 
@@ -227,9 +227,9 @@ txt .proc
             sta  ptr+1
             bcc  +
             inc  ptr+2
-        +		
+        +
             pla
-        ptr		
+        ptr
             sta  $d800		; modified
         ;end
             rts
@@ -283,7 +283,6 @@ txt .proc
     clear_screen .proc
      
             lda  #' '
-            ldy  #250
             jsr  clear_screen_chars
             
             rts

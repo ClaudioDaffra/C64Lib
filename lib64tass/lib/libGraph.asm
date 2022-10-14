@@ -207,19 +207,27 @@ graph .proc
                 ;..................     set point
 
                     .if c64.bitmap_addr == $E000
-                    ;jsr _graphIntRomDisable
+                    jsr c64.mem.to_ram_AE
                     .endif
                     
                     lda (P),y           ;   get row with point in it
                     ora tbl_orbit,x     ;   isolate and set the point
                     sta (P),y           ;   write back to _graphBitMap
 
+                    .if c64.bitmap_addr == $E000
+                    jsr c64.mem.to_rom_AE
+                    .endif
+                    
                     jmp past            ;   skip the erase-point section
 
                 ;..................     unset point
 
                     erase:              ;   handled same way as setting a point
 
+                    .if c64.bitmap_addr == $E000
+                    jsr c64.mem.to_ram_AE
+                    .endif
+                    
                     lda (P),y           ;   just with opposite bit-mask
                     and tbl_andbit,x    ;   isolate and erase the point
                     sta (P),y           ;   write back to _graphBitMap
@@ -227,7 +235,7 @@ graph .proc
                     past:
                     
                     .if c64.bitmap_addr == $E000
-                    ;jsr _graphIntRomEnable
+                    jsr c64.mem.to_rom_AE
                     .endif
                 
                 rts
@@ -237,16 +245,12 @@ graph .proc
         plotPointMC
 
                     .if c64.bitmap_addr == $E000
-                    ;jsr _graphIntRomDisable
+                    jsr c64.mem.to_ram_AE
                     .endif
                     
                     lda (P),y                   ;erase couple of bit 
                     and tblMC_andbitbit,x  
                     sta (P),y                 
-
-                    .if c64.bitmap_addr == $E000
-                    ;jsr _graphIntRomEnable
-                    .endif
                     
                     pha                         ; salva risultato
 
@@ -262,7 +266,7 @@ graph .proc
                     pla
 
                     .if c64.bitmap_addr == $E000
-                    ;jsr _graphIntRomEnable
+                    jsr c64.mem.to_rom_AE
                     .endif
                     
                     rts
@@ -288,14 +292,10 @@ graph .proc
 
                 _plotPointMC_end:
 
-                    .if c64.bitmap_addr == $E000
-                    ;jsr _graphIntRomDisable
-                    .endif
-
                     sta (P),y 
 
                     .if c64.bitmap_addr == $E000
-                    ;jsr _graphIntRomEnable
+                    jsr c64.mem.to_rom_AE
                     .endif
 
                     rts
@@ -525,6 +525,181 @@ table_begin
 
 
     table_end
+
+        ;
+        ;
+        ;
+
+        ;***********
+        ;   BANK
+        ;***********
+        
+        ; .................................................... bank3
+
+        bank3    .proc
+
+            ; ....................................................
+            ;            
+            ;   { Bitmap(+2000) , Screen(+0C00) , Bank(C000) }
+            ;
+            
+            bitmap_E000_screen_CC00_graf_ON
+
+                            ;           76543210
+                lda #$20    ;   0x20  0b00100000       32
+                ora $d011   ;   bit[5] 1 enable bitmap mode   
+                sta $d011   ;   Screen control register #1. Bits
+
+                            ;             76543210    
+                lda #$38    ;   0x38    0b00111000     56
+                sta $d018   ;   Memory setup register. Bits ( BITMAP MODE )
+                            ;   [7654] 0011 - screen memory 011, 3 $0C00-$0FFF.
+                            ;   [3]210 1000 - %1xx, 4 $2000-$3FFF, 8192-16383.
+
+                            ;             76543210
+                lda #$fc    ;   0xfc    0b11111100 252
+                and $dd00   ;   765432[10] %00, 0 Bank #3, $C000-$FFFF, 49152-65535.
+                sta $dd00   ;   Bits #0-#1 VIC bank. Values
+                
+                rts
+
+            ; .................................................... hires on
+
+            hires_bitmap_E000_screen_CC00_ON
+
+                            ;             76543210
+                lda #$ef    ;   0xef    0b11101111
+                and $d016   ;   Bit #4 0 = Multicolor mode off.
+                sta $d016   ; Screen control register #2. Bits    
+                
+                jsr bitmap_E000_screen_CC00_graf_ON
+                
+                rts
+
+            ; ....................................................  hires_on
+
+            multi_bitmap_E000_screen_CC00_ON
+
+                            ;             76543210
+                lda #$10    ;   0xef    0b00010000
+                ora $d016   ;   Bit #4 1 = Multicolor mode on.
+                sta $d016   ; Screen control register #2. Bits    
+                
+                jsr bitmap_E000_screen_CC00_graf_ON
+                
+                rts
+
+            ; ....................................................
+            ;            
+            ;   { Bitmap(+2000) , Screen(+0400) , Bank(0000) }
+            ;
+            
+            bitmap_E000_screen_CC00_graf_OFF
+             
+                            ;           76543210
+                lda #$df    ; 0xdf    0b11011111  223
+                and $d011   ; bit[5] 0 enable text mode
+                sta $d011   ; Screen control register #1. Bits
+
+                            ;           76543210    
+                lda #$15    ; 0x15    0b00010101    21
+                sta $d018   ; Memory setup register. Bits ( TEXT MODE )
+                            ; pointer to character memory
+                            ; [321]0 0101 - %010 , 2 $1000-$17FF, 4096-6143.
+                            ; Pointer to screen memory
+                            ; [7654] 0001 - %0001, 1 $0400-$07FF, 1024-2047.
+                             
+                            ;             76543210
+                lda #$03    ;   0x03    0b00000011 3
+                ora $dd00   ;   765432[10] %11, 3 Bank #0, $0000-$3FFF, 0-16383.
+                sta $dd00   ;   Bits #0-#1 VIC bank. Values
+
+                rts
+                
+            ; ....................................................  graph default
+            ;            
+            ;   text mode , hires off , multicolor off
+            ;
+
+            bitmap_E000_screen_CC00_OFF
+
+                            ;             76543210
+                lda #$ef    ;   0xef    0b11101111
+                and $d016   ;   Bit #4 0 = Multicolor mode off..
+                sta $d016   ; Screen control register #2. Bits    
+                
+                jsr bitmap_E000_screen_CC00_graf_OFF
+                
+                rts
+
+            ;   utility 
+            
+            high    .proc
+                on  .proc
+                    jsr hires_bitmap_E000_screen_CC00_ON
+                    rts
+                .pend
+                off .proc
+                    jsr bitmap_E000_screen_CC00_OFF
+                    rts
+                .pend
+            .pend
+            low    .proc
+                on  .proc
+                    jsr multi_bitmap_E000_screen_CC00_ON
+                    rts
+                .pend
+                off .proc
+                    jsr bitmap_E000_screen_CC00_OFF
+                    rts
+                .pend
+            .pend
+            
+            ; .................................................... bitmap clear
+
+            bitmap_clear            ;   ( bank4 $c000 + $2000 )
+
+                    lda     #$e0    ;   E0  load pointer bitmap $bank3        
+                    sta     $fa         
+                    lda     #$00    ;   00
+                    sta     $f9
+                    ldx     #$20
+                    tay
+
+            -      ;   clear bitmap    *($f9/$fa) = 0  [00e0]
+             
+                    sta     ($f9),y
+                    iny
+                    bne     -
+                    inc     $fa
+                    dex
+                    bne     -
+             
+                    rts
+        .pend
+
+        ;   ....................................................   graph default
+        ;
+        ;   set bank 0 , bitmap 2000 , screen 0400
+        ;
+        
+        bank0   .proc
+        
+            bitmap_2000_screen_0400_graf_ON    .proc
+                jsr bitmap_E000_screen_CC00_OFF
+                rts
+            .pend
+            
+        .pend
+    
+        default .proc
+                jsr bitmap_E000_screen_CC00_OFF
+                rts
+        .pend
+        
+        ;
+        ;
+        ;
 
 .pend
 

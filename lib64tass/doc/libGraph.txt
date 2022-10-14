@@ -120,7 +120,63 @@
         ;               zpy     Y
       
         vertical_line    .proc
+    
+        ;
         
+        ;............................................................ default
+        ;
+        ;   set graph default +$2000 +$0400 bank0 ( 11 )
+        ;
+        
+        default
+        
+###########
+        graph   E000
+###########
+
+            ; .................................................... hires on 320x200
+            ;   
+            ;   set graph-> { Bitmap(+2000) , Screen(+0C00) , Bank(C000) }
+            
+            graph.bank3.hires_bitmap_E000_screen_CC00_ON
+
+            ; .................................................... multi on 160x200
+            ;   
+            ;   set graph-> { Bitmap(+2000) , Screen(+0C00) , Bank(C000) }
+            
+            graph.bank3.multi_bitmap_E000_screen_CC00_ON
+
+            ; .................................................... graph default
+            ;   
+            ;   set graph-> { Bitmap(+2000) , Screen(+0400) , Bank(0000) }
+            ;
+            
+            graph.bank3.bitmap_E000_screen_CC00_graf_OFF
+
+            ; .................................................... bitmap clear
+            ;   
+            ;   clear bitamp at E000
+            ;
+            
+            graph.bank3.bitmap_clear
+            
+            ; .................................................... utility
+            ; 
+            
+            high.on
+            high.off
+            
+            low.on
+            low.off
+
+            ;   ....................................................   graph default
+            ;
+            ;   set bank 0 , bitmap 2000 , screen 0400
+            ;
+
+            graph.bank.bitmap_2000_screen_0400_graf_ON
+
+            
 ;;;
 ;;
 ;

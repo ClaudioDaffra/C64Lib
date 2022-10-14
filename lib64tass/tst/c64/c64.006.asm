@@ -48,7 +48,7 @@ main	.proc
             
             ; IMP !
             ;
-            ;   ... TO USE bitmap txt,  other location
+            ;   ... TO USE bitmap  txt,  other location
             ;   ... TO USE routine txt,  for screen offset 0
             ;
             ;   64tass -D bitmap_addr = $E000 -D screen_addr = 0

@@ -736,26 +736,38 @@ c64 .proc
         ;   address 0001    bits 76543[210]
         
         mem .proc
+        
             default .proc
                 lda #%00000111
                 and $01
                 sta $01
                 rts
             .pend
-            to_rom_AE .proc
+            
+            to_rom_AE .proc     ;   kernal rom enable
+
                 jsr default
                 lda	#$02        ;   0000:00[10] %x10:  RAM visible at $A000-$BFFF; 
                 ora	$01         ;                      KERNAL ROM visible at $E000-$FFFF.
                 sta $01
+                
+                jsr c64.timerA.start
+                
                 rts
             .pend
-            to_ram_AE .proc
+            
+            to_ram_AE .proc     ;   kernal rom disable
+            
+                jsr c64.timerA.stop
+            
                 jsr default
                 lda	#$fd        ;   1111:11[01]	%x01: RAM visible at $A000-$BFFF,
                 and	$01         ;                                and $E000-$FFFF.
                 sta $01
+                
                 rts
             .pend
+            
         .pend
 
         ;******
