@@ -267,16 +267,16 @@ txt .proc
     ; ........................................... clear_screen_chars
     
     clear_screen_chars    .proc
-     
-            ldy  #250
+            ldy  #0
         -        
-            sta  c64.screen_addr+250*0-1,y
-            sta  c64.screen_addr+250*1-1,y
-            sta  c64.screen_addr+250*2-1,y
-            sta  c64.screen_addr+250*3-1,y
-            dey
+            sta  c64.screen_addr+250*0,y
+            sta  c64.screen_addr+250*1,y
+            sta  c64.screen_addr+250*2,y
+            sta  c64.screen_addr+250*3,y
+            iny
+            cpy #250
             bne  -
-            
+
             rts
 
     .pend

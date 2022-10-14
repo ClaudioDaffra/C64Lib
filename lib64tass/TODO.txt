@@ -2,5 +2,5 @@
 
 TODO
 
-    change  DWord0      $fb$fc$fd$fe
-    to      DWord1
+    check new screen clear  ( fix bug location )
+    
