@@ -124,25 +124,31 @@ rts
 
                 draw    .proc
                 
+                    lda #1
+                    sta graph.pixel.checkXY
+                
                     ;   ay ->   zpWord0
                     .graph_imm_x #1
                     ;   y  ->    zpy
                     .graph_imm_y #1
                     ;  ay   ->  ay 
-                    .load_imm_ay #20 ;   length
+                    .load_imm_ay #200 ;   length
 
                     jsr graph.horizontal_line
 
                     ;   ay ->   zpWord0
                     .graph_imm_x #1
                     ;   y  ->    zpy
-                    .graph_imm_y #100
+                    .graph_imm_y #1
                     ;  ay   ->  ay 
-                    .load_imm_ay #255
+                    .load_imm_ay #20
                     ;lda #20 ;   length
                     
                     jsr graph.vertical_line
 
+                    lda #0
+                    sta graph.pixel.checkXY
+                    
                     rts
                 
                 .pend

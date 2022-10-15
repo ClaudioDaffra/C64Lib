@@ -176,7 +176,13 @@
 
             graph.bank.bitmap_2000_screen_0400_graf_ON
 
+            ;   ....................................................   flag 0/1
+            ;
             
+            graph.pixel.checkXY .btye   0/1
+            
+            ;
+
 ;;;
 ;;
 ;

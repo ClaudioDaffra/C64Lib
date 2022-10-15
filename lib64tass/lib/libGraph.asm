@@ -151,7 +151,10 @@ graph .proc
                 sta X+1
 
         pixel_xy
-        
+
+                lda checkXY ;   1 check 0 skip
+                beq start
+                
             ;   check range 0-320 X,    0-200 Y.         
             checkY
                 lda Y
@@ -159,14 +162,23 @@ graph .proc
                 blt start
                 bge overflow
             checkX
-
-                ;   ...
+                 ;16-bit number comparison...
+                 lda X+1        ;MSB of 1st number
+                 cmp #$01       ;MSB of 2nd number
+                 bcc islower    ;X < Y
+                 bne overflow   ;X > Y
+                 lda X          ;LSB of 1st number
+                 cmp #$40       ;LSB of 2nd number
+                 bcc islower    ;X < Y
+                 beq overflow   ;X = Y
+                 bne overflow   ;X > Y
+             islower
 
                 jmp start
             overflow
                 .sev
                 rts
-                
+
         start
         
                 ;   calc Y-cell, divide by 8	y/8 is y-cell table index
@@ -316,7 +328,7 @@ graph .proc
                     .endif
 
                     rts
-
+        checkXY .byte   0
         .pend
 
         ;............................................................ horizontal_line
@@ -350,6 +362,18 @@ graph .proc
         
             .u16_add_1   coordX
             
+            ;16-bit number comparison...
+             lda coordX+1   ;MSB of 1st number
+             cmp #$01       ;MSB of 2nd number
+             bcc islower    ;X < Y
+             bne exit       ;X > Y
+             lda coordX     ;LSB of 1st number
+             cmp #$40       ;LSB of 2nd number
+             bcc islower    ;X < Y
+             beq exit       ;X = Y
+             bne exit       ;X > Y
+         islower
+            
             ;   zpWord0
             .copy_u16    zpWord0 , coordX
             ;   zpy
@@ -365,7 +389,7 @@ graph .proc
         + 
             bcc loop  ;   lower
             bne loop  ;   higher
-
+        exit
             rts
             
         length      .word   0
