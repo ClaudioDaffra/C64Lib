@@ -50,8 +50,9 @@ main	.proc
         
         jsr graph.low.set_color
 
-        jsr graph.clear
-
+        load_imm_zpWord0    #$2000
+        jsr graph.bitmap_clear
+        
         ;............................................................   graph.color_number  
     
         lda #1

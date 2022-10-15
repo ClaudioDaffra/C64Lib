@@ -26,7 +26,7 @@
 
                 jsr graph.high.on           ;   activate graphics hires
          
-                jsr graph.clear             ;   clear bitmap
+                jsr graph.bitmap_clear             ;   clear bitmap
 
                 lda #color.yellow           ;   graph high color    (0,1)
                 sta graph.foreground_color
@@ -139,20 +139,28 @@
             ;   set graph-> { Bitmap(+2000) , Screen(+0C00) , Bank(C000) }
             
             graph.bank3.hires_bitmap_E000_screen_CC00_ON
-
+            
+            graph.bank3.high.on
+            
             ; .................................................... multi on 160x200
             ;   
             ;   set graph-> { Bitmap(+2000) , Screen(+0C00) , Bank(C000) }
             
             graph.bank3.multi_bitmap_E000_screen_CC00_ON
-
+            
+            graph.bank3.low.on
+            
             ; .................................................... graph default
             ;   
             ;   set graph-> { Bitmap(+2000) , Screen(+0400) , Bank(0000) }
             ;
             
             graph.bank3.bitmap_E000_screen_CC00_graf_OFF
+            
+            graph.bank3.hight.off
 
+            graph.bank3.low.off
+            
             ; .................................................... bitmap clear
             ;   
             ;   clear bitamp at E000
@@ -163,23 +171,34 @@
             ; .................................................... utility
             ; 
             
-            high.on
-            high.off
+            graph.high.on
+            graph.high.off
             
-            low.on
-            low.off
+            graph.low.on
+            graph.low.off
 
             ;   ....................................................   graph default
             ;
             ;   set bank 0 , bitmap 2000 , screen 0400
             ;
 
-            graph.bank.bitmap_2000_screen_0400_graf_ON
+            graph.bank1.bitmap_2000_screen_0400_graf_ON
 
+            graph.bank0
+            graph.default
+            
             ;   ....................................................   flag 0/1
             ;
             
-            graph.pixel.checkXY .btye   0/1
+            graph.pixel.checkXY .byte   0/1
+
+            ;   ....................................................   flag 0/1
+            ;
+            ;   input   :
+            ;
+            ;               zpWord0 (address bitmap)
+
+            graph.bitmap_clear
             
             ;
 

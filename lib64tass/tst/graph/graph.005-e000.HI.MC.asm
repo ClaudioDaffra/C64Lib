@@ -3,12 +3,12 @@
 ;
 ;   compile with 
 ;
-;   64tass.exe -D c64.bitmap_addr=$bank3 -D c64.screen_addr=$C000 -C -a -B -i %1 -o %1.prg
+;   64tass.exe -D c64.bitmap_addr=$E000 -D c64.screen_addr=$CC00 -C -a -B -i %1 -o %1.prg
 ;
 ;
 ;   64tass.exe 
-;               -D c64.bitmap_addr=$bank3 
-;               -D c64.screen_addr=$C000 
+;               -D c64.bitmap_addr=$E000 
+;               -D c64.screen_addr=$CC00 
 ;               -C -a -B -i %1 
 ;               -o %1.prg
 ;
@@ -59,7 +59,8 @@ main	.proc
 
                 jsr graph.high.set_color    
 
-                jsr graph.bank3.bitmap_clear
+                load_imm_zpWord0 #$E000
+                jsr graph.bitmap_clear
                 
                 ; ################################# draw
 
@@ -103,7 +104,8 @@ xxx
                 
                 jsr graph.low.set_color
 
-                jsr graph.bank3.bitmap_clear
+                load_imm_zpWord0 #$E000
+                jsr graph.bitmap_clear
 
                 ; ################################# draw
                 

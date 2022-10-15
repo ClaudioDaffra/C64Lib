@@ -108,25 +108,6 @@ graph .proc
              .pend
              
         .pend
-        
-        ; -------------------------------------------------     clear
-        
-        clear .proc
-
-            lda  #<c64.bitmap_addr
-            sta  zpWord0
-            
-            lda  #>c64.bitmap_addr
-            sta  zpWord0+1
-            
-            ldy  #<8000
-            ldx  #>8000
-            lda  #0
-            jsr  mem.set_byte
-            
-            rts            
-
-        .pend
 
         ; -------------------------------------------------     pixel
         
@@ -439,7 +420,27 @@ graph .proc
         length   .byte   0
         coordX   .word   0
         .pend
-    
+
+        ; .................................................... bitmap clear
+
+        bitmap_clear   .proc         
+                                ;   ( bank3 00 $c000 + $2000 ) -> $E000
+                                ;   ( bank0 11 $0000 + $2000 ) -> $2000
+                ldx     #$20
+                ldy     #$00
+
+        -      ;   clear bitmap 
+         
+                sta     (zpWord0),y
+                iny
+                bne     -
+                inc     zpWord0+1
+                dex
+                bne     -
+         
+                rts
+        .pend
+            
         ;
         ;
         ;
@@ -607,6 +608,9 @@ table_begin
                 and $dd00   ;   765432[10] %00, 0 Bank #3, $C000-$FFFF, 49152-65535.
                 sta $dd00   ;   Bits #0-#1 VIC bank. Values
                 
+                lda # ( $CC00 / 256 ) 
+                sta c64.SCRPTR
+                
                 rts
 
             ; .................................................... hires on
@@ -660,6 +664,9 @@ table_begin
                 ora $dd00   ;   765432[10] %11, 3 Bank #0, $0000-$3FFF, 0-16383.
                 sta $dd00   ;   Bits #0-#1 VIC bank. Values
 
+                lda # ( $0400 / 256 ) 
+                sta c64.SCRPTR
+                
                 rts
                 
             ; ....................................................  graph default
@@ -700,28 +707,7 @@ table_begin
                     rts
                 .pend
             .pend
-            
-            ; .................................................... bitmap clear
 
-            bitmap_clear            ;   ( bank4 $c000 + $2000 )
-
-                    lda     #$e0    ;   E0  load pointer bitmap $bank3        
-                    sta     $fa         
-                    lda     #$00    ;   00
-                    sta     $f9
-                    ldx     #$20
-                    tay
-
-            -      ;   clear bitmap    *($f9/$fa) = 0  [00e0]
-             
-                    sta     ($f9),y
-                    iny
-                    bne     -
-                    inc     $fa
-                    dex
-                    bne     -
-             
-                    rts
         .pend
 
         ;   ....................................................   graph default

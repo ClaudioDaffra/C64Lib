@@ -3,12 +3,12 @@
 ;
 ;   compile with 
 ;
-;   64tass.exe -D c64.bitmap_addr=$bank3 -D c64.screen_addr=$C000 -C -a -B -i %1 -o %1.prg
+;   64tass.exe -D c64.bitmap_addr=$E000 -D c64.screen_addr=$CC00 -C -a -B -i %1 -o %1.prg
 ;
 ;
 ;   64tass.exe 
-;               -D c64.bitmap_addr=$bank3 
-;               -D c64.screen_addr=$C000 
+;               -D c64.bitmap_addr=$E000 
+;               -D c64.screen_addr=$CC00 
 ;               -C -a -B -i %1 
 ;               -o %1.prg
 ;

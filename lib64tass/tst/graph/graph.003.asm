@@ -30,8 +30,9 @@ main	.proc
     start	.proc
 
         jsr graph.high.on       ;   320x200
- 
-        jsr graph.clear         ;   clear
+        
+        load_imm_zpWord0    #$2000
+        jsr graph.bitmap_clear
 
         lda #color.white       ;   graph high color    (0,1)
         sta graph.foreground_color
