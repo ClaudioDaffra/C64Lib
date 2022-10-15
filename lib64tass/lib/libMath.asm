@@ -182,7 +182,7 @@ math    .proc
         lda  zpWord0
         cmp  zpWord1
         bne  s16_cmp_eq_else
-        ldy  zpWord0+1        
+        ldy  zpWord0+1
         cpy  zpWord1+1
         bne  s16_cmp_eq_else
         sec

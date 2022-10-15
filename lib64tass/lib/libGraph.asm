@@ -149,8 +149,25 @@ graph .proc
                 lda X+1
                 rol
                 sta X+1
-                
+
         pixel_xy
+        
+            ;   check range 0-320 X,    0-200 Y.         
+            checkY
+                lda Y
+                cmp #200
+                blt start
+                bge overflow
+            checkX
+
+                ;   ...
+
+                jmp start
+            overflow
+                .sev
+                rts
+                
+        start
         
                 ;   calc Y-cell, divide by 8	y/8 is y-cell table index
 
@@ -327,17 +344,15 @@ graph .proc
             
             ;   coordy
             ldy zpy
-            sty coordY
+            ;sty coordY
 
         loop
         
             .u16_add_1   coordX
             
+            ;   zpWord0
             .copy_u16    zpWord0 , coordX
-
-            ldy coordY
-            sty zpy
-
+            ;   zpy
             jsr graph.pixel ;   (zpy ,zpWord0)
 
             .u16_add_1   length
@@ -350,13 +365,11 @@ graph .proc
         + 
             bcc loop  ;   lower
             bne loop  ;   higher
-            ;beq end   ;   same
 
             rts
             
         length      .word   0
         lengthMax   .word   0
-        coordY      .byte   0
         coordX      .word   0
         
         .pend
@@ -364,33 +377,42 @@ graph .proc
         ;............................................................ vertical_line
         ;
         ;   input   :
-        ;               a       height
+        ;
         ;               zpWord0 X
         ;               zpy     Y
-      
+        ;               a       height
+        ;
+        
         vertical_line    .proc
 
-            sta coordY
+            sta  length
             
             .copy_u16 coordX,zpWord0
 
-            lda coordY
+            lda  length
             
             beq  +
         -
+            ; zpWord0
+            ; zpy
             .copy_u16 zpWord0,coordX
             
-            ldy coordY
+            ldy zpy
+            iny
             sty zpy
             
             jsr  graph.pixel
 
-            dec  coordY
+            ldy zpy             ; check <200
+            cpy #200
+            bge +
+
+            dec length
             
             bne  -
         +
             rts
-        coordY   .byte   0
+        length   .byte   0
         coordX   .word   0
         .pend
     
