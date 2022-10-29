@@ -340,8 +340,23 @@ float4 .proc
     ;   output  :   fac1
     ;           |   mem
     
-    copy_mem_to_fac1   .proc
-    copy_fac1_to_mem   .proc
+    copy_mem_to_fac1 
+    
+    copy_fac1_to_mem 
+
+    ;   .................................................. calc index
+    ;
+    ;   input   :
+    ;               ay  array   address
+    ;                x  length
+    ;
+    ;   output  :
+    ;
+    ;               zpWord0  address+(x*sizeof(float))
+    ;               fac1
+    ;               zpWord2
+    
+    calc_index 
 
 .pend
 

@@ -1178,6 +1178,49 @@ float4 .proc
             
             rts
     .pend
+
+    ;   ................................... calc index
+    ;
+    ;   input   :
+    ;               ay  array   address
+    ;                x  length
+    ;
+    ;   output  :
+    ;
+    ;               zpWord0  address+(x*sizeof(float))
+    ;               fac1
+    ;               zpWord2
+    
+    calc_index  .proc
+    
+            sta zpa
+            sty zpy
+            sta zpWord0
+            sty zpWord0+1
+            stx zpx
+    
+            txa             ;   mul by 4
+            asl
+            asl
+            sta zpa         ;   index*size(5)
+            
+            clc             ;   zpWord0+index
+            lda zpWord0
+            adc zpa
+            sta zpWord0
+            clc
+            lda zpWord0+1
+            adc #0
+            sta zpWord0+1
+            
+            lda zpWord0
+            ldy zpWord0+1
+            
+            jsr float4.copy_mem_to_fac1
+
+            rts
+    .pend
+    
     
 .pend
 

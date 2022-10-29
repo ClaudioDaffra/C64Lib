@@ -40,10 +40,16 @@ program .proc
 
 
     f1      .byte   $8b , $9a , $40 , $17   ; -1234.0028
+    
     f2      .byte   $82 , $00 , $01 , $a3   ;     2.0001
-
-
- 
+    
+    af4     .byte   $82 , $00 , $01 , $a3   ;     2.0001
+            .byte   $8b , $9a , $40 , $17   ;     -1234.0028
+            .byte   $8b , $1a , $4e , $98   ;     1234.46
+            .byte   $82 , $00 , $01 , $a3   ;     2.0001
+            .byte   $8b , $9a , $40 , $17   ;     -1234.0028
+            .byte   $8b , $1a , $4e , $98   ;     1234.46
+            
 ;--------------------------------------------------------------- main
         
 main	.proc
@@ -84,6 +90,15 @@ main	.proc
         lda #char.nl
         jsr c64.CHROUT
         
+
+        ;
+        
+        .load_address_ay af4
+        ldx #2
+        jsr float4.calc_index
+        
+        .load_address_ay zpWord2
+        jsr float.print
         
         rts
 
