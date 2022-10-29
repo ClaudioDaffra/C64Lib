@@ -395,7 +395,7 @@ float .proc
     ;   .......................................................... conv
     ;
     ;   convert ubyte in A          to float at address A/Y   
-    ;   convert  byte in A          to float at address A/Y   
+    ;   convert sbyte in A          to float at address A/Y   
     ;   convert uword in zpWord0    to float at address A/Y
     ;   convert sword in zpWord0    to float at address A/Y
     ;
@@ -1120,7 +1120,68 @@ float .proc
     .pend
     
 .pend
- 
+
+;**********
+;   FLOAT4
+;**********
+
+    
+float4 .proc
+
+    ;   .................................................. load/store  float4
+    ;
+    ;   input   :   ay      :   float4 address
+    ;   output  :   fac1
+    ;           |   mem
+    
+    copy_mem_to_fac1   .proc
+
+            sta zpWord0
+            sty zpWord0+1
+            ldy #0
+            ldx #0
+           -
+            lda (zpWord0),y
+            sta zpWord2,x
+            iny
+            inx
+            cpy #4
+            bne -
+            lda #0
+            sta zpWord2+4
+
+            .load_address_ay zpWord2
+            jsr float.copy_mem_to_fac1
+            
+            rts
+    .pend
+
+    copy_fac1_to_mem   .proc
+
+            sta zpWord0
+            sty zpWord0+1
+            
+            .load_address_ay zpWord2
+            jsr float.copy_fac1_to_mem
+
+            ldy #0
+            ldx #0
+           -
+
+            lda zpWord2,x
+            sta (zpWord0),y
+            
+            iny
+            inx
+            cpy #4
+            bne -
+            
+            rts
+    .pend
+    
+.pend
+
+
 ;;;
 ;;
 ;

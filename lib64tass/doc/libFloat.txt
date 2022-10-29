@@ -327,7 +327,24 @@
     set_array_from_fac1
     
     ;
+
+*******************
+Float 4
+*******************
+
+float4 .proc
+
+    ;   .................................................. load/store  float4
+    ;
+    ;   input   :   ay      :   float4 address
+    ;   output  :   fac1
+    ;           |   mem
     
+    copy_mem_to_fac1   .proc
+    copy_fac1_to_mem   .proc
+
+.pend
+
 *******************
 Floating Point Math
 *******************
