@@ -108,7 +108,39 @@
     ;              (Carry) 1 , 0 
     ;   
 
-    containment_word    
+    containment_word
+
+;***********
+;   index
+;***********
+
+    .comment
+
+        dim1  :=       (x) * size
+        dim2  :=  ((   (x) * maxy ) + y )* size
+        dim3  :=  (((( (z) * maxz ) * maxy ) + y ) * maxz +x ) * size
+
+    .endc
+
+    ;  ............................................. calc index array
+    ;
+    ;  input   :   x y  maxy size
+    ;  output  :   zpWord0
+    ;
+
+    array must be < 256 length
+
+    array.short.dim1.size1      ;   byte
+    array.short.dim1.size2      ;   word
+    array.short.dim1.size4      ;   float4
+    array.short.dim1.size5      ;   float5
+    array.short.dim1.sizex      ;   struct
+    
+    array.short.dim2.size1      ;   byte
+    array.short.dim2.size2      ;   word
+    array.short.dim2.size4      ;   float4
+    array.short.dim2.size5      ;   float5
+    array.short.dim2.sizex      ;   struct
     
 ;;;
 ;;

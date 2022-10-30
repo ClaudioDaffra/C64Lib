@@ -25,11 +25,7 @@ program_entry_point
 .include "../../lib/libC64.asm"
 
 ;--------------------------------------------------------------- sub
-    varf
-    ;.byte  $85, $17, $33, $33, $33
-    
-    .byte $85, $cf ,$4 ,$cc ,$cd
-    ; float prog8.code.StArrayElement@7b50df34
+
 
 ;--------------------------------------------------------------- program
 
@@ -43,15 +39,35 @@ program .proc
 
 ;--------------------------------------------------------------- main
 
- 
+              ;76543210
+    v1  .byte %01011010
+    v2  .byte %10100101
+    
+    extract .macro 
+        .rept (\2)-\1
+        ror
+        .endrept
+
+   .endm
+
+    
     
 main	.proc
 
     start	.proc
     
-        .load_address_ay         varf
-        
-        jsr float.print
+              ; 765.432.10
+              ;%010.110.10 
+    v1  .byte %01011010
+
+        lda v1  ;   432
+
+        ;lsr
+        ;lsr
+        .extract 2,4
+        ;and #%00000111
+
+        jsr txt.print_u8_bin
         
         rts
     

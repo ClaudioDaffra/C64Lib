@@ -1639,7 +1639,32 @@ math    .proc
         rts
     .pend
 
- 
+    ;--------------------------------------------------------------- zpWord0 := zpWord0 + zpa
+
+    zpWord0_add_zpa   .proc
+        clc
+        lda zpWord0
+        adc zpa
+        sta zpWord0
+        lda zpWord0+1
+        adc #0
+        sta zpWord0+1
+        rts
+    .pend
+
+    ;--------------------------------------------------------------- zpWord2 := zpWord0 + zpWord1
+
+    zpWord0_add_zpWord1 .proc
+        clc
+        lda zpWord0
+        adc zpWord1
+        sta zpWord2
+        lda zpWord0+1
+        adc zpWord1+1
+        sta zpWord2+1
+        rts
+    .pend
+
 .pend   
 
 

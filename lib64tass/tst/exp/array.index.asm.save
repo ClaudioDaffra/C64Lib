@@ -1,0 +1,263 @@
+
+
+.cpu  '6502'
+.enc  'none'
+
+; ---- basic program with sys call ----
+
+; [start address]
+
+* = $0801
+    ;           [line]
+    .word  (+), 2022
+    ;      [sys]                                     [rem]     [desc]
+    .null  $9e, format(' %d ', program_entry_point), $3a, $8f, ' prg'
++   .word  0
+
+;--------------------------------------------------------------- program_entry_point
+
+program_entry_point
+
+    jmp program
+
+;--------------------------------------------------------------- lib
+
+.include "../../lib/libC64.asm"
+
+;--------------------------------------------------------------- sub
+
+zpWord0_add_byte   .proc
+    clc
+    lda zpWord0
+    adc zpa
+    sta zpWord0
+    lda zpWord0+1
+    adc #0
+    sta zpWord0+1
+    rts
+.pend
+
+.comment
+arraY .proc
+
+    ; output    :   zpWord0(calc index)
+    short   .proc
+        ;   input : x
+        index1  .proc
+            size1   .proc
+                txa     ;   mul by 1
+                jmp index1_ret
+            .pend
+            size2   .proc
+                txa     ;   mul by 2
+                asl
+                jmp  index1_Ret
+            .pend
+            size4   .proc
+                txa     ;   mul by 4
+                asl
+                asl
+                sta zpa
+                jmp  index1_Ret
+            .pend
+            size5   .proc
+                sta zpa
+                txa ;   mul by 5
+                asl
+                asl
+                clc
+                adc zpa
+                jmp  index1_Ret
+            .pend
+    index1_ret
+        sta zpa
+        jsr zpWord0_add_byte
+        rts        
+        .pend
+
+    .pend
+    
+    long    .proc
+    .pend
+
+.pend
+.endc
+
+;  ............................................. calc index array
+;
+;  input   :   x y z   maxx , maxy , maxz , size
+;  output  :   zpWord
+;
+
+aarray  .proc
+    short  .proc
+        index1  .proc
+            size1   .proc
+            txa     ;   mul by 1
+            jmp short_ret
+        .pend
+        size2   .proc
+            txa     ;   mul by 2
+            asl
+            jmp  short_ret
+        .pend
+        size4   .proc
+            txa     ;   mul by 4
+            asl
+            asl
+            sta zpa
+            jmp  short_ret
+        .pend
+        size5   .proc
+            txa ;   mul by 5
+            sta zpa
+            asl
+            asl
+            clc
+            adc zpa
+            jmp  short_ret
+        .pend
+        sizex   .proc
+            txa ;   mul by size
+            ldy size
+            jsr math.mul_u8
+            jmp  short_ret
+        .pend
+    .pend
+    short_ret
+        sta zpa
+        jsr zpWord0_add_byte
+        rts        
+    maxx    .byte   0
+    maxy    .byte   0
+    maxz    .byte   0
+    size    .byte   0
+    .pend
+    
+
+.pend
+
+    
+;--------------------------------------------------------------- program
+
+program .proc
+
+       jsr c64.start    ;   -> call main.start
+       
+       rts
+       
+.pend
+
+;--------------------------------------------------------------- main
+
+    xy       .byte   1
+    arrb     .fill   256;
+    xx       .byte   1
+;
+
+main	.proc
+
+    start	.proc
+
+        ;   ................................................... aarray.short.index1.size1
+        
+        load_address_ay         arrb
+        jsr txt.print_u16_dec
+
+        load_address_zpWord0    arrb
+        ldx #4
+        jsr aarray.short.index1.size1
+        
+        lda #' '
+        jsr c64.CHROUT
+        
+        load_var_ay zpWord0
+        jsr txt.print_u16_dec
+
+        lda #char.nl
+        jsr c64.CHROUT
+
+        ;   ................................................... aarray.short.index1.size2
+        
+        load_address_ay         arrb
+        jsr txt.print_u16_dec
+
+        load_address_zpWord0    arrb
+        ldx #4
+        jsr aarray.short.index1.size2
+        
+        lda #' '
+        jsr c64.CHROUT
+        
+        load_var_ay zpWord0
+        jsr txt.print_u16_dec
+
+        lda #char.nl
+        jsr c64.CHROUT
+
+        ;   ................................................... aarray.short.index1.size4
+        
+        load_address_ay         arrb
+        jsr txt.print_u16_dec
+
+        load_address_zpWord0    arrb
+        ldx #4
+        jsr aarray.short.index1.size4
+        
+        lda #' '
+        jsr c64.CHROUT
+        
+        load_var_ay zpWord0
+        jsr txt.print_u16_dec
+
+        lda #char.nl
+        jsr c64.CHROUT
+
+        ;   ................................................... aarray.short.index1.size5
+        
+        load_address_ay         arrb
+        jsr txt.print_u16_dec
+
+        load_address_zpWord0    arrb
+        ldx #4
+        jsr aarray.short.index1.size5
+        
+        lda #' '
+        jsr c64.CHROUT
+        
+        load_var_ay zpWord0
+        jsr txt.print_u16_dec
+
+        lda #char.nl
+        jsr c64.CHROUT
+        
+        ;   ................................................... aarray.short.index1.sizex
+        
+        load_address_ay         arrb
+        jsr txt.print_u16_dec
+
+        lda #7
+        sta aarray.short.size
+        load_address_zpWord0    arrb
+        ldx #4
+        jsr aarray.short.index1.sizex
+        
+        lda #' '
+        jsr c64.CHROUT
+        
+        load_var_ay zpWord0
+        jsr txt.print_u16_dec
+
+        lda #char.nl
+        jsr c64.CHROUT
+        
+        rts
+    
+    .pend
+
+.pend
+
+;;;
+;;
+;
+

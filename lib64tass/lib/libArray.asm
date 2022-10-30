@@ -539,6 +539,112 @@ array   .proc
         rts
     .pend
 
+    ;  ............................................. calc index array
+    ;
+    ;  input   :   x y  mazy size
+    ;  output  :   zpWord0
+    ;
+
+    short  .proc
+        
+        mul1    .proc
+            jmp array_short_ret
+        .pend
+        mul2    .proc
+            asl
+            sta zpa
+            jmp  array_short_ret
+        .pend
+        mul4    .proc
+            asl
+            asl
+            sta zpa
+            jmp array_short_ret
+        .pend
+        mul5    .proc
+            sta zpa
+            asl
+            asl
+            clc
+            adc zpa
+            sta zpa
+            jmp  array_short_ret
+        .pend
+        
+        ;   ..................................................... dim1
+        dim1  .proc
+                size1   .proc
+                    txa     ;   mul by 1
+                    jmp mul1
+                .pend
+                size2   .proc
+                    txa     ;   mul by 2
+                    jmp mul2
+                .pend
+                size4   .proc
+                    txa     ;   mul by 4
+                    jmp mul4
+                .pend
+                size5   .proc
+                    txa ;   mul by 5
+                    jmp mul5
+                .pend
+                sizex   .proc
+                    txa ;   mul by size a*y -> a
+                    ldy size
+                    jsr math.mul_u8
+                    jmp  array_short_ret
+                .pend
+        .pend
+        ;   ..................................................... dim2
+        dim2  .proc
+                cndx2   .proc
+                    sta dim2_maxy
+                    stx dim2_x
+                    sty dim2_y
+                    
+                    lda dim2_x
+                    ldy dim2_maxy 
+
+                    jsr math.mul_u8
+                    clc
+                    adc dim2_y
+                    rts
+                .pend
+                size1   .proc
+                    jsr cndx2
+                    jmp array_short_ret
+                .pend
+                size2   .proc
+                    jsr cndx2
+                    jmp mul2
+                .pend
+                size4   .proc
+                    jsr cndx2
+                    jmp mul4
+                .pend
+                size5   .proc
+                    jsr cndx2
+                    jmp mul5
+                .pend
+                sizex   .proc
+                    jsr cndx2   ; a
+                    ldy size    ; y
+                    jsr math.mul_u8 ; a*y
+                    jmp array_short_ret
+                .pend
+                dim2_x      .byte 0
+                dim2_y      .byte 0
+                dim2_maxy   .byte 0
+        .pend
+                
+        array_short_ret
+            sta zpa
+            jsr math.zpWord0_add_zpa
+            rts
+    
+    size    .byte   0
+    .pend
 
 .pend
 
