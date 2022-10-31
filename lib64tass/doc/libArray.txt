@@ -145,7 +145,7 @@
     array SMALL must be < 65535 length && index < 256
 
         array.small.dim1.size       ;   byte,word,float4,float5,struct
-
+        array.small.dim2.size       ;   byte,word,float4,float5,struct
         
 ;;;
 ;;

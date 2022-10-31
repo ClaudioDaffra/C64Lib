@@ -648,6 +648,7 @@ array   .proc
             rts
     
     size    .byte   0
+
     .pend
 
     ; ......................................................... small array > 256 index < 256
@@ -657,25 +658,74 @@ array   .proc
     ;  input   :   x size
     ;  output  :   zpWord0
     ;
-    
+
     small   .proc
 
-        dim1  .proc
-                ; a*y=ay
-                txa
-                ldy size
-                jsr math.mul_bytes_into_u16
-                sta zpWord1+0
-                sty zpWord1+1
-                jsr math.zpWord0_add_zpWord1
-                lda zpWord2+0
-                sta zpWord0+0
-                lda zpWord2+1
-                sta zpWord0+1
-                rts
+        dim1  .proc     ;  (x) * size
+            
+            txa
+            ldy size
+            jsr math.mul_bytes_into_u16
+            sta zpWord1+0
+            sty zpWord1+1
+            jsr math.zpWord0_add_zpWord1
+            lda zpWord2+0
+            sta zpWord0+0
+            lda zpWord2+1
+            sta zpWord0+1
+            rts
         .pend
-        
-     size    .byte   0
+
+        dim2  .proc ;   ((   (x) * maxy ) + y )* size
+
+            stx x
+            sty y
+            
+            lda zpWord0+0
+            sta addr+0
+            lda zpWord0+1
+            sta addr+1
+
+            txa         ;   zpWord0 = (x) * maxy )
+            ldy maxy
+
+            jsr math.mul_bytes_into_u16
+            sta zpWord0+0
+            sty zpWord0+1
+
+            clc         ;   zpWord0 += y
+            lda zpWord0+0
+            adc y
+            sta zpWord0+0
+            lda zpWord0+1
+            adc #0
+            sta zpWord0+1
+
+            lda size+0  ;  a:y := size
+            ldy #0
+
+            jsr math.multiply_words
+            
+            ;   LSB 0123
+            ;
+            ;   0   zpWord0+0   low
+            ;   1   zpWord0+1
+            ;   2   zpWord0+2   high
+            ;   3   zpWord0+3
+            
+            lda zpDWord1+0
+            sta zpWord0+0
+            lda zpDWord1+1
+            sta zpWord0+1
+
+            rts
+        .pend
+    
+    addr    .word   0
+    size    .byte   0
+    maxy    .byte   0
+    y       .byte   0
+    x       .byte   0
     .pend
     
 .pend

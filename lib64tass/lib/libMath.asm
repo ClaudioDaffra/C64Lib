@@ -359,7 +359,7 @@ math    .proc
     ;
     ;      input    :
     ;   
-    ;           A/Y             = first 16-bit number, 
+    ;           A/Y             = first  16-bit number, 
     ;           zpWord0 in ZP   = second 16-bit number
     ;
     ;      output   :
@@ -368,7 +368,13 @@ math    .proc
     ;
     ;     result    :     zpDWord1  :=  zpWord0 * zpWord1
     ;
-
+    ;   LSB 0123
+    ;
+    ;   0   zpWord0+0   low
+    ;   1   zpWord0+1
+    ;   2   zpWord0+2   high
+    ;   3   zpWord0+3
+            
     multiply_words    .proc
 
     result = zpDWord1
