@@ -128,20 +128,25 @@
     ;  output  :   zpWord0
     ;
 
-    array must be < 256 length
+    array SHORT must be < 256 length && index < 256
 
-    array.short.dim1.size1      ;   byte
-    array.short.dim1.size2      ;   word
-    array.short.dim1.size4      ;   float4
-    array.short.dim1.size5      ;   float5
-    array.short.dim1.sizex      ;   struct
-    
-    array.short.dim2.size1      ;   byte
-    array.short.dim2.size2      ;   word
-    array.short.dim2.size4      ;   float4
-    array.short.dim2.size5      ;   float5
-    array.short.dim2.sizex      ;   struct
-    
+        array.short.dim1.size1      ;   byte
+        array.short.dim1.size2      ;   word
+        array.short.dim1.size4      ;   float4
+        array.short.dim1.size5      ;   float5
+        array.short.dim1.sizex      ;   struct
+        
+        array.short.dim2.size1      ;   byte
+        array.short.dim2.size2      ;   word
+        array.short.dim2.size4      ;   float4
+        array.short.dim2.size5      ;   float5
+        array.short.dim2.sizex      ;   struct
+
+    array SMALL must be < 65535 length && index < 256
+
+        array.small.dim1.size       ;   byte,word,float4,float5,struct
+
+        
 ;;;
 ;;
 ;

@@ -539,12 +539,16 @@ array   .proc
         rts
     .pend
 
+
+
+    ; ......................................................... short array < 256 index < 256
+    
     ;  ............................................. calc index array
     ;
     ;  input   :   x y  mazy size
     ;  output  :   zpWord0
     ;
-
+    
     short  .proc
         
         mul1    .proc
@@ -646,6 +650,34 @@ array   .proc
     size    .byte   0
     .pend
 
+    ; ......................................................... small array > 256 index < 256
+    
+    ;  ............................................. calc index array
+    ;
+    ;  input   :   x size
+    ;  output  :   zpWord0
+    ;
+    
+    small   .proc
+
+        dim1  .proc
+                ; a*y=ay
+                txa
+                ldy size
+                jsr math.mul_bytes_into_u16
+                sta zpWord1+0
+                sty zpWord1+1
+                jsr math.zpWord0_add_zpWord1
+                lda zpWord2+0
+                sta zpWord0+0
+                lda zpWord2+1
+                sta zpWord0+1
+                rts
+        .pend
+        
+     size    .byte   0
+    .pend
+    
 .pend
 
 
