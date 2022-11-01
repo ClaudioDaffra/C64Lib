@@ -116,10 +116,17 @@
 
     .comment
 
-        dim1  :=       (x) * size
-        dim2  :=  ((   (x) * maxy ) + y )* size
-        dim3  :=  (((( (z) * maxz ) * maxy ) + y ) * maxz +x ) * size
+        dim1  :=  addr +        (x) * size
+        dim2  :=  addr +   ((   (x) * maxy ) + y )* size
 
+    array   : variabili d'appoggio
+    
+        addr    .word   0
+        size    .word   0
+        maxy    .word   0
+        y       .word   0
+        x       .word   0
+    
     .endc
 
     ;  ............................................. calc index array

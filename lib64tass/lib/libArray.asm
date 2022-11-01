@@ -539,8 +539,6 @@ array   .proc
         rts
     .pend
 
-
-
     ; ......................................................... short array < 256 index < 256
     
     ;  ............................................. calc index array
@@ -632,9 +630,9 @@ array   .proc
                     jmp mul5
                 .pend
                 sizex   .proc
-                    jsr cndx2   ; a
-                    ldy size    ; y
-                    jsr math.mul_u8 ; a*y
+                    jsr cndx2           ; a
+                    ldy size            ; y
+                    jsr math.mul_u8     ; a*y
                     jmp array_short_ret
                 .pend
                 dim2_x      .byte 0
@@ -646,8 +644,6 @@ array   .proc
             sta zpa
             jsr math.zpWord0_add_zpa
             rts
-    
-    size    .byte   0
 
     .pend
 
@@ -662,7 +658,6 @@ array   .proc
     small   .proc
 
         dim1  .proc     ;  (x) * size
-            
             txa
             ldy size
             jsr math.mul_bytes_into_u16
@@ -712,21 +707,29 @@ array   .proc
             ;   1   zpWord0+1
             ;   2   zpWord0+2   high
             ;   3   zpWord0+3
-            
-            lda zpDWord1+0
-            sta zpWord0+0
-            lda zpDWord1+1
-            sta zpWord0+1
 
+            ;   addr+=index
+            
+            clc
+            lda addr+0
+            adc zpDWord1+0
+            sta zpWord0
+            lda addr+1
+            adc zpDWord1+1
+            sta zpWord0+1
+            
+            ; res in zpWord0
+            
             rts
         .pend
+
+    .pend
     
     addr    .word   0
-    size    .byte   0
-    maxy    .byte   0
-    y       .byte   0
-    x       .byte   0
-    .pend
+    size    .word   0
+    maxy    .word   0
+    y       .word   0
+    x       .word   0
     
 .pend
 

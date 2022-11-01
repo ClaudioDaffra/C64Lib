@@ -61,7 +61,7 @@ main	.proc
     
     start	.proc
 
-        ;   ................................................... array.small.size
+        ;   ................................................... array.size
 
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -69,7 +69,7 @@ main	.proc
         ;
         
         lda #4  ;   size
-        sta array.small.size
+        sta array.size
     
         load_address_zpWord0    arrb
 
@@ -80,17 +80,17 @@ main	.proc
         jsr print_index
  
 
-        ;   ................................................... array.small.size
+        ;   ................................................... array.size
 
         .load_address_ay         arrb
         jsr txt.print_u16_dec
         
         ;
         
-        lda #4                  ;   size
-        sta array.small.size
-        lda #25                 ;   maxy
-        sta array.small.maxy
+        lda #4                           ;   size
+        sta array.size
+        lda #25                          ;   maxy
+        sta array.maxy
     
         .load_address_zpWord0    arrb    ;   array
         ldx #12                          ;   index x

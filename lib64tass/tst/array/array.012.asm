@@ -63,7 +63,7 @@ main	.proc
     
     start	.proc
 
-        ;   ................................................... array.short.dim1.size1
+        ;   .......................... array.short.dim1.size1
         
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -72,9 +72,9 @@ main	.proc
         ldx #4
         jsr array.short.dim1.size1
         
-        jsr  print_index
+        jsr print_index
         
-        ;   ................................................... array.short.dim1.size2
+        ;   .......................... array.short.dim1.size2
         
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -83,9 +83,9 @@ main	.proc
 
         jsr array.short.dim1.size2
         
-        jsr  print_index
+        jsr print_index
         
-        ;   ................................................... array.short.dim1.size4
+        ;   .......................... array.short.dim1.size4
         
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -94,9 +94,9 @@ main	.proc
         ldx #4
         jsr array.short.dim1.size4
         
-        jsr  print_index
+        jsr print_index
         
-        ;   ................................................... array.short.dim1.size5
+        ;   .......................... array.short.dim1.size5
         
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -105,28 +105,28 @@ main	.proc
         ldx #4
         jsr array.short.dim1.size5
         
-        jsr  print_index
+        jsr print_index
         
-        ;   ................................................... array.short.dim1.sizex
+        ;   .......................... array.short.dim1.sizex
         
         load_address_ay         arrb
         jsr txt.print_u16_dec
 
         lda #7
-        sta array.short.size
+        sta array.size
         load_address_zpWord0    arrb
         ldx #4
         jsr array.short.dim1.sizex
         
-        jsr  print_index
+        jsr print_index
 
-        ;   ...................................................
+        ;   ..........................
         
         lda #char.nl
         jsr c64.CHROUT
 
-        ;   ................................................... array.short.dim2.size1
-;43
+        ;   .......................... array.short.dim2.size1
+
         load_address_ay         arrb
         jsr txt.print_u16_dec
 
@@ -136,9 +136,9 @@ main	.proc
         lda #10 ;   max y
         jsr array.short.dim2.size1
         
-        jsr  print_index
+        jsr print_index
 
-        ;   ................................................... array.short.dim2.size2
+        ;   .......................... array.short.dim2.size2
 
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -149,9 +149,9 @@ main	.proc
         lda #10 ;   max y
         jsr array.short.dim2.size2
         
-        jsr  print_index
+        jsr print_index
 
-        ;   ................................................... array.short.dim2.size4
+        ;   .......................... array.short.dim2.size4
 
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -162,9 +162,9 @@ main	.proc
         lda #10 ;   max y
         jsr array.short.dim2.size4
         
-        jsr  print_index
+        jsr print_index
 
-        ;   ................................................... array.short.dim2.size5
+        ;   .......................... array.short.dim2.size5
 
         load_address_ay         arrb
         jsr txt.print_u16_dec
@@ -175,22 +175,22 @@ main	.proc
         lda #10 ;   max y
         jsr array.short.dim2.size5
         
-        jsr  print_index
+        jsr print_index
 
-        ;   ................................................... array.short.dim2.sizex
+        ;   .......................... array.short.dim2.sizex
 
         load_address_ay         arrb
         jsr txt.print_u16_dec
 
         load_address_zpWord0    arrb
         lda #5
-        sta array.short.size
+        sta array.size
         ldx #4  ;   x
         ldy #3  ;   y
         lda #10 ;   max y
         jsr array.short.dim2.sizex
         
-        jsr  print_index
+        jsr print_index
 
 
         rts
