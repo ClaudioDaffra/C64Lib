@@ -1,0 +1,26 @@
+
+TARGET = c6502.exe
+FLAG= /WX /utf-8 /MP /EHsc
+
+TARGET =c6502.exe
+FLAG= /WX /utf-8 /MP /EHsc
+
+SOURCES =                 \
+    src\error.cpp         \
+    src\token.cpp         \
+    src\lexer.cpp         \
+    src\main.cpp
+
+all: $(TARGET)
+
+$(TARGET):$(SOURCES)
+    cl $(FLAG) /Febin\$(TARGET) $(SOURCES) 
+
+clean:
+    del /Q *.obj            2>nul
+    del /Q *.out            2>nul  
+    del /Q *.exe            2>nul
+    del /Q bin\*.exe        2>nul
+    del /Q obj\*.obj        2>nul
+    del /Q tst\*.out        2>nul
+    del /Q lib\*.out        2>nul

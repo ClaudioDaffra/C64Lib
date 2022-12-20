@@ -1,0 +1,17 @@
+
+Costruzione di un Compilatore 6502
+
+Claudio Daffra (2023)
+
+# prefazione
+
+Questo libro nasce da una mia esigenza personale,
+scrivere un piccolo compilatore per la piattaforma 6502
+del Commodore 64. Più per diletto però.
+La sfida è crearlo passo passo, da un punto di vista incrementale
+il lavoro verrà suddiviso in diversi capitoli, con qualche
+spiegazione teorica, mantenendo un aspetto marcatamente pragmatico.
+
+# Capitolo 1
+
+Scrivina

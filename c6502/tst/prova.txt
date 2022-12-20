@@ -1,0 +1,4 @@
+1;commento 64tass
+ 2//commento C++
+  3
+/**/4

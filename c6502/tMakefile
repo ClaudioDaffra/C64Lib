@@ -1,0 +1,42 @@
+APP=cd64.exe
+CC=g++
+LINK=g++
+
+FLAGS=-Wall  -Wextra -pedantic
+LIBRARYS=
+
+ALL : $(APP)
+
+ODIR=obj
+SDIR=src
+BDIR=bin
+LDIR=lib
+
+LIBS =
+
+OBJS =	error.obj		\
+		token.obj		\
+		lexer.obj		\
+		main.obj
+ 
+OBJ = $(patsubst %,$(ODIR)/%,$(OBJS))
+
+$(ODIR)/%.obj: $(SDIR)/%.cpp 
+		$(CC) -c -o $@ $< $(FLAGS)
+
+LIB = $(patsubst %,$(LDIR)/%,$(LIBS))
+
+$(LDIR)/%.obj: $(LDIR)/%.cpp
+		$(CC) -c -o $@ $< $(FLAGS) 
+
+ALLOBJ =  $(OBJ) $(LIB)
+
+$(APP):$(ALLOBJ) 
+		$(CC) -o $(BDIR)/$@ $^ $(FLAGS) $(LIBRARYS) 
+
+clean:
+		del bin\*.exe & del obj\*.obj & del lib\*.obj
+		del *.exe & del *.obj
+
+
+

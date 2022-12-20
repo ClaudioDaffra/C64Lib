@@ -1,0 +1,40 @@
+APP=c6502
+CC=g++
+LINK=g++
+
+FLAGS= -Wall -Wextra -pedantic 
+LIBRARYS=-lm
+
+ALL : $(APP)
+
+ODIR=obj
+SDIR=src
+BDIR=bin
+LDIR=lib
+
+LIBS =
+
+OBJS =  error.o		\
+		token.o		\
+		lexer.o		\
+		main.o
+
+OBJ = $(patsubst %,$(ODIR)/%,$(OBJS))
+
+$(ODIR)/%.o: $(SDIR)/%.cpp 
+		$(CC) -c -o $@ $< $(FLAGS)
+
+LIB = $(patsubst %,$(LDIR)/%,$(LIBS))
+
+$(LDIR)/%.o: $(LDIR)/%.cpp
+		$(CC) -c -o $@ $< $(FLAGS) 
+
+ALLOBJ =   $(LIB) $(OBJ)
+
+$(APP):$(ALLOBJ) 
+		$(CC) -o $(BDIR)/$@ $^ $(flgags) $(LIBRARYS) 
+
+.PHONY: clean
+
+clean:
+		-rm $(BDIR)/$(APP) ; rm $(ODIR)/*.o ; rm $(LDIR)/*.o ; rm $(ODIR)/*.o ; rm *.o ;
