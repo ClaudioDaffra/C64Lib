@@ -30,6 +30,7 @@ program_entry_point	; assembly code starts here
 main	.proc
 
     start	.proc
+	
         jsr graph.low.on
 
         lda #color.red
