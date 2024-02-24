@@ -1034,6 +1034,28 @@ stack .proc
         rts
     .pend
 
+	; ........................................................ + - signed unsigned char
+	
+    sub_b        .proc
+        inx
+        stx stack.pointer
+        sec
+        lda stack.lo+1,x
+        sbc stack.lo,x
+        sta stack.lo+1,x
+        rts
+    .pend
+
+    add_b        .proc
+        inx
+        stx stack.pointer
+        clc
+        lda  stack.lo,x
+        adc  stack.lo+1,x
+        sta  stack.lo+1,x
+        rts
+    .pend
+	
     sub_w        .proc
         inx
         stx stack.pointer
