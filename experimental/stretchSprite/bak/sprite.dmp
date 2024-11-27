@@ -1,0 +1,189 @@
+00001  0000             
+00002  0001             ; 10 SYS (2305)
+00003  0001             
+00004  0001             *=$0801
+00005  0801             
+00006  0801  0E 08 0A              BYTE    $0E, $08, $0A, $00, $9E, $20, $28,  $32, $33, $30, $35, $29, $00, $00, $00
+00007  0810             
+00008  0810             
+00009  0810  78                    SEI
+00010  0811  2C 11 D0              BIT $D011 ; WAIT FOR NEW FRAME
+00011  0814  10 FB                 BPL *-3
+00012  0816  2C 11 D0              BIT $D011
+00013  0819  30 FB                 BMI *-3
+00014  081B             
+00015  081B  A9 FF                 LDA #$FF ; ENABLE SPRITES
+00016  081D  8D 15 D0              STA $D015
+00017  0820             
+00018  0820  A2 0E                 LDX #14 ; SET SOME X-POSITIONS
+00019  0822  18                    CLC
+00020  0823  A9 F0                 LDA #$F0
+00021  0825  9D 00 D0              STA $D000,X
+00022  0828  E9 18                 SBC #$18
+00023  082A  CA                    DEX
+00024  082B  CA                    DEX
+00025  082C  10 F7                 BPL *-7
+00026  082E             
+00027  082E  A2 0E                 LDX #14 ; SET SOME Y-POSITIONS
+00028  0830  A9 40                 LDA #$40
+00029  0832  9D 01 D0              STA $D001,X
+00030  0835  CA                    DEX
+00031  0836  CA                    DEX
+00032  0837  10 F9                 BPL *-5
+00033  0839             
+00034  0839  A9 24                 LDA #$24 ; SET SPRITE POINTERS TO DISPLAY THIS CODE :).
+00035  083B  A2 07                 LDX #7
+00036  083D  9D F8 07              STA $07F8,X
+00037  0840  CA                    DEX
+00038  0841  10 FA                 BPL *-4
+00039  0843             
+00040  0843  A9 BD                 LDA #$BD ; SET IDLE-PATTERN
+00041  0845  8D FF 3F              STA $3FFF
+00042  0848             LOOP1
+00043  0848  20 81 08              JSR STRETCHCALC ; MAKE BEAUTIFUL STRETCHING.
+00044  084B             
+00045  084B  A9 40                 LDA #$40 ; WAIT FOR SPRITE Y-POSITION
+00046  084D  CD 12 D0              CMP $D012
+00047  0850  D0 FB                 BNE *-3
+00048  0852             
+00049  0852  A2 04                 LDX #4 ; WAIT A FEW CYCLES TO MAKE THE D017-STRETCH WORK
+00050  0854  CA                    DEX
+00051  0855  D0 FD                 BNE *-1
+00052  0857             
+00053  0857  A2 00                 LDX #0
+00054  0859             LOOP2
+00055  0859  BD BF 08              LDA STRETCHTAB,X ; $FF WILL STRETCH, 0 WILL STEP ONE LINE OF GRAPHICS IN THE SPRITE
+00056  085C  8D 17 D0              STA $D017
+00057  085F             
+00058  085F  38                    SEC
+00059  0860  AD 11 D0              LDA $D011
+00060  0863  E9 07                 SBC #7
+00061  0865  09 18                 ORA #$18
+00062  0867  8D 11 D0              STA $D011 ; STEP D011 EACH LINE TO AVOID BADLINES
+00063  086A             
+00064  086A  24 EA                 BIT $EA ; MAKE THE WHOLE LOOP 44 CYCLES = ONE RASTER LINE WHEN USING 8 SPRITES
+00065  086C  EA                    NOP
+00066  086D  EA                    NOP
+00067  086E  EA                    NOP
+00068  086F             
+00069  086F  A9 00                 LDA #0 ; SET BACK FOR THE NEXT LINE
+00070  0871  8D 17 D0              STA $D017
+00071  0874             
+00072  0874  E8                    INX
+00073  0875  E0 64                 CPX #100
+00074  0877  D0 E0                 BNE LOOP2 ; LOOP 100 TIMES
+00075  0879             
+00076  0879  A9 1B                 LDA #$1B ; SET BACK CHAR-SCREEN MODE
+00077  087B  8D 11 D0              STA $D011
+00078  087E  4C 48 08              JMP LOOP1
+00079  0881             
+00080  0881             STRETCHCALC ; SETUP THE STRETCH TABLE
+00081  0881  A0 00                 LDY #0
+00082  0883  8C BD 08              STY YPOS
+00083  0886  A9 FF                 LDA #$FF ; FIRST CLEAR THE TABLE
+00084  0888  99 BF 08              STA STRETCHTAB,Y
+00085  088B  C8                    INY
+00086  088C  D0 FA                 BNE *-4
+00087  088E             
+00088  088E  A9 00                 LDA #0 ; INCREASE THE STARTING VALUE
+00089  0890  EE 8F 08              INC *-1
+00090  0893  0A                    ASL
+00091  0894  8D BE 08              STA ADDVAL
+00092  0897             
+00093  0897  A0 00                 LDY #0 ; THIS LOOP WILL INSERT 16 0:S INTO THE TABLE..
+00094  0899                        ; AT THOSE POSITIONS THE SPRITES WILL NOT STRETCH
+00095  0899             SFT_1
+00096  0899  AD BE 08              LDA ADDVAL
+00097  089C  18                    CLC
+00098  089D  69 0A                 ADC #10
+00099  089F  8D BE 08              STA ADDVAL
+00100  08A2  10 02                 BPL *+4
+00101  08A4  49 FF                 EOR #$FF
+00102  08A6  4A                    LSR
+00103  08A7  4A                    LSR
+00104  08A8  4A                    LSR
+00105  08A9  4A                    LSR
+00106  08AA  38                    SEC
+00107  08AB  6D BD 08              ADC YPOS
+00108  08AE  8D BD 08              STA YPOS
+00109  08B1  AA                    TAX
+00110  08B2  A9 00                 LDA #0
+00111  08B4  9D BF 08              STA STRETCHTAB,X
+00112  08B7  C8                    INY
+00113  08B8  C0 14                 CPY #20
+00114  08BA  90 DD                 BCC SFT_1
+00115  08BC  60                    RTS
+00116  08BD             
+00117  08BD  00         YPOS       BYTE 0
+00118  08BE  00         ADDVAL     BYTE 0
+00119  08BF             
+00120  08BF                        ;.ALIGN $100 ; ALIGN THE TABLE TO A NEW PAGE, THIS WAY LDA STRETCHTAB,X ALWAYS TAKES 4 CYCLES.
+00121  08BF             STRETCHTAB 
+00122  08BF                        ;
+00123  08BF  FF FF 00              BYTE 255,255,0
+00124  08C2  00 00 00              BYTE 0,0,0
+00125  08C5  20 00 0C              BYTE 32,0,12
+00126  08C8  10 00 18              BYTE 16,0,24
+00127  08CB  18 00 10              BYTE 24,0,16
+00128  08CE  0C 00 20              BYTE 12,0,32
+00129  08D1  06 00 40              BYTE 6,0,64
+00130  08D4  03 00 C0              BYTE 3,0,192
+00131  08D7  00 81 80              BYTE 0,129,128
+00132  08DA  00 41 00              BYTE 0,65,0
+00133  08DD  00 22 00              BYTE 0,34,0
+00134  08E0  00 1C 00              BYTE 0,28,0
+00135  08E3  00 08 00              BYTE 0,8,0
+00136  08E6  00 2C 00              BYTE 0,44,0
+00137  08E9  00 C6 00              BYTE 0,198,0
+00138  08EC  01 03 00              BYTE 1,3,0
+00139  08EF  02 00 80              BYTE 2,0,128
+00140  08F2  08 00 70              BYTE 8,0,112
+00141  08F5  10 00 18              BYTE 16,0,24
+00142  08F8  40 00 04              BYTE 64,0,4
+00143  08FB  00 00 00              BYTE 0,0,0
+00144  08FE             
+00145  08FE             ;
+00146  08FE  00 00 00              BYTE 0,0,0
+00147  0901  60 00 06              BYTE 96,0,6
+00148  0904  20 00 0C              BYTE 32,0,12
+00149  0907  10 00 18              BYTE 16,0,24
+00150  090A  08 00 70              BYTE 8,0,112
+00151  090D  0C 00 C0              BYTE 12,0,192
+00152  0910  02 03 00              BYTE 2,3,0
+00153  0913  03 06 00              BYTE 3,6,0
+00154  0916  01 98 00              BYTE 1,152,0
+00155  0919  00 F0 00              BYTE 0,240,0
+00156  091C  00 60 00              BYTE 0,96,0
+00157  091F  00 A0 00              BYTE 0,160,0
+00158  0922  01 90 00              BYTE 1,144,0
+00159  0925  03 18 00              BYTE 3,24,0
+00160  0928  06 06 00              BYTE 6,6,0
+00161  092B  04 03 00              BYTE 4,3,0
+00162  092E  18 00 C0              BYTE 24,0,192
+00163  0931  10 00 60              BYTE 16,0,96
+00164  0934  20 00 30              BYTE 32,0,48
+00165  0937  40 00 18              BYTE 64,0,24
+00166  093A  00 00 00              BYTE 0,0,0
+00167  093D             
+00168  093D             
+00169  093D             
+00170  093D             
+00171  093D             
+00172  093D             
+
+******* 7 Label(s) *******
+AddVal = $08BE 
+loop1 = $0848 
+loop2 = $0859 
+SFT_1 = $0899 
+StretchCalc = $0881 
+StretchTab = $08BF 
+YPos = $08BD 
+
+******* 0 Unused label(s) *******
+
+******* 1 Variable(s) *******
+tgt_c64  = $0001
+******* 1 Unused variables(s) *******
+tgt_c64
+
